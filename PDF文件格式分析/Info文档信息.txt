@@ -1,0 +1,19 @@
+Document Information（文档信息）字典，用来保存PDF在元数据中的文档信息的字典。
+该字典中的属性如下：
+Title：文档标题
+Author：创建文件的作者
+Subject：文档主题
+Keywords：文档关键字
+Creator：如果PDF是由其他格式转换而来的，Creator是创建原始文档的应用程序名
+Producer：如果PDF是由其他格式转换而来的，Producer是创建PDF文件的应用程序名
+CreationDate：文档创建的时间
+ModDate：文档上一次修改的时间
+Tapped：陷印，“True”表示已经陷印或不必陷印；“False”表示文档没有被陷印；“Unknown”表示不确定是否被陷印或需要陷印，
+        该状态容易造成工作流错误，因此，要避免使用。如果是PDF/X文档，则“Tapped”必须被定义。
+        
+陷印的概念：
+陷印是在颜色交接的地方用交接的两种颜色互相渗透一些，使印品不产生白边。 
+
+文档信息在trailer中被引用，如：
+trailer
+<</Root 1 0 R /Info 3 0 R /Size 92 /Prev 498956>>       

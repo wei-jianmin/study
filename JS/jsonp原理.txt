@@ -1,0 +1,37 @@
+同源策略：
+同源策略是浏览器的一种安全策略，所谓同源是指，域名，协议，端口号完全相同
+
+目的：保护用户信息安全
+
+限制：
+cookie、localStorage和IndexDB无法读取
+无法操作跨域的iframe里的dom元素
+ajax请求不能发送
+
+解决ajax的跨域问题有两种方法：
+一、jsop 　
+二、XMLHttpRequest2中可以配合服务端来解决，在响应头中加入Access-Control-Allow-Origin:*
+
+jsonp原理：
+script标签的src，还是img标签的src，或者说link标签的href他们没有被同源策略所限制
+（同源策略是浏览器程序实现的，所以浏览器本身代码可以发送get而不受限制）
+src或href链接的静态资源，本质上来说也是一个get请求
+jsonp就是使用同源策略这一“漏洞”，实现的跨域请求：
+使用script标签，src指向我们提供服务的接口，
+这是ajax发送get请求的替换方案，且不受同源策略限制
+
+与ajax发送get请求的区别：
+ajax发送get请求后，js程序能拿到返回的数据并使用，
+而通过jsonp方式，则只能保证js完成了对服务接口的调用，
+但接口返回的数据，只有浏览器知道，而js程序无法拿到这一数据
+浏览器拿到接口返回的数据后，对返回数据进行处理
+
+那js如果获取接口返回的数据呢？
+当接口返回的是"func(...)"这样的形式时，
+浏览器就会在当前js页面中找有没有这样的方法，有，就调用
+所以，可以在js中提供个func(string data)函数，
+然后在调用服务接口的时候，把"func"函数名作为参数传给接口,
+如 http://localhost:2345/OpenFileDialog?callback=func
+然后在接口侧，实现弹出文件打开对话框功能，把选择的文件的pathname
+然后 return "func(" + dlg.filePathName + ")";
+这样，在js的func函数中，参数传来的数据，就是接口的返回值。

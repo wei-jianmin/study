@@ -1,0 +1,18 @@
+GOT(Global Offset Table)和PLT(Procedure Linkage Table)
+是Linux系统下面ELF格式的可执行文件中，用于定位全局变量和过程的数据信息
+
+main可执行程序调用b.so中打func方法
+命令objdump -d -s > main.dmp反汇编main。
+反汇编生成的文件中，主要有三个段与对动态库函数addvec的调用有关：
+.got.plt，.plt和代码段.text
+
+.got.plt中保存的是数据，为每个动态调用保存一个条目，
+条目的内容应该是对动态库函数的调用所跳转到的目标地址
+由于Linux采用了延迟绑定技术，
+可执行文件中got.plt中的地址并不是目标地址，
+而是动态链接器（ld-linux）中的地址。
+在程序执行的第一次调用时，ld-linux把.got.plt的地址填写正确，
+之后的调用，就可以使用.got.plt中的目标地址了。
+
+.plt段中的内容则是实现跳转操作的代码片段
+

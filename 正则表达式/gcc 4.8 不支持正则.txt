@@ -1,0 +1,6 @@
+在 gcc 4.8.5 中测试正则：
+std::regex r(R"(\w)");
+编译使用  g++ a.cpp --std=c++11
+编译成功，执行时报异常： what(): regex_error
+
+同样的代码，升级gcc 为 8.5 版本， 问题解决

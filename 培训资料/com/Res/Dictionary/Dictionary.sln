@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dictionary", "Dictionary\Dictionary.vcproj", "{C19AC6BD-1603-4122-A963-C8716169BCE7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DictionaryTest", "DictionaryTest\DictionaryTest.vcproj", "{87330FB0-B45B-4793-AE0E-58D097778AEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C19AC6BD-1603-4122-A963-C8716169BCE7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C19AC6BD-1603-4122-A963-C8716169BCE7}.Debug|Win32.Build.0 = Debug|Win32
+		{C19AC6BD-1603-4122-A963-C8716169BCE7}.Release|Win32.ActiveCfg = Release|Win32
+		{C19AC6BD-1603-4122-A963-C8716169BCE7}.Release|Win32.Build.0 = Release|Win32
+		{87330FB0-B45B-4793-AE0E-58D097778AEB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{87330FB0-B45B-4793-AE0E-58D097778AEB}.Debug|Win32.Build.0 = Debug|Win32
+		{87330FB0-B45B-4793-AE0E-58D097778AEB}.Release|Win32.ActiveCfg = Release|Win32
+		{87330FB0-B45B-4793-AE0E-58D097778AEB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

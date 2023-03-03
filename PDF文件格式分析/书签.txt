@@ -1,0 +1,55 @@
+大纲 <=> 书签
+在catlog中被引用：
+<<
+  /Type /Catalog
+  /Pages 2 0 R  
+  /Metadata 3 0 R
+  /StructTreeRoot 4 0 R    
+  /Outlines 6 0 R              % 书签根节点
+  /MarkInfo << /Marked true >>  
+  /PageLayout /OneColumn
+  /PageMode /UseOutlines           
+  /ViewerPreferences <</HideMenubar true /HideToolbar true >>
+>>
+endobj
+
+6 0 obj
+<</Type/Outlines/First 5 0 R /Last 22 0 R /Count 0>>
+endobj
+
+5 0 obj
+<</Type/Outlines/Parent 6 0 R /Next 17 0 R              /Title(aaa)/Dest 7 0 R >>
+endobj
+
+7 0 obj
+[ 0/XYZ 106.9 769.9 0]
+endobj
+
+17 0 obj
+<</Type/Outlines/Parent 6 0 R /Prev 5 0 R /Next 22 0 R /Title(bbb)/Dest 18 0 R >>
+endobj
+
+18 0 obj
+[ 1/XYZ 104.55 769.9 0]
+endobj
+
+22 0 obj
+<</Type/Outlines/Parent 6 0 R /Prev 17 0 R /Next 24 0 R /Title(ccc)/Dest 23 0 R >>
+endobj
+
+23 0 obj
+[ 2/XYZ 101.05 769.9 0]
+endobj
+
+
+书签字典介绍：
+/Type /Outlines
+/Count 数字  一级子节点数量
+/First 第一个子节点
+/Last  最后一个子节点
+/Next  下一个兄弟节点
+/Parrent 父节点
+/Title (书签名)
+/C [1.0 0.3 0.5]  书签字体颜色
+/F 数字  书签字体标记 (粗体/斜体/粗斜体)
+

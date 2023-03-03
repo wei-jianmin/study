@@ -1,0 +1,61 @@
+https://blog.csdn.net/weixin_39774491/article/details/111855598
+
+在浏览器调试窗口/终端（/网络）中，有个XHR选项，就是用于控制显示XMLHTTPRequest的抓包信息的
+
+XMLHttpRequest是一个浏览器接口，使得Javascript可以进行HTTP(S)通信。
+自从浏览器提供有了XMLHTTPRequest这个接口之后，ajax操作就此诞生。
+ajax就是基于浏览器提供的XMLHttpRequest对象来实现的。
+
+XHR的使用流程：
+    首先我们需要新建一个XMLHttpRequest实例  
+        var xhr = new XMLHttpRequest();
+    然后，向远程主机发出一个HTTP请求  
+        xhr.open('GET', 'example.php');  
+        xhr.send();
+    接着，就等待远程主机做出回应。这时需要监控XMLHttpRequest对象的状态变化，指定回调函数
+        xhr.onreadystatechange = function(){
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                alert( xhr.responseText );
+            } else {
+                alert( xhr.statusText );
+            }
+        };
+        //* xhr.readyState：XMLHttpRequest对象的状态，等于4表示数据已经接收完毕。
+        //* xhr.status：服务器返回的状态码，等于200表示一切正常。
+        //* xhr.responseText：服务器返回的文本数据
+        //* xhr.responseXML：服务器返回的XML格式的数据
+        //* xhr.statusText：服务器返回的状态文本。
+        
+以上都是2010年以前使用的出来的过时的XMLHttpRequest对象了，
+老版本的XMLHttpRequest对象有以下几个缺点：
+    * 只支持文本数据的传送，无法用来读取和上传二进制文件。
+    * 传送和接收数据时，没有进度信息，只能提示有没有完成。
+    * 受到"同域限制"(Same Origin Policy)，只能向同一域名的服务器请求数据。
+现在我们都基本上使用的是HTML5中的新版本XMLHttpRequest对象
+新版本的XMLHttpRequest对象，针对老版本的缺点，做出了大幅改进。
+    * 可以设置HTTP请求的时限。
+        xhr.timeout = 3000;
+            xhr.ontimeout = function(event){
+            alert('请求超时！');
+        }   //与之配套的还有一个timeout事件，用来指定回调函数。
+    * 可以使用FormData对象管理表单数据。
+        ajax操作往往用来传递表单数据。为了方便表单处理，HTML 5新增了一个FormData对象，可以模拟表单。
+        首先，新建一个FormData对象。
+            var formData = new FormData();
+        然后，为它添加表单项。
+            formData.append('username', '张三');  
+            formData.append('id', 123456);
+        最后，直接传送这个FormData对象。这与提交网页表单的效果，完全一样。
+            xhr.send(formData);
+        FormData对象也可以用来获取网页表单的值：
+            var form = document.getElementById('myform');
+            var formData = new FormData(form);   // 创建FormData对象时关联表单
+            formData.append('secret', '123456'); // 添加一个表单项
+            xhr.open('POST', form.action);
+            xhr.send(formData);
+    * 可以上传文件。
+    * 可以请求不同域名下的数据(跨域请求)，CORS("跨域资源共享", Cross-origin resource sharing)。
+    * 可以获取服务器端的二进制数据。
+    * 可以获得数据传输的进度信息。
+
+    

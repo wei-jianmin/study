@@ -1,0 +1,71 @@
+文档打开过程：
+STDMETHODIMP CDsoFramerControl::Open(VARIANT Document, VARIANT ReadOnly, VARIANT ProgId, VARIANT WebUsername, VARIANT WebPassword)
+{
+    if (LooksLikeHTTP(pwszDocument) && GetTempPathForURLDownload(pwszDocument, &pwszTempFile))   //（1）
+    {    }
+    GetClassFile(pwszDocument, &myclsid)；
+    判断myclsid，据此给pwszAltProgId赋合适的值
+    m_pDocObjFrame = CDsoDocObject::CreateInstance((IDsoDocObjectSite*)&m_xDsoDocObjectSite)；
+    m_pDocObjFrame->SetIsWps(TRUE);
+    hCur = SetCursor(LoadCursor(NULL, IDC_WAIT));
+    hr = m_pDocObjFrame->CreateFromFile(pwszDocument, clsidAlt, &bopts);   //（2）
+    EnableDropFile(FALSE);
+    hr = m_pDocObjFrame->IPActivateView(); 
+    m_DocType=DOCTYPE_WPS;
+    VARIANT rgargs[2];
+    rgargs[0].vt = VT_DISPATCH;
+    get_ActiveDocument(&(rgargs[0].pdispVal));   //（3）
+    rgargs[1].vt = VT_BSTR;
+    rgargs[1].bstrVal = SysAllocString(pwszDocument);
+    RaiseAutomationEvent(DSOF_DISPID_DOCOPEN, 2, rgargs);   //（4）
+    Activate();   //（5）
+    RedrawCaption();    //（6）
+}
+（1）：
+检查字符串的头几个字符是否为http,如果为真，则调用GetTempPathForURLDownload
+（2）：
+STDMETHODIMP CDsoDocObject::CreateFromFile(LPWSTR pwszFile, REFCLSID rclsid, LPBIND_OPTS pbndopts)
+{
+    hr = CreateBindCtx(0, &pbctx)；
+    hr = pbctx->SetBindOptions(pbndopts)；
+    hr = CreateFileMoniker(pwszFile, &pmkfile)；
+    hr = pmkfile->BindToObject(pbctx, NULL, IID_IOleObject, (void**)&pole);   //完成对象的创建
+    m_pole=pole；
+    m_clsidObject = clsid;
+    m_pmkSourceFile = pmkfile;
+    m_pbctxSourceFile = pbctx;
+    m_pole->SetClientSite((IOleClientSite*)&m_xOleClientSite);
+    pmkfile->Release();
+    pbctx->Release();
+    m_pwszSourceFile=pwszFile；
+}
+（3）：
+STDMETHODIMP CDsoFramerControl::get_ActiveDocument(IDispatch** ppdisp)
+{
+    punk = (IUnknown*)(m_pDocObjFrame->GetActiveObject())；   //GetActiveObject() {return m_pipactive;}
+    hr = punk->QueryInterface(IID_IDispatch, (void**)ppdisp)；
+}
+（4）：
+STDMETHODIMP CDsoFramerControl::RaiseAutomationEvent(DISPID did, ULONG cargs, VARIANT *pvtargs)
+{
+    //hr = DsoDispatchInvoke(m_dispEvents, NULL, did, 0, cargs, pvtargs, NULL);
+    DISPPARAMS dspparm = {NULL, NULL, 0, 0};
+    dspparm.rgvarg = rgargs;
+    dspparm.cArgs = cargs;
+    if ((wflags & DISPATCH_PROPERTYPUT) || (wflags & DISPATCH_PROPERTYPUTREF))
+    {
+         dspparm.rgdispidNamedArgs = &dspidPut;
+         dspparm.cNamedArgs = 1;
+    }
+    hr = m_dispEvents->Invoke(did, IID_NULL, LOCALE_USER_DEFAULT, (WORD)(DISPATCH_METHOD), &dspparm, vt_empty, NULL, NULL);
+}
+（5）：
+STDMETHODIMP CDsoFramerControl::Activate()
+{
+    hr = UIActivate(TRUE);   //（5.1）
+}
+（5.1）：
+STDMETHODIMP CDsoFramerControl::UIActivate(BOOL fForceUIActive)
+{
+
+}

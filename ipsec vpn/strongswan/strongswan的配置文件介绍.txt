@@ -1,0 +1,3 @@
+ipsec.conf //配置ipsec隧道信息
+ipsec.secerts //psk密钥 配置设备私钥证书 配置eap用户名和密码
+strongswan.conf //为strongswan提供所有组件配置

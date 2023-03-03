@@ -1,0 +1,71 @@
+node-gyp 是一个可以编译 node 插件的工具
+
+在使用 node-gyp 前需要安装 python 环境和 C++ 环境
+
+windows-build-tools 这个 npm 包可以帮助我们一键安装 node-gyp 所需要的 python 环境和 C++ 环境
+
+与gyp的关系
+node-gyp 这个工具, 是node 社区对 google gyp 编译工具的一个封装, 
+使用 node-gyp 工具可以用C++为node 项目编写 addon
+
+对gyp的介绍
+https://www.suninf.net/2016/01/gyp-usage.html
+GYP(Generate Your Projects)是一个google开源的构建系统，最开始用于Chromium项目，
+现在一些其他的开源项目也开始使用GYP，如V8，Node.js，WebRTC等。
+● 跨平台的工程配置工具
+● 通过gyp可以生成平台相关的编译配置，比如ninja，xcode，msvs等
+● 类似json格式的文件配置，维护简单，但功能强大
+---------------------------------------------------------------------
+https://www.cnblogs.com/harrychinese/p/gyp.html
+gyp 的意思是 generate your project. 
+该工具是chromium 团队为了解决 chromium 浏览器多平台构建问题, 
+它可以为不同的操作系统生成专门的项目文件, 
+比如为 windows 生成 VC++ 项目文件, 为 mac 生成 xcode 项目文件, 为 Linux 生成 Makefile 项目文件, 
+进而利用这些平台特定的编译工具, 完成项目构建. 
+
+
+gyp官网
+http://gyp3.org/
+
+gyp配置文件的相关语法：
+https://www.cnblogs.com/nanvann/p/3913880.html
+https://www.cnblogs.com/x_wukong/p/4829598.html
+
+gyp vs. cmake
+    GYP 的功能与 CMake 构建工具非常相似，为什么团队创建GYP而不是使用CMake:
+    ● 谷歌的一些设计是基于完全从源代码构建的大型项目的经验，这导致了一些特性
+      cmake中没有的功能，但对Chromium来说并非严格要求。
+    ● 生成一个更 "正常 "的vcproj文件。Gyp试图，特别是在
+      试图生成类似于手工生成的项目的vcprojs。它
+      不生成任何Makefile类型的项目，而是生成msvs文件。
+    ● 项目设置层面的抽象，而不是命令行
+      标志。在GYP的语法中，你可以添加几乎所有的选项在一个手工生成的
+      生成的xcode/vcproj文件中的几乎所有选项。这使得你可以使用内置在
+      的抽象概念。在许多情况下，并非所有的项目
+      文件的结构与命令行标志相对应。
+    ● 跨平台生成。CMake无法在所有平台上生成所有项目
+      文件。例如，xcode项目不能从
+      windows（cmake使用mac特定的库来进行项目生成）。这
+      这意味着，例如生成一个包含所有平台预生成的
+      所有平台的项目是很难用Cmake的（需要分发到
+      需要分发到几种机器类型）。
+    ● Gyp有初级的交叉编译支持。目前我们已经为GYP添加了足够的
+      的功能，以支持x86->arm交叉编译。我最后一次检查
+      这个功能并不存在于cmake中。(这是后话了）。
+    目前gyp有一些缺点
+    ● CMake可能更成熟，已经被应用于更广泛的项目。
+      有许多cmake的 "工具模块"，它们在一个共同的社区中被共享。
+      共同的社区。
+    ● CMake包括一个相当可读的命令式语言。目前Gyp有一个
+      目前，Gyp的声明式语言规定得有点差
+    ● （特点/缺点取决于个人的喜好）。Gyp的语法是
+      深度嵌套。它受到Lisp所有优点和缺点的影响。
+      
+gyp vs. cmake
+参 https://blog.csdn.net/bytxl/article/details/45717299      
+优点：gyp的配置文件比cmake的直观易读
+缺点：文档不够完整，项目不够正式，某些地方还保留着 Chromium 的影子，看起来像是还没有完全独立出来
+      大量的括号嵌套，很容易让人看晕
+      为了支持跨平台，有时不得不加入某些特定平台的配置信息，比如只适用于 Visual Studio 的RuntimeLibrary 配置，
+      这不利于跨平台配置文件的编写，也无形中增加了编写复杂度
+      不支持 make clean，唯一的方法就是将输出目录整个删除或者手动删除其中的某些文件

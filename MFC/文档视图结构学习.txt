@@ -1,0 +1,37 @@
+工具栏上打开按钮的响应：
+    在资源视图中找到“打开”按钮，其对应的资源ID为：ID_FILE_OPEN，说明点击该按钮，会发出命令消息，
+    查找该资源ID ,发现有ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)，
+    查看OnFileOpen函数，发现其内部调用m_pDocManager->OnFileOpen();  CDocManager* m_pDocManager;
+    在MSDN和mfc类库详解中都没发现对此类的介绍，猜测这是一个功能代理类（工具类）
+    继续进入该函数，发现内部有AfxGetApp()->OpenDocumentFile(newName);
+    回到CWinAPP的OpenDocumentFile，发现 m_pDocManager->OpenDocumentFile(lpszFileName);
+    最终，在CDocManager的OpenDocumentFile找到真正的函数响应代码。
+
+对OpenDocumentFile的分析：
+    该函数有一个参数，通过该参数，传来要打开的文件名。
+    进行文件名检查。
+    依次轮询m_templateList（CPtrList），在该列表中找到合适的CDocTemplate成员。
+    。。。。
+    进入CMultiDocTemplate::OpenDocumentFile函数
+    在该函数中：
+        创建文档对象CDocument* pDocument = CreateNewDocument();
+        创建框架对象CFrameWnd* pFrame = CreateNewFrame(pDocument, NULL);
+        然后再pDocument->OnOpenDocument(lpszPathName)
+
+CDocTemplate,CDocument,Cview,CFramewnd之间的关系总结（P347）：
+● CWinAPP拥有一个对象指针：CDocManager*m_pDocManager.
+● CDocManager拥有一个指针链表CPtrList m_templateList，用来维护一系列
+的Document Template。一个程序若支持两种文件类型，就应该有两份
+Document Template，应用程序应该在CMyWinapp ::InitInstance中以
+AddDocTemplate将这些Document Template加入到由CDocManager所维护
+的链表中。
+● CDocTemplate拥有3个成员变量，分别有Document、view、Frame的
+CRuntimeClass指针，另有一个成员变量m_nIDResource，用来表示此
+Document显现时应该采用的UI对象。这四份数据应该在CMyWinApp::
+InitInstance函数构造函数时指定，成为构造函数的参数。
+● CDocument有一个成员变量CDocTemplate*m_pdocTemplate，回指其
+Document Template；另有一个成员变量CPtrList m_viewList，表示他可以
+同时维护一系列的views(因为一个文档可能有多个视图）
+● CFrameWnd有一个成员变量CView*m_pViewActive，指向当前活动的view
+● Cview有一个成员变量CDocument*m_pDocument，指向相关的Document。
+    

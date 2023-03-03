@@ -1,0 +1,58 @@
+通 ip address 、ip a
+用以管理设备的协议地址
+
+1.查看
+(1). ip addr 的缩写是ip a ，可以查看网卡的ip、mac等， 
+     即使网卡处于down状态，也能显示出网卡状态，但是ifconfig查看就看不到。
+(2). ip addr show device  查看指定网卡的信息
+     比如查看网卡接口的信息，就是ip addr show eth0
+ 
+2.增加ip
+ip addr add ip/netmask dev 接口
+比如给eth0增加一个172.25.21.1/24 地址
+ip addr add 172.25.21.1/24 dev eth0
+
+3.删除ip
+ip addr del ip/netmask dev 接口   
+
+4.清空指定网卡的所有ip
+ip addr flush dev 接口     
+   
+5. 给网卡起别名，起别名相当于给网卡多绑定了一个ip  
+用法： 比如给网卡eth0增加别名                
+ip addr add 172.25.21.1/32 dev eth0 label eth0:1
+
+6.删除别名              
+ip addr del ip/netmask dev eth0 
+
+注意:
+    使用命令的方式设置别名，重启服务就没了，若要永久生效，
+    需要写配置文件，步骤如下：
+    1、确保NetworkManager服务是停止的
+       systemctl stop NetworkManager    关闭该服务 
+       systemctl disable NetworkManager  开机不自启动
+    2、修改配置文件ifcfg-eth0
+    3、重启network服务
+
+关于网卡别名：
+    网卡别名又称网卡子ip
+    简单来说就是给一个网卡设备配置多个ip,虽然看上去有多个网卡名,但其实还是只有一个网卡.
+    作用: 
+        布网需要、多ip访问测试、特定软件对多ip的需要..
+    配置步骤：
+        1. 关闭NetworkManager服务(这个服务不稳定,对网络设置有影响)
+           service NetworkManager stop
+        2. 创建一个或多个"子"网卡配置文件如ifcfg-eth0:0, ifcfg-eth0:1,...
+           DEVICE=eth0:0
+           IPADDR=192.168.1.3
+           NETMASK=255.255.0.0
+           ONPARENT=yes # 是否随父网卡一起启动,默认为yes
+           
+           参考/usr/share/doc/initscripts-*/sysconfig.txt说明
+           如果是动态创建的话,以上四条可用下面一条语句代替:
+           ifconfig eth0:0 192.168.1.3/16 up
+           或者
+           ip addr add 192.168.1.100/24 dev eth0 label eth0:0
+           关闭的话:ifconfig eth0:0 down即可
+
+        

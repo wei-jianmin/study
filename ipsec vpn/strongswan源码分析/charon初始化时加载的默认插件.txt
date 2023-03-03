@@ -1,0 +1,16 @@
+charon初始化时加载的默认插件：
+aes attr cmac constraints counters curve25519 des dnskey eap-dynamic eap-identity eap-md5 eap-mschapv2 eap-peap eap-radius eap-tls eap-tnc eap-ttls fips-prf gmp hmac kernel-netlink md5 mgf1 nonce openssl pem pgp pkcs1 pkcs12 pkcs7 pkcs8 pubkey random rc2 resolve revocation sha1 sha2 socket-default sshkey stroke tnc-tnccs updown vici x509 xauth-eap xauth-generic xcbc
+
+在strongswan下的有:
+aes cmac constraints curve25519 des dnskey fips-prf gmp hmac
+md5 mgf1 pem  pgp pkcs1 pkcs12 pkcs7 pkcs8 pubkey random rc2
+revocation sha1 sha2 sshkey x509 xcbc nonce openssl 
+
+在charon下的有:
+eap-identity eap-md5 eap-mschapv2 eap-peap eap-radius
+eap-tls eap-tnc attr counters eap-dynamic socket-default 
+eap-ttls kernel-netlink stroke vici xauth-eap xauth-generic 
+updown resolve 
+
+在libtnccs下的有:   
+tnc-tnccs   

@@ -1,0 +1,26 @@
+用node-gyp 编译出来的是.node后缀名的文件
+
+node 是由 c++ 编写的，核心的 node 模块也都是由 c++ 代码来实现，
+所以同样 node 也开放了让使用者编写 c++ 扩展来实现一些操作的窗口。
+
+如果大家对于 require 函数的描述还有印象的话，就会记得如果不写文件后缀，它是有一个特定的匹配规则的：
+LOAD_AS_FILE(X)
+1. If X is a file, load X as its file extension format
+2. If X.js is a file, load X.js as JavaScript text
+3. If X.json is a file, parse X.json to a JavaScript Object
+4. If X.node is a file, load X.node as binary addon
+可以看到，最后会匹配一个 .node，而后边的描述也表示该后缀的文件为一个二进制的资源
+而这个 .node 文件一般就会是我们所编译好的 c++ 扩展了。
+
+为什么要写 c++ 扩展
+可以简单理解为，如果想基于 node 写一些代码，做一些事情，那么有这么几种选择：
+1.写一段 JS 代码，然后 require 执行
+2.写一段 c++ 代码，编译后 require 执行
+日常的开发其实只用第一项就够了，我们用自己熟悉的语言，写一段熟悉的代码，然后发布在 NPM 之类的平台上，
+其他有相同需求的人就可以下载我们上传的包，然后在TA的项目中使用。
+但有的时候可能纯粹写 JS 满足不了我们的需求，也许是工期赶不上，也许是执行效率不让人满意，也有可能是语言限制。
+所以我们会采用直接编写一些 c++ 代码，来创建一个 c++ 扩展让 node 来加载并执行。
+况且如果已经有了 c++ 版本的轮子，我们通过扩展的方式来调用执行而不是自己从头实现一套，也是避免重复造轮子的方法
+
+node-addon-api: 
+https://github.com/nodejs/node-addon-api/tree/main/doc

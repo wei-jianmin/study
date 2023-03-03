@@ -1,0 +1,10 @@
+使用QTcpSocket或QWebsocket发送数据时，
+调用write方法写入待发送的数据，
+其实最终调用的是QIODevice的write方法，
+这意味着，是把数据写入到QIODevice的缓存中了，
+而不是写到tcp的发送缓存中，
+只有调用QTcpSocket的flush方法（实际是调用QIODevice的flush方法），
+QIODevice才把其缓存的数据发送到tcp发送缓冲区中，
+所以尽管tcp发送三缓冲区的大小在只有几兆时，
+调用QTcpSocket的write方法写入上百兆数据也不会阻塞，
+这是因为数据只是存在了QIODevice的缓冲区中了。

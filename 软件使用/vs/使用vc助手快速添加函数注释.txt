@@ -1,0 +1,15 @@
+1. 菜单/VAssistX/visual assist options/Suggestions/Edit VA Snippets/C++/Refactor Document Method
+   按需要的格式重新编辑，参：
+/************************************************************************
+函数说明 : $SymbolVirtual$$SymbolPrivileges$$SymbolStatic$$SymbolType$ $SymbolContext$ 
+函数功能 : 
+参数说明 : $MethodArgName$  
+附加说明 : 
+*************************************************************************/
+
+2. 菜单/工具/选项/键盘
+   显示命令包含：documentmethod
+   快捷键：alt+c  , 分配，确定
+
+3. 使用时，光标定位在函数上，按快捷键 alt+c ，即可插入函数注释   
+   

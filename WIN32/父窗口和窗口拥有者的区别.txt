@@ -1,0 +1,60 @@
+http://blog.csdn.net/dahaii0/article/details/6967848
+
+一、概念和区别
+    在windows系统中，每个窗口对象都对应有一个数据结构，形成一个list链表。系统的窗口管理器通过这个list来获取窗口信息和管理每个窗口。这个数据结构中有四个数据用来构建list，即child、sibling、parent、owner四个域。
+    所以我们可以看到，窗口之间的关系有两种：owner-owned 关系和 parent-child关系。前者称之为拥有/被拥有关系，后者称之为父/子关系。在这篇文字中，我把owner窗口称之所有者窗口。换句话说，一个窗口在有一个父窗口（parent)的同时，还可能被不同的窗口拥有（owner)，也可以有自己的子窗口(child)。在MFC 的CWnd类中，所有者窗口保存在m_hWndOwner成员变量中，父窗口则保存在m_hParent中，但是这两个值并不一定和窗口对象数据结构中的值相对应。   
+    窗口之间的关系，决定了窗口的外在表现。比如显示、销毁等。
+    如果一个窗口数据的owner域非NULL，则它和该窗口建立了owner-owned 关系，拥有关系决定了：
+    （1）被拥有的窗口永远显示在拥有它的那个窗口的前面；
+    （2）当所有者窗口最小化的时候，它所拥有的窗口都会被隐藏；
+    （3）当所有者窗口被销毁的时候，它所拥有的窗口都会被销毁。
+    需要注意的是，隐藏所有者窗口并不会影响它所拥有的窗口的可见状态。比如：如果窗口 A 拥有窗口B,窗口B拥有窗口C,则当窗口A最小化的时候，窗口B被隐藏，但是窗口 C还是可见。
+    如果一个窗口的parent域非NULL，则它和该窗口之间就建立了parent-child关系。父子决定了：
+    （1）窗口在屏幕上面的显示位置。父窗口提供了用来定位子窗口的坐标系统，一个子窗口只能显示在它的父窗口的客户区中，之外的部分将被裁减。这个裁减法则决定了如果父窗口不可见，则子窗口肯定不可见。如果父窗口移动到了屏幕之外，子窗口也一样。
+    （2）当父窗口被隐藏时，它的所有子窗口也被隐藏。
+    （3）父窗口被销毁的时候，它所拥有的子窗口都会被销毁。
+     注意！最小化父窗口不会影响子窗口的可见状态，子窗口会随着父窗口被最小化，但是它的WS_VISIBLE属性不会变。
+    Windows系统为什么要使用两种关系呢？这是为了更加灵活的管理窗口。举个例子：组合框（combobox)的下拉列表框（list box）可以超出组合框的父窗口的客户区，这样有利于显示，因此系统创建该list box的时候，是作为控制台窗口（desktop window）的子窗口，它的父窗口hWndParent是NULL，这样，list box的显示区域是限制在整个屏幕内，但是该list box的所有者却是组合框的第一个非子窗口祖先（比如对话框），当它的所有者窗口销毁后，该 list box自动销毁。
+    另外，窗口之间消息的传递也和窗口关系有关，通常，一个窗口会把自己的通知消息发送给它的父窗口，但不全是这样，比如，CToolBar发送通知消息给它的所有者窗口而不是父窗口。这样以来，就可以允许工具条作为一个窗口（比如一个 OLE 容器程序窗口）的子窗口的同时，能够给另一个窗口（比如in-place框架窗口）发送消息。至于某类窗口到底是把消息发送给谁，是父窗口还是所有者窗口，microsoft并没有明示。还有，在现场（in-place）编辑的情况下，当一个 server 窗口激活或者失效的时候，框架窗口所拥有的子窗口自动隐藏或者显示，这也是通过直接调用SetOwner函数实现的。
+
+二、窗口类型的说明和限制
+（1）控制台窗口（desktop window）。这是系统最早创建的窗口。可以认为它是所有 WS_OVERLAPPED 类型窗口的所有者和父窗口。Kyle Marsh在他的文章“Win32 Window Hierarchy and Styles”中指出，当系统初始化的时候，它首先创建控制台窗口，大小覆盖整个屏幕。所有其它窗口都在这个控制台窗口上面显示。窗口管理器所用的窗口list中第一个就是这个控制台。它的下一层窗口叫做顶级窗口（top-level），顶级窗口是指所有非child、没有父窗口，或者父窗口是desktop的窗口，它们没有WS_CHILD属性。
+（2）WS_OVERLAPPED类型的窗口可以显示在屏幕的任何地方。它们的所有者窗口是控制台。
+     Overlapped 类型的窗口属于顶级窗口，一般作为应用程序的主窗口。不论是否给出了WS_CAPTION、WS_BORDER属性，这类窗口创建后都有标题栏和边框。Overlapped窗口可以拥有其它顶级窗口或者被其它顶级窗口所拥有。所有overlapped窗口都有WS_CLIPSIBLINGS属性。系统可以自动设置 overlapped窗口的大小和初始位置。
+    当系统 shuts down的时候，它将销毁所有overlapped类型的窗口。
+（3）WS_POPUP类型的窗口可以显示在屏幕任何地方，它们一般没有父窗口，但是如果明确调用SetParent，这类窗口也可以有父窗口。
+     WS_POPUP类型的窗口的所有者是在CreateWindow函数中通过设置hWndParent参数给定的，如果hWndParent不是子窗口，则该窗口就成为这个新的弹出式窗口的owner，否则，系统从hWndParent的父窗口向上找，直到找到第一个非子窗口，把它作为该弹出窗口的owner。当owner窗口销毁的时候，系统自动销毁这个弹出窗口。
+     Pop-up类型的窗口也属于顶级窗口，它和 overlapped 窗口的主要区别是弹出式窗口不需要有标题栏，也不必有边框。弹出式可以拥有其它顶级窗口或者被拥有。所有弹出式窗口也都有 WS_CLIPSIBLINGS属性。
+（4）所有者窗口（owner)只能是 overlapped 或者 pop-up 类型的窗口，子窗口不能是所有者窗口，也就是说子窗口不能拥有其它窗口。
+    overlapped 或者 pop-up 类型的窗口在拥有其它窗口的同时，也可以被拥有。
+    在使用CreateWindowEx创建 WS_OVERLAPPED 或者 WS_POPUP类型的窗口时，可以在 hwndParent 参数中给出它的所有者窗口的句柄。如果 hwndParent 给出的是一个child 类型的窗口句柄，则系统自动将新创建窗口的所有权交给该子窗口的顶级父窗口。在这种情况下，参数hwndParent被保存在新建窗口的parent域中，而它的所有者窗口句柄则保存在owner域中。
+（5）缺省情况下，对话框和消息框属于 owned 窗口，除非在创建它们的时候明确给出了WS_CHILD属性，（比如对话框中嵌入对话框的情形）
+否则由系统负责给它们指定owner窗口。需要注意的是，一旦创建了owned类型的窗口，就无法再改变其所有关系，因为WIN32没有没有提供改变窗口所有者的方法。
+     而且在Win32中，由于有多线程的存在，所以要注意保证父子窗口或者owner/owned 窗口要同属于一个线程。
+（6）对于 WS_CHILD类型的窗口，它的父窗口就是它的所有者窗口。一个子窗口的父窗口也是在CreateWindow函数中用hWndParent参数指定的。子窗口只能在父窗口的客户区中显示，并随父窗口一起销毁。
+     子窗口必须有一个父窗口，这是它和overlapped 以及 pop-up 窗口之间的主要区别。父窗口可以是顶级窗口，也可以是其它子窗口。
+
+
+三、几个相关函数的说明
+（1）获取/设置所有者窗口 
+     win32 API提供了函数GetWindow函数（GW_OWNER 标志）来获取一个窗口的所有者窗口句柄。
+     GetWindow(hWnd, GW_OWNER)永远返回窗口的所有者(owner)。对于子窗口，函数返回 NULL，因为它们的父窗口就相当于所有者（注意，是“相当于”）。因为Windows系统没有维护子窗口的所有者信息。
+     MFC中则是通过如下函数得到所有者窗口指针：
+     _AFXWIN_INLINE CWnd* CWnd::GetOwner() const
+      { return m_hWndOwner != NULL ? CWnd::FromHandle(m_hWndOwner) : GetParent(); }
+      从上述代码我们可以看出，它返回的值和GetWindow返回的有所区别，如果当前窗口没有owner，那么将返回它的父窗口指针。
+      但是Windows没有提供改变窗口所有者的方法。MFC中则提供了改变所有者的方法：
+      _AFXWIN_INLINE void CWnd::SetOwner(CWnd* pOwnerWnd)
+      { m_hWndOwner = pOwnerWnd != NULL ? pOwnerWnd->m_hWnd : NULL; }
+     另外，mfc还提供了CWnd::GetSafeOwner( CWnd* pParent, HWND* pWndTop );函数，可以用来得到参数pParent的第一个非child属性的父窗口指针。如果这个参数是NULL，则返回当前线程的主窗口(通过AfxGetMainWnd得到)。框架经常使用这个函数查找对话框或者属性页的所有者窗口。
+（2）获取/设置父窗口
+      WIN32 API给出了函数GetParent和SetParent。而mfc也是完全封装了这两个函数：
+      _AFXWIN_INLINE CWnd* CWnd::SetParent(CWnd* pWndNewParent)
+      { ASSERT(::IsWindow(m_hWnd)); return CWnd::FromHandle(::SetParent(m_hWnd,
+      pWndNewParent->GetSafeHwnd())); }
+      _AFXWIN_INLINE CWnd* CWnd::GetParent() const
+      { ASSERT(::IsWindow(m_hWnd)); return CWnd::FromHandle(::GetParent(m_hWnd)); }
+    对于SetParent，msdn里面说明了父子窗口必须是同一个进程的。但是由于窗口句柄是系统全局唯一的，不属于同一个进程的情况下，也可以成功调用，但是后果未知。
+    GetParent的返回值比较复杂，对于overlapped类型的窗口，它返回0，对于WS_CHILD类型，它返回其父窗口，对于WS_POPUP类型，它返回其所有者窗口，如果想得到创建它时所传递进去的那个hwndParent参数，应该用GetWindowWord(GWW_HWNDPARENT)函数。
+（3）GetWindowWord(hWnd, GWW_HWNDPARENT)返回一个窗口的父窗口，如果没有，则返回其所有者。
+（4）上面谈到，当一个owner窗口被最小化后，系统自动隐藏它所拥有的窗口。当owner窗口被恢复的时候，系统自动显示它所拥有的窗口。在这两种情况下，系统都会发送（send）WM_SHOWWINDOW消息给被拥有的窗口。某些时候，我们可能需要隐藏 owned窗口，但并不想最小化其所有者窗口，这时候，可以通过ShowOwnedPopups函数来实现，该函数设置或者删除当前窗口所拥有的窗口的WS_VISIBLE属性，然后发送WM_SHOWWINDOW消息更新窗口显示。

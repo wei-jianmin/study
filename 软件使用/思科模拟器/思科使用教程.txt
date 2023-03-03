@@ -1,0 +1,23 @@
+连线方式：
+    交换机----路由器,直通;
+    交换机----交换机,直通;(本来该是交叉线,如果是堆叠之类)
+    主机------交换机,直通;
+    路由器----路由器,交叉;
+    主机------路由器,交叉.
+    ● 如果连线是错误的，则两端有红点，如果是正确的，但还没连通，两端的点是橘黄色的，连通后是绿色的
+
+使用路由器：
+    路由器选择用最后的generic路由器
+    给路由器配置PT-ROUTER-NM-1CFE（1 channel fast ethenet）以支持连接网线
+    打开路由器电源开关后，需要给每个 FE 模块配置 ip
+    路由器连上终端（电脑或交换机）后，需要通过命令开启每个接口，线路才会连通（变为绿色）
+        Router(config)#interface fastEthernet 0/0
+        Router(config-if)#no shutdown
+        Router(config-if)#exit
+        Router(config)#interface fastEthernet 1/0
+        Router(config-if)#no shutdown
+        Router(config-if)#exit
+        Router(config)#interface fastEthernet 2/0
+        。。。。。。。
+        命令输入过程中，支持tab补全
+        

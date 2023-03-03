@@ -1,0 +1,20 @@
+POSITION pos;
+pos=AfxGetApp()->GetFirstDocTemplatePosition();
+CDocTemplate* pDocTemplate=AfxGetApp()->GetNextDocTemplate(pos);
+pos=pDocTemplate->GetFirstDocPosition();
+CDocument* pDoc=pDocTemplate->GetNextDoc(pos);
+pos=pDoc->GetFirstViewPosition();
+CView * pView;
+while(pos!=NULL)
+{
+	pView=(CView *)pDoc->GetNextView(pos);
+	//if(pos!=NULL) continue;	//获取最后一个视图
+	if(pView->IsKindOf(RUNTIME_CLASS(CTZOFDQZView)))
+	{
+		CTZOFDQZView*  pTZOFDQZView=(CTZOFDQZView*)pView;
+		if(pTZOFDQZView->gapp.image)
+			pDC->FillSolidRect(rcInvalid,RGB(255,255,255));
+		else
+			pDC->FillSolidRect(rcInvalid,RGB(128,128,128));
+	}
+}

@@ -1,0 +1,30 @@
+CspMoudleImpl类介绍：
+成员变量：
+std::string provider_type_;
+std::string csp_module_path_;
+bool module_loaded_flag_;
+utils::Lock lock_;				//保护module_loaded_flag_
+CspDynamicInfo ccdi_;			//结构体｛HANDLE；函数指针；ICspCtrler智能指针｝
+成员函数：
+● LoadCcdi
+｛
+   加载dll，获取create_csp_ctrler函数指针，调用create_csp_ctrler函数，返回类型为ICspCtrler*，
+   将dll句柄，函数指针，create_csp_ctrler返回值存到ccdi_结构体成员变量中
+   create_csp_ctrler函数：
+   ｛
+       创建CspCtrlerDefault类对象，将构造函数参数赋值给csp_module_成员变量
+	   该类继承实现ICspCtrler接口
+	      1个成员变量：AutoPtr<ICspModule>	csp_module_;
+	      2个方法：
+	      EnumProviderIdTable：加载dll，调用接口的方法，如FM_SIC_EnumDevice，结果通过输出参数返回
+	      CreateCryptProvider：创建CryptProviderImpl类对象
+		     CryptProviderImpl类通过Psm泛类，间接继承CryptProvider
+			 Psm泛类维护一个ICsp*指针
+			 CryptProvider继承了ICsp接口
+   ｝
+｝
+● SetParams：为provider_type_和csp_module_path_成员变量赋值
+● GetCspModulePath获取csp_module_path_
+● GetProviderType获取provider_type_
+● EnumProviderIdTable调用ccdi_.csp_ctrler->EnumProviderIdTable
+● CreateCryptProvider调用ccdi_.csp_ctrler->CreateCryptProvider

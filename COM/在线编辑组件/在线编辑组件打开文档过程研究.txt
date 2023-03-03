@@ -1,0 +1,18 @@
+STDMETHODIMP CDsoFramerControl::Open(VARIANT Document, VARIANT ReadOnly, VARIANT ProgId, VARIANT WebUsername, VARIANT WebPassword)
+{
+    调用close方法;
+    根据传来的文件名，获得其clsid；
+    判断clsid属于哪种文档类型，得到对应progid；
+    确定原地激活且非模态；
+    激活当前组件；
+    判断是wps型，m_IsWps中记录为真；
+    *设置框架钩子
+    m_pDocObjFrame = CDsoDocObject::CreateInstance((IDsoDocObjectSite*)&m_xDsoDocObjectSite);  //参文档新建过程
+    m_pDocObjFrame->CreateFromFile(pwszDocument, clsidAlt, &bopts);   //（1）
+}
+（1）：
+STDMETHODIMP CDsoDocObject::CreateFromFile(LPWSTR pwszFile, REFCLSID rclsid, LPBIND_OPTS pbndopts)
+{
+    根据传来的文件名获取其clsid；（或者改值已经通过第二个参数传进来了）
+    
+}

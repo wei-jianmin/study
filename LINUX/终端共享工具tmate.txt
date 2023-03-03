@@ -1,0 +1,36 @@
+tmate用法介绍
+https://linux.cn/article-9096-1.html
+apt install tmate
+使用tmate前，需要保证电脑中有ssh密钥
+ssh密钥生成方法：ssh-keygen -t rsa , 然后全部直接点回车确认就行。
+遇到的问题：
+   执行tmate报错：sessions should be nested with care, unset $TMUX to force
+       解决： unset TMUX
+直接输入tmate命令 ，运行tmate
+运行tmate后，通过exit命令退出
+tmate show-messages  显示会话id
+    [tmate] Connecting to ssh.tmate.io...
+    [tmate] Note: clear your terminal before sharing readonly access
+    [tmate] web session read only: https://tmate.io/t/ro-RsgdvMGZWjUSfLHaCCgT4dhtv
+    [tmate] ssh session read only: ssh ro-RsgdvMGZWjUSfLHaCCgT4dhtv@sfo2.tmate.io
+    [tmate] web session: https://tmate.io/t/EsNWd4mgKpZrJXZKxLJxYY2Bz
+    [tmate] ssh session: ssh EsNWd4mgKpZrJXZKxLJxYY2Bz@sfo2.tmate.io
+在其他终端连接     ssh session: ssh 远程机器的tmate会话id
+在浏览器连接       浏览器访问 tmate show-messages 列出的web session网址
+
+tmux       
+https://zhuanlan.zhihu.com/p/40512306
+应该说TMATE在功能上类似TMUX, 个人理解是在TMUX的基础上增加共享的功能
+Tmux ("Terminal Multiplexer"的简称), 是一款优秀的终端复用软件，类似 GNU screen，但比screen更出色
+使用它最直观的好处就是, 通过一个终端登录远程主机并运行tmux后，
+在其中可以开启多个控制台而无需再“浪费”多余的终端来连接这台远程主机
+还有一个好处就是当终端关闭后该shell里面运行的任务进程也会随之中断，通过使用tmux就能很容易的解决这个问题。
+使用场景： 
+1. 关闭终端,再次打开时原终端里面的任务进程依然不会中断 ;
+2. 处于异地的两人可以对同一会话进行操作，一方的操作另一方可以实时看到 ;
+3. 可以在单个屏幕的灵活布局下开出很多终端，然后就能协作地使用它们 ;
+
+tmux用法介绍
+https://blog.51cto.com/13683137989/1961188
+
+            

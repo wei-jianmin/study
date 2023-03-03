@@ -1,0 +1,5 @@
+﻿后台：
+SpringMVC + Struts2 + hibernate/mybatis/iBatis
+
+前台：
+bootstrap,ajax,jquery  

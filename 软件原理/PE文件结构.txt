@@ -1,0 +1,77 @@
+PE文件结构：
+
+DOS头：
+以4d5a(MZ)为标记，占64个字节（00-3F）,最后四个字节指明PE头的位置
+如果这个值为0，那么说明这个exe 文件是一个Dos 程序，windows 会启动Dos 子系统来运行它。
+
+DOS头和PE头之间的代码，当windows程序在dos系统上执行时会使用到
+
+PE头：
+以5045(PE)为标记
+PE头实际上是一个IMAGE_NT_HEADER结构，它的定义为：
+struct IMAGE_NT_HEADERS
+{
+  DWORD Signature,                          //在一个有效的PE 文件里，Signature 字段被设置为 00 00 45 50h,ASCII 码字符是“PE00
+  IMAGE_FILE_HEADER FileHeader,             //PE 映像头
+  IMAGE_OPTIONAL_HEADER32  OptionalHeader   //PE 扩展头部
+}
+
+typedef struct _IMAGE_FILE_HEADER   // 20字节
+{
+  WORD Machine;                     // 运行平台，可执行文件的目标CPU 类型
+  WORD NumberOfSections;            // 文件的区块数目，区块表是紧跟在IMAGE_NT_HEADERS 后边的
+  DWORD TimeDateStamp;              // 文件创建日期和时间
+  DWORD PointerToSymbolTable;       // 指向符号表(主要用于调试)，现在基本没用了
+  DWORD NumberOfSymbols;            // 符号表中符号个数(同上)，COFF 符号是一个大小固定的结构
+  WORD SizeOfOptionalHeader;        // IMAGE_OPTIONAL_HEADER32 结构大小，(对于32 位PE 文件，这个值通常是00E0h；对于64 位PE32+文件，这个值是00F0h )。
+  WORD Characteristics;             // 文件属性，普通的EXE 文件这个字段的值一般是0100h，DLL 文件这个字段的值一般是210Eh
+} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
+
+typedef struct _IMAGE_OPTIONAL_HEADER
+{
+// Standard fields.
+WORD Magic;                         // 标志字, ROM 映像（0107h）,普通可执行文件（010Bh）
+BYTE MajorLinkerVersion;            // 链接程序的主版本号
+BYTE MinorLinkerVersion;            // 链接程序的次版本号
+DWORD SizeOfCode;                   // 所有含代码的节的总大小
+DWORD SizeOfInitializedData;        // 所有含已初始化数据的节的总大小
+DWORD SizeOfUninitializedData;      // 所有含未初始化数据的节的大小
+DWORD AddressOfEntryPoint;          // 程序执行入口RVA
+DWORD BaseOfCode;                   // 代码的区块的起始RVA
+DWORD BaseOfData;                   // 数据的区块的起始RVA
+// NT additional fields. 以下是属于NT 结构增加的领域。
+DWORD ImageBase;                    // 程序的首选装载地址
+DWORD SectionAlignment;             // 内存中的区块的对齐大小
+DWORD FileAlignment;                // 文件中的区块的对齐大小
+WORD MajorOperatingSystemVersion;   // 要求操作系统最低版本号的主版本号
+WORD MinorOperatingSystemVersion;   // 要求操作系统最低版本号的副版本号
+WORD MajorImageVersion;             // 可运行于操作系统的主版本号
+WORD MinorImageVersion;             // 可运行于操作系统的次版本号
+WORD MajorSubsystemVersion;         // 要求最低子系统版本的主版本号
+WORD MinorSubsystemVersion;         // 要求最低子系统版本的次版本号
+DWORD Win32VersionValue;            // 莫须有字段，不被病毒利用的话一般为0
+DWORD SizeOfImage;                  // 映像装入内存后的总尺寸
+DWORD SizeOfHeaders;                // 所有头+ 区块表的尺寸大小
+DWORD CheckSum;                     // 映像的校检和
+WORD Subsystem;                     // 可执行文件期望的子系统+5Eh WORD DllCharacteristics; // DllMain()函数何时被调用，默认为0
+DWORD SizeOfStackReserve;           // 初始化时的栈大小
+DWORD SizeOfStackCommit;            // 初始化时实际提交的栈大小
+DWORD SizeOfHeapReserve;            // 初始化时保留的堆大小
+DWORD SizeOfHeapCommit;             // 初始化时实际提交的堆大小
+DWORD LoaderFlags;                  // 与调试有关，默认为0
+DWORD NumberOfRvaAndSizes;          // 下边数据目录的项数，这个字段自Windows NT发布以来一直是16
+IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];      // 数据目录表
+} IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
+
+
+
+
+
+
+
+
+
+
+
+
+

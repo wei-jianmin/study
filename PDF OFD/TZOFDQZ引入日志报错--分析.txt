@@ -1,0 +1,108 @@
+● 目的：
+在TZOFDQZ项目中想添加日志功能，并决定将日志的结构体指针变量作为struct fz_context_s的子成员——struct fz_context_s是fitz.h中的结构体
+● 做法：
+1.
+头文件的包含，变量的声明
+在fitz.h中 #include "SimpleLog.h"
+在fitz.h文件的struct fz_context_s结构体的定义中，加上SimpleLog *log;
+——这一步是可以编译通过的
+2.
+为log变量申请堆，初始化，打开日志文件操作
+在base_context.c文件的fz_context *fz_new_context（）函数中加上：
+ctx->log=(SimpleLog*)malloc(sizeof(SimpleLog));
+InitSimpleLog(ctx->log);
+——base_context.c文件包含fitz_internal.h文件，而后者又包含了fitz.h文件
+——在编译时，提示“无法解析的外部命令_InitSimpleLog”
+● 研究
+在编译TZOFDQZ项目前，会先编译libmupdf项目，在编译libmupdf项目前，会先编译generated项目——“右键项目/项目依赖项”
+编译generated项目时报错，提示“无法解析的外部命令_InitSimpleLog”
+右键generated项目，在“项目属性/配置属性/NMake/常规/生成命令行”项可知，会运行generate.bat批处理文件
+该批处理文件会先分别编译该项目下的两个源文件“cmapdump.c”和“fontdump.c”,对应生成两个exe文件，然后用这两个exe文件配合一些资源文件，最终在generated目录下生成若干语言包文件
+generate.bat批处理文件中有如下两句：
+cl /nologo -Ifitz -Ipdf scripts/fontdump.c
+
+cl /nologo -Ifitz -Ipdf scripts/cmapdump.c
+cl为编译工具，其中-I指明了编译时包含的目录
+对这两条命令，在命令行中单独测试，发现编译fontdump时没问题，编译cmapdump时，提示“无法解析的外部命令_InitSimpleLog”
+● 测试
+在F盘建立test文件夹，其中有3个文件：
+a.c:
+#include "b.h"
+int main()
+{
+	test();
+	return 0;
+}
+b.h:
+void test();
+b.c:
+#include "b.h"
+void test()
+{
+	int i;
+	i=0;
+}
+在命令行下编译：
+cl a.c
+编译错误，提示：无法解析的外部符号 _test，该符号在函数 _main 中被引用
+错误分析：
+cl工具没有编译b.c文件，所以无法找到test函数的定义
+修改方法：
+cl a.c b.c
+附1：
+在Linux下，文件的执行步骤为：
+	源程序（.c/.h）-->
+	预处理（宏替换，预处理，头包含，去注释  gcc -E  test.c -o test.i）-->
+	编译（gcc -S test.i -o test.s）-->
+	生成目标文件/汇编（gcc -c test.o -o test.o）-->
+	链接-->生成exe程序
+编译器把文件编译为目标文件的时候，除了要在目标文件里写入源文件包含的数据和代码，还要至少提供3个表：未解决符号表，导出符号表和地址重定向表。
+未解决符号表提供了所有在该编译单元里引用但是定义并不在本编译单元里的符号及其出现的地址。 
+导出符号表提供了本编译单元具有定义，并且愿意提供给其他编译单元使用的符号及其地址。 
+地址重定向表提供了本编译单元所有对自身地址的引用的记录。
+这3个表是链接的依据。
+参：http://www.cnblogs.com/magicsoar/p/3760201.html
+附2：
+C语言和C++语言混编，因为C++支持函数重载所以C++编译器生成的库文件中的函数名会面目全非，
+例如C编译器会生成 _readRegmark 这个函数名，
+而C++编译器则生成了"void __cdecl readRegmark(char *)" (?readRegmark@@YAXPAD@Z)这么个函数名。
+解决办法就是借助 extern "C"{  }
+参：http://www.cnblogs.com/hiloves/p/4678848.html
+● 项目中错误的解决办法
+从前面的分析可知，cl在编译cmapdump.c这个文件时，间接的用到了SimpleLog.c中的函数，但因为SimpleLog.c没有被编译，所以就出现了错误
+打开cmapdump.c文件进行查看，可见在文件的开头有：
+
+#include "fitz-internal.h"
+
+#include "mupdf-internal.h"
+
+
+#include "../fitz/base_context.c"
+
+#include "../fitz/base_error.c"
+
+#include "../fitz/base_memory.c"
+
+#include "../fitz/base_string.c"
+
+#include "../fitz/stm_buffer.c"
+
+#include "../fitz/stm_open.c"
+
+#include "../fitz/stm_read.c"
+
+
+#include "../pdf/pdf_lex.c"
+
+#include "../pdf/pdf_cmap.c"
+
+#include "../pdf/pdf_cmap_parse.c"
+
+
+上面的这些包含的.c文件，在cl cmapdump.c时，就会一同被编译，这和上面的cl a.c b.c这句其实是一个道理
+因此只要在这里加上
+#include "../fitz/SimpleLog.c"
+问题即可解决
+● 总结
+之所以在编译项目时会出现上面的问题，主要原因是该项目是通过执行；批处理文件，使用cl命令导致的
+在一般的vs项目中，代码的编译机制跟这里是不一样的，所以在别的项目中使用SimpleLog时，只包含.h文件，照样能编译通过，而不会报这里的错误

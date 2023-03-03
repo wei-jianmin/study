@@ -1,0 +1,13 @@
+声明存储内存状态的变量
+_CrtMemState s1, s2, s3;
+
+记录内存状态1
+_CrtMemCheckpoint( &s1 );
+
+记录内存状态2
+_CrtMemCheckpoint( &s2 );
+
+//s1与s2对比，将差异记录在s3中
+if ( _CrtMemDifference( &s3, &s1, &s2) ) 
+//将s3中的信息显示在输出窗口中	
+　　_CrtMemDumpStatistics( &s3 );

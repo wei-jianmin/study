@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://www.jianshu.com/p/62c2bf192390 -->
+<html><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+
+  <!-- Start of Baidu Transcode -->
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="MobileOptimized" content="width">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="mobile-agent" content="format=html5;url=https://www.jianshu.com/p/62c2bf192390">
+  <!-- End of Baidu Transcode -->
+
+    <meta name="description" content="原文地址：http://blog.csdn.net/chenhanzhun/article/details/39641489 前言 在计算机中数据存储和传输以位(bit)为单位，每8个位bit组成1个字节(Byte)。32位计算机的字长为32位，即4个字节；对应的，64位计算机的字长为64位，即8个字节。计算机系统对基本类型数据在内存中存放的位置有限制，要求这些数据的起始地址的值是某个数k的...">
+
+  <meta name="360-site-verification" content="604a14b53c6b871206001285921e81d8">
+  <meta property="wb:webmaster" content="294ec9de89e7fadb">
+  <meta property="qc:admins" content="104102651453316562112116375">
+  <meta property="qc:admins" content="11635613706305617">
+  <meta property="qc:admins" content="1163561616621163056375">
+  <meta name="google-site-verification" content="cV4-qkUJZR6gmFeajx_UyPe47GW9vY6cnCrYtCHYNh4">
+  <meta name="google-site-verification" content="HF7lfF8YEGs1qtCE-kPml8Z469e2RHhGajy6JPVy5XI">
+  <meta http-equiv="mobile-agent" content="format=html5; url=https://www.jianshu.com/p/62c2bf192390">
+
+  <!-- Apple -->
+  <meta name="apple-mobile-web-app-title" content="简书">
+
+    <!--  Meta for Smart App Banner -->
+  <meta name="apple-itunes-app" content="app-id=888237539, app-argument=jianshu://notes/16222966">
+  <!-- End -->
+
+  <!--  Meta for Twitter Card -->
+  <meta content="summary" property="twitter:card">
+  <meta content="@jianshucom" property="twitter:site">
+  <meta content="（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别" property="twitter:title">
+  <meta content="原文地址：http://blog.csdn.net/chenhanzhun/article/details/39641489 前言 在计算机中数据存储和传输以位(bit)为单..." property="twitter:description">
+  <meta content="https://www.jianshu.com/p/62c2bf192390" property="twitter:url">
+  <!-- End -->
+
+  <!--  Meta for OpenGraph -->
+  <meta property="fb:app_id" content="865829053512461">
+  <meta property="og:site_name" content="简书">
+  <meta property="og:title" content="（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.jianshu.com/p/62c2bf192390">
+  <meta property="og:description" content="原文地址：http://blog.csdn.net/chenhanzhun/article/details/39641489 前言 在计算机中数据存储和传输以位(bit)为单位，每8个位bit组...">
+  <!-- End -->
+
+  <!--  Meta for Facebook Applinks -->
+  <meta property="al:ios:url" content="jianshu://notes/16222966">
+  <meta property="al:ios:app_store_id" content="888237539">
+  <meta property="al:ios:app_name" content="简书">
+
+  <meta property="al:android:url" content="jianshu://notes/16222966">
+  <meta property="al:android:package" content="com.jianshu.haruki">
+  <meta property="al:android:app_name" content="简书">
+  <!-- End -->
+
+
+    <title>（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别 - 简书</title>
+
+  <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="jsI3FJlF1QPilVwKcaISuEe3e7JWbnu+/UCU8tWutyLfNCRZ6ICA1u/uffVAnjR6MBAzYDryz/orUyNPuChxwQ==">
+
+  <link rel="stylesheet" media="all" href="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/web-4d59548b691b7b5c11d8.css">
+  
+  <link rel="stylesheet" media="all" href="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/entry-649d8b5ffe985fcfe898.css">
+
+  <link href="https://cdn2.jianshu.io/assets/favicons/favicon-e743bfb1821442341c3ab15bdbe804f7ad97676bd07a770ccc9483473aa76f06.ico" rel="shortcut icon" type="image/x-icon">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/57-a6f1f1ee62ace44f6dc2f6a08575abd3c3b163288881c78dd8d75247682a4b27.png" sizes="57x57">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/72-fb9834bcfce738fd7b9c5e31363e79443e09a81a8e931170b58bc815387c1562.png" sizes="72x72">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/76-49d88e539ff2489475d603994988d871219141ecaa0b1a7a9a1914f4fe3182d6.png" sizes="76x76">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/114-24252fe693524ed3a9d0905e49bff3cbd0228f25a320aa09053c2ebb4955de97.png" sizes="114x114">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/120-1bb7371f5e87f93ce780a5f1a05ff1b176828ee0d1d130e768575918a2e05834.png" sizes="120x120">
+      <link rel="apple-touch-icon-precomposed" href="https://cdn2.jianshu.io/assets/apple-touch-icons/152-bf209460fc1c17bfd3e2b84c8e758bc11ca3e570fd411c3bbd84149b97453b99.png" sizes="152x152">
+
+  <!-- Start of 访问统计 -->
+    <style type="text/css" abt="234"></style><script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/push.js.下载"></script><script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/hm.js.下载"></script><script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0c0e9d9b1e7d617b3e6842e85b9fb068";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <!-- End of 访问统计 -->
+<style type="text/css">@charset "UTF-8";.image-package .image-container{position:relative;z-index:2;background-color:#eee;-webkit-transition:background-color .1s linear;-o-transition:background-color .1s linear;transition:background-color .1s linear;margin:0 auto}body.reader-night-mode .image-package .image-container{background-color:#545454}.image-package .image-container-fill{z-index:1}.image-package .image-container .image-view{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}.image-package .image-container .image-view-error:after{content:"图片获取失败，请点击重试";position:absolute;top:50%;left:50%;width:100%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);color:#888;font-size:14px}.image-package .image-container .image-view img.image-loading{opacity:.3}.image-package .image-container .image-view img{-webkit-transition:all .15s linear;-o-transition:all .15s linear;transition:all .15s linear;z-index:2;opacity:1}</style><style type="text/css">fieldset[disabled] .multiselect {
+  pointer-events: none;
+}
+
+.multiselect__spinner {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  width: 48px;
+  height: 35px;
+  background: #fff;
+  display: block;
+}
+
+.multiselect__spinner:after,
+.multiselect__spinner:before {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  border-color: #41b883 transparent transparent;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 0 0 0 1px transparent;
+}
+
+.multiselect__spinner:before {
+  animation: a 2.4s cubic-bezier(.41,.26,.2,.62);
+  animation-iteration-count: infinite;
+}
+
+.multiselect__spinner:after {
+  animation: a 2.4s cubic-bezier(.51,.09,.21,.8);
+  animation-iteration-count: infinite;
+}
+
+.multiselect__loading-enter-active,
+.multiselect__loading-leave-active {
+  transition: opacity .4s ease-in-out;
+  opacity: 1;
+}
+
+.multiselect__loading-enter,
+.multiselect__loading-leave-active {
+  opacity: 0;
+}
+
+.multiselect,
+.multiselect__input,
+.multiselect__single {
+  font-family: inherit;
+  font-size: 14px;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
+.multiselect {
+  box-sizing: content-box;
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  text-align: left;
+  color: #35495e;
+}
+
+.multiselect * {
+  box-sizing: border-box;
+}
+
+.multiselect:focus {
+  outline: none;
+}
+
+.multiselect--disabled {
+  opacity: .6;
+}
+
+.multiselect--active {
+  z-index: 1;
+}
+
+.multiselect--active:not(.multiselect--above) .multiselect__current,
+.multiselect--active:not(.multiselect--above) .multiselect__input,
+.multiselect--active:not(.multiselect--above) .multiselect__tags {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.multiselect--active .multiselect__select {
+  transform: rotate(180deg);
+}
+
+.multiselect--above.multiselect--active .multiselect__current,
+.multiselect--above.multiselect--active .multiselect__input,
+.multiselect--above.multiselect--active .multiselect__tags {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.multiselect__input,
+.multiselect__single {
+  position: relative;
+  display: inline-block;
+  min-height: 20px;
+  line-height: 20px;
+  border: none;
+  border-radius: 5px;
+  background: #fff;
+  padding: 0 0 0 5px;
+  width: 100%;
+  transition: border .1s ease;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  vertical-align: top;
+}
+
+.multiselect__tag~.multiselect__input,
+.multiselect__tag~.multiselect__single {
+  width: auto;
+}
+
+.multiselect__input:hover,
+.multiselect__single:hover {
+  border-color: #cfcfcf;
+}
+
+.multiselect__input:focus,
+.multiselect__single:focus {
+  border-color: #a8a8a8;
+  outline: none;
+}
+
+.multiselect__single {
+  padding-left: 6px;
+  margin-bottom: 8px;
+}
+
+.multiselect__tags-wrap {
+  display: inline;
+}
+
+.multiselect__tags {
+  min-height: 40px;
+  display: block;
+  padding: 8px 40px 0 8px;
+  border-radius: 5px;
+  border: 1px solid #e8e8e8;
+  background: #fff;
+}
+
+.multiselect__tag {
+  position: relative;
+  display: inline-block;
+  padding: 4px 26px 4px 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  color: #fff;
+  line-height: 1;
+  background: #41b883;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+
+.multiselect__tag-icon {
+  cursor: pointer;
+  margin-left: 7px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  font-weight: 700;
+  font-style: normal;
+  width: 22px;
+  text-align: center;
+  line-height: 22px;
+  transition: all .2s ease;
+  border-radius: 5px;
+}
+
+.multiselect__tag-icon:after {
+  content: "\D7";
+  color: #266d4d;
+  font-size: 14px;
+}
+
+.multiselect__tag-icon:focus,
+.multiselect__tag-icon:hover {
+  background: #369a6e;
+}
+
+.multiselect__tag-icon:focus:after,
+.multiselect__tag-icon:hover:after {
+  color: #fff;
+}
+
+.multiselect__current {
+  min-height: 40px;
+  overflow: hidden;
+  padding: 8px 12px 0;
+  padding-right: 30px;
+  white-space: nowrap;
+  border-radius: 5px;
+  border: 1px solid #e8e8e8;
+}
+
+.multiselect__current,
+.multiselect__select {
+  line-height: 16px;
+  box-sizing: border-box;
+  display: block;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.multiselect__select {
+  position: absolute;
+  width: 40px;
+  height: 38px;
+  right: 1px;
+  top: 1px;
+  padding: 4px 8px;
+  text-align: center;
+  transition: transform .2s ease;
+}
+
+.multiselect__select:before {
+  position: relative;
+  right: 0;
+  top: 65%;
+  color: #999;
+  margin-top: 4px;
+  border-style: solid;
+  border-width: 5px 5px 0;
+  border-color: #999 transparent transparent;
+  content: "";
+}
+
+.multiselect__placeholder {
+  color: #adadad;
+  display: inline-block;
+  margin-bottom: 10px;
+  padding-top: 2px;
+}
+
+.multiselect--active .multiselect__placeholder {
+  display: none;
+}
+
+.multiselect__content-wrapper {
+  position: absolute;
+  display: block;
+  background: #fff;
+  width: 100%;
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid #e8e8e8;
+  border-top: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+.multiselect__content {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+  vertical-align: top;
+}
+
+.multiselect--above .multiselect__content-wrapper {
+  bottom: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: none;
+  border-top: 1px solid #e8e8e8;
+}
+
+.multiselect__content::webkit-scrollbar {
+  display: none;
+}
+
+.multiselect__element {
+  display: block;
+}
+
+.multiselect__option {
+  display: block;
+  padding: 12px;
+  min-height: 40px;
+  line-height: 16px;
+  text-decoration: none;
+  text-transform: none;
+  vertical-align: middle;
+  position: relative;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.multiselect__option:after {
+  top: 0;
+  right: 0;
+  position: absolute;
+  line-height: 40px;
+  padding-right: 12px;
+  padding-left: 20px;
+}
+
+.multiselect__option--highlight {
+  background: #41b883;
+  outline: none;
+  color: #fff;
+}
+
+.multiselect__option--highlight:after {
+  content: attr(data-select);
+  background: #41b883;
+  color: #fff;
+}
+
+.multiselect__option--selected {
+  background: #f3f3f3;
+  color: #35495e;
+  font-weight: 700;
+}
+
+.multiselect__option--selected:after {
+  content: attr(data-selected);
+  color: silver;
+}
+
+.multiselect__option--selected.multiselect__option--highlight {
+  background: #ff6a6a;
+  color: #fff;
+}
+
+.multiselect__option--selected.multiselect__option--highlight:after {
+  background: #ff6a6a;
+  content: attr(data-deselect);
+  color: #fff;
+}
+
+.multiselect--disabled {
+  background: #ededed;
+  pointer-events: none;
+}
+
+.multiselect--disabled .multiselect__current,
+.multiselect--disabled .multiselect__select,
+.multiselect__option--disabled {
+  background: #ededed;
+  color: #a6a6a6;
+}
+
+.multiselect__option--disabled {
+  cursor: text;
+  pointer-events: none;
+}
+
+.multiselect__option--disabled.multiselect__option--highlight {
+  background: #dedede!important;
+}
+
+.multiselect-enter-active,
+.multiselect-leave-active {
+  transition: all .15s ease;
+}
+
+.multiselect-enter,
+.multiselect-leave-active {
+  opacity: 0;
+}
+
+.multiselect__strong {
+  margin-bottom: 8px;
+  line-height: 20px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+[dir=rtl] .multiselect {
+  text-align: right;
+}
+
+[dir=rtl] .multiselect__select {
+  right: auto;
+  left: 1px;
+}
+
+[dir=rtl] .multiselect__tags {
+  padding: 8px 8px 0 40px;
+}
+
+[dir=rtl] .multiselect__content {
+  text-align: right;
+}
+
+[dir=rtl] .multiselect__option:after {
+  right: auto;
+  left: 0;
+}
+
+[dir=rtl] .multiselect__clear {
+  right: auto;
+  left: 12px;
+}
+
+[dir=rtl] .multiselect__spinner {
+  right: auto;
+  left: 1px;
+}
+
+@keyframes a {
+  0% {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(2turn);
+  }
+}</style><style type="text/css">
+#free-reward-panel .reward-users-modal main {
+  padding: 0;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.reward-note-modal .v-modal {
+  width: 620px;
+  text-align: center;
+}
+.reward-note-modal .v-modal form {
+    margin: 0 auto 25px auto;
+    padding: 0 40px;
+}
+.reward-note-modal .v-modal .reward-intro {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.reward-note-modal .v-modal .reward-intro .avatar {
+      cursor: default !important;
+      width: 36px;
+      height: 36px;
+      margin-right: 10px;
+      display: inline-block;
+}
+.reward-note-modal .v-modal .reward-intro .intro {
+      margin-right: 5px;
+      font-weight: bold;
+      vertical-align: middle;
+}
+.reward-note-modal .v-modal .reward-intro i {
+      color: #EA6F5A;
+      vertical-align: middle;
+}
+.reward-note-modal .v-modal .main-inputs {
+    margin: 25px 0;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group {
+      margin: 0 -5px;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group input {
+        display: none;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group input:checked + .option {
+        color: #EA6F5A;
+        border-color: #EA6F5A;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .custom-amount:checked + .option .custom-text {
+        opacity: 0;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .custom-amount:checked + .option .custom-amount-input {
+        opacity: 1;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option {
+        position: relative;
+        margin: 0 5px 15px;
+        width: 156px;
+        height: 56px;
+        line-height: 54px;
+        border: 1px solid #E6E6E6;
+        border-radius: 4px;
+        font-weight: normal;
+        color: #999999;
+        cursor: pointer;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option i {
+          font-size: 16px;
+          vertical-align: middle;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .amount {
+          font-size: 28px;
+          vertical-align: middle;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .piece {
+          font-size: 13px;
+          vertical-align: sub;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input {
+          position: absolute;
+          top: 0;
+          z-index: -1;
+          width: 100%;
+          opacity: 0;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input i {
+            position: absolute;
+            top: 0;
+            left: 10px;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input .piece {
+            position: absolute;
+            top: 4px;
+            right: 10px;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input input {
+            display: block;
+            margin: 0 auto;
+            width: 80px;
+            height: 54px;
+            line-height: 54px;
+            border: none;
+            font-size: 28px;
+            text-align: center;
+            background: transparent;
+            -moz-appearance: textfield;
+}
+.reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input input::-webkit-outer-spin-button, .reward-note-modal .v-modal .main-inputs .amount-group .option .custom-amount-input input::-webkit-inner-spin-button {
+              -webkit-appearance: none !important;
+}
+.reward-note-modal .v-modal .main-inputs .message {
+      padding: 15px 20px;
+      margin-bottom: 0;
+      font-size: 14px;
+      border: 1px solid #E6E6E6;
+      color: #333333;
+      border-radius: 4px;
+      background-color: rgba(180, 180, 180, 0.1);
+}
+.reward-note-modal .v-modal .main-inputs .message textarea {
+        width: 100%;
+        height: 44px;
+        padding: 0;
+        margin: 0;
+        resize: none;
+        background: none !important;
+        border: none !important;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        -webkit-box-shadow: none;
+                box-shadow: none;
+}
+.reward-note-modal .v-modal .main-inputs .message textarea:focus {
+          outline: none;
+}
+.reward-note-modal .v-modal .reward-info .amount {
+    font-size: 28px;
+    font-weight: bold;
+    color: #EA6F5A;
+}
+.reward-note-modal .v-modal .reward-info .pay-method {
+    font-size: 14px;
+}
+.reward-note-modal .v-modal .reward-info .pay-method a {
+      color: #3194D0;
+}
+.reward-note-modal .v-modal .choose-pay {
+    margin: 0 -5px;
+}
+.reward-note-modal .v-modal .choose-pay input {
+      display: none;
+}
+.reward-note-modal .v-modal .choose-pay input:checked + .option {
+      color: #EA6F5A;
+      border-color: #EA6F5A;
+}
+.reward-note-modal .v-modal .choose-pay .option {
+      margin: 20px 5px 10px;
+      width: 156px;
+      height: 56px;
+      line-height: 54px;
+      text-align: center;
+      border: 1px solid #E6E6E6;
+      border-radius: 4px;
+      cursor: pointer;
+}
+.reward-note-modal .v-modal .choose-pay .option img {
+        height: 30px;
+}
+.reward-note-modal .v-modal .choose-pay .option img.day.alipay, .reward-note-modal .v-modal .choose-pay .option img.night.alipay {
+        min-width: 85px;
+}
+.reward-note-modal .v-modal .choose-pay .option img.day.wechat, .reward-note-modal .v-modal .choose-pay .option img.night.wechat {
+        min-width: 112px;
+}
+.reward-note-modal .v-modal .choose-pay .option img.night {
+        display: none;
+}
+.reward-note-modal .v-modal .choose-pay .tooltip {
+      width: 230px;
+}
+.reward-note-modal .v-modal .modal-footer {
+    padding: 0 15px 20px;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+}
+.reward-note-modal .v-modal .modal-footer .btn {
+      padding: 8px 45px;
+      font-size: 24px;
+}
+.reward-note-modal .v-modal .btn-pay {
+    padding: 8px 25px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #F5A623;
+}
+.weixin-pay, .success-pay {
+  text-align: center;
+}
+.weixin-pay .v-modal, .success-pay .v-modal {
+    width: 350px;
+}
+.weixin-pay .ic-successed, .success-pay .ic-successed {
+    font-size: 60px;
+    color: #3db922;
+}
+.weixin-pay h2, .weixin-pay h3, .success-pay h2, .success-pay h3 {
+    margin-bottom: 20px;
+    color: #333333;
+}
+.weixin-pay h2, .success-pay h2 {
+    margin: 0 0 40px 0;
+    font-size: 24px;
+}
+.weixin-pay .bind-text, .success-pay .bind-text {
+    position: relative;
+    margin-bottom: 30px;
+    font-size: 14px;
+    color: #999999;
+}
+.weixin-pay .bind-text:before, .weixin-pay .bind-text:after, .success-pay .bind-text:before, .success-pay .bind-text:after {
+      content: "";
+      border-top: 1px solid #999;
+      display: block;
+      position: absolute;
+      width: 40px;
+      top: 8px;
+}
+.weixin-pay .bind-text:before, .success-pay .bind-text:before {
+      left: 30px;
+}
+.weixin-pay .bind-text:after, .success-pay .bind-text:after {
+      right: 30px;
+}
+.weixin-pay .share-bind, .success-pay .share-bind {
+    display: block;
+    margin-bottom: 30px;
+}
+.weixin-pay .share-bind i, .success-pay .share-bind i {
+      margin-right: 4px;
+      font-size: 22px;
+      vertical-align: middle;
+}
+.weixin-pay .share-bind.wechat i, .success-pay .share-bind.wechat i {
+      color: #00BB29;
+}
+.weixin-pay .share-bind.weibo i, .success-pay .share-bind.weibo i {
+      color: #E05244;
+}
+.weixin-pay .wx-qr-code, .success-pay .wx-qr-code {
+    display: inline-block;
+}
+.weixin-pay .wx-qr-code img, .success-pay .wx-qr-code img {
+      margin: 0 auto;
+      padding: 10px;
+      width: 200px;
+      background-color: #ffffff;
+}
+.weixin-pay .pay-amount, .success-pay .pay-amount {
+    margin: 20px 0;
+    color: #787878;
+}
+.weixin-pay .pay-amount span, .success-pay .pay-amount span {
+      color: #F5A623;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.v-modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: transparent;
+}
+.v-modal-wrap.modal-leave-active {
+    -webkit-transition: opacity 0.3s;
+    -o-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+}
+.v-modal-wrap.modal-enter-active .v-modal-mask, .v-modal-wrap.modal-leave-active .v-modal-mask {
+    opacity: 0;
+}
+.v-modal-wrap.modal-enter-active .v-modal, .v-modal-wrap.modal-leave-active .v-modal {
+    -webkit-transform: translate(-50%, -70%);
+        -ms-transform: translate(-50%, -70%);
+            transform: translate(-50%, -70%);
+    opacity: 0;
+}
+.v-modal-wrap .v-modal-mask {
+    background-color: rgba(255, 255, 255, 0.7);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    -webkit-transition: opacity 0.3s;
+    -o-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+    opacity: 1;
+}
+.v-modal-wrap .v-modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+    transition: opacity 0.3s, -webkit-transform 0.3s;
+    -o-transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s, transform 0.3s, -webkit-transform 0.3s;
+    opacity: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    overflow: hidden;
+}
+.v-modal-wrap .v-modal > header:before, .v-modal-wrap .v-modal > header:after, .v-modal-wrap .v-modal > main:before, .v-modal-wrap .v-modal > main:after, .v-modal-wrap .v-modal > footer:before, .v-modal-wrap .v-modal > footer:after {
+      content: '';
+      clear: both;
+      display: table;
+}
+.v-modal-wrap .v-modal > header {
+      padding: 20px;
+      border-bottom: 1px solid #F0F0F0;
+}
+.v-modal-wrap .v-modal > header h4 {
+        margin: 0;
+        color: #333;
+        text-align: left;
+}
+.v-modal-wrap .v-modal .close {
+      position: absolute;
+      right: 16px;
+      top: 20px;
+      font-size: 26px;
+      line-height: 20px;
+      color: rgba(0, 0, 0, 0.8);
+}
+.v-modal-wrap .v-modal .close:hover {
+        color: #000000;
+}
+.v-modal-wrap .v-modal > main {
+      padding: 20px 20px 20px 20px;
+      font-size: 15px;
+      color: #333;
+      -webkit-box-flex: 1;
+      -webkit-flex-grow: 1;
+          -ms-flex-positive: 1;
+              flex-grow: 1;
+      overflow-x: hidden;
+      overflow-y: auto;
+}
+.v-modal-wrap .v-modal > footer {
+      padding: 20px;
+      background-color: #fff;
+}
+.v-modal-wrap .v-modal > footer button {
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
+        border: 0;
+        float: right;
+}
+.v-modal-wrap .v-modal > footer button:focus {
+          outline: 0;
+}
+.v-modal-wrap .v-modal > footer .submit {
+        padding: 4px 12px;
+        border: 1px solid;
+        border-radius: 20px;
+}
+.v-modal-wrap .v-modal > footer .cancel {
+        margin-top: 5px;
+}
+.v-modal-wrap .v-modal > footer .cancel:hover {
+          color: #333333;
+}
+.reader-night-mode .v-modal-wrap .v-modal-mask {
+  background-color: rgba(63, 63, 63, 0.7);
+}
+.reader-night-mode .v-modal-wrap .v-modal {
+  background-color: #3f3f3f;
+}
+.reader-night-mode .v-modal-wrap .v-modal header {
+    border-color: #2F2F2F;
+}
+.reader-night-mode .v-modal-wrap .v-modal header h4 {
+      color: #C8C8C8;
+}
+.reader-night-mode .v-modal-wrap .v-modal .close {
+    color: #C8C8C8;
+}
+.reader-night-mode .v-modal-wrap .v-modal .close:hover {
+      color: #ffffff;
+}
+.reader-night-mode .v-modal-wrap .v-modal main {
+    color: #C8C8C8;
+}
+.reader-night-mode .v-modal-wrap .v-modal footer {
+    background-color: #3f3f3f;
+}
+.reader-night-mode .v-modal-wrap .v-modal footer .cancel:hover {
+      color: #C8C8C8;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.youdao-fixed-ad {
+  display: block;
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+.youdao-fixed-ad .img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.youdao-fixed-ad .ad-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: block;
+    font-size: 12px;
+    padding: 2px 5px 0 6px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    cursor: pointer;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.like[data-v-6ddd02c6] {
+  display: inline-block;
+}
+.like .like-group[data-v-6ddd02c6] {
+    position: relative;
+    padding: 13px 0 15px 0;
+    font-size: 0;
+    border: 1px solid #EA6F5A;
+    border-radius: 40px;
+}
+.like .like-group[data-v-6ddd02c6]:hover {
+      background-color: rgba(236, 97, 73, 0.05);
+}
+.like .like-group .btn-like[data-v-6ddd02c6] {
+      display: inline-block;
+      font-size: 19px;
+}
+.like .like-group .btn-like[data-v-6ddd02c6]:before {
+        content: '';
+        position: absolute;
+        left: 12px;
+        top: 2px;
+        width: 50px;
+        height: 50px;
+        background-image: url(//cdn2.jianshu.io/assets/web/like_animation_steps-62a00a7b52377d3069927cdb8e61fd34.png);
+        background-position: left;
+        background-repeat: no-repeat;
+        background-size: 1000px 50px;
+}
+.like .like-group .btn-like a[data-v-6ddd02c6] {
+        position: relative;
+        padding: 18px 30px 18px 55px;
+        color: #EA6F5A;
+}
+.like .like-group .modal-wrap[data-v-6ddd02c6] {
+      font-size: 18px;
+      border-left: 1px solid rgba(236, 97, 73, 0.4);
+      display: inline-block;
+      margin-left: -15px;
+}
+.like .like-group .modal-wrap a[data-v-6ddd02c6] {
+        color: #EA6F5A;
+        padding: 18px 26px 18px 18px;
+}
+.like .like-group.like-animation[data-v-6ddd02c6], .like .like-group.active[data-v-6ddd02c6] {
+      background-color: #EA6F5A;
+}
+.like .like-group.like-animation .btn-like a[data-v-6ddd02c6], .like .like-group.active .btn-like a[data-v-6ddd02c6] {
+        color: white;
+}
+.like .like-group.like-animation .modal-wrap[data-v-6ddd02c6], .like .like-group.active .modal-wrap[data-v-6ddd02c6] {
+        border-left: 1px solid white;
+}
+.like .like-group.like-animation .modal-wrap a[data-v-6ddd02c6], .like .like-group.active .modal-wrap a[data-v-6ddd02c6] {
+          color: white;
+}
+.like .like-group.like-animation .btn-like[data-v-6ddd02c6]:before {
+      -webkit-animation: likeBlast-data-v-6ddd02c6 0.6s 1 steps(19);
+              animation: likeBlast-data-v-6ddd02c6 0.6s 1 steps(19);
+      background-position: right;
+}
+@-webkit-keyframes likeBlast {
+0% {
+    background-position: left;
+}
+100% {
+    background-position: right;
+}
+}
+@keyframes likeBlast-data-v-6ddd02c6 {
+0% {
+    background-position: left;
+}
+100% {
+    background-position: right;
+}
+}
+.like .like-group.active .btn-like[data-v-6ddd02c6]:before {
+      background-position: right;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.main {
+  position: relative;
+  margin: 0 auto;
+  padding: 0 0 30px 0;
+  width: 620px;
+}
+.main .title {
+    padding-left: 8px;
+    border-left: 3px solid #EA6F5A;
+    line-height: 1;
+    font-size: 15px;
+}
+.main .collection-settings {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    font-size: 13px;
+    color: #A0A0A0;
+}
+.main .collection-settings span {
+      padding-left: 4px;
+}
+.main .include-collection {
+    width: 100%;
+    padding-top: 20px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+}
+.main .include-collection .item {
+      display: inline-block;
+      margin: 0 12px 12px 0;
+      min-height: 32px;
+      background-color: white;
+      border: 1px solid #DCDCDC;
+      border-radius: 4px;
+      vertical-align: top;
+      overflow: hidden;
+}
+.main .include-collection .item img {
+        width: 32px;
+        height: 32px;
+}
+.main .include-collection .item .name {
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 14px;
+}
+.main .include-collection .add-collection-wrap {
+      margin: 0 12px 12px 0;
+}
+.main .include-collection .add-collection {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #DCDCDC;
+      border-radius: 4px;
+}
+.main .include-collection .add-collection i {
+        margin-right: 4px;
+        color: #969696;
+}
+.main .recommend-note a {
+    position: relative;
+    margin: 20px 2px 0 0;
+    width: 200px;
+    height: 160px;
+    display: inline-block;
+}
+.main .recommend-note a:after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 160px;
+      border-radius: 0 0 4px 4px;
+      -webkit-box-shadow: inset 0px -80px 50px -22px rgba(0, 0, 0, 0.6);
+              box-shadow: inset 0px -80px 50px -22px rgba(0, 0, 0, 0.6);
+      top: 0;
+      left: 0;
+      z-index: 1;
+}
+.main .recommend-note .name {
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    right: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #ffffff;
+    z-index: 2;
+}
+.main .recommend-note .author {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 2;
+}
+.main .recommend-note .avatar {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+.main .recommend-note .avatar img {
+      border-radius: 50%;
+}
+.main .recommend-note .author-name {
+    font-size: 12px;
+    color: #ffffff;
+    display: inline-block;
+    vertical-align: -1px;
+}
+.main .show-more {
+    margin: 0 12px 12px 0;
+    font-size: 14px;
+    color: #A0A0A0;
+}
+</style><script>//remove 17173 video ad
+doAdblock();
+function doAdblock(){
+    (function() {
+        function A() {}
+        A.prototype = {
+            rules: {
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+//remove baidu search ad
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var aa = function(){
+            var all = document.body.querySelectorAll("#content_left div,#content_left table");
+            for(var i = 0; i < all.length; i++){
+                if(/display:\s?(table|block)\s!important/.test(all[i].getAttribute("style"))){all[i].style.display= "none";all[i].style.visibility='hidden';}
+            }
+            all = document.body.querySelectorAll('.result.c-container[id="1"]');
+            //if(all.length == 1) return;
+            for(var i = 0; i < all.length; i++){
+                if(all[i].innerHTML && all[i].innerHTML.indexOf('广告')>-1){
+                    all[i].style.display= "none";all[i].style.visibility='hidden';
+                }
+            }
+        }
+        aa();
+        document.getElementById('wrapper_wrapper').addEventListener('DOMSubtreeModified',aa)
+    };
+}
+//remove sohu video ad
+if (document.URL.indexOf("tv.sohu.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//remove 56.com video ad
+if (document.URL.indexOf("56.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//fore iqiyi enable html5 player function
+if (document.URL.indexOf("iqiyi.com") >= 0){
+    if (document.cookie.indexOf("player_forcedType=h5_VOD")==-1){
+        document.cookie='player_forcedType=h5_VOD'
+        if(localStorage.reloadTime && Date.now() - parseInt(localStorage.reloadTime)<60000){
+            console.log('no reload')
+        }else{
+            location.reload()
+            localStorage.reloadTime = Date.now();
+        }
+    }
+}
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style><script>//console.log('a')
+</script></head>
+
+  <!-- 只给10%的用户添加代码 -->
+  <!-- ###第四范式-智能推荐：代码直接复制 无需修改参数### -->
+  <!-- ###功能：上报内容并反馈用户行为### -->
+  <!--
+  -->
+  <body lang="zh-CN" class="reader-black-font">
+    <!-- 全局顶部导航栏 -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="width-limit">
+    <!-- 左上方 Logo -->
+    <a class="logo" href="https://www.jianshu.com/"><img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/nav-logo-4c7bbafe27adc892f3046e6978459bac.png" alt="Nav logo"></a>
+
+    <!-- 右上角 -->
+      <!-- 未登录显示登录/注册/写文章 -->
+      <a class="btn write-btn" target="_blank" href="https://www.jianshu.com/writer#/">
+        <i class="iconfont ic-write"></i>写文章
+</a>      <a class="btn sign-up" id="sign_up" href="https://www.jianshu.com/sign_up">注册</a>
+      <a class="btn log-in" id="sign_in" href="https://www.jianshu.com/sign_in">登录</a>
+
+    <!-- 如果用户登录，显示下拉菜单 -->
+
+    <div class="style-mode"><a class="style-mode-btn"><i class="iconfont ic-navigation-mode"></i></a> <div class="popover-modal" style="left: 0px; display: none;"><div class="meta"><i class="iconfont ic-navigation-night"></i><span>夜间模式</span></div> <div class="switch day-night-group"><a class="switch-btn">开</a> <a class="switch-btn active">关</a></div> <hr> <div class="switch font-family-group"><a class="switch-btn font-song">宋体</a> <a class="switch-btn font-hei active">黑体</a></div> <div class="switch"><a class="switch-btn active">简</a> <a class="switch-btn">繁</a></div></div></div>
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="nav navbar-nav">
+            <li class="tab ">
+              <a href="https://www.jianshu.com/">
+                <span class="menu-text">首页</span><i class="iconfont ic-navigation-discover menu-icon"></i>
+</a>            </li>
+            <li class="tab ">
+              <a id="web-nav-app-download-btn" class="app-download-btn" href="https://www.jianshu.com/apps?utm_medium=desktop&amp;utm_source=navbar-apps"><span class="menu-text">下载App</span><i class="iconfont ic-navigation-download menu-icon"></i></a>
+            </li>
+          <li class="search">
+            <form target="_blank" action="https://www.jianshu.com/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+              <input type="text" name="q" id="q" value="" autocomplete="off" placeholder="搜索" class="search-input">
+              <a class="search-btn" href="javascript:void(null)"><i class="iconfont ic-search"></i></a>
+</form>          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+    
+<div class="note">
+  <div id="note-fixed-ad-container">
+      <a target="_blank" href="https://www.jianshu.com/apps/redirect?utm_source=side-banner-click" id="web-note-ad-fixed"><span class="close">×</span></a>
+    <div id="fixed-ad-container">
+      <!---->
+      <div id="_so_pdsBy_0"></div>
+    </div>
+  </div>
+  <div class="post">
+    <div class="article">
+        <h1 class="title">（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别</h1>
+
+        <!-- 作者区域 -->
+        <div class="author">
+          <a class="avatar" href="https://www.jianshu.com/u/f15e05d2a0da">
+            <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/5fa742e3-fe7b-460b-817e-814e9c765ab9" alt="96">
+</a>          <div class="info">
+            <span class="name"><a href="https://www.jianshu.com/u/f15e05d2a0da">曲谐_</a></span>
+            <!-- 关注用户按钮 -->
+            <a class="btn btn-success follow"><i class="iconfont ic-follow"></i><span>关注</span></a>
+            <!-- 文章数据信息 -->
+            <div class="meta">
+              <!-- 如果文章更新时间大于发布时间，那么使用 tooltip 显示更新时间 -->
+                <span class="publish-time" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="最后编辑于 2017.12.10 03:40">2017.08.24 20:16*</span>
+              <span class="wordage">字数 2236</span>
+            <span class="views-count">阅读 222</span><span class="comments-count">评论 0</span><span class="likes-count">喜欢 32</span><span class="rewards-count ">赞赏 3</span></div>
+          </div>
+          <!-- 如果是当前作者，加入编辑按钮 -->
+        </div>
+
+
+        <!-- 文章内容 -->
+        <div data-note-content="" class="show-content">
+          <div class="show-content-free">
+            <p><strong>原文地址：</strong><a href="https://link.jianshu.com/?t=http://blog.csdn.net/chenhanzhun/article/details/39641489" target="_blank" rel="nofollow">http://blog.csdn.net/chenhanzhun/article/details/39641489</a></p>
+<h2>前言</h2>
+<blockquote>
+<p>在计算机中数据存储和传输以位(bit)为单位，每8个位bit组成1个字节(Byte)。32位计算机的字长为32位，即4个字节；对应的，64位计算机的字长为64位，即8个字节。计算机系统对基本类型数据在内存中存放的位置有限制，要求这些数据的起始地址的值是某个数k的倍数，这就是所谓的内存对齐，而这个k则被称为该数据类型的对齐模数(alignment modulus)。</p>
+</blockquote>
+<h2>结构的存储分配</h2>
+<p>编译器按照结构体成员列表的顺序为每个成员分配内存，当存储成员时需要满足正确地边界对齐要求时，成员之间可能出现用于填充地额外内存空间。32位系统每次分配字节数最多为4个字节,64位系统分配字节数最多为8个字节。<br>
+以下图表是在不同系统中基本类型数据内存大小和默认对齐模数:</p>
+<br>
+<div class="image-package">
+<div class="image-container" style="max-width: 675px; max-height: 267px; background-color: transparent;">
+<div class="image-container-fill" style="padding-bottom: 39.56%;"></div>
+<div class="image-view" data-width="675" data-height="267"><img data-original-src="//upload-images.jianshu.io/upload_images/6274961-e9528c5587c54ce4.png" data-original-width="675" data-original-height="267" data-original-format="image/png" data-original-filesize="11738" class="" style="cursor: zoom-in;" src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/6274961-e9528c5587c54ce4.png"></div>
+</div>
+<div class="image-caption"></div>
+</div><br>
+<p>注：此外指针所占内存的长度由系统决定，在32位系统下为32位（即4个字节），64位系统下则为64位（即8个字节）.</p>
+
+<h2>没有#pragma pack宏的对齐</h2>
+<p><strong>对齐规则</strong> :</p>
+<ol>
+<li>结构体的起始存储位置必须是能够被该结构体中最大的数据类型所整除。</li>
+<li>每个数据成员存储的起始位置是自身模数的整数倍(比如int在32位机为4字节，则int型成员要从4的整数倍地址开始存储)。</li>
+<li>结构体总大小（也就是sizeof的结果），必须是该结构体成员中最大的对齐模数的整数倍。若不满足，会根据需要自动填充空缺的字节。</li>
+<li>结构体包含另一个结构体成员，则被包含的结构体成员要从其原始结构体内部最大对齐模数的整数倍地址开始存储。(比如struct a里存有struct b，b里有char,int,double等元素,那b应该从8的整数倍开始存储。)</li>
+<li>结构体包含数组成员，比如char a[3],它的对齐方式和分别写3个char是一样的，也就是说它还是按一个字节对齐。如果写：typedef char Array[3],Array这种类型的对齐方式还是按一个字节对齐，而不是按它的长度3对齐。</li>
+<li>结构体包含共用体成员，则该共用体成员要从其原始共用体内部最大对齐模数的整数倍地址开始存储。</li>
+</ol>
+<p>现在给出一个结构体，我们针对win-32和Linux-32进行分析,例1：</p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyStruct</span> 
+{</span> 
+  <span class="hljs-keyword">char</span> a; 
+  <span class="hljs-keyword">int</span> b; 
+  <span class="hljs-keyword">long</span> <span class="hljs-keyword">double</span> c; 
+}; 
+</code></pre>
+<p><strong>解答</strong> ：<br><br>
+<strong>win-32位系统下</strong> ：<br><br>
+由上图可知该结构体的最大对齐模数为sizeof(long double)=8；假设MyStruct从地址空间0x0000开始存放。char为1个字节，所以a存放于0x0000中；int为4个字节，根据规则，b存储的起始地址必须为其对齐模数4的整数倍，所以a后面自动填充空缺字节空间0x0001-0x0003，因此b存放于0x0004-0x0007中。long double是8个字节，由于32位系统每次最多分配4个字节，则首先分配0x0008-0x000B，由于不够存储空间，则继续分配0x000C-0x000F,所以c存储在0x0008-0x000F中，由于此时总存储空间为4+4+8=16；则16满足最大对齐模数sizeof(long double)=8的整数倍；因此，sizeof(MyStruct)=16个字节。<br><br>
+<strong>Linux-32位系统下：</strong> <br></p>
+<p>由上图可知该结构体的最大对齐模数为4；假设MyStruct从地址空间0x0000开始存放。char为1个字节，所以a存放于0x0000中；int为4个字节，根据规则，b存储的起始地址必须为其对齐模数4的整数倍，所以a后面自动填充空缺字节空间0x0001-0x0003，因此b存放于0x0004-0x0007中。long double是12个字节，由于32位系统每次最多分配4个字节，则首先分配0x0008-0x000B，由于不够存储空间，则继续分配0x000C-0x000F,仍然不满足存储c，则继续分配0x0010-0x0013，所以c存储在0x0008-0x0013中，由于此时总存储空间为4+4+12=20；则20满足最大对齐模数4的整数倍；因此，sizeof(MyStruct)=20个字节。<br></p>
+<blockquote>
+<p>注：以下的所有例子都是在win-32下实现</p>
+</blockquote>
+<p>例2：</p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">B</span>{</span>   
+  <span class="hljs-keyword">char</span> a;   
+  <span class="hljs-keyword">int</span> b;   
+  <span class="hljs-keyword">char</span> c;   
+}; 
+</code></pre>
+<p>由上图可知该结构体的最大对齐模数为sizeof(int)=4；假设B从地址空间0x0000开始存放。char为1个字节，所以a存放于0x0000中；int为4个字节，根据规则，b存储的起始地址必须为其对齐模数4的整数倍，所以a后面自动填充空缺字节空间0x0001-0x0003，因此b存放于0x0004-0x0007中。c也是char类型，所以c存放在0x0008中；此时结构体B总的大小为4+4+1=9个字节；则9不能满足最大对齐模数4的整数倍；因此在c的后面自动填充空间0x0009-0x000B，使其满足最大对齐模数的倍数，最终结构体B的存储空间为0x0000-0x000B；则sizeof(B)=12个字节。<br><br>
+<strong>例3：空结构体</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">C</span>{</span>   
+}; 
+</code></pre>
+<p>sizeof(C) = 0或sizeof(C);C为空结构体，在C语言中占0字节，在C++中占1字节。</p>
+<p><strong>例4：结构体有静态成员</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">D</span>{</span>   
+   <span class="hljs-keyword">char</span> a;   
+   <span class="hljs-keyword">int</span> b;   
+   <span class="hljs-keyword">static</span> <span class="hljs-keyword">double</span> c; <span class="hljs-comment">//静态成员   </span>
+}; 
+</code></pre>
+<p>静态成员变量存放在全局数据区内，在编译的时候已经分配好内存空间，所以对结构体的总内存大小不做任何贡献；因此，sizeof(D)=4+4=8个字节</p>
+<p><strong>例5：结构体中包含结构体</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">E</span>{</span>   
+  <span class="hljs-keyword">int</span> a;   
+  <span class="hljs-keyword">double</span> b;   
+  <span class="hljs-keyword">float</span> c;   
+};   
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">F</span>{</span>   
+  <span class="hljs-keyword">char</span> e[<span class="hljs-number">2</span>];   
+  <span class="hljs-keyword">int</span> f;   
+  <span class="hljs-keyword">short</span> h;   
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">E</span> <span class="hljs-title">i</span>;</span>   
+}; 
+</code></pre>
+<p>在结构体E中最大对齐模数是sizeof(double)=8；且sizeof(E)=8+8+8=24个字节；在结构体F中，除了结构体成员E之外，其他的最大对齐模数是sizeof(int)=4；又因为结构体E中最大对齐模数是sizeof(double)=8；所以结构体F的最大对齐模数取E的最大对齐模数8；因此，sizeof(F)=4+4+8+24=40个字节。</p>
+<p><strong>例6：结构体包含共用体</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-keyword">union</span> union1   
+{   
+  <span class="hljs-keyword">long</span> a;   
+  <span class="hljs-keyword">double</span> b;   
+  <span class="hljs-keyword">char</span> name[<span class="hljs-number">9</span>];   
+  <span class="hljs-keyword">int</span> c[<span class="hljs-number">2</span>];   
+};   
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">E</span>{</span>   
+  <span class="hljs-keyword">int</span> a;   
+  <span class="hljs-keyword">double</span> b;   
+  <span class="hljs-keyword">float</span> c;   
+  union1 MyUnion;   
+}; 
+</code></pre>
+<p>共用体中的最大对齐模式是sizeof(double)=8；则sizeof(union1)=16；结构体E的最大对齐模数也是8；则sizeof(E)=8+8+8+16=40个字节。</p>
+<p><strong>例7：结构体包含指针成员</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-keyword">typedef</span>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">A</span>{</span>   
+    <span class="hljs-keyword">char</span> a;   
+    <span class="hljs-keyword">int</span> b;   
+    <span class="hljs-keyword">float</span> c;   
+    <span class="hljs-keyword">double</span> d;   
+    <span class="hljs-keyword">int</span> *p;   
+    <span class="hljs-keyword">char</span> *pc;   
+    <span class="hljs-keyword">short</span> e;   
+}A; 
+</code></pre>
+<p>结构体包含的指针成员的大小根据系统类型决定，由于这里是在win-32位系统下分析，则指针大小为4个字节；因此，结构体A的最大对齐模数为sizeof(double)=8；则sizeof(A)=4+4+8+8+4+4+8=40个字节。<br>
+<strong>存在#pragma pack宏的对齐</strong></p>
+<pre class="hljs cpp"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (n)<span class="hljs-comment">//编译器将按照n个字节对齐   </span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack () <span class="hljs-comment">//取消自定义字节对齐方式 </span></span>
+</code></pre>
+<p><strong>对齐规则</strong><br>
+结构，联合，或者类的数据成员，第一个放在偏移为0的地方，以后每个数据成员的对齐，按照#pragma pack指定的数值和自身对齐模数中较小的那个。</p>
+<p><strong>例8：按指定的对齐模数</strong></p>
+<pre class="hljs cpp"><code class="cpp"> <span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (2) <span class="hljs-comment">/*指定按2字节对齐*/</span>   </span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">G</span>{</span>   
+    <span class="hljs-keyword">char</span> b;   
+    <span class="hljs-keyword">int</span> a;   
+    <span class="hljs-keyword">double</span> d;   
+    <span class="hljs-keyword">short</span> c;   
+};   
+ <span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack () <span class="hljs-comment">/*取消指定对齐，恢复缺省对齐*/</span> </span>
+</code></pre>
+<p>在结构体G中成员变量的最大对齐模数是sizeof(double)=8；又因为指定对齐模数是2；所以取其较小者2为结构体G的最大对齐模数；则sizeof(G)=2+4+8+2=16；由于16是2的整数倍，则不需要填充。</p>
+<h2>总结</h2>
+<p>在分析结构体字节对齐时，首先确定有没有利用#pragma pack()宏定义指定对齐模数；根据情况对应上面进行两种情况分析，针对不同的系统会得到不同的结果。</p>
+<h2>补充：</h2>
+<p>在Visual C++下可以用__declspec(align(#))声明数据按#字节对齐<br><br>
+GUN C下可以使用以下命令:<br><br>
+<strong>attribute</strong>((aligned (n)))，让所作用的结构成员对齐在n字节自然边界上。如果结构中有成员的长度大于n，则按照最大成员的长度来对齐<br><br>
+<strong>attribute</strong>((<strong>packed</strong>))，取消结构在编译过程中的优化对齐，按照实际占用字节数进行对齐。<br><br>
+C++11新加关键字alignas(n)<br></p>
+
+          </div>
+        </div>
+    </div>
+
+    <!-- 如果是付费文章，未购买，则显示购买按钮 -->
+
+    <!-- 连载目录项 -->
+
+    <!-- 如果是付费文章 -->
+      <!-- 如果是付费连载，已购买，且作者允许赞赏，则显示付费信息和赞赏 -->
+        <div id="free-reward-panel" class="support-author"><p>小礼物走一走，来简书关注我</p> <div class="btn btn-pay">赞赏支持</div> <div class="supporter"><ul class="support-list"><li><a target="_blank" href="https://www.jianshu.com/u/518647ef4a11" class="avatar"><img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/b054e9b3-e301-46dd-b2aa-0e990679113b"></a></li><li><a target="_blank" href="https://www.jianshu.com/u/89cb31710d70" class="avatar"><img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/d4b77f6f-2bca-4e18-b5e5-6f22ea456b92"></a></li><li><a target="_blank" href="https://www.jianshu.com/u/208a48d28362" class="avatar"><img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/d76c934e-a58c-4c54-a51a-c882c8382685"></a></li></ul> <!----></div> <!----> <!----></div>
+
+      <div class="show-foot">
+        <a class="notebook" href="https://www.jianshu.com/nb/14212459">
+          <i class="iconfont ic-search-notebook"></i>
+          <span>操作系统</span>
+</a>        <div class="copyright" data-toggle="tooltip" data-html="true" data-original-title="转载请联系作者获得授权，并标注“简书作者”。">
+          © 著作权归作者所有
+        </div>
+        <div class="modal-wrap" data-report-note="">
+          <a id="report-modal">举报文章</a>
+        </div>
+      </div>
+
+      <!-- 文章底部作者信息 -->
+        <div class="follow-detail">
+          <div class="info">
+            <a class="avatar" href="https://www.jianshu.com/u/f15e05d2a0da">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/5fa742e3-fe7b-460b-817e-814e9c765ab9" alt="96">
+</a>            <a class="btn btn-success follow"><i class="iconfont ic-follow"></i><span>关注</span></a>
+            <a class="title" href="https://www.jianshu.com/u/f15e05d2a0da">曲谐_</a>
+          <p>写了 57901 字，被 87 人关注，获得了 284 个喜欢</p></div>
+        </div>
+
+    <div class="meta-bottom">
+      <div data-v-6ddd02c6="" class="like"><div data-v-6ddd02c6="" class="btn like-group"><div data-v-6ddd02c6="" class="btn-like"><a data-v-6ddd02c6="">喜欢</a></div> <div data-v-6ddd02c6="" class="modal-wrap"><a data-v-6ddd02c6="">32</a></div></div> <!----></div>
+      <div class="share-group">
+        <a class="share-circle" data-action="weixin-share" data-toggle="tooltip" data-original-title="分享到微信">
+          <i class="iconfont ic-wechat"></i>
+        </a>
+        <a class="share-circle" data-action="weibo-share" data-toggle="tooltip" href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f=&#39;http://v.t.sina.com.cn/share/share.php?appkey=1881139527&#39;,u=z||d.location,p=[&#39;&amp;url=&#39;,e(u),&#39;&amp;title=&#39;,e(t||d.title),&#39;&amp;source=&#39;,e(r),&#39;&amp;sourceUrl=&#39;,e(l),&#39;&amp;content=&#39;,c||&#39;gb2312&#39;,&#39;&amp;pic=&#39;,e(p||&#39;&#39;)].join(&#39;&#39;);function%20a(){if(!window.open([f,p].join(&#39;&#39;),&#39;mb&#39;,[&#39;toolbar=0,status=0,resizable=1,width=440,height=430,left=&#39;,(s.width-440)/2,&#39;,top=&#39;,(s.height-430)/2].join(&#39;&#39;)))u.href=[f,p].join(&#39;&#39;);};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,&#39;&#39;,&#39;&#39;,&#39;&#39;, &#39;推荐 @曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》（ 分享自 @简书 ）&#39;,&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weibo&#39;,&#39;页面编码gb2312|utf-8默认gb2312&#39;));" data-original-title="分享到微博">
+          <i class="iconfont ic-weibo"></i>
+        </a>
+        <a class="share-circle" data-toggle="tooltip" id="longshare" target="_blank" data-original-title="" title="">
+            <div class="qrcode" id="qrcode">
+             <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/download-index-side-qrcode-cb13fc9106a478795f8d10f9f632fccf.png" alt="Download index side qrcode">
+             <p>下载app生成长微博图片</p>
+             </div>
+          <i class="iconfont ic-picture"></i>
+        </a>
+        <a class="share-circle more-share" tabindex="0" data-toggle="popover" data-placement="top" data-html="true" data-trigger="focus" href="javascript:void(0);" data-content="
+          &lt;ul class=&quot;share-list&quot;&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qzone&#39;)+&#39;&amp;title=&#39;+e(&#39;推荐 曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》&#39;),x=function(){if(!window.open(r,&#39;qzone&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-zone&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到QQ空间&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://twitter.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=twitter&#39;)+&#39;&amp;text=&#39;+e(&#39;推荐 曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》（ 分享自 @jianshucom ）&#39;)+&#39;&amp;related=&#39;+e(&#39;jianshucom&#39;),x=function(){if(!window.open(r,&#39;twitter&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-twitter&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Twitter&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://www.facebook.com/dialog/share?app_id=483126645039390&amp;display=popup&amp;href=https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=facebook&#39;,x=function(){if(!window.open(r,&#39;facebook&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-facebook&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Facebook&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://plus.google.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=google_plus&#39;),x=function(){if(!window.open(r,&#39;google_plus&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-google&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Google+&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,s1=window.getSelection,s2=d.getSelection,s3=d.selection,s=s1?s1():s2?s2():s3?s3.createRange().text:&#39;&#39;,r=&#39;http://www.douban.com/recommend/?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=douban&#39;)+&#39;&amp;title=&#39;+e(&#39;（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别&#39;)+&#39;&amp;sel=&#39;+e(s)+&#39;&amp;v=1&#39;,x=function(){if(!window.open(r,&#39;douban&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r+&#39;&amp;r=1&#39;};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})()&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-douban&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到豆瓣&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        " data-original-title="" title="">更多分享</a>
+      </div>
+    </div>
+      <a id="web-note-ad-1" target="_blank" href="https://www.jianshu.com/apps/redirect?utm_source=note-bottom-click"><img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/web-note-ad-1-c2e1746859dbf03abe49248893c9bea4.png" alt="Web note ad 1"></a>
+    <!--
+    <div id="note-comment-above-ad-container">
+      <span id="youdao-comment-ad" class="ad-badge">广告</span>
+    </div>
+    -->
+    <div id="vue_comment"></div>
+  </div>
+
+  <div class="side-tool"><ul><li data-placement="left" data-toggle="tooltip" data-container="body" data-original-title="回到顶部" style=""><a class="function-button"><i class="iconfont ic-backtop"></i></a></li> <!----> <!----> <!----> <!----> <li data-placement="left" data-toggle="tooltip" data-container="body" data-original-title="分享文章" id="share"><a tabindex="0" role="button" data-toggle="popover" data-placement="left" data-html="true" data-trigger="focus" href="javascript:void(0);" data-content="&lt;ul class=&#39;share-list&#39; style=&quot;width:220px&quot;&gt;
+                  &lt;li&gt;&lt;a class=&quot;weixin-share&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-weixin&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到微信&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f=&#39;http://v.t.sina.com.cn/share/share.php?appkey=1881139527&#39;,u=z||d.location,p=[&#39;&amp;url=&#39;,e(u),&#39;&amp;title=&#39;,e(t||d.title),&#39;&amp;source=&#39;,e(r),&#39;&amp;sourceUrl=&#39;,e(l),&#39;&amp;content=&#39;,c||&#39;gb2312&#39;,&#39;&amp;pic=&#39;,e(p||&#39;&#39;)].join(&#39;&#39;);function%20a(){if(!window.open([f,p].join(&#39;&#39;),&#39;mb&#39;,[&#39;toolbar=0,status=0,resizable=1,width=440,height=430,left=&#39;,(s.width-440)/2,&#39;,top=&#39;,(s.height-430)/2].join(&#39;&#39;)))u.href=[f,p].join(&#39;&#39;);};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,&#39;&#39;,&#39;&#39;,&#39;&#39;, &#39;推荐 @曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》（ 分享自 @简书 ）&#39;,&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weibo&#39;,&#39;页面编码gb2312|utf-8默认gb2312&#39;));&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-weibo&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到微博&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  
+                  &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qzone&#39;)+&#39;&amp;title=&#39;+e(&#39;推荐 曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》&#39;),x=function(){if(!window.open(r,&#39;qzone&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-zone&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到QQ空间&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://twitter.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=twitter&#39;)+&#39;&amp;text=&#39;+e(&#39;推荐 曲谐_ 的文章《（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别》（ 分享自 @jianshucom ）&#39;)+&#39;&amp;related=&#39;+e(&#39;jianshucom&#39;),x=function(){if(!window.open(r,&#39;twitter&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-twitter&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Twitter&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://www.facebook.com/dialog/share?app_id=483126645039390&amp;display=popup&amp;href=https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=facebook&#39;,x=function(){if(!window.open(r,&#39;facebook&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-facebook&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Facebook&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://plus.google.com/share?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=google_plus&#39;),x=function(){if(!window.open(r,&#39;google_plus&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-google&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Google+&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,s1=window.getSelection,s2=d.getSelection,s3=d.selection,s=s1?s1():s2?s2():s3?s3.createRange().text:&#39;&#39;,r=&#39;http://www.douban.com/recommend/?url=&#39;+e(&#39;https://www.jianshu.com/p/62c2bf192390?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=douban&#39;)+&#39;&amp;title=&#39;+e(&#39;（转）操作系统学习（五）——64位系统与32位系统在数据结构占用上的区别&#39;)+&#39;&amp;sel=&#39;+e(s)+&#39;&amp;v=1&#39;,x=function(){if(!window.open(r,&#39;douban&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r+&#39;&amp;r=1&#39;};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})()&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-douban&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到豆瓣&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;" data-original-title="" title="" class="function-button"><i class="iconfont ic-share"></i></a> <!----></li> <!----></ul></div>
+</div>
+<div class="note-bottom">
+  <!---->
+  <div data-vcomp="recommended-notes" data-note-id="16222966"></div>
+  <!-- 相关文章 -->
+  <div class="seo-recommended-notes">
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/d63efcd8390f?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">C++结构体字节对齐</a>
+          <p class="description">@[c++|struct] 今天在编程中碰到一个坑，搞的调试了半天，最后发现程序中在写数据和读取数据时结构体定义不一致导致读取出来的数据不对，最终问题是由于数据结构的自动字节对齐导致了两端数据差异。下面附上一篇结构体对齐的详解文章，原文链接为：C++结构体字节对齐 前言##...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/b2fedff5f797?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/87dc39daecc1.jpg" alt="48">
+            </div>
+            <span class="name">drybeans</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="https://www.jianshu.com/p/8b52c203c882?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/1750575-07bc27e87c02b726.jpg" alt="240">
+</a>          <a class="title" target="_blank" href="https://www.jianshu.com/p/8b52c203c882?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">C 结构体对齐</a>
+          <p class="description">转载 结构体对齐详解 结构体数据成员对齐的意义 许多实际的计算机系统对基本类型数据在内存中存放的位置有限制，它们会要求这些数据的起始地址的值是某个数k的倍数，这就是所谓的内存对齐，而这个k则被称为该数据类型的对齐模数(alignment modulus)。这种强制的要求一来...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/661c5ba6ec20?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/1761e52e2555.jpg" alt="48">
+            </div>
+            <span class="name">erU</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/18c2deb05c3d?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">C/C++ 刁钻问题各个击破之细说 sizeof </a>
+          <p class="description">首先感觉本文原作者的分享 w57w57w57的专栏-CSDN博客网址： http://blog.csdn.net/w57w57w57/article/details/6626840 一、正文开始 Sizeof 是 C/C++ 中的关键字，它是一个运算符，其作用是取得一个对象...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/2a303e9d060d?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/cc76e0793255.png" alt="48">
+            </div>
+            <span class="name">HelloGeekBand</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/15c99305ed2d?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">C语言结构体内存布局问题</a>
+          <p class="description">引言 C语言结构体内存布局是一个老生常谈的问题，网上也看了一些资料，有些说的比较模糊，有些是错误的。本人借鉴了前人的文章，经过实践，总结了一些规则，如有错误，希望指正，不胜感激。 实际环境 系统环境 macOS Sierra(10.12.4) IDE Xcode(8.3) ...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/fb95af4e80f7?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/c6d5347c-2230-4c38-b6e6-4ca0ec5a1c9f.jpg" alt="48">
+            </div>
+            <span class="name">boborz</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/cc5bb30a8b92?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">iOS 代码规范总结</a>
+          <p class="description">前言：代码规范最终的目的是降低代码维护的成本。 代码规范的好处（网上一搜一大把）：http://kdboy.iteye.com/blog/407572 一. 结构规范 1.文件夹的建立：注意创建的都是实体文件夹 参考链接http://blog.csdn.net/lvxian...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/bf28d1214ad4?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/95c00bf1af18.jpg" alt="48">
+            </div>
+            <span class="name">道道明明白白</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="https://www.jianshu.com/p/92458f53bc6b?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/6024906-a56ead07037661cd.jpg" alt="240">
+</a>          <a class="title" target="_blank" href="https://www.jianshu.com/p/92458f53bc6b?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">公主童话</a>
+          <p class="description">小时候 你说你是公主 你有魔法，你爱看童话 你说妈妈太辛苦 总是很晚才到家 长大后 你就成了她 偶尔幻想，偶尔逛逛菜市场 童话里的公主 是不是早已长大 银行存款的余额 还够不够花</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/43cc542bb886?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/e02edce7-599b-45ac-8937-89a4ab33beb5" alt="48">
+            </div>
+            <span class="name">bz活在当下</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/c2a842d51322?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">属于孩纸的梦与童话</a>
+          <p class="description">握手中笔，心境疏渺淡泊，想要清澈描绘岁月走过后的往昔景色。回忆深情入画中，一缕心念执着。念之一字，一今一心。念即是今时今日心灵最温柔暖软处的情思。对过去的深情与思念，怎个纠连绵绵不绝。 朦胧雾散，似梦画来。 是小的可以骑在父亲脖子上的年纪，那样可以在制高点上轻松地看到露天放...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/4e822481eb28?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/cde27f80b763.jpeg" alt="48">
+            </div>
+            <span class="name">吴泊汐</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/e84fdfccc7f2?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">面试时，如何向公司提问？</a>
+          <p class="description">很多人将面试看作一种单向选择，事实上，面试是一种双向选择：不仅是公司挑选你，也是你挑选公司。面试就是为双方提供互相了解的机会，公司在评估你，你也在评估公司。 面试官也知道这一点，所以他们有心理准备，期待你提出问题，并且会做出回答。所以，面试时不要浪费向公司提问的机会。而且，...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/1aa841069d11?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/71a316d76119" alt="48">
+            </div>
+            <span class="name">牵猪的仓鼠</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="https://www.jianshu.com/p/9cb226063250?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">大学生怎样才能具备出众的“气质”？</a>
+          <p class="description">现在不少快毕业的大学生们都爱拿出现在的照片和入学前对比，即使不用PS，也都发现自己漂亮了不少，于是欣喜万分，纷纷表示：“大学是个美容院。” 其实，这真和上不上大学没太大关系。 我们常常说：女大十八变，越变越好看，男生同样如此。由于正处青春年少黄金年龄，就是不上大学，只要底子...</p>
+          <a class="author" target="_blank" href="https://www.jianshu.com/u/9a204a0b99f4?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/67b16c300c70.jpg" alt="48">
+            </div>
+            <span class="name">毛哥说教育</span>
+</a>        </div>
+  </div>
+</div>
+
+    <script type="application/json" data-name="page-data">{"user_signed_in":false,"locale":"zh-CN","os":"windows","read_mode":"day","read_font":"font2","note_show":{"is_author":false,"is_following_author":false,"is_liked_note":false,"follow_state":0,"uuid":"bd4aa989-ec1c-4081-bea4-0850f118c0e1"},"note":{"id":16222966,"slug":"62c2bf192390","user_id":6274961,"notebook_id":14212459,"commentable":true,"likes_count":32,"views_count":222,"public_wordage":2236,"comments_count":0,"featured_comments_count":0,"total_rewards_count":3,"is_author":false,"paid_type":"free","paid":false,"paid_content_accessible":false,"author":{"nickname":"曲谐_","total_wordage":57901,"followers_count":87,"total_likes_count":284}}}</script>
+    
+    <script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/babel-polyfill-6cd2d6b53fe3184b71cc.js.下载" crossorigin="anonymous"></script>
+    <script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/web-base-bc36981d6df104200b63.js.下载" crossorigin="anonymous"></script>
+<script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/web-6d576e44ba4a54fc4bb8.js.下载" crossorigin="anonymous"></script>
+    
+    <script src="./64位系统与32位系统在数据结构占用上的区别 - 简书_files/entry-4ccd791b25276ed536e7.js.下载" crossorigin="anonymous"></script>
+    <script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+  
+
+<!----><!----></body></html>

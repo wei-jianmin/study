@@ -1,0 +1,46 @@
+int QAxBase::internalInvoke(QMetaObject::Call call, int index, void **v)
+{
+    Q_ASSERT(call == QMetaObject::InvokeMetaMethod);
+    Q_UNUSED(call);
+
+    // get the IDispatch
+    IDispatch *disp = d->dispatch();
+    if (!disp)
+        return index;
+
+    const QMetaObject *mo = metaObject();
+    // get the slot information
+    const QMetaMethod slot = mo->method(index + mo->methodOffset());  //标记0
+    Q_ASSERT(slot.methodType() == QMetaMethod::Slot);   /* 出问题点 */
+
+    QByteArray signature(slot.methodSignature());
+    QByteArray slotname(signature);
+    slotname.truncate(slotname.indexOf('('));
+    。。。。。。
+}
+调用堆栈：
+QAxBase::internalInvoke
+QAxBase::qt_static_metacall
+QAxBase::qt_metacall
+QAxWidget::qt_metacall
+GGZYKeyOcx::GGZY_ZCHash
+问题描述：
+如果是用封装的ocx，则“标记0”行获取到的slot为空，导致下一行出现崩溃
+崩溃问题分析：
+int QAxBase::qt_static_metacall(QAxBase *_t, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_ASSERT(_t != 0);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        const QMetaObject *mo = _t->metaObject();
+        switch (mo->method(_id + mo->methodOffset()).methodType()) {   //标记1
+        case QMetaMethod::Signal:
+        。。。。。。
+}
+在“标记1”行， 这里的mo为ocx封装类的元对象类，
+mo->methodOffset()函数遍历各级基类，并返回统计的所有的基类方法的总个数，
+因此标记1中，是把相对方法id变成绝对id，然后传给mo->method，
+也就是说，这里的id，假定的是“要调用的方法在当前类中，排第几个"，
+而如果我们通过包装的ocx类，调用ocx中的方法时，
+传进去的方法id，是在ocx类中的位置，而不是在ocx包装类中的位置，与前面的假定不符合，所以就会出现问题。
+
+F:\QtProjects\untitled53\mylabel.cpp:3: error: undefined reference to `vtable for MyLabel'

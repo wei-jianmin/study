@@ -1,0 +1,16 @@
+void abc(char* s)
+{
+  AfxMessageBox(_T("abc"));
+}
+
+#ifndef abc
+#define abc(s) AfxMessageBox("ABC");
+#endif
+
+在函数中调用abc()时，会优先使用宏
+
+如果要使用函数，应该这样使用：
+#ifdef abc
+#undef abc
+  abc(_T("DF"));
+#endif

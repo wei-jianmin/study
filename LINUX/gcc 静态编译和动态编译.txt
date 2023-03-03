@@ -1,0 +1,43 @@
+https://blog.csdn.net/qq_37659294/article/details/99692418
+
+很多教程会提到加上-static是静态编译
+分别用-static和不用-static编译出了两个可执行程序，
+用-static编译出来的文件明显大得多，因为它已经把该程序依赖的一些库文件链接到该文件里面去了
+在ARM开发板上面运行该程序时不需要依赖库了，而不加-static的运行时则需要依赖的库
+静态编译的程序能够直接在开发板上面运行，而动态编译的则不行
+
+注：使用静态编译选项，其实就是指定链接库时，只去找静态库，而不是优先找动态库
+注：使用-static选项时，有时会提示：cannot find -lc
+    这其实是静态链接时没有找到libc.a，需要安装glibc-static.xxx.rpm 或 yum -y install glibc-static
+
+============================================================================
+
+-static-libstdc++、-static-libgcc
+-static-libstdc++ 指定链接stdc++静态库，使用该选项编出的程序不依赖 libstdc++.so.6
+-static-libgcc必须和-static-libstdc++搭配使用，单独使用-static-libgcc不能生效
+              使用该选项编出的程序不依赖 ligbcc_s.so.1
+-static 编译纯静态程序，不依赖任何so文件，当然也不能用来编译出so文件
+
+============================================================================
+
+https://blog.csdn.net/gaolijing_/article/details/106822446
+
+qt静态编译
+在默认情况下，用QtCreator编译程序时，使用的是动态编译，
+这就导致编译好的程序在运行时需要另外加上相应的Qt库文件，以及一大堆dll文件。
+如果想将生成的程序连同所需要的库一起完整地打包成一个可执行程序，
+并且可以在一台没有开发环境的电脑上运行，那就需要使用静态编译。
+
+这需要编译qt的源码，例如：
+configure.bat  -static -release -confirm-license  -opensource -opengl desktop -platform win32-g++  
+-prefix "D:\SoftwareInstall\Qt5.14.0\5.14.0\mingw73_32_static" -sql-sqlite  -sql-odbc -qt-zlib 
+-qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -make libs  -nomake tools -nomake examples -nomake tests 
+-skip qt3d  -skip qtcanvas3d -skip qtdatavis3d -skip qtlocation -skip qtwayland -skip qtwebchannel 
+-skip qtwebengine -skip qtwebsockets -skip qtwebview
+
+编译完成后，还要进行如下修改：
+D:\SoftwareInstall\Qt5.14.0\5.14.0\mingw73_32_static\mkspecs\common\g+±win32.conf
+在conf文件中新增QMAKE_LFLAGS = -static
+在conf文件中修改QMAKE_LFLAGS_DLL = -static
+
+QT Creator中配置静态编译器

@@ -1,0 +1,4 @@
+●  AfxEnableControlContainer:
+要想在应用程序中使用ActiveX控件，必须使你的应用程序成为ActiveX控件包容器。ActiveX   控件包容器就是完全支持ActiveX控件，并能把控件组合进自己的窗口或对话框的父应用程序。利用MFC的AppWizard，你可以很方便地创建你的包容器程序。事实上，在用AppWizard创建新的应用程序时，你的应用程序就被缺省设置为控件包容器，即在第3步选中支持ActiveX   Controls的复选框。如果你在创建过程中没有选择这项技术支持，以后也可以手动地加入这项支持。如果你手动添加这个函数，和APPWIZEARD添加效果是一样的   
+该函数内部为afxOccManager = _afxOccManager.GetData();  _afxOccManager为COccManager对象，COccManager的解释：Manages various custom control sites; implemented by COleControlContainer and COleControlSite objects.简单的说，就是管理站点用的。
+

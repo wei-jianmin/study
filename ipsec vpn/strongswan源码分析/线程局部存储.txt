@@ -1,0 +1,25 @@
+https://zhuanlan.zhihu.com/p/102116328
+
+在Linux中提供了如下函数来对线程局部数据进行操作
+    #include <pthread.h>
+
+    // Returns 0 on success, or a positive error number on error
+    int pthread_key_create (pthread_key_t *key, void (*destructor)(void *));
+
+    // Returns 0 on success, or a positive error number on error
+    int pthread_key_delete (pthread_key_t key);
+
+    // Returns 0 on success, or a positive error number on error
+    int pthread_setspecific (pthread_key_t key, const void *value);
+
+    // Returns pointer, or NULL if no thread-specific data is associated with key
+    void *pthread_getspecific (pthread_key_t key);
+    
+    理解：
+        pthread_key_create创建一个线程相关结构，该结构可以存放一个void*指针
+        参数pthread_key_t *key用来存放创建出来的结构的地址
+        pthread_key_delete用来删除该结构
+        pthread_setspecific用以把参数值value的副本存储在这个结构中
+        pthread_getspecific用来获取key关联的内部结构中存放的值
+        
+    

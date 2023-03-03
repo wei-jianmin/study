@@ -1,0 +1,60 @@
+非MFC程序：
+WinMain __/―― 注册窗口 __/―― 创建窗口 __/―― 消息泵 __/―― 窗口处理过程 __/―― 调用各种API
+MFC程序：
+WinMain有MFC提供 __/―― 注册窗口包装于AfxWinInit中 __/―― 创建窗口在CWinAPP::InitInstance中完成 __/―― 消息泵在CWinAPP::Run中 __/―― API包装在MFC各种类中 __/―― 消息映射 __/―― 动态创建
+
+CWinAPP和CFrameWnd：
+SDK程序，其主体在于WinMain和WndProc这两部分，而这两部分都有相当程度的不变性。MFC就把有相当程度固定行为的WinMain内部操作封装在CWinAPP中，而把有相当程度固定行为的WndProc内部操作封装在CFrameWnd中，也就是说：CWinAPP代表程序本体，而CframeWnd代表一个主框窗口。但另一方面，尽管WinMain和WndProc都有相当程度的不变性，但面对不同程序时，仍有某种变化，所以，你必须以这两个类为基础，派生自己的类，并改写其中一部分成员函数。
+
+CWinAPP与main：
+该类的成员函数中就包括InitApplication、InitInstance、Run函数，而这几个函数就是CWinApp对main函数封装的体现。
+
+CFrameWnd与WndProc：
+CFrameWnd通过消息映射机制，模拟了WndProc中用switch case对消息的解析。
+
+应用程序对象与main主函数：
+应用程序对象theApp是父类CWinAPP的派生类的实例。该派生类只有InitialInstall成员函数是必须要实现的，其它的函数可以不实现。
+theApp对象是全局对象，所以它是在main执行前创建的。
+main函数是MFC在程序连接阶段自动添加到我们的代码中的（见注0），简化的main函数为：
+int AFXAPI AfxWinMain(......)
+{
+    int nReturnCode=-1;
+*  CWinApp* pApp = AfxGetApp();	//获得theApp对象的指针，见注1
+    AfxWinInit(hInstance,hPrevInstance,lpCmdLine,nCmdshow);    //见注2
+   //开始调用CWinApp中--对SDK下main方法的封装：
+*  pApp->InitApplication();		//见注3	
+*  pApp->InitInstance();		//见注4		
+*  nReturncode = pApp->Run();	//消息泵
+    return nReturnCode;
+}
+注0：MFC::配置属性\连接器\高级\入口点：wWinMainCRTStartup。
+    Entry-Point Symbol可以指定程序的入口地址，一般为一个函数名（且必须采用__stdcall调用约定）。
+    一般Win32的程序，EXE的入口为WinMain，DLL的入口为DllEntryPoint；
+    最好让连接器自动设置程序的入口点。默认情况下，通过一个C的运行时库函数来实现：
+    控制台程序采用mainCRTStartup (或wmainCRTStartup)去调用程序的main (或wmain)函数；
+    Windows程序采用WinMainCRTStartup (或 wWinMainCRTStartup)调用程序的WinMain (或 wWinMain，必须采用__stdcall调用约定)；
+    DLL采用_DllMainCRTStartup调用DllMain函数（必须采用__stdcall调用约定）
+○注1：AfxGetApp函数返回的是记录在全局对象modulestate中的theApp对象的指针，该指针是在theApp的构造函数中存到modulestate中的。
+○注2：AfxWinInit函数内部会设置modulestate的信息，并将main函数传来的参数保存到theApp的成员变量中,如果不是dll，则设置线程的钩子函数为_AfxMsgFilterHook。_AfxMsgFilterHook内部注意调用线程的ProcessMessageFilter方法。ProcessMessageFilter中会对MSGF_DDEMGR、MSGF_MENU、MSGF_DIALOGBOX等情况进行处理。
+○注3：获得文档管理器（DocManager，静态对象），在其中添加空文档模板等，同时将一些策略信息写到注册表中。
+○注4：窗口的真正创建就是在这一步完成的，继承类必须重写该方法，因为父类中没有对该方法提供实现。在实现该方法时，一般主要就是完成创建CMyFrameWnd对象、并调用该对象的显示窗口、更新窗口等工作。窗口的创建（Create，CWnd中的方法）就是在CMyFrameWnd的构造函数中完成的。而Create内部实际调用的是CreateEx（CWnd中的方法）。而CreateEx内部不简单是窗口的创建，而是在创建窗口前，还会完成窗口类的注册（注5），添加窗口钩子(在AfxHookWindowCreate中添加WH_CBT型钩子响应函数_AfxCbtFilterHook)等操作，之后才是真正窗口的创建。
+○注5：在CreateEx中会调用PreCreateWindow { ...AfxDeferRegisterClass（..）...}，这是CWnd中的方法。CWnd/CFrameWnd/CMDIFrameWnd/CMDIChildWnd这些类在重载PreCreateWindow时，会给AfxDeferRegisterClass穿不同的参数，从而可以注册不同的窗口类。
+○注6：InitInstance和run方法是从CWinThread就开始有的，而InitApplication则是从CWinAPP才开始有的。这三个都是虚方法，且尽管InitInstance和run方法都在CWinThread中声明了，但该类对InitInstance方法只是提供了个空壳，里面基本没有什么有用的代码，但对于run方法，内部则是提供了完整实现（汲取消息+泵出消息+空闲等待的死循环）。而CWinAPP具体实现了InitInstance，但实现run时，却主要是调用父类CWinThread的run方法。另外还需要对泵出消息多做一点介绍：泵出消息（PumpMessage）实际是个方法，其内部会先调用PreTranslateMessage方法，然后才调用TranslateMessage和DispatchMessage。
+
+当程序run起来之后，MFC的消息映射机制就开始发挥价值了——具体的介绍见后面。
+
+● 对话框
+在SDK中如何创建对话框？
+创建模态对话框的函数：
+int DialogBox( 
+  HINSTANCE hInstance, 	//应用程序句柄
+  LPCTSTR lpTemplate, 	//注1:
+  HWND hWndParent, 	//指定其父窗口
+  DLGPROC lpDialogFunc	//指定对话框函数的窗口处理过程
+);
+注1：模板：可以是个字符串作为对话框的名字，也可以是个对话框模板的资源标识符，该资源标识符需要符合规范（需要是个DWORD，且高字节为0，低字节存放资源标识符，可以使用宏#define MAKEINTRESOURCE(i)  (LPTSTR) ((DWORD) ((WORD) (i))) 进行规范化处理）。
+创建非模态对话框：
+hDlgModeless=CreateDialog(hInstance,szTemplate,hwndParent,DialogProc);
+参数使用和上面一样。
+两者的区别：
+模态对话框，消息会直接发给窗口。而非模态对话框的消息则是进入消息队列。

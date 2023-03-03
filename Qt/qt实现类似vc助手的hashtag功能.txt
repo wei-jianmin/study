@@ -1,0 +1,7 @@
+qtcreator/帮助/关于插件/使用工具/ToDo
+
+设置工具/选项/To-Do
+将原来的关键字删除， 添加关键字 -MARK  -TODO
+扫描范围选择 Scan the whole active project
+
+重启qtcreator，菜单/控件/输出窗口/TODO事项(alt+6)

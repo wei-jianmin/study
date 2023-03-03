@@ -1,0 +1,55 @@
+http://www.3lian.com/edu/2015/06-29/225232.html
+这篇文章主要介绍了C++中Cbitmap,HBitmap,Bitmap区别及联系的相关资料,需要的朋友可以参考下
+　　加载一位图，可以使用LoadImage：
+　　HANDLE LoadImage(HINSTANCE hinst，LPCTSTR lpszName，UINT uType，int cxDesired，int CyDesired，UINT fuLoad);
+　　LoadImage可以用来加载位图，图标和光标
+　　加载时可以规定加载图的映射到内存的大小：
+　　cxDesired：指定图标或光标的宽度，以像素为单位。如果此参数为零并且参数fuLoad值中LR_DEFAULTSIZE没有被使用，那么函数使用目前的资源宽度。
+　　cyDesired：指定图标或光标的高度，以像素为单位。如果此参数为零并且参数fuLoad值中LR_DEFAULTSIZE没有被使用，那么函数使用目前的资源高度。
+　　LoadImage的返回值是相关资源的句柄。因为加载的是位图所以返回的句柄是HBITMAP型的(需要强制转换)。
+　　延伸理解 HBITMAP/CBitmap/BITMAP：
+　　HBITMAP是bitmap的指针，
+　　msdn中如是：Handle to a bitmap.typedef HANDLE HBITMAP;
+　　CBitmap是mfc中封装bitmap的类;
+　　msdn中：
+　　Encapsulates(囊括) a Windows graphics device interface (GDI) bitmap and provides member functions to manipulate(操作) the bitmap.
+　　BITMAP是一个结构体，封装着bitmap的一些信息。定义了逻辑位图的高，宽，颜色格式和位值。
+　　MSDN中如是：This structure defines the type, width, height, color format, and bit values of a bitmap.
+　　三者之间的关系转换：
+　
+HBITMAP hBitmap;
+ 
+CBitmap bitmap;
+ 
+BITMAP bm;
+ 
+//下面是三者之间的联系：
+ 
+bitmap.Attach(hBitmap);//由HBITMAP 得到关联的CBitmap
+ 
+bitmap.GetBitmap(&bm); // 由CBitmap 得到关联的BITMAP
+hBitmap=(HBITMAP)bitmap.GetSafeHandle();//由CBitmap得到相关的HBITMAP
+　　BITMAP结构具有如下形式：
+
+typedef struct tagBITMAP
+{
+int bmType;
+int bmWidth;//宽
+int bmHeight;//高
+int bmWidthBytes;
+BYTE bmPlanes;
+BYTE bmBitsPixel;
+LPVOID bmBits;
+} BITMAP;
+　　延伸理解下Attach/Detach：
+　　attach是把一个C++对象与一个WINDOWS对象关联，直到用detach则把关联去掉。
+　　如果attach了以后没有detach，则C++对象销毁的时候WINDOWS对象跟着一起完蛋。
+　　attach了以后，C++对象的指针和WINDOWS对象的HWND会有一个映射关系，其作用相当于你直接用一个C++对象去Create一个WINDOWS对象，例如 CEdit edit; edit.create(...)
+　　并且此映射是永久的，知道此对象完蛋为止。
+　　如果用类似GetDlgItem函数也可以返回一个指针，并可以强制转换。GetDlgItem会到映射表里找。
+　　有2种映射表，一中是永久的，一种是临时的。
+　　直接用C++对象创建的WINDOWS对象或者是通过attach的对象的映射关系都被放到永久表中，否则就在临时表中创建映射。
+　　所以GetDlgItem不推荐你保存返回的指针，因为你很难保证你的WINDOWS对象跟C++对象的关联是否放在永久表中。
+　　如果映射是放在临时表中，那么在空闲时间会被自动删除。
+　　用attcah完全是为了方便用MFC类的成员函数去操纵WINDOWS对象。
+　　以上所述就是本文的全部内容了，希望大家能够喜欢。

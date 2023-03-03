@@ -1,0 +1,49 @@
+对于比较高级的qt addin for vs，如 vs2020 的
+可以直接打开pro工程文件
+
+而对于比较早的版本， 如 qt4.8.7  vs2008
+则不支持打开pro文件
+
+解决办法是依据qmake可以依据pro文件，生成vcproj文件：
+命令：
+qmake -tp vc -spec D:\Qt\4.8.7\mkspecs\win32-msvc2008 xxx.pro
+
+虽然也报错：
+Project WARNING: qmake spec does not announce the compiler family. Guessed msvc.
+WARNING: Generator: MSVC.NET: Unknown version (0) of MSVC detected for .vcproj
+WARNING: Generator: MSVC.NET: Unknown version (0) of MSVC detected for .vcproj
+
+但工程下确实生成了vcproj文件
+
+另需说明的是，上面的报错是在转qt5.9的pro文件时报的错，
+而转换命令中-spec指定的是qt 4.8.7的spec文件（因为装的是qt4.8.7的vs addin插件），
+不知上面的报错是否与这个有关
+
+问题后记：
+因为是用qt5.9的qmake生成的，所以对于带Q_OBJECT宏的头文件，为其自动添加的自定义生成步骤中，
+使用的也是qt5.9的moc工具进行与编译，因此生成的元文件，也是qt5.9的格式，
+而vs中的qt插件，配的是qt4.8.7的，因此无法正确使用qt5.9格式的moc文件，
+而因为电脑上装的qt5.9是MinGW版的，所以在vs的qt插件中没法配置为使用qt5.9
+解决办法是手动修改工程配置，改为使用qt4.8.7的moc工具，
+而且qt4.8.7与qt5.9的头文件引用方式也不同，需要进行相应的修改
+
+修改示例：
+===============1===============.
+带Q_OBJECT的头文件改为：
+"C:\Qt\4.8.7\bin\moc.exe"  "$(InputPath)" -o ".\GeneratedFiles\moc_$(InputName).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_DEPRECATED_WARNINGS -DQT_DLL -DQT_NO_DEBUG -DCURL_STATICLIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_WEBKIT_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DREADER_RESOURCES_STATIC -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DNDEBUG -DQT_PHONON_LIB -DQT_NETWORK_LIB -DREADER_THIRDPARTYLIB_STATIC -DDEFLATE_H -DQAXSERVER -DUSE_NEW_DOCKAREA -DUSE_NEW_TOOLBAR -D_WINDLL -D_UNICODE  "-I.\GeneratedFiles" "-I.\..\..\..\src" "-I.\..\..\..\include" " "-IC:\Qt\4.8.7\include" "-IC:\Qt\4.8.7\include\QtCore" "-IC:\Qt\4.8.7\include\QtGui" "-IC:\Qt\4.8.7\include\ActiveQt" "-IC:\Qt\4.8.7\mkspecs\default" "-IC:\Qt\4.8.7\include\phonon" "-IC:\Qt\4.8.7\include\QtNetwork" "-I." "-I.\GeneratedFiles"
+===============2===============.
+ui文件的自定义编译命令改为：
+"C:\Qt\4.8.7\bin\uic.exe" -o ".\GeneratedFiles\ui_$(InputName).h" "$(InputPath)"
+===============3===============.
+nullptr 改为 NULL
+===============4===============.
+在当前工程目录下创建GeneratedFiles文件夹
+===============5===============
+引用的库QtCore、QtGui，改为QtCore4、QtGui4
+===============6===============
+qt4的QByteArray没有toStdString方法，改为：
+QString(bytearray).toStdString();
+===============7===============
+报错：常量中有换行符
+这是因为文件是utf8编码的文件
+解决办法：用notepad++将文件转为asni编码

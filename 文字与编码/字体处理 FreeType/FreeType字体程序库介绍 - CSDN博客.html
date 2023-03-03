@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/hgl868/article/details/7226479"/> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="FreeType库是一个完全免费(开源)的、高质量的且可移植的字体引擎，它提供统一的接口来访问多种字体格式文件，包括TrueType, OpenType, Type1, CID, CFF, Windows FON/FNT, X11 PCF等。支持单色位图、反走样位图的渲染。FreeType库是高度模块化的程序库，虽然它是使用ANSI C开发，但是采用面向对象的思想（下文中将会介绍到）。因此，Fre" />
+    <meta name="keywords" content="module,postscript" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>FreeType字体程序库介绍 - CSDN博客</title>
+    
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-d18c5189a1.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-8195ccbe2d.min.css">
+
+    <script type="text/javascript">
+        var username = "hgl868";
+        var blog_address = "https://blog.csdn.net/hgl868";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = ""; 
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/hgl868/article/details/7226479"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.0.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.3/css/sandalstrap.min.css"> 
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<body>    
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix pt0" id="mainBox">
+		<div id="breadcrumbs">
+			<span><a href="https://blog.csdn.net/">博客首页</a></span>
+			<i>></i>
+			<span><a href="https://blog.csdn.net/hgl868">hgl868的专栏</a></span>
+			<i>></i>
+			<span>FreeType字体程序库介绍</span>
+		</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-title-box">
+			<span class="article-type type-1 float-left">原</span>		<h1 class="title-article">FreeType字体程序库介绍</h1>
+	</div>
+	<div class="article-info-box">
+		<div class="article-bar-top d-flex">
+												<span class="time">2012年02月01日 18:34:23</span>
+			<div class="float-right">
+				<span class="read-count">阅读数：1970</span>
+											</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css" />
+						<div class="htmledit_views">
+                
+FreeType库是一个完全免费(开源)的、高质量的且可移植的字体引擎，它提供统一的接口来访问多种字体格式文件，包括TrueType, OpenType, Type1, CID, CFF, Windows FON/FNT, X11 PCF等。支持单色位图、反走样位图的渲染。FreeType库是高度模块化的程序库，虽然它是使用ANSI C开发，但是采用面向对象的思想（下文中将会介绍到）。因此，FreeType的用户可以灵活地对它进行裁剪，例如我们在使用过程中，仅仅使用TrueType字体格式的处理，就可以将其他和这个格式无关的代码通过若干宏定义的取消就可以达到裁剪目的，这可以保证最后的二进制代码的紧凑性。例如，我们对TrueType格式处理的裁剪，使用单色位图渲染，最后的二进制代码大约只有25KB。
+<br /><br />
+这个库可以用于各种图形处理系统，当然如果你想自己控制字体的渲染、布局的话。另外，拿它来当作学习的范例也是非常不错，其中包含一些优秀的设计思想和比较成熟的算法。 <br /><br />
+本文大多是对FreeType文档的翻译，有些地方如果翻译的不好，还请原谅，可以访问http://www.infomall.cn/cgi-bin/mallgate/20030816/http://www.freetype.org/以获得最新的信息。这里先介绍一下FreeType的设计思路和字形规范，也希望和国内使用FreeType库的朋友多多交流。
+<br /><br /><br /><br />
+『FreeType设计』 <br /><br />
+一、组件和API <br />
+FT可以看作是一组组件，每个组件负责一部分任务，它们包括 <br /><br />
+客户应用程序一般会调用FT高层API，它的功能都在一个组件中，叫做基础层。 <br /><br />
+根据上下文和环境，基础层会调用一个或多个模块进行工作，大多数情况下，客户应用程序不知道使用那个模块。 <br /><br />
+ 基础层还包含一组例程来进行一些共通处理，例如内存分配，列表处理、io流解析、固定点计算等等，这些函数可以被模块随意调用，它们形成了一个底层基础API。 <br /><br /><br />
+为了一些特殊的构建，基础层的有些部分可以替换掉，也可以看作组件。例如ftsystem组件，负责实现内存管理和输入流访问，还有ftinit，负责库初始化。 <br /><br />
+ FT还有一些可选的组件，可以根据客户端应用灵活使用，例如ftglyph组件提供一个简单的API来管理字形映象，而不依赖它们内部表示法。或者是访问特定格式的特性，例如ftmm组件用来访问和管理Type1字体中Multiple Masters数据。
+<br /><br />
+最后，一个模块可以调用其他模块提供的函数，这对在多个字体驱动模块中共享代码和表非常有用，例如truetype和cff模块都使用sfnt模块提供的函数。 <br /><br /><br />
+请注意一些要点： <br /><br />
+一个可选的组件可以用在高层API，也可以用在底层API，例如上面的ftglyph； <br /><br />
+ 有些可选组件使用模块特定的接口，而不是基础层的接口，上例中，ftmm直接访问Type1模块来访问数据； <br /><br />
+ 一个可替代的组件能够提供一个高层API的函数，例如，ftinit提供FT_Init_FreeType() <br /><br />
+二、公共对象和类 <br />
+1、FT中的面向对象 <br />
+虽然FT是使用ANSI C编写，但是采用面向对象的思想，是这个库非常容易扩展，因此，下面有一些代码规约。 <br /><br />
+1、 每个对象类型/类都有一个对应的结构类型和一个对应的结构指针类型，后者称为类型/类的句柄类型 <br /><br />
+设想我们需要管理FT中一个foo类的对象，可以定义如下 <br /><br />
+typedef struct FT_FooRec_* FT_Foo; <br /><br />
+typedef struct FT_FooRec_ <br /><br />
+{ <br />
+// fields for the foo class <br />
+… <br /><br />
+}FT_FooRec; <br /><br />
+依照规约，句柄类型使用简单而有含义的标识符，并以FT_开始，如FT_Foo，而结构体使用相同的名称但是加上Rec后缀。Rec是记录的缩写。每个类类型都有对应的句柄类型；
+<br /><br />
+2、 类继承通过将基类包装到一个新类中实现，例如，我们定义一个foobar类，从foo类继承，可以实现为 <br /><br />
+typedef struct FT_FooBarRec_ * FT_FooBar; <br />
+typedef struct FT_FooBarRec_ <br />
+{ <br />
+FT_FooRec root; //基类 <br />
+}FT_FooBarRec; <br /><br />
+可以看到，将一个FT_FooRec放在FT_FooBarRec定义的开始，并约定名为root，可以确保一个foobar对象也是一个foo对象。 <br />
+在实际使用中，可以进行类型转换。 <br /><br />
+2、FT_Library类 <br />
+这个类型对应一个库的单一实例句柄，没有定义相应的FT_LibraryRec，使客户应用无法访问它的内部属性。 <br />
+库对象是所有FT其他对象的父亲，你需要在做任何事情前创建一个新的库实例，销毁它时会自动销毁他所有的孩子，如face和module等。 <br />
+通常客户程序应该调用FT_Init_FreeType()来创建新的库对象，准备作其他操作时使用。 <br />
+另一个方式是通过调用函数FT_New_Library()来创建一个新的库对象，它在&lt;freetype/ftmodule.h&gt;中定义，这个函数返回一个空的库，没有任何模块注册，你可以通过调用FT_Add_Module()来安装模块。
+<br />
+调用FT_Init_FreeType()更方便一些，因为他会缺省地注册一些模块。这个方式中，模块列表在构建时动态计算，并依赖ftinit部件的内容。（见ftinit.c[l73]行，include FT_CONFIG_MODULES_H，其实就是包含ftmodule.h，在ftmodule.h中定义缺省的模块，所以模块数组ft_default_modules的大小是在编译时动态确定的。）
+<br /><br />
+3、FT_Face类 <br />
+一个外观对象对应单个字体外观，即一个特定风格的特定外观类型，例如Arial和Arial Italic是两个不同的外观。 <br /><br />
+一个外观对象通常使用FT_New_Face()来创建，这个函数接受如下参数：一个FT_Library句柄，一个表示字体文件的C文件路径名，一个决定从文件中装载外观的索引（一个文件中可能有不同的外观），和FT_Face句柄的地址，它返回一个错误码。
+<br />
+FT_Error FT_New_Face( FT_Library library, <br />
+const char* filepathname, <br />
+FT_Long face_index, <br />
+FT_Face* face); <br /><br />
+函数调用成功，返回0，face参数将被设置成一个非NULL值。 <br /><br />
+外观对象包含一些用来描述全局字体数据的属性，可以被客户程序直接访问。例如外观中字形的数量、外观家族的名称、风格名称、EM大小等，详见FT_FaceRec定义。 <br /><br />
+4、FT_Size类 <br />
+每个FT_Face对象都有一个或多个FT_Size对象，一个尺寸对象用来存放指定字符宽度和高度的特定数据，每个新创建的外观对象有一个尺寸，可以通过face-&gt;size直接访问。
+<br /><br />
+尺寸对象的内容可以通过调用FT_Set_Pixel_Sizes()或FT_Set_Char_Size()来改变。 <br />
+一个新的尺寸对象可以通过FT_New_Size()创建，通过FT_Done_Size()销毁，一般客户程序无需做这一步，它们通常可以使用每个FT_Face缺省提供的尺寸对象。
+<br />
+FT_Size公共属性定义在FT_SizeRec中，但是需要注意的是有些字体驱动定义它们自己的FT_Size的子类，以存储重要的内部数据，在每次字符大小改变时计算。大多数情况下，它们是尺寸特定的字体hint。例如，TrueType驱动存储CVT表，通过cvt程序执行将结果放入TT_Size结构体中，而Type1驱动将scaled global metrics放在T1_Size对象中。
+<br /><br />
+5、FT_GlyphSlot类 <br />
+字形槽的目的是提供一个地方，可以很容易地一个个地装入字形映象，而不管它的格式（位图、向量轮廓或其他）。理想的，一旦一个字形槽创建了，任何字形映象可以装入，无需其他的内存分配。在实际中，只对于特定格式才如此，像TrueType，它显式地提供数据来计算一个槽地最大尺寸。
+<br /><br />
+另一个字形槽地原因是他用来为指定字形保存格式特定的hint，以及其他为正确装入字形的必要数据。 <br /><br />
+基本的FT_GlyphSlotRec结构体只向客户程序展现了字形metics和映象，而真正的实现回包含更多的数据。 <br /><br />
+例如，TrueType特定的TT_GlyphSlotRec结构包含附加的属性，存放字形特定的字节码、在hint过程中暂时的轮廓和其他一些东西。 <br /><br />
+最后，每个外观对象有一个单一字形槽，可以用face-&gt;glyph直接访问。 <br /><br /><br /><br />
+6、FT_CharMap类 <br />
+FT_CharMap类型用来作为一个字符地图对象的句柄，一个字符图是一种表或字典，用来将字符码从某种编码转换成字体的字形索引。 <br /><br />
+单个外观可能包含若干字符图，每个对应一个指定的字符指令系统，例如Unicode、Apple Roman、Windows codepages等等。 <br /><br />
+每个FT_CharMap对象包含一个platform和encoding属性，用来标识它对应的字符指令系统。每个字体格式都提供它们自己的FT_CharMapRec的继承类型并实现它们。
+<br /><br />
+7 对象关系 <br /><br />
+三、内部对象和类 <br />
+1、内存管理 <br />
+所有内存管理操作通过基础层中3个特定例程完成，叫做FT_Alloc、FT_Realloc、FT_Free，每个函数需要一个FT_Memory句柄作为它的第一个参数。它是一个用来描述当前内存池/管理器对象的指针。在库初始化时，在FT_Init_FreeType中调用函数FT_New_Memory创建一个内存管理器，这个函数位于ftsystem部件当中。
+<br /><br />
+缺省情况下，这个管理器使用ANSI malloc、realloc和free函数，不过ftsystem是基础层中一个可替换的部分，库的特定构建可以提供不同的内存管理器。即使使用缺省的版本，客户程序仍然可以提供自己的内存管理器，通过如下的步骤，调用FT_Init_FreeType实现：
+<br /><br />
+1. 手工创建一个FT_Memory对象，FT_MemoryRec位于公共文件&lt;freetype/ftsystem.h&gt;中。 <br /><br />
+2. 使用你自己的内存管理器，调用FT_New_Library()创建一个新的库实例。新的库没有包含任何已注册的模块。 <br /><br />
+3. 通过调用函数FT_Add_Default_Modules()（在ftinit部件中）注册缺省的模块，或者通过反复调用FT_Add_Module手工注册你的驱动。
+<br /><br />
+2、输入流 <br />
+字体文件总是通过FT_Stream对象读取，FT_StreamRec的定义位于公共文件&lt;freetype/ftsystem.h&gt;中，可以允许客户开发者提供自己的流实现。FT_New_Face()函数会自动根据他第二个参数，一个C路径名创建一个新的流对象。它通过调用由ftsystem部件提供的FT_New_Stream()完成，后者时可替换的，在不同平台上，流的实现可能大不一样。
+<br /><br />
+举例来说，流的缺省实现位于文件src/base/ftsystem.c并使用ANSI fopen/fseek和fread函数。不过在FT2的Unix版本中，提供了另一个使用内存映射文件的实现，对于主机系统来说，可以大大提高速度。
+<br /><br />
+FT区分基于内存和基于磁盘的流，对于前者，所有数据在内存直接访问（例如ROM、只写静态数据和内存映射文件），而后者，使用帧（frame）的概念从字体文件中读出一部分，使用典型的seek/read操作并暂时缓冲。
+<br /><br />
+FT_New_Memory_Face函数可以用来直接从内存中可读取的数据创建/打开一个FT_Face对象。最后，如果需要客户输入流，客户程序能够使用FT_Open_Face()函数接受客户输入流。这在压缩或远程字体文件的情况下，以及从特定文档抽取嵌入式字体文件非常有用。
+<br /><br />
+注意每个外观拥有一个流，并且通过FT_Done_Face被销毁。总的来说，保持多个FT_Face在打开状态不是一个很好的主意。 <br /><br />
+3、模块 <br />
+FT2模块本身是一段代码，库调用FT_Add_Moudle（）函数注册模块，并为每个模块创建了一个FT_Module对象。FT_ModuleRec的定义对客户程序不是公开的，但是每个模块类型通过一个简单的公共结构FT_Module_Class描述，它定义在&lt;freetype/ftmodule.h&gt;中，后面将详述。
+<br /><br />
+当调用FT_Add_Module是，需要指定一个FT_Module_Class结构的指针，它的声明如下： <br /><br />
+FT_Error FT_Add_Module( FT_Library library, <br /><br />
+const FT_Module_Class* clazz); <br /><br />
+调用这个函数将作如下操作： <br /><br />
+检查库中是否已经有对应FT_Module_Class指名的模块对象； <br /><br />
+ 如果是，比较模块的版本号看是否可以升级，如果模块类的版本号小于已装入的模块，函数立即返回。当然，还要检查正在运行的FT版本是否满足待装模块所需FT的版本。 <br />
+创建一个新的FT_Module对象，使用模块类的数据的标志决定它的大小和如何初始化； <br /><br />
+ 如果在模块类中有一个模块初始器，它将被调用完成模块对象的初始化； <br /><br />
+ 新的模块加入到库的“已注册”模块列表中，对升级的情况，先前的模块对象只要简单的销毁。 <br /><br />
+注意这个函数并不返回FT_Module句柄，它完全是库内部的事情，客户程序不应该摆弄他。最后，要知道FT2识别和管理若干种模块，这在后面将有详述，这里列举如下： <br /><br />
+渲染器模块用来将原始字形映象转换成位图或象素图。FT2自带两个渲染器，一个是生成单色位图，另一个生成高质量反走样的象素图。 <br /><br />
+ 字体驱动模块用来支持多种字体格式，典型的字体驱动需要提供特定的FT_Face、FT_Size、FT_GlyphSlot和FT_CharMap的实现； <br /><br />
+ 助手模块被多个字体驱动共享，例如sfnt模块分析和管理基于SFNT字体格式的表，用于TrueType和OpenType字体驱动； <br /><br />
+ 最后，auto-hinter模块在库设计中有特殊位置，它不管原始字体格式，处理向量字形轮廓，使之产生优质效果。 <br /><br />
+注意每个FT_Face对象依据原始字体文件格式，都属于相应的字体驱动。这就是说，当一个模块从一个库实例移除/取消注册后，所有的外观对象都被销毁（通常是调用FT_Remove_Module()函数）。
+<br /><br />
+因此，你要注意当你升级或移除一个模块时，没有打开FT_Face对象，因为这会导致不预期的对象删除。 <br /><br />
+4、库 <br />
+现在来说说FT_Library对象，如上所述，一个库实例至少包含如下： <br /><br />
+一个内存管理对象（FT_Memory），用来在实例中分配、释放内存； <br /><br />
+ 一个FT_Module对象列表，对应“已安装”或“已注册”的模块，它可以随时通过FT_Add_Module()和FT_Remove_Module()管理； <br /><br />
+ 记住外观对象属于字体驱动，字体驱动模块属于库。 <br /><br />
+还有一个对象属于库实例，但仍未提到：raster pool <br /><br />
+光栅池是一个固定大小的一块内存，为一些内存需要大的操作作为内部的“草稿区域”，避免内存分配。例如，它用在每个渲染器转换一个向量字形轮廓到一个位图时（这其实就是它为何叫光栅池的原因）。
+<br /><br />
+光栅池的大小在初始化的时候定下来的（缺省为16k字节），运行期不能修改。当一个瞬时操作需要的内存超出这个池的大小，可以另外分配一块作为例外条件，或者是递归细分任务，以确保不会超出池的极限。
+<br /><br />
+这种极度的内存保守行为是为了FT的性能考虑，特别在某些地方，如字形渲染、扫描线转换等。 <br /><br />
+四、模块类 <br />
+在FT中有若干种模块 <br /><br />
+渲染模块，用来管理可缩放的字形映象。这意味这转换它们、计算边框、并将它们转换成单色和反走样位图。FT可以处理任何类型的字形映像，只要为它提供了一个渲染模块，FT缺省带了两个渲染器
+<br />
+raster <br />
+支持从向量轮廓（由FT_Outline对象描述）到单色位图的转换 <br />
+smooth <br />
+支持同样的轮廓转换到高质量反走样的象素图，使用256级灰度。这个渲染器也支持直接生成span。 <br /><br />
+字体驱动模块，用来支持一种或多种特定字体格式，缺省情况下，FT由下列字体驱动 <br /><br />
+truetype <br />
+支持TrueType字体文件 <br /><br />
+type1 <br />
+支持PostScript Type1字体，可以是二进制（.pfb）和ASCII(.pfa)格式，包括Multiple Master字体 <br /><br />
+cid <br />
+支持Postscript CID-keyed字体 <br /><br />
+cff <br />
+支持OpenType、CFF和CEF字体（CEF是CFF的一个变种，在Adobe的SVG Viewer中使用 <br /><br />
+winfonts <br />
+支持Windows位图字体，.fon和.fnt <br /><br />
+字体驱动可以支持位图和可缩放的字形映象，一个特定支持Bezier轮廓的字体驱动通过FT_Outline可以提供他自己的hinter，或依赖FT的autohinter模块。
+<br /><br />
+ 助手模块，用来处理一些共享代码，通常被多个字体驱动，甚至是其他模块使用，缺省的助手如下 <br /><br />
+sfnt <br />
+用来支持基于SFNT存储纲要的字体格式，TrueType和OpenType字体和其他变种 <br /><br />
+psnames <br />
+用来提供有关字形名称排序和Postscript编码/字符集的函数。例如他可以从一个Type1字形名称字典中自动合成一个Unicode字符图。 <br /><br />
+psaux <br />
+用来提供有关Type1字符解码的函数，type1、cid和cff都需要这个特性 <br /><br />
+最后，autohinter模块在FT中是特殊角色，当一个字体驱动没有提供自己的hint引擎时，他可以在字形装载时处理各自的字形轮廓。 <br /><br />
+1 FT_Module_Class结构 <br />
+2 FT_Module类型 <br />
+『FT字形规范』 <br /><br />
+一、基本印刷概念 <br />
+1、字体文件、格式和信息 <br />
+字体是一组可以被显示和打印的多样的字符映像，在单个字体中共享一些共有的特性，包括外表、风格、衬线等。按印刷领域的说法，它必须区别一个字体家族和多种字体外观，后者通常是从同样的模板而来，但是风格不同。例如，Palatino Regular 和 Palatino Italic是两种不同的外观，但是属于同样的家族Palatino。
+<br /><br />
+单个字体术语根据上下文既可以指家族也可指外观。例如，大多文字处理器的用户用字体指不同的字体家族，然而，大多这些家族根据它们的格式会通过多个数据文件实现。对于TrueType来讲，通常是每个外观一个文件（arial.ttf对应Arial Regular外观，ariali.ttf对应Arial Italic外观）这个文件也叫字体，但是实际上只是一个字体外观。
+<br /><br />
+数字字体是一个可以包含一个和多个字体外观的数据文件，它们每个都包含字符映像、字符度量，以及其他各种有关文本布局和特定字符编码的重要信息。对有些难用的格式，像Adobe的Type1，一个字体外观由几个文件描述（一个包含字符映象，一个包含字符度量等）。在这里我们忽略这种情况，只考虑一个外观一个文件的情况，不过在FT2.0中，能够处理多文件字体。
+<br /><br />
+为了方便说明，一个包含多个外观的字体文件我们叫做字体集合，这种情况不多见，但是多数亚洲字体都是如此，它们会包含两种或多种表现形式的映像，例如横向和纵向布局。 <br /><br />
+2、字符映象和图 <br />
+字符映象叫做字形，根据书写、用法和上下文，单个字符能够有多个不同的映象，即多个字形。多个字符也可以有一个字形（例如Roman？？）。字符和字形之间的关系可能是非常复杂，本文不多述。而且，多数字体格式都使用不太难用的方案存储和访问字形。为了清晰的原因，当说明FT时，保持下面的观念
+<br /><br />
+一个字体文件包含一组字形，每个字形可以存成位图、向量表示或其他结构（更可缩放的格式使用一种数学表示和控制数据/程序的结合方式）。这些字形可以以任意顺序存在字体文件中，通常通过一个简单的字形索引访问。
+<br />
+ 字体文件包含一个或多个表，叫做字符图，用来为某种字符编码将字符码转换成字形索引，例如ASCII、Unicode、Big5等等。单个字体文件可能包含多个字符图，例如大多TrueType字体文件都会包含一个Apple特定的字符图和Unicode字符图，使它在Mac和Windows平台都可以使用。
+<br /><br />
+3、字符和字体度量 <br />
+每个字符映象都关联多种度量，被用来在渲染文本时，描述如何放置和管理它们。在后面会有详述，它们和字形位置、光标步进和文本布局有关。它们在渲染一个文本串时计算文本流时非常重要。
+<br /><br />
+每个可缩放的字体格式也包含一些全局的度量，用概念单位表示，描述同一种外观的所有字形的一些特性，例如最大字形外框，字体的上行字符、下行字符和文本高度等。 <br /><br />
+虽然这些度量也会存在于一些不可缩放格式，但它们只应用于一组指定字符维度和分辨率，并且通常用象素表示。 <br /><br />
+二、字形轮廓 <br />
+1、象素、点和设备解析度 <br />
+当处理计算机图形程序时，指定象素的物理尺寸不是正方的。通常，输出设备是屏幕或打印机，在水平和垂直方向都有多种分辨率，当渲染文本是要注意这些情况。 <br /><br />
+定义设备的分辨率通常使用用dpi（每英寸点(dot)数）表示的两个数，例如，一个打印机的分辨率为300x600dpi表示在水平方向，每英寸有300个象素，在垂直方向有600个象素。一个典型的计算机显示器根据它的大小，分辨率不同（15’’和17’’显示器对640x480象素大小不同），当然图形模式分辨率也不一样。
+<br /><br />
+所以，文本的大小通常用点（point）表示，而不是用设备特定的象素。点是一种简单的物理单位，在数字印刷中，一点等于1/72英寸。例如，大多罗马书籍使用10到14点大小印刷文字内容。
+<br /><br />
+可以用点数大小来计算象素数，公式如下： <br /><br />
+象素数 = 点数*分辨率/72 <br /><br />
+分辨率用dpi表示，因为水平和垂直分辨率可以不同，单个点数通常定义不同象素文本宽度和高度。 <br /><br />
+2、向量表示 <br />
+字体轮廓的源格式是一组封闭的路径，叫做轮廓线。每个轮廓线划定字形的外部或内部区域，它们可以是线段或是Bezier曲线。 <br /><br />
+曲线通过控制点定义，根据字体格式，可以是二次(conic Beziers)或三次(cubic Beziers)多项式。在文献中，conic Bezier通常称为quadratic Beziers。因此，轮廓中每个点都有一个标志表示它的类型是一般还是控制点，缩放这些点将缩放整个轮廓。
+<br /><br />
+每个字形最初的轮廓点放置在一个不可分割单元的网格中，点通常在字体文件中以16位整型网格坐标存储，网格的原点在(0,0)，它的范围是-16384到-16383（虽然有的格式如Type1使用浮点型，但为简便起见，我们约定用整型分析）。
+<br /><br />
+网格的方向和传统数学二维平面一致，x轴从左到右，y轴从下到上。 <br /><br />
+在创建字形轮廓时，一个字体设计者使用一个假想的正方形，叫做EM正方形。他可以想象成一个画字符的平面。正方形的大小，即它边长的网格单元是很重要的，原因是 <br /><br />
+ 它是用来将轮廓缩放到指定文本尺寸的参考，例如在300x300dpi中的12pt大小对应12*300/72=50象素。从网格单元缩放到象素可以使用下面的公式 <br /><br />
+象素数 ＝ 点数 × 分辨率/72 <br /><br />
+象素坐标＝ 网格坐标*象素数/EM大小 <br /><br />
+ EM尺寸越大，可以达到更大的分辨率，例如一个极端的例子，一个4单元的EM，只有25个点位置，显然不够，通常TrueType字体之用2048单元的EM；Type1 PostScript字体有一个固定1000网格单元的EM，但是点坐标可以用浮点值表示。
+<br /><br />
+注意，字形可以自由超出EM正方形。网格单元通常交错字体单元或EM单元。上边的象素数并不是指实际字符的大小，而是EM正方形显示的大小，所以不同字体，虽然同样大小，但是它们的高度可能不同。
+<br /><br />
+3、Hinting和位图渲染 <br />
+存储在一个字体文件中的轮廓叫“主”轮廓，它的点坐标用字体单元表示，在它被转换成一个位图时，它必须缩放至指定大小。这通过一个简单的转换完成，但是总会产生一些不想要的副作用，例如像字母E和H，它们主干的宽度和高度会不相同。
+<br /><br />
+所以，优秀的字形渲染过程在缩放“点”是，需要通过一个网格对齐(grid-fitting)的操作（通常叫hinting），将它们对齐到目标设备的象素网格。这主要目的之一是为了确保整个字体中，重要的宽度和高度能够一致。例如对于字符I和T来说，它们那个垂直笔划要保持同样象素宽度。另外，它的目的还有管理如stem和overshoot的特性，这在小象素字体会引起一些问题。
+<br /><br />
+有若干种方式来处理网格对齐，多数可缩放格式中，每种字形轮廓都有一些控制数据和程序。 <br /><br />
+显式网格对齐 <br /><br />
+TrueType格式定义了一个基于栈的虚拟机（VM），可以借助多于200中操作码（大多是几何操作）来编写程序，每个字形都由一个轮廓和一个控制程序组成，后者可以处理实际的网格对齐，他由字体设计者定义。
+<br /><br />
+ 隐式网格对齐（也叫hinting） <br /><br />
+Type1格式有一个更简单的方式，每个字形由一个轮廓以及若干叫hints的片断组成，后者用来描述字形的某些重要特性，例如主干的存在、某些宽度匀称性等诸如此类。没有多少种hint，要看渲染器如何解释hint来产生一个对齐的轮廓。
+<br /><br />
+ 自动网格对齐 <br /><br />
+有些格式很简单，没有包括控制信息，将字体度量如步进、宽度和高度分开。要靠渲染器来猜测轮廓的一些特性来实现得体的网格对齐。 <br /><br />
+显式 <br />
+质量：对小字体有很好的结果，这对屏幕显示非常重要。 <br /><br />
+一致性：所有渲染器产生同样的字形位图。 <br />
+速度：如果程序很复杂，解释字节码很慢 <br /><br />
+大小：字形程序会很长。 <br /><br />
+技术难度：编写优秀的hinting程序非常难，没有好的工具支持。 <br /><br />
+隐式 <br />
+大小：Hint通常比显式字形程序小的多 <br /><br />
+速度：网格对齐会非常快 <br />
+质量：小字体不好，最后结合反走样 <br /><br />
+不一致。不同渲染器结果不同，甚至同一引擎不同版本也不同。 <br /><br />
+自动 <br />
+大小：不需要控制信息，导致更小的字体文件 <br /><br />
+速度：依赖对齐算法，通常比显式对齐快。 <br />
+质量：小字体不好，最后结合反走样 <br /><br />
+速度：依赖算法 <br /><br />
+不一致：不同渲染器结果不同，甚至同一引擎不同版本也不同。 <br /><br />
+三、字形度量 <br />
+1、基线(baseline)、笔(pen)和布局(layout) <br />
+基线是一个假想的线，用来在渲染文本时知道字形，它可以是水平（如Roman）和是垂直的（如中文）。而且，为了渲染文本，在基线上有一个虚拟的点，叫做笔位置（pen position）或原点（origin），他用来定位字形。
+<br /><br />
+每种布局使用不同的规约来放置字形： <br /><br />
+ 对水平布局，字形简单地搁在基线上，通过增加笔位置来渲染文本，既可以向右也可以向左增加。 <br /><br />
+两个相邻笔位置之间的距离是根据字形不同的，叫做步进宽度（advance width）。注意这个值总是正数，即使是从右往左的方向排列字符，如Arabic。这和文本渲染的方式有些不同。
+<br /><br />
+笔位置总是放置在基线上。 <br />
+对垂直布局，字形在基线上居中放置： <br /><br />
+2、印刷度量和边界框 <br />
+在指定字体中，定义了多种外观度量。 <br /><br />
+ 上行高度（ascent）。从基线到放置轮廓点最高/上的网格坐标，因为Y轴方向是向上的，所以它是一个正值。 <br />
+ 下行高度（descent）。从基线到放置轮廓点最低/下的网格坐标，因为Y轴方向是向上的，所以它是一个负值。 <br />
+ 行距（linegap）。两行文本间必须的距离，基线到基线的距离应该计算成 <br /><br />
+上行高度 － 下行高度 ＋ 行距 <br /><br />
+边界框（bounding box，bbox）。这是一个假想的框子，他尽可能紧密的装入字形。通过四个值来表示，叫做xMin、yMin、xMax、yMax，对任何轮廓都可以计算，它们可以是字体单元（测量原始轮廓）或者整型象素单元（测量已缩放的轮廓）。注意，如果不是为了网格对齐，你无需知道这个框子的这个值，只需知道它的大小即可。但为了正确渲染一个对齐的字形，需要保存每个字形在基线上转换、放置的重要对齐。
+<br /><br />
+ 内部leading。这个概念从传统印刷业而来，他表示字形出了EM正方形空间数量，通常计算如下 <br /><br />
+internal leading = ascent – descent – EM_size <br /><br />
+外部leading。行距的别名。 <br /><br />
+3、跨距（bearing）和步进 <br />
+每个字形都有叫跨距和步进的距离，它们的定义是常量，但是它们的值依赖布局，同样的字形可以用来渲染横向或纵向文字。 <br /><br />
+ 左跨距或bearingX。从当前笔位置到字形左bbox边界的水平距离，对水平布局是正数，对垂直布局大多是负值。 <br /><br />
+ 上跨距或bearingY。从基线到bbox上边界的垂直距离，对水平布局是正值，对垂直布局是负值。 <br /><br />
+步进宽度或advanceX。当处理文本渲染一个字形后，笔位置必须增加（从左向右）或减少（从右向左）的水平距离。对水平布局总是正值，垂直布局为null。 <br /><br />
+ 步进高度或advanceY。当每个字形渲染后，笔位置必须减少的垂直距离。对水平布局为null，对垂直布局总是正值。 <br /><br />
+字形宽度。字形的水平长度。对未缩放的字体坐标，它是bbox.xMax-bbox.xMin，对已缩放字形，它的计算要看特定情况，视乎不同的网格对齐而定。 <br /><br />
+ 字形高度。字形的垂直长度。对未缩放的字体坐标，它是bbox.yMax-bbox.yMin，对已缩放字形，它的计算要看特定情况，视乎不同的网格对齐而定。 <br /><br />
+ 右跨距。只用于水平布局，描述从bbox右边到步进宽度的距离，通常是一个非负值。 <br /><br />
+advance_width – left_side_bearing – (xMax-xMin) <br /><br />
+下图是水平布局所有的度量 <br /><br />
+下图是垂直布局的度量 <br /><br />
+4、网格对齐的效果 <br />
+因为hinting将字形的控制点对齐到象素网格，这个过程将稍稍修改字符映象的尺寸，和简单的缩放有所区别。例如，小写字母m的映象在主网格中有时是一个正方形，但是为了使它在小象素大小情况下可以辨别，hinting试图扩大它已缩放轮廓，以让它三条腿区分开来，这将导致一个更大的字符位图。
+<br /><br />
+字形度量也会受网格对齐过程的影响： <br /><br />
+ 映象的宽度和高度改变了，即使只是一个象素，对于小象素大小字形区别都很大； <br /><br />
+ 映象的边界框改变了，也改变了跨距； <br /><br />
+ 步进必须更改，例如如果被hint的位图比缩放的位图大时，必须增加步进宽度，来反映扩大的字形宽度。 <br /><br />
+这有一些含义如下， <br /><br />
+ 因为hinting，简单缩放字体上行或下行高度可能不会有正确的结果，一个可能的方法时保持被缩放上行高度的顶和被缩放下行高度的底。 <br /><br />
+ 没有容易的方法去hint一个范围内字形并步进它们宽度，因为hinting对每个轮廓工作都不一样。唯一的方法时单独hint每个字形，并记录返回值。有些格式，如TrueType，包含一些表对一些通用字符预先计算出它们的象素大小。
+<br /><br />
+hinting依赖最终字符宽度和高度的象素值，意味着它非常依赖分辨率，这个特性使得正确的所见即所得布局非常难以实现。 <br /><br />
+在FT中，对字形轮廓处理2D变换很简单，但是对一个已hint的轮廓，需要注意专有地使用整型象素距离（意味着FT_Outline_Translate()函数的参数应该都乘以64，因为点坐标都是26.6固定浮点格式），否则，变换将破坏hinter的工作，导致非常难看的位图。
+<br /><br />
+5、文本宽度和边界框 <br />
+如上所示，指定字形的原点对应基线上笔的位置，没有必要定位字形边界框的某个角，这不像多数典型的位图字体格式。有些情况，原点可以在边界框的外边，有时，也可以在里边，这要看给定的字形外形了。
+<br /><br />
+同样，字形的步进宽度是在布局时应用于笔位置的增量，而不是字形的宽度，那是字形边界的宽度。对文本串，具有相同的规约，这意味着： <br /><br />
+指定文本串的边界框没有必要包含文本光标，也不需要后边的字形放置在它的角上。 <br /><br />
+字符串的步进宽度和它的边界框大小无关，特别时它在开始和最后包含空格或tab。 <br /><br />
+最后，附加的处理如间距调整能够创建文本串，它的大小不直接依赖单独字形度量并列排列。例如，VA的步进宽度不是V和A各自的步进之和。 <br /><br />
+四、字距调整 <br />
+字距调整这个术语指用来在一个文本串中调整重合字形的相对位置的特定信息。 <br /><br />
+1、字距调整对 <br />
+字距调整包括根据相邻字形的轮廓修改它们之间的距离。例如T和y可以贴得更近一点，因为y的上缘正好在T的右上角一横的下边。 <br /><br />
+当仅仅根据字形的标准宽度来布局文本，一些连续的字符看上去有点太挤和太松，例如下图中A和V的就显得距离太远。 <br /><br /><br />
+比较一下下图，同样的单词，A和V的距离拉近些 <br /><br /><br />
+可以看到，这个调整可以导致很大的区别。有的字体外观包含一个表，它包含文本布局所需的指定字形对的字距距离。 <br /><br />
+这个对是顺序的，AV对的距离和VA对不一定一致； <br /><br />
+ 依据布局或书写，字距可以表示水平或垂直方向。 <br /><br />
+字距表示成网格单元，它们通常是X轴方向的，意味着负值表示两个字形需要在水平方向放的更近一点。 <br /><br />
+2、应用字距调整 <br />
+在渲染文本时应用字据调整是一个比较简单的过程，只需要在写下一个字形时，将缩放的字距加到笔位置即可。然而，正确的渲染器要考虑的更细一点。 <br /><br />
+“滑动点”问题是一个很好的例子：很多字体外观包括一个大写字符（如T、F）和一个点.之间的字距调整，以将点正好放置在前者的主腿的右侧。 <br /><br />
+根据字符的外形，有时候需要在点和随后的字符间作附加的调整，当应用“标准”的字距调整，上面的句子如下 <br /><br />
+这显然太紧凑了。一个方案是，只在需要时滑动点，当然这需要对文本的意思有了解。如果当我们在渲染特定段落的最后一个点时，上面的调整就不适合了。这只是一个例子，还有很多其他例子显示一个真正的印刷工人需要恰当地布局文本。
+<br /><br />
+有一个很简单地算法，可以避免滑动点问题。 <br /><br />
+1. 在基线上放置第一个字形； <br /><br />
+2. 将笔位置保存到pen1； <br /><br />
+3. 根据第一个和第二个字形的字距距离调整笔位置； <br /><br />
+4. 放置第二个字形，并计算下个笔位置，放到pen2； <br /><br />
+5. 如果pen1大于pen2，使用pen1作为下个笔位置，否则使用pen2。 <br /><br />
+五、文本处理 <br />
+1、书写简单文本串 <br />
+在第一个例子中，我们将生成一个简单的Roman文字串，即采用水平的自左向右布局，使用专有的象素度量，这个过程如下： <br /><br />
+1. 将字符串转换成一系列字形索引； <br /><br />
+2. 将笔放置在光标位置； <br /><br />
+3. 获得或装入字形映象； <br /><br />
+4. 平移字形以使它的原点匹配笔位置； <br /><br />
+5. 将字形渲染到目标设备； <br /><br />
+6. 根据字形的步进象素增加笔位置； <br /><br />
+7. 对剩余的字形进行第三步； <br /><br />
+8. 当所有字形都处理了，在新的笔位置设置文本光标。 <br /><br />
+注意字距调整不在这个算法中。 <br /><br />
+2、子象素定位 <br />
+在渲染文本时使用子象素定位有时很有用。这非常重要，例如为了提供半所见即所得的文本布局，文本渲染的算法和上一节很相似，但是有些区别： <br /><br />
+笔位置表示成小数形式的象素； <br /><br />
+ 因为将一个已经hint过的轮廓平移一个非整型距离将破坏网格对齐，字形原点的位置在渲染字符映象前必须取整； <br /><br />
+ 步进宽度表示成小数形式的象素，没有必要是整型。 <br /><br />
+这里是算法的改进版本： <br /><br />
+1. 将字符串转换成一系列字形索引； <br /><br />
+2. 将笔放置在光标位置，这可以是一个非整型点； <br /><br />
+3. 获得或装入字形映象； <br /><br />
+4. 平移字形以使它的原点匹配取整后的笔位置； <br /><br />
+5. 将字形渲染到目标设备； <br /><br />
+6. 根据字形的步进象素宽度增加笔位置，这个宽度可以是小数形式； <br /><br />
+7. 对剩余的字形进行第三步； <br /><br />
+8. 当所有字形都处理了，在新的笔位置设置文本光标。 <br /><br />
+注意使用小数象素定位后，两个指定字符间的空间将不是固定的，它右先前的取整操作堆积的数决定。 <br /><br />
+3、简单字距调整 <br />
+在基本文本渲染算法上增加字距调整非常简单，当一个字距调整对发现了，简单地在第4步前，将缩放后的调整距离增加到笔位置即可。淡然，这个距离在算法1需要被取整，算法2不必要。
+<br /><br />
+4、自右向左布局 <br />
+布局Arabic或Heberw文字的过程非常相似，区别只是在字形渲染前，笔位置需要减少（记住步进宽度总是正值） <br /><br />
+5、垂直布局 <br />
+布局垂直文字也是同样的过程，重要的区别如下： <br /><br />
+ 基线是垂直的，使用垂直的度量而不是水平度量； <br /><br />
+ 左跨距通常是负的，但字形原点必须在基线上； <br /><br />
+ 步进高度总是正值，所以笔位置必须减少以从上至下书写； <br /><br />
+6、所见即所得布局 <br /><br /><br />
+六、FT轮廓 <br />
+1、FT轮廓描述和结构 <br />
+a. 轮廓曲线分解 <br />
+一个轮廓是2D平面上一系列封闭的轮廓线。每个轮廓线由一系列线段和Bezier弧组成，根据文件格式不同，曲线可以是二次和三次多项式，前者叫quadratic或conic弧，它们在TrueType格式中用到，后者叫cubic弧，多数用于Type1格式。
+<br /><br />
+每条弧由一系列起点、终点和控制点描述，轮廓的每个点有一个特定的标记，表示它用来描述一个线段还是一条弧。这个标记可以有以下值： <br /><br />
+FT_Curve_Tag_On <br />
+当点在曲线上，这对应线段和弧的起点和终点。其他标记叫做“Off”点，即它不在轮廓线上，但是作为Bezier弧的控制点。 <br /><br />
+FT_Curve_Tag_Conic <br />
+一个Off点，控制一个conic Bezier弧 <br /><br />
+FT_Curve_Tag_Cubic <br />
+一个Off点，控制一个cubic Bezier弧 <br /><br /><br />
+下面的规则应用于将轮廓点分解成线段和弧 <br /><br />
+两个相邻的“on”点表示一条线段； <br /><br />
+一个conic Off点在两个on点之间表示一个conic Bezier弧，off点是控制点，on点是起点和终点； <br /><br />
+两个相邻的cubic off点在两个on点之间表示一个cubic Bezier弧，它必须有两个cubic控制点和两个on点。 <br /><br />
+最后，两个相邻的conic off点强制？？在它们正中间创建一个虚拟的on点。这大大方便定义连续的conic弧。TrueType规范就是这么定义的。 <br /><br />
+注意，在单个轮廓线中可以混合使用conic和cubic弧，不过现在没有那种字体驱动产生这样的轮廓。 <br /><br /><br /><br />
+b. 轮廓描述符 <br />
+FT轮廓通过一个简单的结构描述 <br /><br />
+FT_Outline <br /><br />
+n_points 轮廓中的点数 <br /><br />
+n_contours 轮廓中轮廓线数 <br /><br />
+points 点坐标数组 <br /><br />
+contours 轮廓线端点索引数组 <br /><br />
+tags 点标记数组 <br /><br />
+这里，points是一个FT_Vector记录数组的指针，用来存储每个轮廓点的向量坐标。它表示为一个象素1/64，也叫做26.6固定浮点格式。 <br /><br />
+contours是一组点索引，用来划定轮廓的轮廓线。例如，第一个轮廓线总是从0点开始，以contours[0]点结束。第二个轮廓线从contours[0]+1点开始，以contours[1]结束，等等。
+<br /><br />
+注意，每条轮廓线都是封闭的，n_points应该和contours[n_controus-1]+1相同。最后，tags是一组字节，用来存放每个轮廓的点标记。 <br /><br />
+2、边界和控制框计算 <br />
+边界框（bbox）是一个完全包含指定轮廓的矩形，所要的是最小的边界框。因为弧的定义，bezier的控制点无需包含在轮廓的边界框中。例如轮廓的上缘是一个Bezier弧，一个off点就位于bbox的上面。不过这在字符轮廓中很少出现，因为大多字体设计者和创建工具都会在每个曲线拐点处放一个on点，这会使hinting更加容易。于是我们定义了控制框（cbox），它是一个包含轮廓所有点的最小矩形，很明显，它包含bbox，通常它们是一样的。不想bbox，cbox计算起来非常快。
+<br /><br /><br />
+控制框和边界框可以通过函数FT_Outline_Get_CBox()和FT_Outline_Get_BBox()自动计算，前者总是非常快，后者在有外界控制点的情况下会慢一点，因为需要找到conic和cubic弧的末端，如果不是这种情况，它和计算控制框一样快。
+<br /><br />
+注意，虽然大多字形轮廓为易于hint具有相同的cbox和bbox，这在它们进行变换以后，如旋转，就不再是这种情况了。 <br /><br />
+3、坐标、缩放和网格对齐 <br />
+轮廓点的向量坐标表示为26.6格式，即一个象素的1/64。因此，坐标（1.0,-2.5）存放整型对（x:64,y:-192）。 <br /><br />
+在主字形轮廓从EM网格缩放到当前字符大小后，hinter负责对齐重要的轮廓点到象素网格。虽然这个过程很难几句话说清楚，但是它的目的也就是取整点的位置，以保持字形重要的特性，如宽度、主干等。下面的操作可以用来将26.6格式的向量距离取整到网格：
+<br /><br />
+round(x) == (x + 32) &amp; -64 <br /><br />
+floor(x) == x &amp; -64 <br /><br />
+ceiling(x) == (x + 63) &amp; -64 <br /><br />
+一旦一个字形轮廓经过对齐或变换，在渲染之前通常要计算字形的映象象素大小。做到这一点，必须考虑如下： <br /><br />
+扫描线转换器画出所有中心在字形形状中的象素，他也可以检测drop-outs？？？ <br /><br />
+这导致如下的计算： <br /><br />
+ 计算bbox； <br /><br />
+ 对齐bbox如下： <br /><br />
+xmin = floor(bbox.xMin) <br /><br />
+xmax = ceiling(bbox.xMax) <br /><br />
+ymin = floor(bbox.yMin) <br /><br />
+ymax = ceiling(bbox.yMax) <br /><br />
+ 返回象素尺寸，即 <br /><br />
+width = (xmax-xmin) / 64 <br /><br />
+和 <br /><br />
+height = (ymax-ymin) / 64 <br /><br />
+通过对齐bbox，可以保证所有的象素中心将画到，包括那些从drop-out控制来的，将在调整后的框子之中。接着，框子的象素尺寸可以计算出来。 <br /><br />
+同时注意，当平移一个对齐的轮廓，应该总是使用整型距离来移动。否则，字形的边缘将不再对齐象素网格，hinter的工作将无效，产生非常难看的位图。 <br /><br />
+七、FT位图 <br />
+1、向量坐标和象素坐标对比 <br />
+这里阐述了向量坐标的象素坐标的区别，为了更清楚的说明，使用方括号来表示象素坐标，使用圆括号表示向量坐标。 <br /><br />
+在象素坐标中，我们使用Y轴向上的规约，坐标[0,0]总是指位图左下角象素，坐标[width-1, rows-1]是右上角象素。在向量坐标中，点坐标用浮点单位表示，如(1.25, -2.3)，这个位置并不是指一个特定象素，而是在2D平面上一个非实质性的点。
+<br /><br />
+象素其实在2D平面上是一个方块，它的中心是象素坐标值的一半，例如位图的左下角象素通过方块(0,0)-(1,1)界定，它的中心位于(0.5,0.5)。注意这儿用的是向量坐标表示。这对计算距离就会发生一些区别。例如，[0,0]-[10.0]一条线的象素长度是11，然而，(0,0)-(10,0)的向量程度覆盖了10个象素，因此它的长度是10。
+<br /><br /><br />
+2、FT位图和象素图描述符 <br />
+一个位图和象素图通过一个叫FT_Bitmap的单一结构描述，他定义在&lt;freetype/ftimage.h&gt;中，属性如下 <br /><br />
+FT_Bitmap <br /><br />
+rows 行数，即位图中的水平线数 <br /><br />
+width 位图的水平象素数 <br /><br />
+pitch 它的绝对值是位图每行占的字节数，根据位图向量方向，可以是正值或是负值 <br /><br />
+buffer 一个指向位图象素缓冲的无类型指针 <br /><br />
+pixel_mode 一个枚举值，用来表示位图的象素格式；例如ft_pixel_mode_mono表示1位单色位图，ft_pixel_mode_grays表示8位反走样灰度值
+<br /><br />
+num_grays 这只用于灰度象素模式，它给出描述反走样灰度级别的级数，FT缺省值为255。 <br /><br />
+pitch属性值的正负符号确定象素缓冲中的行是升序还是降序存放。上面说道FT在2D平面上使用Y轴向上的规约，这意味着(0,0)总是指向位图的左下角。如果picth是正值，按照向量减少的方向存储行，即象素缓冲的第一个字节表示位图最上一行的部分。如果是负值，第一个字节将表示位图最下一行的部分。对所有的情况，pitch可以看作是在指定位图缓冲中，跳到下一个扫描行的字节增量。
+<br /><br /><br />
+通常都使用正pitch，当然有的系统会使用负值。 <br /><br />
+3、轮廓转换到位图和象素图 <br />
+使用FT从一个向量映象转换到位图和象素图非常简单，但是，在转换前，必须理解有关在2D平面上放置轮廓的一些问题： <br /><br />
+ 字形转载器和hinter在2D平面上放置轮廓时，总将(0,0)匹配到字符原点，这意味着字形轮廓，及对应的边界框，可以在平面中放置于任何地方。 <br /><br />
+ 目标位图映射到2D平面上，左下角在(0,0)上，这就是说一个[w,h]大小的位图和象素图将被映射到(0,0)-(w,h)界定的2D矩形窗口。 <br /><br />
+当扫描转换轮廓，所有在这个位图窗口的部分将被渲染，其他的被忽略。 <br /><br />
+很多使用FT的开发者都会有个误解，认为一个装入的轮廓可以直接渲染成一个适当大小的位图，下面的图像表明这个问题。 <br /><br />
+第一个图表明一个2D平面上一个装入的轮廓； <br /><br />
+第二个表示一个任意大小[w,h]维护的目标窗口； <br /><br />
+第三个表示在2D平面上轮廓和窗口的合并； <br /><br />
+最后一个表示位图实际被渲染的部分。 <br /><br /><br />
+实际上，几乎所有的情况，装入或变换过的轮廓必须在渲染成目标位图之前作平移操作，以调整到相对目标窗口的位置。 <br /><br />
+例如，创建一个单独的字形位图正确的方法如下： <br /><br />
+计算字形位图的大小，可以直接从字形度量计算出来，或者计算它的边界框（这在经过变换后非常有用，此时字形度量不再有效）。 <br /><br />
+ 根据计算的大小创建位图，别忘了用背景色填充象素缓冲； <br /><br />
+ 平移轮廓，使左下角匹配到(0,0)。别忘了为了hinting，应该使用整型。通常，这就是说平移一个向量（-ROUND(xMin), -ROUND(yMin)）。
+<br /><br />
+ 调用渲染功能，例如FT_Outline_Render()函数。 <br /><br /><p>在将字形映象直接写入一个大位图的情况，轮廓必须经过平移，以将它们的向量位置对应到当前文本光标/字符原点上</p>
+<p><br /></p>
+<br />            </div>
+                </div>
+				<div class="hide-article-box text-center">
+			<a class="btn btn-red-hollow" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/hgl868/article/details/7226479,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/hgl868/article/details/7226479,"}'>阅读更多</a>
+		</div>
+        	</article>
+	
+		<div class="article-bar-bottom">
+						<div class="tags-box artic-tag-box">
+			<span class="label">文章标签：</span>
+						<a data-track-click='{"mod":"popu_626","con":"module"}' data-track-view='{"mod":"popu_626","con":"module"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=module&t=blog" target="_blank">module						<a data-track-click='{"mod":"popu_626","con":"postscript"}' data-track-view='{"mod":"popu_626","con":"postscript"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=postscript&t=blog" target="_blank">postscript						<a data-track-click='{"mod":"popu_626","con":"library"}' data-track-view='{"mod":"popu_626","con":"library"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=library&t=blog" target="_blank">library						<a data-track-click='{"mod":"popu_626","con":"算法"}' data-track-view='{"mod":"popu_626","con":"算法"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=算法&t=blog" target="_blank">算法						<a data-track-click='{"mod":"popu_626","con":"存储"}' data-track-view='{"mod":"popu_626","con":"存储"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=存储&t=blog" target="_blank">存储						<a data-track-click='{"mod":"popu_626","con":"api"}' data-track-view='{"mod":"popu_626","con":"api"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=api&t=blog" target="_blank">api						</a>
+		</div>
+						<div class="tags-box">
+			<span class="label">个人分类：</span>
+						<a class="tag-link" href="https://blog.csdn.net/hgl868/article/category/884127"  target="_blank">c++						</a>
+		</div>
+								<div class="tags-box hot-word">
+			<span class="label">相关热词：</span>
+						<a class="tag-link" href="https://blog.csdn.net/shakevincent/article/details/52950294" target="_blank">
+			freetype			</a>
+					</div>
+			</div>
+	
+	<!-- !empty($pre_next_article[0]) -->
+			<div class="related-article related-article-prev text-truncate">
+		<a href="https://blog.csdn.net/hgl868/article/details/7222917">
+			<span>上一篇</span>Android 嵌入浏览器		</a>
+	</div>
+				<div class="related-article related-article-next text-truncate">
+		<a href="https://blog.csdn.net/hgl868/article/details/7227071">
+			<span>下一篇</span>FreeType 用法		</a>
+	</div>
+	</div>
+<script>
+    $(".MathJax").remove();
+</script>
+
+<!-- 博客详情页PC增加广告系统刷量代码 -->
+<div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+<script id="adJs52b5334"></script>
+<script>document.getElementById("adJs52b5334").src = "https://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+</div>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+			"HTML-CSS": {
+					linebreaks: { automatic: true, width: "94%container" },
+					imageFont: null
+			},
+			tex2jax: {
+				preview: "none"
+			},
+			mml2jax: {
+				preview: 'none'
+			}
+	});
+</script>
+<script>
+	(function(){
+		var btnReadmore = $("#btn-readmore");
+		if(btnReadmore.length>0){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*2){
+				articleBox.css({
+					'height':winH*2+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+	})()
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/hgl868/article/details/7226479#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://download.csdn.net/download/chenchmail/3822501,searchFromBaidu_0"}' data-track-click='{"mod":"popu_387","con":",https://download.csdn.net/download/chenchmail/3822501,searchFromBaidu_0"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://download.csdn.net/download/chenchmail/3822501" target="_blank">
+				&lt;em&gt;<em>FreeType</em>&lt;/em&gt; &lt;em&gt;文档&lt;/em&gt;			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+							<span class="read-num">下载</span>
+				
+			</p>
+			<p>
+				<span class="date">2018年07月27日 00:00</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://download.csdn.net/download/chenchmail/3822501" target="_blank" strategy="searchFromBaidu_0">
+				*投诉人联系方式:  *版权证明: 只允许上传png/jpeg/jpg/gif格式的图片,且小于3M  *详细原因:  取  消 提  交 &lt;em&gt;FreeType&lt;/em&gt; &lt;em&gt;文档&lt;/em&gt; 3积分 立即下载 ...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zhangxueyang1/article/details/54232233,searchFromBaidu_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zhangxueyang1/article/details/54232233,searchFromBaidu_1"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/zhangxueyang1/article/details/54232233" target="_blank" title="[精华] <em>FreeType</em> 2开发文档 [中译版]">
+					[精华] <em>FreeType</em> 2开发文档 [中译版]				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/zhangxueyang1" target="_blank">
+						<img src="https://avatar.csdn.net/F/0/E/3_zhangxueyang1.jpg" alt="zhangxueyang1" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">zhangxueyang1</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">01-08</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						137</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/zhangxueyang1/article/details/54232233" target="_blank" >
+						链接：
+http://www.unixresources.net/linux/clf/kylix/archive/00/00/59/21/592188.html					</a>
+				</p>
+		</div>
+				</div>
+														<div class="recommend-item-box recommend-ad-box">
+						<script type="text/javascript" src="//cee1.iteye.com/pkcgstjjm.js"></script>
+					</div>
+							
+				<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/danelumax2/article/details/8679313,searchFromBaidu_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/danelumax2/article/details/8679313,searchFromBaidu_2"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/danelumax2/article/details/8679313" target="_blank" title="<em>FreeType</em>2中文手册">
+					<em>FreeType</em>2中文手册				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/danelumax2" target="_blank">
+						<img src="https://avatar.csdn.net/1/F/5/3_danelumax2.jpg" alt="danelumax2" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">danelumax2</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">03-15</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1059</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/danelumax2/article/details/8679313" target="_blank" >
+						《FreeType Glyph Conventions》中译版 
+
+FreeType字形约定 
+
+一、基本印刷概念 
+1、字体文件、格式和信息 
+字体是一组可以被显示和打印的多样的字符映像...					</a>
+				</p>
+		</div>
+						<div class="img-box float-right">
+				<a href="https://blog.csdn.net/danelumax2/article/details/8679313">
+					<img src="https://csdnimg.cn/release/phoenix/article_rand_pic/game/game23.jpg" alt="">	
+				</a>
+			</div>
+			</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u013904227/article/details/52104668,searchFromBaidu_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u013904227/article/details/52104668,searchFromBaidu_3"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/u013904227/article/details/52104668" target="_blank" title="文本处理以及<em>freetype</em>的使用">
+					文本处理以及<em>freetype</em>的使用				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/u013904227" target="_blank">
+						<img src="https://avatar.csdn.net/F/E/0/3_u013904227.jpg" alt="u013904227" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">u013904227</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">08-03</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						2430</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/u013904227/article/details/52104668" target="_blank" >
+						1. 字符编码
+  编码
+  解释  GBK(国标扩展码)
+  英文字符用一个字节进行表示，值小于等于 127。汉字用两个字节进行表示，对应的区位码由国家标准指定
+  UTF-8
+  变长编码，中文文...					</a>
+				</p>
+		</div>
+						<div class="img-box float-right">
+				<a href="https://blog.csdn.net/u013904227/article/details/52104668">
+					<img src="https://csdnimg.cn/release/phoenix/article_rand_pic/game/game7.jpg" alt="">	
+				</a>
+			</div>
+			</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/shell_albert/article/details/43563923,searchFromBaidu_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/shell_albert/article/details/43563923,searchFromBaidu_4"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/shell_albert/article/details/43563923" target="_blank" title="<em>freetype</em>">
+					<em>freetype</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/shell_albert" target="_blank">
+						<img src="https://avatar.csdn.net/8/F/7/3_shell_albert.jpg" alt="shell_albert" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">shell_albert</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">02-06</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						308</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/shell_albert/article/details/43563923" target="_blank" >
+											</a>
+				</p>
+		</div>
+						<div class="img-box float-right">
+				<a href="https://blog.csdn.net/shell_albert/article/details/43563923">
+					<img src="https://csdnimg.cn/release/phoenix/article_rand_pic/other/other27.jpg" alt="">	
+				</a>
+			</div>
+			</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://download.csdn.net/download/angle502/8157835,searchFromBaidu_5"}' data-track-click='{"mod":"popu_387","con":",https://download.csdn.net/download/angle502/8157835,searchFromBaidu_5"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://download.csdn.net/download/angle502/8157835" target="_blank">
+				&lt;em&gt;<em>freetype</em>&lt;/em&gt;使用指南			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+							<span class="read-num">下载</span>
+				
+			</p>
+			<p>
+				<span class="date">2018年07月28日 00:00</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://download.csdn.net/download/angle502/8157835" target="_blank" strategy="searchFromBaidu_5">
+				&lt;em&gt;freetype&lt;/em&gt;开源库使用说明。字体是一组可以被显示和打印的多样的字符映像,在单个字体中共享一些共有的特性,包括外表、风格、衬线等。按印刷领域的说法,它必须区别一个...			</a>
+		</p>
+
+	</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'right',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 0,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/cwgk_zc/article/details/3551057,searchFromBaidu_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/cwgk_zc/article/details/3551057,searchFromBaidu_6"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/cwgk_zc/article/details/3551057" target="_blank" title="<em>FreeType</em>资料(一)">
+					<em>FreeType</em>资料(一)				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/cwgk_zc" target="_blank">
+						<img src="https://avatar.csdn.net/F/0/0/3_cwgk_zc.jpg" alt="cwgk_zc" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">cwgk_zc</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">12-18</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						228</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/cwgk_zc/article/details/3551057" target="_blank" >
+						FreeType 学习笔记http://blog.chinaunix.net/u1/40363/showart_434185.html					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/absurd/article/details/1354499,searchFromBaidu_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/absurd/article/details/1354499,searchFromBaidu_7"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/absurd/article/details/1354499" target="_blank" title="<em>Freetype</em>学习笔记">
+					<em>Freetype</em>学习笔记				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/absurd" target="_blank">
+						<img src="https://avatar.csdn.net/6/5/9/3_absurd.jpg" alt="absurd" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">absurd</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">10-28</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1.4万</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/absurd/article/details/1354499" target="_blank" >
+						Freetype学习笔记 转载时请注明出处和作者联系方式：http://blog.csdn.net/absurd作者联系方式：Li XianJing 更新时间：2006-12-19 GTK+(基于Di...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/tuhuolong/article/details/8799590,BlogCommendFromQuerySearch_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/tuhuolong/article/details/8799590,BlogCommendFromQuerySearch_8"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/tuhuolong/article/details/8799590" target="_blank" title="<em>FreeType</em>(<em>字体</em>渲染引擎):支持多种<em>字体</em>格式(TTF,TTC等)">
+					<em>FreeType</em>(<em>字体</em>渲染引擎):支持多种<em>字体</em>格式(TTF,TTC等)				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/tuhuolong" target="_blank">
+						<img src="https://avatar.csdn.net/F/F/8/3_tuhuolong.jpg" alt="tuhuolong" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">tuhuolong</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">04-14</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1371</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/tuhuolong/article/details/8799590" target="_blank" >
+						每个字体文件有一个字符映射表（字符-&gt;字符图形描述数据）
+每个字符通过物理尺寸描述，跟像素无关
+
+
+水平基准线
+
+
+
+
+垂直基准线...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/tianyuan521521/article/details/46273407,BlogCommendFromQuerySearch_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/tianyuan521521/article/details/46273407,BlogCommendFromQuerySearch_9"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/tianyuan521521/article/details/46273407" target="_blank" title="[福利]国内首篇利用<em>freetype</em>的跨平台truetype<em>字体</em>真正轮廓（非位图）获取(带完整qt工程代码)-秒杀GetGlyphOutline">
+					[福利]国内首篇利用<em>freetype</em>的跨平台truetype<em>字体</em>真正轮廓（非位图）获取(带完整qt工程代码)-秒杀GetGlyphOutline				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/tianyuan521521" target="_blank">
+						<img src="https://avatar.csdn.net/1/5/A/3_tianyuan521521.jpg" alt="tianyuan521521" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">tianyuan521521</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">05-30</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						4224</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/tianyuan521521/article/details/46273407" target="_blank" >
+						前言
+所需基本知识点
+trueType字体的一些基本概念
+trueType字体的基本构成
+besier曲线定义
+freetype对trueType的解析
+解析基本步骤
+freetype字体库初始化省略...					</a>
+				</p>
+		</div>
+						<div class="img-box float-right">
+				<a href="https://blog.csdn.net/tianyuan521521/article/details/46273407">
+					<img src="https://csdnimg.cn/release/phoenix/article_rand_pic/game/game4.jpg" alt="">	
+				</a>
+			</div>
+			</div>
+			
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/hgl868">
+                <img src="https://avatar.csdn.net/5/E/2/3_hgl868.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/hgl868" target="_blank" class="text-truncate" id="uid">playbar</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/hgl868/article/details/7226479" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="311">
+                        <dt><a href="https://blog.csdn.net/hgl868?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/hgl868?t=1"><span class="count">311</span></a></dd>
+                    </dl>
+        <dl class="text-center" title="360">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">360</span></dd>
+        </dl>
+        <dl class="text-center" title="80">
+            <dt>喜欢</dt>
+            <dd><span class="count">80</span></dd>
+        </dl>
+        <dl class="text-center" title="139">
+            <dt>评论</dt>
+            <dd><span class="count">139</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="7级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-7"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="1333998">
+                133万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="15722">
+                1万+            </dd>
+        </dl>
+        <dl title="940">
+            <dt>排名：</dt>
+            <dd>940</dd>
+        </dl>
+    </div>
+        <div class="badge-box d-flex">
+        <span>勋章：</span>
+                        <a class="icon-badge" title="持之以恒">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#csdnc-m-lasting"></use>
+            </svg>
+            <div class="icon-arrow"></div>
+            <div class="grade-detail-box item2">
+                <div class="pos-box">
+                    <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-m-lasting"></use>
+                        </svg>
+                        <p>持之以恒</p>
+                    </div>
+                    <div class="right-box d-flex justify-content-center align-items-center">
+                        授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+                    </div>
+                </div>
+            </div>
+        </a>
+                            </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-百度联盟-300x250 -->
+                      <script type="text/javascript" src="//cee1.iteye.com/lgyyovfyh.js"></script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/hgl868/article/details/81092627" target="_blank">逻辑智力测试题内附详细答案</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/hgl868/article/details/80733461" target="_blank">smali 语法</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/hgl868/article/details/78870948" target="_blank">任意android 手机支持daydream</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/hgl868/article/details/78132096" target="_blank">GCC编译器优化选项</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/hgl868/article/details/77988026" target="_blank">资料收集</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/884127">
+                    c++                    <span class="count float-right">90篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/884128">
+                    Android                    <span class="count float-right">147篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/898028">
+                    java                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/912873">
+                    linux                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/937949">
+                    Design Pattern                    <span class="count float-right">36篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/948511">
+                    other                    <span class="count float-right">25篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/1207789">
+                    OpenGL                    <span class="count float-right">28篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/hgl868/article/category/2593441">
+                    games                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2018/07">
+                    2018年7月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2018/06">
+                    2018年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/12">
+                    2017年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/09">
+                    2017年9月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/08">
+                    2017年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/05">
+                    2017年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2017/02">
+                    2017年2月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2016/10">
+                    2016年10月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2016/05">
+                    2016年5月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2016/04">
+                    2016年4月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2016/03">
+                    2016年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/11">
+                    2015年11月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/08">
+                    2015年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/06">
+                    2015年6月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/05">
+                    2015年5月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/04">
+                    2015年4月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2015/03">
+                    2015年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2014/11">
+                    2014年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2014/10">
+                    2014年10月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2014/09">
+                    2014年9月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2014/08">
+                    2014年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2013/07">
+                    2013年7月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2013/06">
+                    2013年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2013/03">
+                    2013年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2013/02">
+                    2013年2月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2013/01">
+                    2013年1月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/12">
+                    2012年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/11">
+                    2012年11月                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/09">
+                    2012年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/08">
+                    2012年8月                    <span class="count float-right">16篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/06">
+                    2012年6月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/05">
+                    2012年5月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/04">
+                    2012年4月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/03">
+                    2012年3月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/02">
+                    2012年2月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2012/01">
+                    2012年1月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/12">
+                    2011年12月                    <span class="count float-right">29篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/11">
+                    2011年11月                    <span class="count float-right">48篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/10">
+                    2011年10月                    <span class="count float-right">75篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/09">
+                    2011年9月                    <span class="count float-right">47篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/08">
+                    2011年8月                    <span class="count float-right">25篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/hgl868/article/month/2011/07">
+                    2011年7月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/hgl868/article/details/7876257">GLSL 内建函数</a>
+					<p class="read">阅读量：<span>56633</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/hgl868/article/details/7058909">C++移位运算符</a>
+					<p class="read">阅读量：<span>38055</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/hgl868/article/details/7057747">C++ memset详解</a>
+					<p class="read">阅读量：<span>31715</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/hgl868/article/details/7947272">判断点在多边形内的多种写法</a>
+					<p class="read">阅读量：<span>28028</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/hgl868/article/details/6724276">NDK Build 参数</a>
+					<p class="read">阅读量：<span>26768</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/hgl868/article/details/7058909#comments">C++移位运算符</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/JingTianWen" class="user-name" target="_blank">JingTianWen</a>：[reply]JIEJINQUANIL[/reply]
+1&amp;lt;&amp;lt;35是编...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/hgl868/article/details/50987923#comments">opengl shader 绘制心形</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/dongdong123456" class="user-name" target="_blank">dongdong123456</a>：MVP矩阵是如何设置的呢                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/hgl868/article/details/7012084#comments">Guarded Suspensio...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/u013038643" class="user-name" target="_blank">u013038643</a>：例子很不错                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/hgl868/article/details/6724276#comments">NDK Build 参数</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/cyz7758520" class="user-name" target="_blank">cyz7758520</a>：翻译得太到位了！                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/hgl868/article/details/45095153#comments">引擎V8及优化技术</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/wuyu835214" class="user-name" target="_blank">wuyu835214</a>：very good                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//cee1.iteye.com/avneunkwb.js"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+			<script>
+			(function() {
+				var s = "_" + Math.random().toString(36).slice(2);
+				document.write('<div id="baidufooter_0001"></div>');
+				(window.slotbydup=window.slotbydup || []).push({
+					id: '5851901',
+					container: 'baidufooter_0001',
+					size: '520,40',
+					display: 'inlay-fix'
+				});
+			})();
+			</script>
+			<script src="https://dup.baidustatic.com/js/os.js"></script>
+			<style>
+				#baidufooter_0001{
+					display: none !important;
+				}
+			</style>
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li>
+			<button class="btn-like " title="点赞">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<p>0</p>
+			</button>
+		</li>
+		<li>
+			<a class="btn-comments" title="写评论" href="#commentBox">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg><br>写评论			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc" title="目录">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg><br>目录
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark" title="收藏">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg><br>收藏
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_weixin" data-cmd="weixin" title="微信分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg><br>微信
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_tsina" data-cmd="tsina" title="微博分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-weibo"></use>
+				</svg><br>微博
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_qzone" data-cmd="qzone" title="QQ分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-qq"></use>
+				</svg><br>QQ
+			</a>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "FreeType字体程序库介绍";
+    var ChannelId = 0;
+    var articleId = "7226479";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/hgl868/article/details/7226479";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "freetype+%E6%96%87%E6%A1%A3";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = '';
+    var highlight = ["freetype","\u5b57\u4f53","\u7a0b\u5e8f\u5e93","\u4ecb\u7ecd"];//高亮数组
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.3/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"FreeType字体程序库介绍");
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-a4f198c74c.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-bb796c2d26.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-73eea35575.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=freetype+%E6%96%87%E6%A1%A3"  type="text/javascript"></script>
+</body>
+<div class="box-box-aways">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <div id="adAways">
+        <script>
+            (function() {
+            (window.slotbydup=window.slotbydup || []).push({
+            id: '5868728',
+            container: 'adAways',
+            size: '250,500',
+            display: 'inlay-fix'
+            });
+            })();
+            </script>
+        <script src="https://dup.baidustatic.com/js/os.js"></script>
+    </div>
+</div>
+<div class="box-box-default">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/mhzzjepzz.js"></script>
+</div>
+<div class="box-box-large">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/idvveasfs.js"></script>
+</div>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-93244aa03c.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+</html>

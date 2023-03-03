@@ -1,0 +1,88 @@
+@charset "utf-8";
+/* 你自己的样式 */
+
+html, body {
+  margin: 0px;
+  height: 100%;
+}
+a:hover {
+  text-decoration: none;
+}
+a:focus {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+button, a:focus {
+  outline: 0 none !important;
+}
+.back{
+  background : #006dcc;
+}
+/*登录页面样式*/
+.Login {
+  height: 85%;
+  padding: 1% 0;
+  min-width: 800px;
+  min-height: 560px;
+}
+.LoginHeader {
+  height: 17%;
+  margin-left: 50px;
+  background-size: auto 68%;
+}
+.LoginCont {
+  height: 80%;
+  background-color: #eef4fc;
+  background-size: auto 100%;
+}
+.LoginCont img{
+  margin:30px auto;
+  margin-left:140px;
+}
+.LoginForm {
+  float: right;
+  width: 21%;
+  min-width: 300px;
+  height: 80%;
+  background: rgba(0, 0, 0, 0.45);
+  border-top: 2px solid mediumblue;/*#ffbc40*/
+  padding: 20px 35px;
+  color: #ffffff;
+  margin: 3% 10% 0 0;
+}
+.LoginForm .input-group {
+  margin-top: 30px;
+}
+.LoginForm h3 {
+  margin-left: 6px;
+}
+#subButton{
+  margin-top:30px;
+}
+/*页头相同样式*/
+.navContent{
+  padding-left : 50px;
+  padding-right : 30px;
+}
+.navContent span{
+  color : #fff;
+  vertical-align:middle;
+}
+/*页脚样式*/
+.footer{
+  height : 40px;
+  line-height : 40px;
+  font-size : 14px;
+  color : #444547;
+  letter-spacing : 2px;
+  background:#CCC;
+}
+#footer{
+	width:98%;
+	/*border:1px solid #333333;*/
+	text-align:center;
+	position: fixed; /*or前面的是absolute就可以用 relative*/ 
+	bottom: 17px;  
+}

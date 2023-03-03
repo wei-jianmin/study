@@ -1,0 +1,37 @@
+IOleInPlaceSite接口：
+该接口管理容器与内嵌对象的交互。需要说明的是，客户区是内嵌对象的显示区域，
+并提供关于对象位置和概念信息。该接口提供方法来管理in-place对象。使用该接口，
+你可以通知容器何时对象被激活，并通知容器，一个复合菜单将要替换容器的原始菜单。
+它也提供方法来用于使in-place对象检索窗口层级，以及将对象的in-place活动窗口
+放在父窗口的那个位置。最后，他也决定了容器如何滚动控件，管理对象的undo状态，
+和通知对象何时他的边框被改变了。
+OleInPlaceSite接口从IOleWindow接口继承而来，用来在OLE包容和OLE对象之间维持
+一种互相联系，例如OLE对象可以从OLE包容获得上下文窗口位置的信息，OLE包容也
+可以在OLE对象实地激活时获得通知以做出相应的安排。IOleInPlaceSite包含了方法
+GetWindow、ContextSensitiveHelp（这两个方法是从IOleWindow继承而来）、
+IOleInPlaceSite、CanInPlaceActivate、OnInPlaceActivate OnUIActivate、
+GetWindowContext、Scroll、OnUIDeactivate、OnInPlaceDeactivate、
+DiscardUndoState、DeactivateAndUndo、OnPosRectChange。
+一般而言，比较重要的是：GetWindowContext，OLE对象可以在此获得OLE包容的一些
+设定信息，以作自身响应；GetWindow，OLE对象需要在这里获得母窗口句柄；
+OnUIActive、OnUIDeactive、OnInPlaceActive、OnInPlaceDeactive、DeactiveAndUndo，
+这些都是OLE对象在试图变化时的一些通知函数，OLE包容需要在这时为OLE对象安排好诸如
+菜单等等资源的协调，以及调用OLE对象做复合文档的永久化、回复等等，都是比较简单的实现。
+其他的接口函数均可按需要实现，否则简单返回即可。
+
+接口列表：
+CanInPlaceActivate 		控件对象调用此方法，检查容器是否能原地激活对象
+OnInPlaceActivate 		控件对象调用此方法，通知容器一个对象将要被原地激活
+OnUIActivate 		控件对象调用此方法，通知容器一个对象将要被原地激活，且其复合菜单将要取代容器原来的菜单
+GetWindowContext 	使这个in-place对象能检索组织成窗口对象层级的各接口, 
+			以及检索对象的就地激活窗口应该放置于父窗口的哪个位置。
+Scroll 			描述容器应该滚动对象多少个像素。
+OnUIDeactivate 		告诉容器重新加载对象的用户界面并使其获得焦点
+OnInPlaceDeactivate 	告诉容器一个对象不再原地激活了。
+DiscardUndoState 		告诉容器对象不需要再有撤销操作的能力，
+			容器也不能再调用 IOleInPlaceObject::ReActivateAndUndo了。
+DeactivateAndUndo 	告诉容器结束in-place回话，使对象失活，并恢复到自己保存的撤消状态。
+OnPosRectChange 		对象的extents已经改变。
+ 
+
+

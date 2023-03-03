@@ -1,0 +1,96 @@
+#include <stdio.h>
+
+typedef struct sec_tag
+{
+	double start;
+	double end;
+} sec;
+
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+
+//0表成功，非0表失败
+int intersec(sec s1,sec s2,sec *res);
+//len:数组长度，prefix_info:输出数字前要输出的字符串，presion小数点后保留位数
+void printout(sec *pset,int len,char* prefix_info,int presion);
+
+int main()
+{
+	sec set1[4]={{6,8},
+				 {9,23},
+				 {25,27},
+				 {29,48}
+				};
+	sec set2[5]={{7,10},
+				 {11,15},
+				 {17,33},
+				 {35,39},
+				 {42,50}
+				};
+	sec set3[9]={0};		//存放取交集的结果
+ 	sec sec1,sec2,sec3;
+	int index1=0;
+	int index2=0;
+	int index3=0;
+	int err=0;
+
+	do 
+	{
+		sec1=set1[index1];
+		sec2=set2[index2];
+		err=intersec(sec1,sec2,&sec3);
+		if(err<0)
+		{
+			index1++;
+		}
+		else if(err==0)
+		{
+			set3[index3]=sec3;
+			index3++;
+			if(sec3.end==sec1.end)
+				index1++;
+			else //if(sec3.end==sec2.end)
+				index2++;
+		}
+		else if(err>0)
+		{
+			index2++;
+		}
+	} while(index1<4 && index2<5);
+	printout(set1,4,"集合1:\t\t",0);
+	printout(set2,5,"集合2:\t\t",0);
+	printout(set3,9,"求交集的结果:\t",0);
+	getchar();
+}
+
+//0表成功，非0表失败
+int intersec(sec s1,sec s2,sec *res)
+{
+	res->start=res->end=0;
+	if(s1.end<=s2.start)	//s1在s2的左边，没有交集
+		return -1;
+	if(s1.start>=s2.end)	//s1在s2的右边，没有交集
+		return 1;
+	res->start=max(s1.start,s2.start);
+	res->end=min(s1.end,s2.end);
+	return 0;
+}
+
+//len:数组长度，prefix_info:输出数字前要输出的字符串，presion小数点后保留位数
+void printout(sec *pset,int len,char* prefix_info,int presion)
+{
+	int i=0;
+	char format[20]="{%f,%f}\t";
+
+	if(prefix_info!=NULL)
+		printf("%s",prefix_info);
+
+	if(presion>=0)
+		sprintf(format,"{%%.%df,%%.%df}\t",presion,presion);
+
+	for(;i<len;i++)
+	{
+		printf(format,pset[i].start,pset[i].end);
+	}
+	printf("\n");
+}

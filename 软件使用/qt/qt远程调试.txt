@@ -1,0 +1,39 @@
+-----------远程Windows----------
+参：  https://blog.csdn.net/lee353086/article/details/77329866
+
+前言：我本机的ip是 192.168.3.127
+      我要调试虚拟机中的程序，虚拟机的ip是 192.168.3.25
+      要调试的程序名称为 HelloWorld
+      
+一：  远程机侧设置
+   1. 把要调试的程序，即相关的动态库拷贝到远程机上
+      确保程序可以正常执行（只是测一下能执行就行，不需要真正执行）
+      如果报"this application has request the runtime to ..."
+      通常把 C:\Qt\Qt5.9.0\5.9\mingw53_32\plugins\platforms
+      拷贝到远程机的程序目录下即可（注意platfors中需要有debug版的动态库）
+      需要额外拷贝的文件的位置：
+      qt相关动态库   C:\Qt\Qt5.9.0\5.9\mingw53_32\bin 下
+      基础动态库     C:\Qt\Qt5.9.0\Tools\mingw530_32\bin 下
+      基础动态库     C:\Qt\Qt5.9.0\Tools\QtCreator\bin 下
+   2. 把 C:\Qt\Qt5.9.0\Tools\mingw530_32\bin\gdbserver.exe
+      拷贝到远程机被调试程序同级目录下
+   3. 在远程机命令行中执行    
+      gdbserver [要监听的ip]:要监听的端口号 要调试的程序文件的名字 [启动参数 ...]
+      如：gdbserver 192.168.3.127:2345 HelloWorld
+      注：要监听的ip是可以省略的，省略则监听所有ip，但端口号前面的冒号不能省略
+      注：要调试的程序文件的名字，不带后缀名
+      
+二：  本机设置
+   1. qtcreator/菜单/工具/选项/调试器/gdb选项卡/额外的启动命令，
+      在里面填入：
+      set sysroot C:\Qt\Qt5.9.0\Tools\mingw530_32\bin;C:\Windows\syswow64
+   2. 菜单/调试/开启调试/attach to running debug server...
+   3. 在弹出的启动调试器窗口中填入：
+      服务器端口               ：   2345
+      override server address  :    192.168.3.25
+      本地执行档               :    通过浏览按钮定位到 HelloWorld.exe
+      其它选项不设置（为空）
+      点 OK 按钮
+
+----------------远程Linux--------------
+参： https://blog.csdn.net/zestroly/article/details/80814445

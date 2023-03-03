@@ -1,0 +1,47 @@
+1. 整理桌面，保存有用数据
+2. 软件
+    listary
+        关键字
+            自定义
+                rj  日记    创建或打开日记      F:\Desktop\文件\工具文件\打开日志.vbs
+                rjb 日记本  打开日记所在文件夹  F:\Desktop\文件\工具文件\打开日记本.vbs
+                bc  BCompare.exe  E:\R软件\BeyondComparePro\BCompare.exe
+        参： F:\Desktop\学习笔记\软件使用\listary使用技巧
+    strokeit
+    vs 2008 + sp1 + vs助手
+        参： F:\Desktop\学习笔记\软件使用\使用vc助手快速添加函数注释.txt
+    qt 4.8.7  ,  5.9.0
+    vmware
+    translate   E:\R软件\GoogleTranslate_1433 破解版\Google Translate
+    notepad2    E:\R软件\notepad2  放到C:\Windows下 
+    notepad++   E:\R软件\NotepadZQB v6.6.2\NotepadZQB
+    simple sticky notes
+    Mobaxterm
+    向日葵
+    Wireshark
+    数字签名工具  
+    Google浏览器
+        书签：E:\2022年2月13日\bookmarks_2022_2_13.html
+        插件：F:\r软件\谷歌插件 - 副本
+    everything
+    定制发送到菜单  参：F:\Desktop\学习笔记\电脑使用技巧
+    7zip
+    svn   用户名：weijianmin，密码：111111
+    unlocker
+    QTTabBar
+    dopdf
+    钉钉
+    微信
+    福昕阅读器
+    数科阅读器   阿里云盘/suwell 3.0.21
+    小鸟壁纸
+    火绒弹窗拦截
+    360安全管家
+    OnTimer_jb51
+    wps
+3. 环境配置
+    PLATFORMCODE	windows	操作系统编码
+    EQ_COMPONENTS	E:\workspace\projects\basecomponents	组件库根目录
+    EQ_CPP_PUBLIB	%EQ_COMPONENTS%\projects\base\sdk\cpp\cpp.publib\1.0.0.1	C++公共库
+    PATH(增加）	%EQ_COMPONENTS%\Tools	常用工具，脚本存放位置
+    QTDIR  C:\Qt\4.8.7

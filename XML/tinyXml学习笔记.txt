@@ -1,0 +1,36 @@
+TiXmlNode继承自TiXmlBase，并把TiXmlDocument和TiXmlElement当做友元类
+TiXmlNode中定义了NodeType枚举类型表明该节点为:DOCUMENT/ELEMENT/COMMENT/DECLAREATION/TEXT/TYPECOUNT/UNKNOWN
+TixmlNode中的成员变量：
+	NodeType	type;
+
+
+	TIXML_STRING	value;	//即TiXmlString类型
+
+，支持多种字符串操作，
+				//能和char*自由转换，使用new申请的内存空间
+	TiXmlNode*	parent;
+	TiXmlNode*	firstChild;
+
+	TiXmlNode*	lastChild;
+
+
+	TiXmlNode*	prev;
+
+	TiXmlNode*	next;
+TiXmlNode内部主要提供了对父子及兄弟节点的增删改查功能。
+-------------------------------------------------------------------------
+TiXmlDocument继承自TiXmlNode
+TiXmlDocument中主要包含了加载、保存xml文件的方法
+-------------------------------------------------------------------------
+TiXmlElement继承自TiXmlNode
+TiXmlElement的成员变量为：
+	TiXmlAttributeSet attributeSet;	//TiXmlAttribute的集合
+TiXmlElement内部主要提供了对attribute的增删改查操作。
+为了便利，他也提供了GetText方法获取子该元素中的文本，但只适用于该元素的第一个子元素是TiXmlText的情况，如果不是TiXmlText，则返回空，所以更推荐的方法还是获得TiXmlText对象后，再使用这个对象获取文本内容。
+此外，该类中也提供了Print方法，可将元素内容打印到文件中。
+---------------------------------------------------------------------------
+TiXmlText继承自TiXmlNode
+它以TiXmlElement作为友元类
+
+--------
+TiXml有个bug：当保存xmlDoc.SaveFile路径太深时，会保存失败

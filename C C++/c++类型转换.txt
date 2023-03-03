@@ -1,0 +1,34 @@
+除了隐式转换（自动转换）外，还有显式转换：
+C     风格： (type-id)
+C++风格： static_cast、dynamic_cast、reinterpret_cast、和const_cast..
+
+static_cast：
+带编译期类型检查的类型转换运算符。
+它主要有如下几种用法：
+用于类层次结构中基类和子类之间指针或引用的转换。进行上行转换（把子类的指针或引用转换成基类表示）是安全的；进行下行转换（把基类指针或引用转换成子类指针或引用）时，由于没有动态类型检查，所以是不安全的。
+用于基本数据类型之间的转换，如把int转换成char，把int转换成enum。这种转换的安全性也要开发人员来保证。
+把void指针转换成目标类型的指针(不安全!!)
+把任何类型的表达式转换成void类型。
+注意：static_cast不能转换掉expression的const、volitale、或者__unaligned属性。
+
+dynamic_cast：
+主要用于类指针或类引用的上下行转换，如果从派生类向基类转换，则和static_cast没什么区别，但如果是从基类向派生类转换，则因为dynamic_cast会借助运行时库进行类型检查，所以可以正确的进行转换---如果不能正确的转换，会将左值赋值为0；
+如：B继承自A类，则
+A *pa；
+B *pb1,*pb2;
+pb1=new B;
+pa=pb1;   //派生类指针->基类指针，隐式转换，编译正确，运行正确
+pa=static_cast<A*>pb1;   //带编译期检查，正确
+pb2=pa;   //基类->派生类，编译正确，运行异常
+pb2=static_cast<B*>pa;   //带编译期检查，编译错误
+pb2=dynamic_cast<B*>pa;   //正确，会引进动态类型检查，pb2=pb1
+pb1=new A;
+pb2=dynamic_cast<B*>pa;   //正确，但运行结果为 pb2=NULL
+
+const_cast:
+可将变量（包括指针、引用等）的const修饰符去掉，如
+const int i=12;
+int j=const_cast<int>i;
+
+reinpreter_cast：  
+普通转换，类似c的强制转换。

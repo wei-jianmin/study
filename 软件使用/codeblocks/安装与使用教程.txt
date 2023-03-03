@@ -1,0 +1,79 @@
+1. 在centos7下，源中没有codeblocks，
+   为此，需先安装 epel-release，并执行 yum clean all && yum makecache
+   关于epel的注释：
+     EPEL是由 Fedora 社区打造，为 RHEL 及衍生发行版
+     如 CentOS、Scientific Linux 等提供高质量软件包的项目。
+     装上了 EPEL之后，就相当于添加了一个第三方源
+
+2. 在执行完第1步的准备工作后，就可以用 yum 查找并安装 codeblocks 了  
+   yum search codeblocks 的结果为：
+       codeblocks.x86_64 : An open source, cross platform, free C++ IDE
+       codeblocks-contrib.x86_64 : Additional Code::Blocks plug-ins
+       codeblocks-contrib-devel.x86_64 : Files needed to build Code::Blocks contrib plug-ins
+       codeblocks-contrib-libs.x86_64 : Libraries needed to run Code::Blocks contrib plug-ins
+       codeblocks-devel.x86_64 : Files needed to build Code::Blocks plug-ins
+       codeblocks-libs.x86_64 : Libraries needed to run Code::Blocks and its plug-ins
+   执行： yum install codeblocks, yum install codeblocks-contrib
+   注：codeblocks-contrib 是个三方插件，类似vc助手，使得 codeblocks 可以支持自定义快捷键、代码跳转等等功能
+
+3. 建立 wxWidgets 工程进行测试
+   wxWidgets 是类似 Qt/MFC 的界面编程框架，它是跨平台的，在Windows下调用Windows的API，在Linux下调用GTK
+   具体建立 wxWidgets 工程步骤，后面会详细介绍，这里暂时略过
+   
+4. 编译上面的工程，报错：找不到 <wx/app.h>
+   原因：没装 wxWidgets 的 develop 版开发库
+   解决：yum search wxGTK, yun install wxGTK-devel
+   说明：wxGTK 是包装了GTK的 wxWidgets，另外类似的还有：包装了x11的wxX11, 包装了motif的wxMotif，包装袋win32api的wxMSW
+   wxGTK、wxBase在安装codeblocks时已经自动安装了，但没有安装 wxGTK-devel，需在这里手动安装
+   
+5. 进行完4步的操作后，电脑中有 <wx/app.h> 这样的文件了，但项目仍然找不到
+   这是因为没有包含相应头文件，同理可推出也没有链接相应的库文件
+   解决：   
+   wx-config --cxxflags --libs
+        -I/usr/lib64/wx/include/gtk2-unicode-release-2.8 -I/usr/include/wx-2.8 
+        -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__ 
+        -pthread -Wl,-z,relro   -lwx_gtk2u_richtext-2.8 -lwx_gtk2u_aui-2.8 
+        -lwx_gtk2u_xrc-2.8 -lwx_gtk2u_qa-2.8 -lwx_gtk2u_html-2.8 -lwx_gtk2u_adv-2.8 
+        -lwx_gtk2u_core-2.8 -lwx_baseu_xml-2.8 -lwx_baseu_net-2.8 -lwx_baseu-2.8 
+   根据上面的提示信息，打开codeblocks菜单/Settings/Compiler/Global compiler settings/ 
+   在 Compiler settings/#defines 选项卡中设置预定义宏：
+        _FILE_OFFSET_BITS=64
+        _LARGE_FILES
+        __WXGTK__
+   在 Linker settings 选项卡中，添加 wxWidgets 动态库（在 /usr/lib64下，以 libwx_ 开头的动态库）
+   在 Search directories 选项卡中，添加 wxWidgets 头文件包含路径
+
+附注： 创建 wxWidgets 工程
+菜单/file/new/projects，在弹出的选项卡中选择 wxWidgets project
+然后会让选择使用的 wxWidgets 的版本，根据 wx-config --cxxflags --libs，可看出电脑中装的 wxWidgets 的版本
+然后会让选择输入工程名字，后面的要求输入 作者、邮箱、网址 的窗口可以选择跳过
+在接下来的窗口中，在 Preferred GUI Builder 中，可选择 None/wxSmith/wxFormBuilder,这三者的关系后面有介绍
+然后进入到编译设置窗口，在这里可以设置编译输出目录（默认相对当前工程所在目录）
+之后弹出的窗口中，可以选择使用 wxWidgets 的动态库，还是静态库，还可以选择使用预编译头、是否创建空工程
+
+附注二：None/wxSmith/wxFormBuilder
+实际不使用wxSmith或wxFormBuilder，也能设计出界面程序
+wxWidgets使用xml格式描述窗口界面，后缀名为 .xrc，但需手工编写该文件
+wxSmith或wxFormBuilder则相当于 Qt的Designer，使得界面设计所见即所得
+wxSmith使用的文件后缀名为 .wxs，wxFormBuilder使用的文件后缀名为 .fbp
+两者的对比（参考）：
+    wxSmith的缺点：
+        1. wxSmith是Code::Blocks的插件，就意味着离不开Code::Blocks。
+        2. wxSmith在操作上不人性化，调整顺序将十分麻烦，用起来不顺手。
+        3. wxSmith支持的控件不如wxFB多。连最基本的超链接都没有！
+        4. wxSmith对每一个控件都使用const static ID，意味着内存占用将增加。
+        5. wxSmith对文本非常固执的必须采用_()宏，即i18n支持。（为什么不让用户选择？）
+        6. wxSmith多出一些不属于GUI的东西，比如wxTimer，wxStopWatch...不喜欢。
+        7. wxSmith的所见即所得做得不好。用户看不到直观的菜单和状态栏，预览也不行。
+    wxFormBuilder的缺点：
+        用wxFormBuilder 3.0 release，在设计界面上确实没得挑，很方便。
+        然后在生成代码上却是有问题的：你必须从他生成的C++类中继承。
+        这也就罢了，如果你将你的界面进行了修改，则你只能手工的修改继承类：
+        因为如果不这样，你的手工添加的代码将不再存在！
+        而wxSmith虽然在操作上不如wxFormBuilder方便，
+        但却可以不用继承类，软件将知道的识别手工代码并保留
+
+附注三：加载oes工程
+1. 菜单/File/Import project/MS Visual Studio project
+2. 右键工程/properties，Project settings 选项卡中选择 "This is a custom Makefile"，确定
+3. 右键工程/Build Options，在 "Make" commands 选项卡中，修改 Build project/target: ./build_r.sh

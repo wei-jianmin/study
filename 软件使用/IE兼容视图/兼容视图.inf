@@ -1,0 +1,6 @@
+[Version]
+Signature="$CHICAGO$"
+[Defaultinstall]
+addREG=Compat
+[Compat]
+HKCU,"Software\Microsoft\Internet Explorer\BrowserEmulation","AllSitesCompatibilityMode","0x00010001","0"

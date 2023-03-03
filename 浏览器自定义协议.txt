@@ -1,0 +1,25 @@
+1. 准备cmdtest.exe程序
+程序内容：
+int main(int argc, char *argv[])
+{
+	puts("传来的参数：");
+	for(int i=0;i<argc;i++)
+	{
+		puts(argv[i]);
+	}
+	return 0;
+}
+放置于 C:\cmdtest.exe
+
+2. 注册表修改如下：
+[HKEY_CLASSES_ROOT\cmdtest]     //cmdtest即协议名，在浏览器中输入cmdtest://asdf，即会提示用户将启动
+    @="my testcmd protocol"     //浏览器提示的，要打开程序的名称
+    "URL Protocol"="C:\cmdtest.exe"   //没发现用处
+    [shell]
+        [open]
+            [command]
+                @="C:\cmdtest.exe %1"   //真正调用的程序位置，%1为参数
+
+缺点与问题：                
+    浏览器每次通过自定义协议打开外部程序时，都会弹出一个窗口，要求用户确认是否允许打开该外部程序
+    每次执行自定义协议时，都会以一个新的进程打开该外部程序

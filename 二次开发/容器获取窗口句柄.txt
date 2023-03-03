@@ -1,0 +1,13 @@
+
+//如果是取容器接口指针
+LPOLECONTAINER lpContainer;
+HRESULT hr = m_pClientSite->GetContainer(&lpContainer);
+//如果是取窗口句柄
+HWND m_hWndParent;
+IOleInPlaceSite *pOleInPlaceSite = NULL;
+if (NOERROR==m_pClientSite->QueryInterface(IID_IOleInPlaceSite, (LPVOID *)&pOleInPlaceSite))
+{
+ pOleInPlaceSite->GetWindow((HWND *)&m_hWndParent);
+ pOleInPlaceSite->Release();
+}
+ 

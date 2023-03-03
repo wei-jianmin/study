@@ -1,0 +1,94 @@
+{
+    "RootA" : "Value1",
+    "RootB " : "Value2",
+    "RootC" : {
+        "ChildA" : "String",
+        "ChildB" : 42
+    },
+    "RootD" : [
+          16,
+          256
+     ]
+}
+
+JSONNode n(JSON_NODE);
+n.push_back(JSONNode("RootA", "Value1"));   //添加基本的键-值对作为子节点
+n.push_back(JSONNode("RootB", "Value2"));
+
+JSONNode c(JSON_NODE);                      //键-对象子节点的添加方式：先创建一个空节点
+c.set_name("RootC");                            //设置节点名
+c.push_back(JSONNode("ChildA", "String"));      //添加二级子节点
+c.push_back(JSONNode("ChildB", 42));
+n.push_back(c);
+
+JSONNode c(JSON_ARRAY);                     //数组即一棵无名孩子树，通过n[i][j]穿层访问适用于子孙及数组
+c.set_name("RootD");
+c.push_back(JSONNode("", 16));
+c.push_back(JSONNode("", 256));
+n.push_back(c);
+
+n[0].type()：node的类型分五种：
+JSON_NULL          0  //空节点或者说NULL
+JSON_STRING        1
+JSON_NUMBER        2
+JSON_BOOL          3
+JSON_ARRAY         4
+JSON_NODE          5
+
+n.size() 返回调用节点的儿子个数，不计孙子
+
+需要注意的是：取值即取副本
+
+/*
+{
+  "errcode":"0",
+  "errmsg":"",
+  "friendList":[                                        //数组里面可以有多个无名Node
+    {"123":"381519760@qq.com"},                         //Node里面有一个键值对
+    {},                                                 //空节点
+    {                                                   //Node下面有多个键值对
+      "wjm1":"wjm_regist@163.com",
+      "wjm2":"wjm_regist@163.com",
+      "wjm3":"wjm_regist@163.com",
+      "wjm4":"wjm_regist@163.com"
+    }
+  ]
+}
+*/
+JSONNode root_node = libjson::parse(str_ret.c_str());
+if(0 == strcmp(root_node.at_nocase("errcode").as_string().c_str(),"0"))
+{
+  unsigned char t = root_node.at_nocase("friendList").type();
+  if(JSON_ARRAY != t)
+  {
+    CTZMessageBox::OutputMsg(QMessageBox::Information, "提示", "获取数据格式错误", true, NULL);
+    return;
+  }
+
+  JSONNode friends = root_node.at_nocase("friendList").as_array();
+  
+  UserManage->clearTableWidgetItem();
+  JSONNode afriend,afriend2;
+  for(int i=0;i<friends.size();i++)
+  {
+    afriend = friends.at(i).as_node();
+    t = afriend.type();
+    if(JSON_NODE != t)
+    {
+      continue;
+    }
+
+    afriend2 = afriend.at(0);
+    t = afriend2.type();
+    if(JSON_STRING != t)
+    {
+      continue;
+    }
+    afriend2 = afriend2.as_string();
+    UserManage->setTableWidgetItem(i,afriend2.name().c_str(),afriend2.as_string().c_str());
+  }
+}
+
+
+
+

@@ -1,0 +1,155 @@
+Q_OBJECT宏预处理后的效果(MinGW)：
+public:
+	_Pragma("GCC diagnostic push")
+	static const QMetaObject  taticMetaObject; 
+	virtual const QMetaObject *metaObject() const; 
+	virtual void *qt_metacast(const char *);
+	virtual int qt_metacall(QMetaObject::Call, int, void **); 
+	static inline QString tr(const char *s, const char *c = Q_NULLPTR, int n = -1) 
+		{ return staticMetaObject.tr(s, c, n); }
+	__attribute__ ((__deprecated__)) static inline QString trUtf8(const char *s, const char *c = Q_NULLPTR, int n = -1) 
+		{ return staticMetaObject.tr(s, c, n); }
+private:
+	static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **); 
+	_Pragma("GCC diagnostic pop")
+	struct QPrivateSignal {};
+
+小结：
+● _Pragma("GCC diagnostic push")
+  记录当前为GCC配置的诊断选项
+  _Pragma("GCC diagnostic pop")
+  恢复之前存储的
+  
+● 声明了3+2个公有函数：（3个虚函数+2个静态函数）	
+	virtual QMetaObject *metaObject();          //获取类的元对象
+		//这个函数是获取当前类对象里面内部元对象的公开接口
+	virtual void *qt_metacast(const char *);    //动态类型识别
+		//qt_metacast 是程序运行时的对象指针转换，它可以将派生类对象的指针安全地转为基类对象指针
+		//这是 Qt 不依赖编译器特性，自己实现的运行时类型转换
+		//qt_metacast 参数是基类名称字符串，返回值是转换后的基类对象指针，如果转换不成功，返回 NULL。
+	virtual int qt_metacall(QMetaObject::Call, int, void **);   //实现对信号槽和属性的支持
+		//qt_metacall 是非常重要的虚函数，  
+		//在信号到槽的执行过程中，qt_metacall 就是负责槽函数的调用，
+		//属性系统的读写等也是靠 qt_metacall 实现。
+	static QString tr(const char *s, const char *c = Q_NULLPTR, int n = -1);
+	static QString trUtf8(const char *s, const char *c = Q_NULLPTR, int n = -1);
+    //提供字符编码转换
+	
+● 声明了1个私有静态函数：
+	static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **); 
+		//前面的qt_metacall调用该私有静态函数实现槽函数调用，真正调用槽函数的就是 qt_static_metacall
+		
+● 声明了1个公有成员变量（类的元对象）：
+	static const QMetaObject  taticMetaObject; 
+		//这句定义了关键的静态元对象 staticMetaObject，这个对象会保存该类的元对象系统信息。
+		//使用静态元对象，说明该类的所有实例都会共享这个静态元对象，而不需要重复占用内存。
+		
+● 声明了一个私有结构体：
+	struct QPrivateSignal {};
+		//QPrivateSignal 是一个私有的空结构体，对函数功能来说没啥用，
+		//就是在信号被触发时，挂在参数里提醒程序员这是一个私有信号的触发。
+		
+=============================================================================================================
+对一个moc文件的分析：
+
+//  data字段是一个由byte数组组成的数组，数组大小根据信号&槽个数有关，这个数组在调用QObject的connect函数时用来匹配信号名或槽名。
+//　stringdata 存放的是字符资源，存放全部的信号名、槽名、类名。
+struct qt_meta_stringdata_MainWindow_t {
+    QByteArrayData data[7];
+    char stringdata0[45];
+};
+#define Q_BASIC_ATOMIC_INITIALIZER(a) { (a) }
+#define Q_REFCOUNT_INITIALIZE_STATIC { Q_BASIC_ATOMIC_INITIALIZER(-1) }
+#define Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset)   { Q_REFCOUNT_INITIALIZE_STATIC, size, 0, 0, offset } \
+#define Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset)    Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset)
+#define QT_MOC_LITERAL(idx, ofs, len)  Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, qptrdiff(offsetof(qt_meta_stringdata_MainWindow_t, stringdata0) + ofs - idx * sizeof(QByteArrayData)) )
+static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
+    {
+        QT_MOC_LITERAL(0, 0, 8),    //个数与qt_meta_stringdata_MainWindow_t结构体中data数组的长度相匹配
+　　    QT_MOC_LITERAL(1, 9, 5),    //第一个参数是数组索引
+　　    QT_MOC_LITERAL(2, 15, 0),   //第二个参数是在stringdata字段中的开始位置
+　　    QT_MOC_LITERAL(3, 16, 5),   //第三个参数是长度。
+　    　QT_MOC_LITERAL(4, 22, 5),   //如这里的4,22,5，就表示第4个字符串（从第0个开始算起），偏移量为22，长度为5，即“iTemp”
+　　    QT_MOC_LITERAL(5, 28, 7),   //可以认为这个结构体就是个带索引的字符串数组
+　　    QT_MOC_LITERAL(6, 36, 7)    
+    },
+    “CTestMoc\0Test1\0\0Test2\0iTemp\0OnTest1\0OnTest2\0”    //与qt_meta_stringdata_MainWindow_t结构体中stringdata0字符数组的长度相匹配
+};
+
+//  这个结构体描述的是信号&槽在调用时的索引、参数、返回值等信息。
+//  这个数组的前14个uint 描述的是元对象的私有信息，定义在qmetaobject_p.h文件的QMetaObjectPrivate结构体当中
+static const uint qt_meta_data_MainWindow[] = {
+// content:
+       7,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       4,    14, // methods  //这个信息描述的是信号&槽的个数和在表中的偏移量，即14个uint之后是信号&槽的信息，4表示有4个信号槽
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       2,       // signalCount
+       // signals: name, argc, parameters, tag, flags   //每描述一个信号需要5个uint
+       1, 0, 34, 2, 0x06,
+    　 3, 1, 35, 2, 0x06,
+    　 // slots:   name, argc, parameters, tag, flags   //每描述一个槽也需要5个uint
+       // name：对应的是上面qt_meta_stringdata_MainWindow中索引，例如1 对应的是Test1
+       // argc：参数个数
+       // parameters ： 参数的在qt_meta_data_CTestMoc这个表中的索引位置。
+       // tag：这个字段的数值对应的是qt_meta_stringdata_MainWindow 索引，在这个moc文件里对应的是一个空字符串，具体怎么用，在源代码里没看懂。
+   　　// flags：是一个特征值，是在 enum MethodFlags 枚举中定义。
+    　 5, 0, 38, 2, 0x08,
+    　 6, 1, 39, 2, 0x08,
+    　 // signals: parameters
+    　 QMetaType::Void,
+    　 QMetaType::Void, QMetaType::Int, 4,
+    　 // slots: parameters
+    　 QMetaType::Void,
+    　 QMetaType::Void, QMetaType::Int, 4,
+       0        // eod
+};
+
+void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+const QMetaObject MainWindow::staticMetaObject = {
+    { &QMainWindow::staticMetaObject, qt_meta_stringdata_MainWindow.data,
+      qt_meta_data_MainWindow,  qt_static_metacall, nullptr, nullptr}
+};
+
+
+const QMetaObject *MainWindow::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *MainWindow::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_MainWindow.stringdata0))
+        return static_cast<void*>(const_cast< MainWindow*>(this));
+    return QMainWindow::qt_metacast(_clname);
+}
+
+int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QMainWindow::qt_metacall(_c, _id, _a);
+    return _id;
+}
+
+处理后：		
+static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
+    {
+ //QT_MOC_LITERAL(0, 0, 10) // "MainWindow"
+ //Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(10, qptrdiff(offsetof(qt_meta_stringdata_MainWindow_t, stringdata0) + 0 - 0 * sizeof(QByteArrayData)) )
+ { { {-1} }, 10, 0, 0, qptrdiff(offsetof(qt_meta_stringdata_MainWindow_t, stringdata0) + 0 - 0 * sizeof(QByteArrayData)) }
+    },
+    "MainWindow"
+};
+	
+	

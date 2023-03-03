@@ -1,0 +1,346 @@
+http://blog.csdn.net/netanimals/article/details/7454820
+
+--------------
+C/C++的一个重要特色是可以动态的分配和释放内存，我们的口号是new和delete成对出现。
+可是，总会由于各种各样的原因，有内存泄露的情况发生，借助visual C++ 集成开发环境，可以方便的检查内存泄露信息，具体方法如下：
+1、在stdafx.h头文件中添加两行代码
+//内存泄露检测
+#define _CRTDBG_MAP_ALLO
+#include <crtdbg.h>
+2、在程序退出的地方添加函数，
+_CrtDumpMemoryLeaks();
+执行程序，如果有内存泄露则可以在调试输出窗口看到如下信息
+view plaincopy to clipboardprint?
+Detected memory leaks!  
+Dumping objects ->  
+tooltip.cpp(394) : {387} client block at 0x00387FE0, subtype c0, 112 bytes long.  
+a CToolTipCtrl object at $00387FE0, 112 bytes long  
+g:\c++\vc_prac\mfc_prac\pos_system\pos_systemview.cpp(174) : {312} normal block at 0x00387F40, 100 bytes long.  
+ Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD   
+能看到泄露的内存分配时候的文件、代码行，等信息
+===========================================================================
+　　介绍：
+　　动态分配、回收内存是C/C++编程语言一个最强的特点，但是中国哲学家孙（Sun Tzu，我不知道是谁？那位知道？） 指出，最强的同时也是最弱的。这句话对C/C++应用来说非常正确，在内存处理出错的地方通常就是BUGS产生的地方。一个最敏感和难检测的BUG就是内存泄漏-没有把前边分配的内存成功释放，一个小的内存泄漏可能不需要太注意，但是程序泄漏大块内存，或者渐增式的泄漏内存可能引起的现象是：先是性能低下，再就是引起复杂的内存耗尽错误。最坏的是，一个内存泄漏程序可能用完了如此多的内存以至于引起其他的程序出错，留给用户的是不能知道错误到底来自哪里。另外，一个看上去无害的内存泄漏可能是另一个问题的先兆。幸运的是VC++DEBUGER和CRT库提供了一组有效的检测和定位内存泄漏的工具。本文描述如何使用这些工具有效和系统的排除内存泄漏。 
+　　
+　　启动内存泄漏检测：
+　　主要的检测工具是DEBUGER和CRT堆除错函数。要使除错函数生效，必须要在你的程序中包含以下几个语句：
+　　
+　　#define _CRTDBG_MAP_ALLOC
+　　#include "stdlib.h"
+　　#include "crtdbg.h"
+　　
+　　并且这些#include 语句必须按上边给出的顺序使用。如果你改变了顺序，可能导致使用的函数工作不正常。包含crtdbg.h的作用是用malloc和free函数的debug版本（_malloc_dbg 和 _free_dbg）来替换他们，他们能跟踪内存分配和回收。这个替换仅仅是在debug状态下生效，Relese版本中还是使用普通的malloc和free函数。
+　　上面的#define语句使用crt堆函数相应的debug版本来替换正常的堆函数。这个语句不是必需的，但是没有他，你可能会失去一些有用的内存泄漏信息。
+　　
+　　你一旦在你的程序中增加了以上的语句，你可以通过在程序中增加_CrtDumpMemoryLeaks();函数来输出内存泄漏信息。
+　　
+　　当你在debuger下运行你的程序时，_CrtDumpMemoryLeaks 显示内存泄漏信息在OutPut窗口的Debug标签项里。内存泄漏信息举例如下：
+　　
+　　Detected memory leaks!
+　　Dumping objects ->
+　　C:\PROGRAM FILES\VISUAL STUDIO\MyProjects\leaktest\leaktest.cpp(20) : {18} 
+　　normal block at 0x00780E80, 64 bytes long.
+　　Data: <　> CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+　　Object dump complete.
+　　如果你没有使用 #define _CRTDBG_MAP_ALLOC语句的话，输出信息将如下：
+　　
+　　Detected memory leaks!
+　　Dumping objects ->
+　　{18} normal block at 0x00780E80, 64 bytes long.
+　　Data: <　> CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+　　Object dump complete.
+　　
+　　像你所看到的，当_CRTDBG_MAP_ALLOC 被定义后_CrtDumpMemoryLeaks给了你很多有用的信息。在没有定义_CRTDBG_MAP_ALLOC 的情况下，显示信息包含：
+　　1.内存分配的编号（大括弧中的数字）；
+　　2.内存快的类型（普通型、客户端型、CRT型）；
+　　3.16进制表示的内存位置；
+　　4.内存快的大小；
+　　5.前16bytes的内容。
+　　
+　　如果定义了_CRTDBG_MAP_ALLOC ，输出信息还包含当前泄漏内存是在那个文件中被分配的定位信息。文件名后圆括弧中的数字是行数。如果你双击这行信息，
+　　
+　　C:\PROGRAM FILES\VISUAL STUDIO\MyProjects\leaktest\leaktest.cpp(20) : {18} 
+　　normal block at 0x00780E80, 64 bytes long.
+　　
+　　光标就会跳转到原文件中分配这个内存的行前。选择Output中的题是行，按F4能达到同样的效果。
+　　
+　　使用Using _CrtSetDbgFlag：
+　　如果你的程序的退出点只有一个的话，调用_CrtDumpMemoryLeaks将是非常容易。但是，如果你的程序有多个退出点话会是什么样一个情况？如果不想在每个退出点都调用_CrtDumpMemoryLeaks，你可以在程序的开始包含以下调用：
+　　
+　　_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+　　这个语句会在你的程序结束时自动调用_CrtDumpMemoryLeaks，但是你必须象前边提到的那样设置_CRTDBG_ALLOC_MEM_DF 和 _CRTDBG_LEAK_CHECK_DF这两个标志位。
+　　
+　　介绍一下内存块的类型：
+　　就象前面指出的，一个内存泄漏信息指出每个内存泄漏块的类型为普通、客户端或者CRT型。在实际程序中，普通型和客户端型式最常见的类型。
+　　
+　　普通型内存块是你的程序平常分配的内存类型。
+　　
+　　客户端型内存块是MFC程序给需要析构的对象分配的内存块。MFC的new操作可以选择普通型或客户端型中合适的一种作为将要被创建的对象的内存块类型。
+　　
+　　CRT内存块是CRT库为自己使用而分配的内存块。CRT在处理自己的释放内存操作时使用这些块，所以在内存泄漏报告中这种类型并不常见，除非发生严重异常（例如：CRT库出错）。
+　　
+　　还有两种类型你在内存泄漏信息中看不到：
+　　
+　　自由块，它是已经被释放的内存块；
+　　忽略块，它是已经被特殊标示的内存块。
+　　
+　　设置CRT报告的格式：
+　　在默认情况下，_CrtDumpMemoryLeaks输出的内存泄漏信息就象前边描述的那样。你可以使用_CrtSetReportMode让这些输出信息输出到其他地方。如果你使用一个库，它可能要使输出信息到其他的地方，在这种情况下，你可以使用_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );语句使输出信息重新定位到Output窗口。
+　　
+　　根据内存分配编号设置断点：
+　　内存泄漏报告中的文件名和行数告诉你内存泄漏的位置，但是知道内存泄漏位置不是总是能找到问题所在。在一个运行的程序中一个内存分配操作可能被调用多次，但是内存泄漏可能只发生在其中的某次操作中。为了确认问题所在，你除了知道泄漏的位置之外，你还必须要知道发生泄漏的条件。内存分配编号使得解决这个问题成为可能。这个数字就在文件名、行数之后的大括弧内。例如，在上面的输出中“18”就是内存分配编号，它的意思是你程序中的内存泄漏发生在第18次分配操作中。
+　　
+　　CRT库对正在运行程序中所有的内存块分配进行计数，包括自身的内存分配，或者其他库（象MFC）。一个对象的分配编号是n表示第n个对象被分配，但是它可能并不表示第N个对象通过代码被分配（在大多数情况下它们并不相同）。
+　　
+　　你可以根据内存分配编号在内存被分配的位置设置断点。先在程序开始部分附近设置一个断点，当你的程序在断点处停止后，你可以通过QuickWatch对话框或者Watch窗口来设置内存分配断点。在Watch窗口中的Name列中输入_crtBreakAlloc，如果你使用的是多线程DLL版本的CRT库的话你必须包含上下文转换 {,,msvcrtd.dll}_crtBreakAlloc。完成后按回车，debugger处理这次调用，并且把返回值显示在value列中。如果你没有设置内存分配断点的话返回值是-1。在value列中输入你想设置的分配数，例如18。
+　　
+　　你在自己感兴趣的内存分配位置设置断点后，你可以继续debugging。细心的运行你的程序在相同的条件下，这样才能保证内存分配的顺序不致发生变化。当程序在特定的内存分配处停下来后， 你可以查看Call 窗口和其他的debugger信息来分析此次内存分配的条件。如果有必要你可以继续运行程序，看一看这个对象有什么变化，或许可以得知为什么内存没有被正确的释放。
+　　
+　　尽管这个操作非常容易，但是如果你高兴的话也可以在代码中设置断点。在代码中增加一行代码_crtBreakAlloc = 18;另外也可以通过_CrtSetBreakAlloc(18)来完成设置。
+　　
+　　比较内存状态
+　　另一个定位内存泄漏的方法是在重要位置捕捉应用程序的“内存快照”。CRT库提供了一个结构体类型 _CrtMemState，使用它你可以保存内存状态的快照（当前状态）。
+　　
+　　_CrtMemState s1, s2, s3;
+　　
+　　为了得到一个快照，可以把一个_CrtMemState 结构体传给_CrtMemCheckpoint 函数，这个函数可以把当前的内存状态填充在结构体中：
+　　
+　　_CrtMemCheckpoint( &s1 );
+　　
+　　你可以通过把结构体_CrtMemState 传给_CrtMemDumpStatistics函数来输出结构体中的内容。
+　　_CrtMemDumpStatistics( &s3 );( &s1 );
+　　
+　　它输出的信息如下：
+　　
+　　0 bytes in 0 Free Blocks.
+　　0 bytes in 0 Normal Blocks.
+　　3071 bytes in 16 CRT Blocks.
+　　0 bytes in 0 Ignore Blocks.
+　　0 bytes in 0 Client Blocks.
+　　Largest number used: 3071 bytes.
+　　Total allocations: 3764 bytes.
+　　
+　　为了得知一段代码中是否有内存泄漏，你可以在这段代码的开始和完成处分别拍一个快照，然后调用_CrtMemDifference函数来比较两个状态：
+　　
+　　_CrtMemCheckpoint( &s1 );
+　　// memory allocations take place here
+　　_CrtMemCheckpoint( &s2 );
+　　
+　　if ( _CrtMemDifference( &s3, &s1, &s2) ) 
+　　_CrtMemDumpStatistics( &s3 );
+　　
+　　就像名字中暗示的那样，_CrtMemDifference比较两个内存状态，并且产生一个结果（第一个参数）。把 _CrtMemCheckpoint 放在程序的开始和结尾，调用_CrtMemDifference 来比较结果，这也是一种检测内存泄漏的方法。如果发现内存泄漏，你可以使用_CrtMemCheckpoint把程序分成两半分别使用上述方法来检测内存泄漏，这样就是使用二分法来检查内存泄漏。
+
+////////////////////
+
+今天调试程序，发现有内存泄漏但是没有提示具体是哪一行，搞得我很头疼。结果在网上搜索了一些资料，经自己实践后整理如下：
+
+    第一种：通过"OutPut窗口"定位引发内存泄漏的代码（下面转，我写的没原文好，也懒得写）。
+
+我们知道，MFC程序如果检测到存在内存泄漏，退出程序的时候会在调试窗口提醒内存泄漏。例如：
+class CMyApp : public CWinApp
+{
+public:
+   BOOL InitApplication()
+   {
+       int* leak = new int[10];
+       return TRUE;
+   }
+};
+产生的内存泄漏报告大体如下：
+Detected memory leaks!
+Dumping objects ->
+c:\work\test.cpp(186) : {52} normal block at 0x003C4410, 40 bytes long.
+Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+Object dump complete.
+这挺好。问题是，如果我们不喜欢MFC，那么难道就没有办法？或者自己做？ 
+呵呵，这不需要。其实，MFC也没有自己做。内存泄漏检测的工作是VC++的C运行库做的。也就是说，只要你是VC++程序员，都可以很方便地检测内存泄漏。我们还是给个样例：
+#include <crtdbg.h>
+inline void EnableMemLeakCheck()
+{
+   _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+}
+void main()
+{
+   EnableMemLeakCheck();
+   int* leak = new int[10];
+}
+运行（提醒：不要按Ctrl+F5，按F5），你将发现，产生的内存泄漏报告与MFC类似，但有细节不同，如下：
+Detected memory leaks!
+Dumping objects ->
+{52} normal block at 0x003C4410, 40 bytes long.
+Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+Object dump complete.
+为什么呢？看下面。
+
+定位内存泄漏由于哪一句话引起的
+你已经发现程序存在内存泄漏。现在的问题是，我们要找泄漏的根源。
+一般我们首先确定内存泄漏是由于哪一句引起。在MFC中，这一点很容易。你双击内存泄漏报告的文字，或者在Debug窗口中按F4，IDE就帮你定位到申请该内存块的地方。对于上例，也就是这一句：
+   int* leak = new int[10];
+这多多少少对你分析内存泄漏有点帮助。特别地，如果这个new仅对应一条delete（或者你把delete漏写），这将很快可以确认问题的症结。 
+我们前面已经看到，不使用MFC的时候，生成的内存泄漏报告与MFC不同，而且你立刻发现按F4不灵。那么难道MFC做了什么手脚？ 
+其实不是，我们来模拟下MFC做的事情。看下例： 
+inline void EnableMemLeakCheck()
+{
+   _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+}
+#ifdef _DEBUG
+#define new   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+void main()
+{
+   EnableMemLeakCheck();
+   int* leak = new int[10];
+}
+再运行这个样例，你惊喜地发现，现在内存泄漏报告和MFC没有任何分别了。
+
+
+    第二种方法：直接定位指定内存块错误的代码行（下面转）。
+
+单确定了内存泄漏发生在哪一行，有时候并不足够。特别是同一个new对应有多处释放的情形。在实际的工程中，以下两种情况很典型： 
+创建对象的地方是一个类工厂（ClassFactory）模式。很多甚至全部类实例由同一个new创建。对于此，定位到了new出对象的所在行基本没有多大帮助。 
+
+COM对象。我们知道COM对象采用Reference Count维护生命周期。也就是说，对象new的地方只有一个，但是Release的地方很多，你要一个个排除。 
+那么，有什么好办法，可以迅速定位内存泄漏？
+答：有。
+在内存泄漏情况复杂的时候，你可以用以下方法定位内存泄漏。这是我个人认为通用的内存泄漏追踪方法中最有效的手段。
+我们再回头看看crtdbg生成的内存泄漏报告： 
+Detected memory leaks!
+Dumping objects ->
+c:\work\test.cpp(186) : {52} normal block at 0x003C4410, 40 bytes long.
+Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+Object dump complete. 
+除了产生该内存泄漏的内存分配语句所在的文件名、行号为，我们注意到有一个比较陌生的信息：{52}。这个整数值代表了什么意思呢？
+其实，它代表了第几次内存分配操作。象这个例子，{52}代表了第52次内存分配操作发生了泄漏。你可能要说，我只new过一次，怎么会是第52次？这很容易理解，其他的内存申请操作在C的初始化过程调用的呗。:)
+有没有可能，我们让程序运行到第52次内存分配操作的时候，自动停下来，进入调试状态？所幸，crtdbg确实提供了这样的函数：即 long _CrtSetBreakAlloc(long nAllocID)。我们加上它：
+inline void EnableMemLeakCheck()
+{
+   _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+}
+#ifdef _DEBUG
+#define new   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+void main()
+{
+   EnableMemLeakCheck();
+   _CrtSetBreakAlloc(52);
+   int* leak = new int[10];
+}
+你发现，程序运行到 int* leak = new int[10]; 一句时，自动停下来进入调试状态。细细体会一下，你可以发现，这种方式你获得的信息远比在程序退出时获得文件名及行号有价值得多。因为报告泄漏文件名及行号，你获得的只是静态的信息，然而_CrtSetBreakAlloc则是把整个现场恢复，你可以通过对函数调用栈分析（我发现很多人不习惯看函数调用栈，如果你属于这种情况，我强烈推荐你去补上这一课，因为它太重要了）以及其他在线调试技巧，来分析产生内存泄漏的原因。通常情况下，这种分析方法可以在5分钟内找到肇事者。
+当然，_CrtSetBreakAlloc要求你的程序执行过程是可还原的（多次执行过程的内存分配顺序不会发生变化）。这个假设在多数情况下成立。不过，在多线程的情况下，这一点有时难以保证。
+
+个人心得：我在用这种方法时开始没看懂，后来在MSDN中也找到了这方面相关的信息，后来才会用。我感觉在这方面网上介绍的不够详细，下面我就相对详细地解释一下（为什么用“相对详细”？本人比较懒）。首先说明一下，下面的函数不需要上面所添加的宏定义和"crtdbg.h"头文件，也不需要EnableMemLeakCheck()函数。只需在main函数一开始运行 _CrtSetBreakAlloc(long (4459))函数。其中4459是申请内存的序号(上面有说明)，然后F5运行(不需要设断点)，然后会出现“Find Source”这个对话框，点击“取消”。然后会出现“User breakpoint called from code at xxxx”的对话框，点击“确定”，会看到一些汇编的代码（不要怕，其实我也看不懂，算然原来学过点汇编），调出堆栈窗口（call stack），在其中的“main() line xxx + xxx bytes”上双击（或它的上一行双击，我的上一行是一个自定义函数，双击后直接定位到我new的地方，定位还是很准的，开始我怀疑，但最后检查果然是这地方没释放）会定位到错误行。
+
+第三种：用Ctrl+B来设定，不过现在好像忘了。效果根第二种方法基本一样。
+
+有人会问，既然第一种方法定位没问题，为什么还要介绍第二种？
+
+其实在实际应用中，某些内存泄漏它没有定位到哪一行的，只有内存块的序号（有可能我用的不太会用），这个时候就需要用第二种方法。
+
+
+
+本文转载自:http://hailang19821213.blog.163.com/blog/static/30679461201011162425197/
+
+
+====总结要点如下====总结要点如下====总结要点如下==========================
+
+// 一般在入口函数cpp中添加以下定义和头文件   CRT库
+#define _CRTDBG_MAP_ALLOC   
+#include <stdlib.h>   
+#include <crtdbg.h>  
+
+
+// 内存泄露信息中显示文件名和代码行号
+#ifdef _DEBUG
+#define new   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+
+
+
+static void Debug()
+{ 
+// 一般在入口函数一开始添加以下代码   
+_CrtDumpMemoryLeaks();   
+_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );   
+};
+
+
+// 根据内存分配编号设置断点：
+static void Debug(unsigned int num)
+{
+//num就是刚刚检测出来的内存泄露的地方大括号内的数字,跳转到内存泄露的地方 
+_CrtSetBreakAlloc(num);   
+}
+
+
+
+可以封装在一个类中，程序中直接调用： 
+
+CDebug::Debug();
+
+===========================================================================
+// Debug.h: interface for the CDebug class.
+//---------------------------------------------------------------------------------
+// 内存泄露信息示例 : 
+// {49} normal block at 0x00382F78, 40 bytes long.
+// Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+//---------------------------------------------------------------------------------
+// 显示信息包含：
+//　　1.内存分配的编号（大括弧中的数字）；
+//　　2.内存快的类型（普通型、客户端型、CRT型）；
+// <1>普通型内存块是你的程序平常分配的内存类型。
+// <2>客户端型内存块是MFC程序给需要析构的对象分配的内存块。
+// <3>CRT内存块是CRT库为自己使用而分配的内存块。
+// <4>自由块，它是已经被释放的内存块；
+// <5>忽略块，它是已经被特殊标示的内存块。
+//　　3.16进制表示的内存位置；
+//　　4.内存快的大小；
+//　　5.前16bytes的内容。
+//////////////////////////////////////////////////////////////////////
+
+
+#if !defined(AFX_DEBUG_H__6B201A16_E36F_4830_A4F5_BD2207106871__INCLUDED_)
+#define AFX_DEBUG_H__6B201A16_E36F_4830_A4F5_BD2207106871__INCLUDED_
+
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+
+// 一般在入口函数cpp中添加以下定义和头文件   CRT库
+#define _CRTDBG_MAP_ALLOC   
+#include <stdlib.h>   
+#include <crtdbg.h>  
+
+
+// 内存泄露信息中显示文件名和代码行号
+#ifdef _DEBUG
+#define new   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+
+
+class CDebug  
+{
+private:
+CDebug();
+virtual ~CDebug();
+public:
+static void Debug()
+{ 
+// 一般在入口函数一开始添加以下代码   
+_CrtDumpMemoryLeaks();   
+_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );   
+};
+
+
+// 根据内存分配编号设置断点：
+static void Debug(unsigned int num)
+{
+//num就是刚刚检测出来的内存泄露的地方大括号内的数字,跳转到内存泄露的地方 
+_CrtSetBreakAlloc(num);   
+}
+};
+
+
+#endif // !defined(AFX_DEBUG_H__6B201A16_E36F_4830_A4F5_BD2207106871__INCLUDED_)

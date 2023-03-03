@@ -1,0 +1,77 @@
+[Edit]
+Ctrl + Z : Undo
+Ctrl + Shift + Z : Redo
+Ctrl + D : Duplicate Line
+Ctrl + Shift + U : Toogle Case
+
+[Edit/Find]
+Ctrl + F : Find
+Ctrl + Shift + F : Find in Path
+Alt + F7 : Find Usages
+Ctrl + Alt + F7 : Show Usages
+Ctrl + F7 : Find Usages in File
+Ctrl + Shift + F7 : Highlight Usages in File
+
+[View]
+Ctrl + Shift + I : Quick Definition
+Ctrl + P : Param Info
+Ctrl + Shift + P : Type Info
+Ctrl + E : Recent Files
+Ctrl + Shift + E : Recent Locations
+
+[Navigate]
+Shift + Shift : Search Everywhere
+Ctrl + Shift + ¡û : Back
+Ctrl + Shift + ¡ú : Forward
+Ctrl + B : Goto Declaration or Usage
+Ctrl + F12 : File Structure
+Ctrl + H : Type Hierarchy
+Ctrl + Shift + H : Method Hierarchy
+Ctrl + Alt + H : Call Hierarchy
+Alt + ¡ü £ºPrev Method
+Alt + ¡ý : Next Method
+
+[Navigate/Bookmarks]
+F11 : Toogle Bookmark
+Shift + F11 : Show Bookmarks
+Ctrl + Enter : Bookmarks View Descript
+
+[Code]
+Ctrl + O : List Override Methods
+Ctrl + I : List Implement Methods
+Ctrl + Alt + T : Surround With
+Ctrl + J : List Live Template
+Ctrl + Alt + L : Reformat Code
+Ctrl + Shift + Alt + L : Reformat Code Dialog
+Ctrl + Shift + ¡ü £ºMove Method Up
+Ctrl + Shift + ¡ý : Move Method Down
+Alt + Shift + ¡ü £ºMove Line Up
+Alt + Shift + ¡ý : Move Line Down
+Shift + Enter : Insert New Line Down
+Ctrl + Alt + Enter : Insert New Line Up
+Alt + Enter : Auto Import
+
+[Code/Completion]
+Ctrl + Space : Basic Completion
+Ctrl + Shift + Space : Smart Completion
+
+[Code/Folding]
+Ctrl + '+' : Expand
+Ctrl + '-' : Collapse
+Ctrl + Alt + '+' : Expand Recursively
+Ctrl + Alt + '-' : Collapse Recursively
+Ctrl + Shift + '+' : Expand All
+Ctrl + Shift + '-' : Collapse All
+
+[Run]
+Shift + F10 : Run This Module
+Shift + F9 : Debug This Module
+Alt + Shift + F10 : Run
+Alt + Shift + F9 : Debug
+Ctrl + F2 : Stop
+F8 : Step Over
+F7 : Step Into
+Shift + F8 : Step Out
+Alt + F9 : Run to Cursor
+Ctrl + F8 : Toggle Line Breakpoint
+Ctrl + Shift + F8 : View Breakpoints

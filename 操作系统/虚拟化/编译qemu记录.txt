@@ -1,0 +1,17 @@
+configure生成make文件时：
+1. 安装了高版本的gcc（7.5），但依然提示 版本低
+   原因：内部实际使用的是cc的版本，使用 cc -v 可发现仍然为4.8.5版本
+   解决：把cc链接到7.5版本的gcc
+2. 报 glib-2.56 gthread-2.0 is requeied to compile QEMU
+   解决：所搜索安装 glib 的开发版
+   
+make时：   
+1. 生成libcommon.fa.p/hw_display_virtio_gpu-udmabuf.c.o时，报报找不到<linux/memfd.h
+   解决：找到 hw/display/virtio-gpu-udmabuf.c，把里面的 #include <linux/memfd.h> 直接注释掉即可
+   
+安装客户系统   
+1. 安装系统是找不到硬盘
+   原因： 在创建完img硬盘后，移动了img文件的位置，在安装系统时，又没有指定该位置
+   解决： 在执行 qemu-system_x86_64安装镜像时，使用-hda命令，指定磁盘位置
+   参考： https://blog.csdn.net/wanghuiyao/article/details/65627198
+   

@@ -1,0 +1,37 @@
+Web服务器是可以向发出请求的浏览器提供文档的程序
+
+web服务器 vs web应用服务器
+    Web服务器可以解析(handles)HTTP协议。
+    当Web服务器接收到一个HTTP请求(request)，会返回一个HTTP响应(response)，例如送回一个HTML页面
+    为了处理一个请求(request)，Web服务器可以响应(response)一个静态页面或图片，进行页面跳转(redirect)，
+    或者把动态响应(dynamic response)的产生委托(delegate)给一些其它的程序，
+    例如CGI脚本，JSP(JavaServer Pages)脚本，servlets，ASP(Active Server Pages)脚本，
+    服务器端(server-side)JavaScript，或者一些其它的服务器端(server-side)技术。
+    
+    应用服务器，如JSP，处理的是非常规性WEB页面（JSP文件），
+    它动态生成WEB页面，生成的WEB页面再发送给客户端
+    （实际上当应用服务器处理完一个JSP请求并完成JSP生成HTML后它的任务就结束了，其余的就是WEB处理的过程了）
+    根据定义，作为应用程序服务器，它通过各种协议（包括HTTP）,把商业逻辑暴露给(expose)客户端应用程序。
+    应用程序使用此商业逻辑就像你调用对象的一个方法(或过程 语言中的一个函数)一样。
+    在大多数情形下，应用程序服务器是通过组件(component)的应用程序接口(API)把商业逻辑暴露(expose)(给客户端应用程序)的
+    
+    简而言之，应用服务器处理业务逻辑，web服务器则主要是让客户可以通过浏览器进行访问，处理HTML文件，
+    web服务器通常比应用服务器简单。
+    WEB服务器:Apache、IIS、Nginx（也是反向代理服务器）
+    应用服务器:Tomcat、Weblogic、Jboss
+    
+    Tomcat 服务器是一个免费的开放源代码的Web 应用服务器
+    Tomcat 部分是Apache 服务器的扩展，但它是独立运行的
+    所以当你 运行tomcat 时，它实际上作为一个与Apache 独立的进程单独运行的
+    
+apache和tomcat的区别（web服务器和应用服务器的区别）
+    apache:是web服务器，可以作为独立的web服务器来运行，但是不能解释java程序；
+    它是普通服务器，只支持html（普通网页），可以通过插件支持php；
+    功能类似与IIS，是html容器。只支持静态网页。
+    
+    tomcat：是应用（java）服务器，一个servlet容器，是apache的扩展；可用于发布jsp及java
+    它支持动态网页，如asp，php，cgi，jsp。
+    Tomcat Server是根据servlet和JSP规范进行执行的
+    Tomcat是Java Servlet 2.2和JavaServer Pages 1.1技术的标准实现
+    
+    

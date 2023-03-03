@@ -1,0 +1,7 @@
+MoveWindow:
+MoveWindow sends WM_WINDOWPOSCHANGED,   WM_MOVE,   WM_SIZE,   and   WM_NCCALCSIZE messages to the window. （这里很重要，说明MoveWindow函数内部不做真实的窗口处理，而是发送了一组消息，让其他函数进行处理，其实这个函数就是SetWindowPos，我们可以继续往下看）
+
+SetWindowPos:
+SetWindowPos always causes a WM_WINDOWPOSCHANGED message to be sent to the window. The flags passed in this message are exactly the same as those passed into the function. No other messages are sent by this function. （SetWindowPos包含了z-order的设置，其功能比MoveWindow更为强大，包含了一组设置窗口显示状态的标志。然而，MoveWindow和SetWindowPos更本质的区别是，MoveWindow做了更多额外的事情，发送WM_MOVE, WM_SIZE, and WM_NCCALCSIZE等多种消息给窗口，而SetWindowPos则显的单纯的多，只发送了WM_WINDOWPOSCHANGED消息给窗口）
+
+从上面可以看出MoveWindow和SetWindowPos实现的功能基本是一致的，但还是存在细微的差别，关键的一点是MoveWindow不仅通知窗口进行SetWindowPos操作，而且还发送了一批消息，告知窗口显示改变了，这样窗口就可以在内部进行一些操作。这点对处理ActiveX控件的resize很重要，在ActiveX控件中往往通过WM_SIZE消息处理关联窗口resize的窗口调整，所以在调用方必须使用MoveWindow才能使ActiveX控件实现resize。

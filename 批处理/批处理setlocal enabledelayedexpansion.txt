@@ -1,0 +1,5 @@
+批处理在某个文件中使用了setlocal enabledelayedexpansion，
+会使后面定义的变量无法导出，
+即另一个批处理文件call调用该文件后，没法使用该文件定义了的变量，
+解决办法是在不在被调批处理文件中设置setlocal enabledelayedexpansion，
+而是把setlocal enabledelayedexpansion提前到调用文件中

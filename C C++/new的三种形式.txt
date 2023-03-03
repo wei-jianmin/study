@@ -1,0 +1,56 @@
+new有三种形式： 
+1. 作为关键字
+这是我们平时所用的形式， 如 new int; new MyClass;
+如果new的是不同类型，则和malloc效果差不多，
+如果是new的类，则除了申请内存之外，还会自动的调用类的构造函数
+也就是说，这个new关键字，在编译器处理的时候，会被拆分为两块功能：内存分配+调用构造函数
+
+2. 作为运算符，单纯实现内存分配
+operator new
+类比operator ()
+定义：
+void* operator new(std::size_t) throw(std::bad_alloc);    //分配失败的情况下，抛出异常std::bad_alloc
+void* operator new[](std::size_t) throw(std::bad_alloc); 
+void * operator new(std::size_t,const std::nothrow_t&) throw();   //nothrow new在失败时，返回NULL
+void * operator new[](std::size_t,const std::nothrow_t&) throw();
+包含在<new>头文件中，一同定义的还有delete（略）
+当做函数来使用
+使用方式： operator new(size)  <==> new size ?
+
+3. 作为运算符，单纯实现调用构造函数
+void* operator new(std::size_t, void* __p);
+void* operator new[](std::size_t, void* __p);
+包含在<new>头文件中，一同定义的还有delete（略）
+
+----------
+类比加法运算符函数（成员函数）
+class A
+{
+public:
+  A(char* s,int i);
+  int oeprator + (int i);
+}
+a+3;  编译器将+视作特殊符号(即运算符，像是关键字，而又不是关键字),这会引发编译器的变换处理，变为：a.operator+(3)这种形式
+A* p = new A("abc",3);
+当编译器碰到new这个特殊符号时，
+先将之变为 
+void *pv = openator new(sizeof(A));
+A* p = (A*)pv;
+new(p) A("abc",3);  //在p内存上，执行A的构造函数
+但编译器碰到最后一句这种形式时，会进一步做变换处理，
+
+
+==========
+
+成员运算符重载函数与友元运算符重载函数的比较：
+对双目运算符而言，成员运算符重载函数参数表中含有一个参数，而友元运算符重载函数参数表中含有两个参数
+对于双目运算符，如果重载为成员函数，则成员对象必须、只能出现在运算符的前面，而如果使用友元函数，则可以选择让对象出现在运算符前面或后面，或者两者都支持。
+对单目运算符而言，成员运算符重载函数参数表中没有(前置单目)或有一个(后置单目)参数，而友元运算符重载函数参数表中含有一(前置单目)到二(后置单目)个参数
+
+
+
+
+
+
+
+

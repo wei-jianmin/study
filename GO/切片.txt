@@ -1,0 +1,46 @@
+切片内部结构：
+struct Slice
+{   
+    byte*    array;       // actual data
+    uintgo    len;        // number of elements
+    uintgo    cap;        // allocated number of elements
+
+};
+
+当把 slice 作为参数，本身传递的是值，
+但其内容就 byte* array，实际传递的是引用，
+所以可以在函数内部修改，
+但如果对 slice 本身做 append，而且导致 slice 进行了扩容，
+实际扩容的是函数内复制的一份切片，对于函数外面的切片没有变化
+
+
+slice 的底层是数组指针，所以 slice a 和 s 指向的是同一个底层数组，所以当修改 s[0] 时，a 也会被修改。
+func main() {
+    s := []int{1, 2, 3} // len=3, cap=3
+    a := s
+    s[0] = 888
+    s = append(s, 4)
+    fmt.Println(a, len(a), cap(a)) // 输出：[888 2 3] 3 3
+    fmt.Println(s, len(s), cap(s)) // 输出：[888 2 3 4] 4 6
+}
+
+
+append(list, [params])，
+先判断 list 的 cap 长度是否大于等于 len(list) + len([params])，
+如果大于，那么 cap 不变，否则 cap 扩大为原来的两倍后，再判断是否大于等于 len(list) + len([params])
+测试结果：
+len     cat     value
+0       0       []
+1       1       [0]
+2       2       [0 1]
+3       4       [0 1 2]
+4       4       [0 1 2 3]
+5       8       [0 1 2 3 4]
+6       8       [0 1 2 3 4 5]
+7       8       [0 1 2 3 4 5 6]
+8       8       [0 1 2 3 4 5 6 7]
+9       16      [0 1 2 3 4 5 6 7 8]
+注：在 cap 小于1024的情况下是每次扩大到 2 * cap ，当大于1024之后就每次扩大到 1.25 * cap 
+
+
+使用 copy 函数要注意对于 copy(dst, src)，要初始化 dst 的 size，否则无法复制

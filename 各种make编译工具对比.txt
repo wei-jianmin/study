@@ -1,0 +1,12 @@
+make、gmake、nmake、cmake的关系
+    https://blog.csdn.net/lionhenryzxxy/article/details/58585716
+    gmake是GNU Make的缩写
+    Linux系统环境下的make就是GNU Make，
+    之所以有gmake，是因为在别的平台上，make一般被占用，GNU make只好叫gmake了
+    freebsd自带的make是BSD make，两者的不同在于Makefile部分不兼容
+    windows下自带的make叫做nmake
+    Dmake是同GNU Make类似的一个工具，dmake 是 make 实用程序的超集。
+    cmake最终仍然生成 Makefile, Visual Studio 的 .sln，Xcode 的 .xcodebuild 文件，
+    依赖现有编译工具 (make, nmake, vcbuild, xcodebuild) 来编译
+    mingw32-make 是qt使用的编译makefile文件的工具，
+    如果MakeFile中使用的是gcc编译器，则windows下可用mingw32-make工具编译

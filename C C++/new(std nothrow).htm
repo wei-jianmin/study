@@ -1,0 +1,2274 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0059)https://blog.csdn.net/fengbingchun/article/details/63686673 -->
+<!DOCTYPE html><HTML lang="zh-CN"><HEAD>
+<META charset="UTF-8"><LINK rel="canonical" href="https://blog.csdn.net/fengbingchun/article/details/63686673">
+<META name="renderer" content="webkit">
+<META name="force-rendering" content="webkit">
+<META content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<META name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<META name="apple-mobile-web-app-status-bar-style" content="black">
+<META name="referrer" content="always">
+<META content="no-siteapp" http-equiv="Cache-Control"><LINK rel="alternate" 
+href="#" media="handheld">
+<META name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+<SCRIPT src="new(std%20nothrow)_files/tingyun-rum-blog.js"></SCRIPT>
+<LINK rel="SHORTCUT ICON" 
+href="https://csdnimg.cn/public/favicon.ico"><TITLE>C++中nothrow的介绍及使用 -          
+                                网络资源是无限的 - CSDN博客</TITLE><LINK rel="stylesheet" 
+href="new(std%20nothrow)_files/detail-850fd67a6d.min.css"><LINK rel="stylesheet" 
+href="new(std%20nothrow)_files/skin-yellow-2eefd34acf.min.css">
+<SCRIPT type="text/javascript">
+        var username = "fengbingchun";
+        var blog_address = "https://blog.csdn.net/fengbingchun";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = false;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/fengbingchun/article/details/63686673"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin-yellow";
+        // 第四范式所需数据
+        var articleTitles = "C++中nothrow的介绍及使用 -                                          网络资源是无限的";
+        var articleID = "63686673";
+
+        var nickName = "fengbingchun";
+        var isCorporate = false;
+    </SCRIPT>
+
+<SCRIPT type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/jquery-1.9.1.min.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/main-1.0.6.js"></SCRIPT>
+<!-- 新版上报 -->
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/track.js"></SCRIPT>
+<!-- 新版上报end --><LINK rel="stylesheet" href="new(std%20nothrow)_files/sandalstrap.min.css">
+<STYLE>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </STYLE>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<META name="GENERATOR" content="MSHTML 9.00.8112.16737"></HEAD>
+<BODY class="nodata "><LINK rel="stylesheet" href="new(std%20nothrow)_files/content_toolbar.css">
+<SCRIPT id="toolbar-tpl-scriptId" type="text/javascript" src="new(std%20nothrow)_files/content_toolbar.js" domain="https://blog.csdn.net/"></SCRIPT>
+<LINK rel="stylesheet" href="new(std%20nothrow)_files/blog_code-c3a0c33d5c.css">
+<LINK rel="stylesheet" href="new(std%20nothrow)_files/paging.css">
+<SCRIPT type="text/javascript">
+	// 容错处理
+	var NEWS_FEED = function(){}
+</SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/mvf_news_feed.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/copyright.js"></SCRIPT>
+
+<DIV style="display: none;"><IMG onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);' 
+src=""></DIV><LINK rel="stylesheet" href="new(std%20nothrow)_files/chart-3456820cac.css">
+<SCRIPT src="new(std%20nothrow)_files/ds.js"></SCRIPT>
+
+<DIV id="mainBox" class="container clearfix">
+<DIV class="recommend-right">
+<UL class="recommend-fixed-box"></UL></DIV><main>
+<DIV class="blog-content-box">
+<DIV class="article-header-box">
+<DIV class="article-header">
+<DIV class="article-title-box"><SPAN 
+class="article-type type-1 float-left">原</SPAN>
+<H1 class="title-article">C++中nothrow的介绍及使用</H1></DIV>
+<DIV class="article-info-box">
+<DIV class="article-bar-top"><SPAN class="time">2017年03月19日 18:13:52</SPAN><A 
+class="follow-nickName" href="https://me.csdn.net/fengbingchun" 
+target="_blank">fengbingchun</A><SPAN class="read-count">阅读数：4763</SPAN></DIV>
+<DIV class="operating"></DIV></DIV></DIV></DIV><ARTICLE class="baidu_pl">
+<DIV id="article_content" class="article_content clearfix csdn-tracking-statistics" 
+data-dsm="post" data-mod="popu_307" data-pid="blog">
+<DIV 
+class="article-copyright">版权声明：本文为博主原创文章，未经博主允许不得转载。					https://blog.csdn.net/fengbingchun/article/details/63686673				</DIV><LINK 
+rel="stylesheet" href="new(std%20nothrow)_files/ck_htmledit_views-2c6a5211c9.css">
+<DIV id="content_views" class="htmledit_views">
+<P><SPAN>	</SPAN>在C中，使用malloc等分配内存的函数时，一定要检查其返回值是否为”空指针”，并以此作为检查内存操作是否成功的依据，这种Test-for-NULL代码形式是一种良好的编程习惯，也是编写可靠程序所必需的。</P>
+<P><SPAN>	</SPAN>在C++中new在申请内存失败时默认会抛出一个std::bad_alloc 
+异常。如果出现这个异常，那就意味着内存耗尽，或者有其它原因导致内存分配失败。所以，按照C++标准，如果想检查new是否成功，则应该通过try 
+catch捕捉异常。但有些编译器不支持try catch。C++标准化委员会不想遗弃这些Test-for-NULL的代码，所以他们提供了operator 
+new的另一种可选形式---- nothrow，用以提供传统的Failure-yields-NULL行为。</P>
+<P><SPAN>	</SPAN>当使用new申请一块内存失败时，抛出异常std::bad_alloc是C++标准中规定的标准行为，所以使用try { p = 
+new int[size];} catch(std::bad_alloc) { … } 的处理方式。</P>
+<P></P><PRE><CODE class="language-cpp">struct nothrow_t {
+	// placement new tag type to suppress exceptions
+};
+
+extern const nothrow_t nothrow; // constant for placement new tag</CODE></PRE>
+<P><SPAN style="color: rgb(34, 34, 34);"><SPAN>	</SPAN>其中，</SPAN><SPAN style="color: rgb(34, 34, 34);">nothrow_t</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">通常是一个空结构，其唯一目的是提供编译器一个可根据重载规则识别具体调用的类型。用户一般简单地使用</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">"new(std::nothrow) </SPAN><SPAN style="color: rgb(34, 34, 34);">类型</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">"(nothrow</SPAN><SPAN style="color: rgb(34, 34, 34);">是一个</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">nothrow_t</SPAN><SPAN style="color: rgb(34, 34, 34);">类型的常量</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">)</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">来调用这个</SPAN><SPAN style="color: rgb(34, 34, 34);">placement 
+new</SPAN><SPAN style="color: rgb(34, 34, 34);">操作符。它与标准</SPAN><SPAN style="color: rgb(34, 34, 34);">new</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">的区别是，</SPAN><SPAN style="color: rgb(34, 34, 34);">new</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">在分配内存失败时会抛出异常，而</SPAN><SPAN style="color: rgb(34, 34, 34);">"new(std::nothrow)"</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">在分配内存失败时会返回一个空指针。</SPAN></P>
+<P><SPAN style="color: rgb(34, 34, 34);"><SPAN>	</SPAN>new operator</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">分配内存失败后，缺省的行为不是返回</SPAN><SPAN style="color: rgb(34, 34, 34);">NULL</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">，而是抛出异常</SPAN><SPAN style="color: rgb(34, 34, 34);">std::bad_alloc</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">。所以判断返回值是否为</SPAN><SPAN style="color: rgb(34, 34, 34);">NULL</SPAN><SPAN 
+style="color: rgb(34, 34, 34);">没有任何意义。</SPAN></P>
+<P>&nbsp;<SPAN>	</SPAN>std::nothrow: This constant value is used as an argument 
+for operator new and operator new[] to indicate that these functions shall not 
+throw an exception on failure, but return a null pointer instead.</P>
+<P><SPAN>	</SPAN>By default, when the new operator is used to attempt to 
+allocate memory and the handling function is unable to do so, a bad_alloc 
+exception is thrown. But when nothrow is used as argument for new, it returns a 
+null pointer instead.</P>
+<P><SPAN>	</SPAN>This constant (nothrow) is just a value of type nothrow_t, with 
+the only purpose of triggering an overloaded version of the function operator 
+new (or operatornew[]) that takes an argument of this type.</P>
+<P><SPAN>	</SPAN>以下是测试代码：</P>
+<P></P><PRE><CODE class="language-cpp">#include "nothrow.hpp"
+#include &lt;iostream&gt;
+#include &lt;new&gt; // std::nothrow
+
+// reference: http://www.cplusplus.com/reference/new/nothrow/
+int test_nothrow1()
+{
+	std::cout &lt;&lt; "Attempting to allocate 1 MiB...";
+	char* p = new (std::nothrow) char[1048576];
+	if (p == 0)
+		std::cout &lt;&lt; "Failed!\n";
+	else {
+		std::cout &lt;&lt; "Succeeded!\n";
+		delete[] p;
+	}
+
+	return 0;
+}
+
+// reference: http://en.cppreference.com/w/cpp/memory/new/nothrow
+int test_nothrow2()
+{
+	try {
+		while (true) {
+			new int[100000000ul];   // throwing overload
+		}
+	}
+	catch (const std::bad_alloc&amp; e) {
+		std::cout &lt;&lt; e.what() &lt;&lt; '\n';
+	}
+
+	while (true) {
+		int* p = new(std::nothrow) int[100000000ul]; // non-throwing overload
+		if (p == nullptr) {
+			std::cout &lt;&lt; "Allocation returned nullptr\n";
+			break;
+		}
+	}
+
+	return 0;
+}</CODE></PRE><SPAN>	</SPAN><STRONG>GitHub</STRONG>：<A 
+href="https://github.com/fengbingchun/Messy_Test" 
+rel="nofollow">https://github.com/fengbingchun/Messy_Test</A></DIV></DIV>
+<DIV class="hide-article-box text-center"><A id="btn-readmore" class="btn" 
+data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/fengbingchun/article/details/63686673,"}' 
+data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/fengbingchun/article/details/63686673,"}'>阅读更多</A></DIV>
+<SCRIPT>(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										
+										if(!window.csdn.anonymousUserLimit.judgment()){
+											window.csdn.anonymousUserLimit.Jumplogin();
+											return false;
+										}else if(!currentUserName){
+											window.csdn.anonymousUserLimit.updata();
+										}
+										
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</SCRIPT>
+</ARTICLE></DIV>
+<SCRIPT>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</SCRIPT>
+<A id="commentBox"></A>
+<DIV class="comment-box">
+<DIV class="comment-edit-box d-flex"><A id="commentsedit"></A>
+<DIV class="user-img"><A href="javascript:void(0);" target="_blank"><IMG class="show_loginbox" 
+src="new(std%20nothrow)_files/anonymous-User-img.png"></A></DIV>
+<FORM id="commentform"><INPUT id="comment_replyId" type="hidden"><TEXTAREA id="comment_content" class="comment-content" name="comment_content" placeholder="想对作者说点什么"></TEXTAREA>
+<DIV class="opt-box"> <!-- d-flex -->
+<DIV id="ubbtools" class="add_code"><A href="https://blog.csdn.net/fengbingchun/article/details/63686673#insertcode" 
+target="_self" code="code"><I 
+class="icon iconfont icon-daima"></I></A></DIV><INPUT id="comment_replyId" name="comment_replyId" 
+type="hidden"><INPUT id="comment_userId" name="comment_userId" 
+type="hidden"><INPUT id="commentId" name="commentId" type="hidden">
+<DIV style="display: none;" class="csdn-tracking-statistics tracking-click" 
+data-mod="popu_384"><A class="comment_area_btn" href="https://blog.csdn.net/fengbingchun/article/details/63686673#" 
+target="_blank">发表评论</A></DIV>
+<DIV id="myDrap" class="dropdown"><A aria-haspopup="true" aria-expanded="false" 
+class="dropdown-face d-flex align-items-center" role="button" data-toggle="dropdown">
+<DIV class="txt-selected text-truncate">添加代码片</DIV><svg xmlns="http://www.w3.org/2000/svg" 
+class="icon d-block" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="#csdnc-triangledown" /></svg></A>
+<UL id="commentCode" class="dropdown-menu" aria-labelledby="drop4">
+  <LI><A data-code="html">HTML/XML</A></LI>
+  <LI><A data-code="objc">objective-c</A></LI>
+  <LI><A data-code="ruby">Ruby</A></LI>
+  <LI><A data-code="php">PHP</A></LI>
+  <LI><A data-code="csharp">C</A></LI>
+  <LI><A data-code="cpp">C++</A></LI>
+  <LI><A data-code="javascript">JavaScript</A></LI>
+  <LI><A data-code="python">Python</A></LI>
+  <LI><A data-code="java">Java</A></LI>
+  <LI><A data-code="css">CSS</A></LI>
+  <LI><A data-code="sql">SQL</A></LI>
+  <LI><A data-code="plain">其它</A></LI></UL></DIV>
+<DIV class="right-box"><SPAN id="tip_comment" 
+class="tip">还能输入<EM>1000</EM>个字符</SPAN><INPUT class="btn btn-sm btn-red btn-comment" value="发表评论" type="submit"></DIV></DIV></FORM></DIV>
+<DIV class="comment-list-container"><A id="comments"></A>
+<DIV class="comment-list-box"></DIV>
+<DIV id="commentPage" class="pagination-box d-none"></DIV>
+<DIV class="opt-box text-center"><BUTTON id="btnMoreComment" class="btn btn-sm btn-link-blue"></BUTTON></DIV></DIV>
+</DIV>
+<DIV class="recommend-box">
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/hertz2007/article/details/6629654,BlogCommendFromBaidu_0"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/hertz2007/article/details/6629654,BlogCommendFromBaidu_0"}'>
+<DIV class="content"><A title="关于std::nothrow - hertz2007的专栏" href="https://blog.csdn.net/hertz2007/article/details/6629654" 
+target="_blank">
+<H4 class="text-truncate oneline">关于std::<EM>nothrow</EM> - 
+hertz2007的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/9/E/3_hertz2007.jpg" alt="hertz2007" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">hertz2007</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-24</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1.1万</SPAN></P></DIV></A>
+<P class="content"><A title="关于std::nothrow - hertz2007的专栏" href="https://blog.csdn.net/hertz2007/article/details/6629654" 
+target="_blank"><SPAN 
+class="desc oneline">http://hi.baidu.com/ilbx/blog/item/30a2c9f550299d2dbd31090f.htmlnothrow 
+new与普通new2009-03-01  16:57标准...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/hertz2007" target="_blank">来自：	<SPAN 
+class="blog_title"> hertz2007的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/jfkidear/article/details/7990613,BlogCommendFromBaidu_1"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/jfkidear/article/details/7990613,BlogCommendFromBaidu_1"}'>
+<DIV class="content"><A title="std::nothrow - jfkidear的专栏" href="https://blog.csdn.net/jfkidear/article/details/7990613" 
+target="_blank">
+<H4 class="text-truncate oneline">std::<EM>nothrow</EM> - jfkidear的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/7/4/3_jfkidear.jpg" alt="jfkidear" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">jfkidear</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">09-18</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							2.5万</SPAN></P></DIV></A>
+<P class="content"><A title="std::nothrow - jfkidear的专栏" href="https://blog.csdn.net/jfkidear/article/details/7990613" 
+target="_blank"><SPAN class="desc oneline">std::nothrow在内存不足时，new 
+(std::nothrow)并不抛出异常，而是将指针置NULL。 关于std::nothrow分...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/jfkidear" target="_blank">来自：	<SPAN class="blog_title"> 
+jfkidear的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/a_Treasure/article/details/82106638,BlogCommendFromBaidu_2"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/a_Treasure/article/details/82106638,BlogCommendFromBaidu_2"}'>
+<DIV class="content"><A title="C++中new和std::nothrow的使用避免抛异常 - a_Treasure的博客" 
+href="https://blog.csdn.net/a_Treasure/article/details/82106638" 
+target="_blank">
+<H4 
+class="text-truncate oneline"><EM>C++</EM>中new和std::<EM>nothrow</EM>的<EM>使用</EM>避免抛异常 
+- a_Treasure的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/0/C/3_a_treasure.jpg" alt="a_Treasure" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">a_Treasure</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">08-27</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							111</SPAN></P></DIV></A>
+<P class="content"><A title="C++中new和std::nothrow的使用避免抛异常 - a_Treasure的博客" href="https://blog.csdn.net/a_Treasure/article/details/82106638" 
+target="_blank"><SPAN 
+class="desc oneline">平时一直使用new但是在内存分配失败的时候直接报异常，怎么处理后边听其他人讨论时知道了std::nothrow.
+这个面试的时候写上绝对是亮点，实现对非零指针的检查。 最近才发现http://ww...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/a_Treasure" target="_blank">来自：	<SPAN class="blog_title"> 
+a_Treasure的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/woodsp/article/details/38896279,BlogCommendFromBaidu_3"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/woodsp/article/details/38896279,BlogCommendFromBaidu_3"}'>
+<DIV class="content"><A title="new(std::nothrow) 应用场景 - woodsp的专栏" href="https://blog.csdn.net/woodsp/article/details/38896279" 
+target="_blank">
+<H4 class="text-truncate oneline">new(std::<EM>nothrow</EM>) 应用场景 - 
+woodsp的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/F/A/3_woodsp.jpg" alt="woodsp" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">woodsp</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">08-28</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							631</SPAN></P></DIV></A>
+<P class="content"><A title="new(std::nothrow) 应用场景 - woodsp的专栏" href="https://blog.csdn.net/woodsp/article/details/38896279" 
+target="_blank"><SPAN class="desc oneline">C++ 中 std::nothrow 有什么样的应用场景呢 
+知乎已经不好玩了，不是你长篇大论就能留… 对于比较健壮的代码来说，nothrow使用的情况比直接new多很多吧。 
+直接new如果失败要抛出异...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/woodsp" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+woodsp的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/starryheavens/article/details/7002404,BlogCommendFromBaidu_4"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/starryheavens/article/details/7002404,BlogCommendFromBaidu_4"}'>
+<DIV class="content"><A title="new有三种使用方式：plain new、nothrow new、placement new. - starryheavens的专栏" 
+href="https://blog.csdn.net/starryheavens/article/details/7002404" target="_blank">
+<H4 class="text-truncate oneline">new有三种<EM>使用</EM>方式：plain new、<EM>nothrow</EM> 
+new、placement new. - starryheavens的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/7/F/3_starryheavens.jpg" alt="starryheavens" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">starryheavens</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">11-22</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							2445</SPAN></P></DIV></A>
+<P class="content"><A title="new有三种使用方式：plain new、nothrow new、placement new. - starryheavens的专栏" 
+href="https://blog.csdn.net/starryheavens/article/details/7002404" target="_blank"><SPAN 
+class="desc oneline">1.plain new/delete.普通的new定义如下：&nbsp;void *operator 
+new(std::size_t) throw(std::bad_alloc);&nbsp;&nbsp; void ...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/starryheavens" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+starryheavens的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u012580994/article/details/42175041,BlogCommendFromBaidu_5"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u012580994/article/details/42175041,BlogCommendFromBaidu_5"}'>
+<DIV class="content"><A title="new &amp;&amp; new(std::nothrow) - Wind god的专栏" 
+href="https://blog.csdn.net/u012580994/article/details/42175041" 
+target="_blank">
+<H4 class="text-truncate oneline">new &amp;&amp; new(std::<EM>nothrow</EM>) - 
+Wind god的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/D/C/3_u012580994.jpg" alt="u012580994" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u012580994</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">12-26</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1011</SPAN></P></DIV></A>
+<P class="content"><A title="new &amp;&amp; new(std::nothrow) - Wind god的专栏" 
+href="https://blog.csdn.net/u012580994/article/details/42175041" 
+target="_blank"><SPAN class="desc oneline">偶然看到 cocos2d-x 中 带有 new 
+(std::nothrow) XX;所以就百度了下&nbsp;发现了这个文章 
+&nbsp;转载地址：http://blog.sina.com.cn/s/blog_6...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/u012580994" target="_blank">来自：	<SPAN class="blog_title"> 
+Wind god的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u012723995/article/details/47448137,BlogCommendFromBaidu_6"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u012723995/article/details/47448137,BlogCommendFromBaidu_6"}'>
+<DIV class="content"><A title="C++ 之 std::nothrow - Fairy的专栏" href="https://blog.csdn.net/u012723995/article/details/47448137" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> 之 std::<EM>nothrow</EM> - 
+Fairy的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/8/A/3_u012723995.jpg" alt="u012723995" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u012723995</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">08-12</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1709</SPAN></P></DIV></A>
+<P class="content"><A title="C++ 之 std::nothrow - Fairy的专栏" href="https://blog.csdn.net/u012723995/article/details/47448137" 
+target="_blank"><SPAN class="desc oneline">首先给出知乎的相关回答：
+http://www.zhihu.com/question/20024129出乎意料的简短：
+ 对于比较健壮的代码来说，nothrow使用的情况比直接new多很多吧。 直...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/u012723995" target="_blank">来自：	<SPAN class="blog_title"> 
+Fairy的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/zgjxhgh/article/details/30263031,BlogCommendFromBaidu_7"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/zgjxhgh/article/details/30263031,BlogCommendFromBaidu_7"}'>
+<DIV class="content"><A title="new (std::nothrow) 与 new - zgjxhgh的专栏" href="https://blog.csdn.net/zgjxhgh/article/details/30263031" 
+target="_blank">
+<H4 class="text-truncate oneline">new (std::<EM>nothrow</EM>) 与 new - 
+zgjxhgh的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/0/9/3_zgjxhgh.jpg" alt="zgjxhgh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zgjxhgh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">06-12</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							6846</SPAN></P></DIV></A>
+<P class="content"><A title="new (std::nothrow) 与 new - zgjxhgh的专栏" href="https://blog.csdn.net/zgjxhgh/article/details/30263031" 
+target="_blank"><SPAN class="desc oneline">普通new一个异常的类型std::bad_alloc。这个是标准适应性态。
+ 在早期C++的舞台上，这个性态和现在的非常不同；new将返回0来指出一个失败，和malloc()非常相似。
+&nbsp;&nbsp;&nbsp;在一定...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/zgjxhgh" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+zgjxhgh的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/huyiyang2010/article/details/5984987,BlogCommendFromBaidu_8"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/huyiyang2010/article/details/5984987,BlogCommendFromBaidu_8"}'>
+<DIV class="content"><A title="C++ new的nothrow关键字和new_handler用法 - 星空漫野" href="https://blog.csdn.net/huyiyang2010/article/details/5984987" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> 
+new的<EM>nothrow</EM>关键字和new_handler用法 - 星空漫野				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/F/B/3_huyiyang2010.jpg" alt="huyiyang2010" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">huyiyang2010</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">11-03</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1.2万</SPAN></P></DIV></A>
+<P class="content"><A title="C++ new的nothrow关键字和new_handler用法 - 星空漫野" href="https://blog.csdn.net/huyiyang2010/article/details/5984987" 
+target="_blank"><SPAN 
+class="desc oneline">今天和同事review代码时，发现这样的一段代码：&nbsp;Manager * pManager = new 
+Manager();if(NULL == pManager){&nbsp;&nbsp;&nbsp; //记录日志&nbsp;&nbsp;&nbsp; 
+retu...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/huyiyang2010" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+星空漫野</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box type_hot_word">
+<DIV class="content clearfix oneline">
+<H5 class="float-left">文章热词</H5>
+<DIV class="word float-left"><SPAN><A href="https://edu.csdn.net/courses/o280_s281_k" 
+target="_blank">C/C++培训					</A></SPAN><SPAN><A href="https://edu.csdn.net/courses/o280_s281_k" 
+target="_blank">C/C++					</A></SPAN><SPAN><A href="https://edu.csdn.net/courses/o280_s281_k" 
+target="_blank">						C/C++入门教程					</A></SPAN><SPAN><A href="https://edu.csdn.net/combos/o280_s281_l0_t" 
+target="_blank">C/C++课程					</A></SPAN><SPAN><A href="https://edu.csdn.net/combos/o280_s281_l0_t" 
+target="_blank">C/C++学习					</A></SPAN></DIV></DIV>
+<DIV class="content clearfix oneline">
+<H5 class="float-left">相关热词</H5>
+<DIV class="float-left"><SPAN><A href="https://www.csdn.net/gather_29/MtTakg4sODc3MS1ibG9n.html" 
+target="_blank">android应用开发介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_2e/MtTakg4sMTgzOC1ibG9n.html" 
+target="_blank">android系统介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_20/MtzaYg1sMDktYmxvZwO0O0OO0O0O.html" 
+target="_blank">c++数据类型介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_2b/MtzaAg0sMjQtYmxvZwO0O0OO0O0O.html" 
+target="_blank">c++ signal 介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_2c/OtDaEgwsNjQtYmxvZwO0O0OO0O0O.html" 
+target="_blank">c++ vector介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_4a/MtTaAgysMzMtZWR1.html" 
+target="_blank">						区块链介绍</A></SPAN><SPAN><A href="https://www.csdn.net/gather_4a/MtTaAgysNDItZWR1.html" 
+target="_blank">						区块链培训介绍</A></SPAN></DIV></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u011068702/article/details/73928553,BlogCommendFromBaidu_9"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u011068702/article/details/73928553,BlogCommendFromBaidu_9"}'>
+<DIV class="content"><A title="C++之用std::nothrow分配内存失败不抛异常 - No talent" href="https://blog.csdn.net/u011068702/article/details/73928553" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM>之用std::<EM>nothrow</EM>分配内存失败不抛异常 
+- No talent				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/F/8/3_u011068702.jpg" alt="u011068702" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u011068702</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">06-29</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							469</SPAN></P></DIV></A>
+<P class="content"><A title="C++之用std::nothrow分配内存失败不抛异常 - No talent" href="https://blog.csdn.net/u011068702/article/details/73928553" 
+target="_blank"><SPAN class="desc oneline">1、std::nothrow介绍
+1）.malloc分配时，如果内存耗尽分配不出来，会直接返回NULL；2.）早期C++版本，new分配时，如果内存耗尽分配不出来，也会直接返回NULL；
+...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/u011068702" 
+target="_blank">来自：	<SPAN class="blog_title"> No 
+talent</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box blog-expert-recommend-box">
+<DIV class="d-flex">
+<DIV class="blog-expert-recommend">
+<DIV class="blog-expert">
+<DIV class="blog-expert-flexbox"></DIV></DIV></DIV>
+<DIV class="blog-expert-load-new" data-index="3"><svg xmlns="http://www.w3.org/2000/svg" 
+style="enable-background: new 0 0 200 200;" viewBox="0 0 200 200" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+xml:space="preserve" version="1.1"><path d="M 142.5 57.5 c -1.3 -1.2 -2.1 -3.3 -2.1 -5.4 c 0 -4.2 3.3 -7.5 7.5 -7.5 h 19.6 c 4.2 0 7.5 3.3 7.5 7.5 s -3.3 7.5 -7.5 7.5 h -4.2 C 170.8 71.2 175 85 175 100 c 0 41.7 -33.8 75 -75 75 c -4.2 0 -7.5 -3.3 -7.5 -7.5 c 0 -4.2 3.3 -7.5 7.5 -7.5 c 33.3 0 60 -27.1 60 -60 C 160 83.7 153.8 68.7 142.5 57.5 L 142.5 57.5 Z M 57.5 142.5 c 1.2 1.2 2.1 3.3 2.1 5.4 c 0 4.2 -3.3 7.5 -7.5 7.5 H 32.5 c -4.2 0 -7.5 -3.3 -7.5 -7.5 c 0 -4.2 3.3 -7.5 7.5 -7.5 h 4.2 C 29.2 128.8 25 115 25 100 c 0 -41.7 33.7 -75 75 -75 c 4.2 0 7.5 3.3 7.5 7.5 S 104.2 40 100 40 c -33.3 0 -60 27.1 -60 60 C 40 116.2 46.2 131.2 57.5 142.5 Z" 
+/></svg><SPAN>换一批</SPAN></DIV></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/dkbyjh/article/details/5623963,BlogCommendFromBaidu_10"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/dkbyjh/article/details/5623963,BlogCommendFromBaidu_10"}'>
+<DIV class="content"><A title="C++ new操作符探秘---利用nothrow new代替普通new - dkbyjh的专栏" 
+href="https://blog.csdn.net/dkbyjh/article/details/5623963" target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> new操作符探秘---利用<EM>nothrow</EM> 
+new代替普通new - dkbyjh的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/2/E/3_dkbyjh.jpg" alt="dkbyjh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">dkbyjh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-25</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							5509</SPAN></P></DIV></A>
+<P class="content"><A title="C++ new操作符探秘---利用nothrow new代替普通new - dkbyjh的专栏" 
+href="https://blog.csdn.net/dkbyjh/article/details/5623963" 
+target="_blank"><SPAN class="desc oneline">	学习ACE的时候,编译包"error C2061: 语法错误 : 
+标识符“nothrow”,很是郁闷, 
+找了下原因,原来是ACE_NEW_RETURN导致的,往网上一搜,发现C++的new还有"no...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/dkbyjh" target="_blank">来自：	<SPAN 
+class="blog_title"> dkbyjh的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/adream307/article/details/52926852,BlogCommendFromBaidu_11"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/adream307/article/details/52926852,BlogCommendFromBaidu_11"}'>
+<DIV class="content"><A title="[c++] exception with no throw - I have a adream" 
+href="https://blog.csdn.net/adream307/article/details/52926852" target="_blank">
+<H4 class="text-truncate oneline">[<EM>c++</EM>] exception with no throw - I 
+have a adream				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/7/8/3_adream307.jpg" alt="adream307" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">adream307</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">10-25</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							568</SPAN></P></DIV></A>
+<P class="content"><A title="[c++] exception with no throw - I have a adream" 
+href="https://blog.csdn.net/adream307/article/details/52926852" 
+target="_blank"><SPAN class="desc oneline">exception with no 
+throw</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/adream307" 
+target="_blank">来自：	<SPAN class="blog_title"> I have a 
+adream</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/linshixina/article/details/7815132,BlogCommendFromBaidu_12"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/linshixina/article/details/7815132,BlogCommendFromBaidu_12"}'>
+<DIV class="content"><A title="warning C4290: 忽略C++ 异常规范，但指示函数不是__declspec(nothrow） - linshixina的专栏" 
+href="https://blog.csdn.net/linshixina/article/details/7815132" target="_blank">
+<H4 class="text-truncate oneline">						warning C4290: 忽略<EM>C++</EM> 
+异常规范，但指示函数不是__declspec(<EM>nothrow</EM>） - linshixina的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/4/C/3_linshixina.jpg" alt="linshixina" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">linshixina</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-31</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							3458</SPAN></P></DIV></A>
+<P class="content"><A title="warning C4290: 忽略C++ 异常规范，但指示函数不是__declspec(nothrow） - linshixina的专栏" 
+href="https://blog.csdn.net/linshixina/article/details/7815132" 
+target="_blank"><SPAN class="desc oneline">warning C4290: 忽略C++ 
+异常规范，但指示函数不是__declspec(nothrow) 2011年03月26日 星期六 15:17在VS 200...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/linshixina" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+linshixina的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/a627088424/article/details/46005299,BlogCommendFromBaidu_13"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/a627088424/article/details/46005299,BlogCommendFromBaidu_13"}'>
+<DIV class="content"><A title="C ++的new、delete - 停止更新，迁移至ykpeng.com" href="https://blog.csdn.net/a627088424/article/details/46005299" 
+target="_blank">
+<H4 class="text-truncate oneline">C ++的new、delete - 停止更新，迁移至ykpeng.com				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/C/D/3_a627088424.jpg" alt="a627088424" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">a627088424</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-26</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							5441</SPAN></P></DIV></A>
+<P class="content"><A title="C ++的new、delete - 停止更新，迁移至ykpeng.com" href="https://blog.csdn.net/a627088424/article/details/46005299" 
+target="_blank"><SPAN class="desc oneline">当写出p = new P();这样的代码的时候, 实际上有两步操作, 
+首先分配内存,然后在分配好的内存之上初始化类成员.第二步是有构造函数完成的, 第一步就是new函数的工作.全局的new有...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/a627088424" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+停止更新，迁移至ykpeng.com</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/jxtgddlt/article/details/6441233,BlogCommendFromBaidu_14"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/jxtgddlt/article/details/6441233,BlogCommendFromBaidu_14"}'>
+<DIV class="content"><A title="warning C4290: 忽略 C++ 异常规范，但指示函数不是 __declspec(nothrow) - jxtgddlt的专栏" 
+href="https://blog.csdn.net/jxtgddlt/article/details/6441233" target="_blank">
+<H4 class="text-truncate oneline">						warning C4290: 忽略 <EM>C++</EM> 
+异常规范，但指示函数不是 __declspec(<EM>nothrow</EM>) - jxtgddlt的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/1/0/3_jxtgddlt.jpg" alt="jxtgddlt" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">jxtgddlt</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-24</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							2507</SPAN></P></DIV></A>
+<P class="content"><A title="warning C4290: 忽略 C++ 异常规范，但指示函数不是 __declspec(nothrow) - jxtgddlt的专栏" 
+href="https://blog.csdn.net/jxtgddlt/article/details/6441233" 
+target="_blank"><SPAN class="desc oneline">警告消息 
+忽略C++异常规范，但指示函数不是__declspec(nothrow)使用异常规范声明函数，Visual 
+C++接受但并不实现此规范。包含在编译期间被忽略的异常规范的代码可能需要重新编译和...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/jxtgddlt" target="_blank">来自：	<SPAN class="blog_title"> 
+jxtgddlt的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/hyhyl1990/article/details/46842915,searchFromBaidu_15"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/hyhyl1990/article/details/46842915,searchFromBaidu_15"}'>
+<DIV class="content"><A title="Android原生权限管理：AppOps - AndroidLover" href="https://blog.csdn.net/hyhyl1990/article/details/46842915" 
+target="_blank">
+<H4 class="text-truncate oneline">Android原生权限管理：AppOps - AndroidLover				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/C/B/3_hyhyl1990.jpg" alt="hyhyl1990" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">hyhyl1990</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-11</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							4.5万</SPAN></P></DIV></A>
+<P class="content"><A title="Android原生权限管理：AppOps - AndroidLover" href="https://blog.csdn.net/hyhyl1990/article/details/46842915" 
+target="_blank"><SPAN class="desc oneline">1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ AppOps 简介&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AppOps全称是 Application 
+Operations，类似我们平时常说的应用程序的操作（权限）管理。AppOps是Google原生Andr...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/hyhyl1990" target="_blank">来自：	<SPAN class="blog_title"> 
+AndroidLover</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/cshilin/article/details/51849599,BlogCommendFromGuangxin_16"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/cshilin/article/details/51849599,BlogCommendFromGuangxin_16"}'>
+<DIV class="content"><A title="Part8：定制new和delete - CShilin's Personal Blogs" 
+href="https://blog.csdn.net/cshilin/article/details/51849599" target="_blank">
+<H4 class="text-truncate oneline">						Part8：定制new和delete - CShilin's Personal 
+Blogs				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/2/2/3_cshilin.jpg" alt="cshilin" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">cshilin</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-07</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							2116</SPAN></P></DIV></A>
+<P class="content"><A title="Part8：定制new和delete - CShilin's Personal Blogs" 
+href="https://blog.csdn.net/cshilin/article/details/51849599" 
+target="_blank"><SPAN 
+class="desc oneline">当计算环境（例如java和.net）夸耀自己内置“垃圾回收能力”的当今，C++对内存管理的纯手工方法看起来老土。但是许多苛刻的系统程序开发人员之所以选择C++，就是因为它允许他们手工管理内存。 
+ 这样...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/cshilin" 
+target="_blank">来自：	<SPAN class="blog_title"> CShilin's Personal 
+Blogs</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/needle2/article/details/6078079,BlogCommendFromGuangxin_17"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/needle2/article/details/6078079,BlogCommendFromGuangxin_17"}'>
+<DIV class="content"><A title="遭遇std::bad_alloc，内存分配失败 - 千里之行,始于足下" href="https://blog.csdn.net/needle2/article/details/6078079" 
+target="_blank">
+<H4 class="text-truncate oneline">遭遇std::bad_alloc，内存分配失败 - 千里之行,始于足下				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/2/0/3_needle2.jpg" alt="needle2" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">needle2</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">12-15</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							8338</SPAN></P></DIV></A>
+<P class="content"><A title="遭遇std::bad_alloc，内存分配失败 - 千里之行,始于足下" href="https://blog.csdn.net/needle2/article/details/6078079" 
+target="_blank"><SPAN class="desc oneline">用C++的new操作符，分配内存，什么时候会失败？【转】Effective 
+C++ 中文第二版 50个有效改善程序设计效率的办法条款7：预先准备好内存不够的情况operator 
+new在无法完成内存分...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/needle2" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+千里之行,始于足下</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/xuqianghit/article/details/6361983,BlogCommendFromQuerySearch_18"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/xuqianghit/article/details/6361983,BlogCommendFromQuerySearch_18"}'>
+<DIV class="content"><A title="Cpp深入：异常体系结构 - 记录、分享" href="https://blog.csdn.net/xuqianghit/article/details/6361983" 
+target="_blank">
+<H4 class="text-truncate oneline">Cpp深入：异常体系结构 - 记录、分享				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/6/9/3_xuqianghit.jpg" alt="xuqianghit" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xuqianghit</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-25</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1237</SPAN></P></DIV></A>
+<P class="content"><A title="Cpp深入：异常体系结构 - 记录、分享" href="https://blog.csdn.net/xuqianghit/article/details/6361983" 
+target="_blank"><SPAN class="desc oneline">1. 异常简介2. 函数异常列表3. 堆栈解退4. 
+标准库exception类型简介5. 继承中的异常6. 异常何时迷失？7. 异常处理最佳实践&nbsp;&nbsp;1. 
+异常简介c++中的异常使用关键字try{} c...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/xuqianghit" target="_blank">来自：	<SPAN class="blog_title"> 
+记录、分享</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/huang11055/article/details/8121168,BlogCommendFromQuerySearch_19"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/huang11055/article/details/8121168,BlogCommendFromQuerySearch_19"}'>
+<DIV class="content"><A title="c++学习注意点 - huang11055的专栏" href="https://blog.csdn.net/huang11055/article/details/8121168" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>c++</EM>学习注意点 - huang11055的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/C/4/3_huang11055.jpg" alt="huang11055" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">huang11055</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">10-28</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							266</SPAN></P></DIV></A>
+<P class="content"><A title="c++学习注意点 - huang11055的专栏" href="https://blog.csdn.net/huang11055/article/details/8121168" 
+target="_blank"><SPAN class="desc oneline">一&nbsp;&nbsp; 编程设计
+&nbsp;&nbsp;&nbsp;&nbsp; 
+1.将程序划分为多个子系统,包括子系统间的接口和依赖关系、子系统间的数据流、在各子系统间的来回输入输出、以及总的线程模型。
+&nbsp;&nbsp;&nbsp;&nbsp; 2.各个子系统的具体细节，包括进一...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/huang11055" target="_blank">来自：	<SPAN class="blog_title"> 
+huang11055的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/vagrxie/article/details/1819382,BlogCommendFromQuerySearch_20"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/vagrxie/article/details/1819382,BlogCommendFromQuerySearch_20"}'>
+<DIV class="content"><A title="看《C++ STL》发现的关于异常说明的问题 - 九天雁翎的博客" href="https://blog.csdn.net/vagrxie/article/details/1819382" 
+target="_blank">
+<H4 class="text-truncate oneline">						看《<EM>C++</EM> STL》发现的关于异常说明的问题 - 
+九天雁翎的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/C/C/3_vagrxie.jpg" alt="vagrxie" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">vagrxie</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">10-11</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							3764</SPAN></P></DIV></A>
+<P class="content"><A title="看《C++ STL》发现的关于异常说明的问题 - 九天雁翎的博客" href="https://blog.csdn.net/vagrxie/article/details/1819382" 
+target="_blank"><SPAN class="desc oneline">今天开翻《C++ 
+STL》一书，就发现一个问题，那就是目前的编译器好像尚不支持C++的异常说明，源代码如下：#include "stdafx.h"#include 
+#include using nam...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/vagrxie" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+九天雁翎的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/autumn20080101/article/details/51169746,BlogCommendFromQuerySearch_21"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/autumn20080101/article/details/51169746,BlogCommendFromQuerySearch_21"}'>
+<DIV class="content"><A title="c++ 一个构造函数 调用 另一个 构造函数 - autumn20080101的专栏" href="https://blog.csdn.net/autumn20080101/article/details/51169746" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>c++</EM> 一个构造函数 调用 另一个 构造函数 - 
+autumn20080101的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/B/C/3_autumn20080101.jpg" alt="autumn20080101" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">autumn20080101</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-16</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							677</SPAN></P></DIV></A>
+<P class="content"><A title="c++ 一个构造函数 调用 另一个 构造函数 - autumn20080101的专栏" href="https://blog.csdn.net/autumn20080101/article/details/51169746" 
+target="_blank"><SPAN class="desc oneline">c++ 一个构造函数 调用 另一个 构造函数
+ 你看到的这个文章来自于http://www.cnblogs.com/ayanmw 由于最近写的代码 
+发现有点异常，值怎么是错误的呢？明明...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/autumn20080101" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+autumn20080101的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/xhu_eternalcc/article/details/22779853,BlogCommendFromQuerySearch_22"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/xhu_eternalcc/article/details/22779853,BlogCommendFromQuerySearch_22"}'>
+<DIV class="content"><A title="C++学习之new返回值的误用-new(nothrow) - enockipp的小'码'头" 
+href="https://blog.csdn.net/xhu_eternalcc/article/details/22779853" target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM>学习之new返回值的误用-new(<EM>nothrow</EM>) 
+- enockipp的小'码'头				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/E/A/3_xhu_eternalcc.jpg" alt="xhu_eternalcc" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xhu_eternalcc</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-02</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1238</SPAN></P></DIV></A>
+<P class="content"><A title="C++学习之new返回值的误用-new(nothrow) - enockipp的小'码'头" 
+href="https://blog.csdn.net/xhu_eternalcc/article/details/22779853" target="_blank"><SPAN 
+class="desc oneline">转自：http://blog.csdn.net/starryheavens/article/details/7002404
+ 1.plain new/delete.普通的new定义如下：voi...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/xhu_eternalcc" target="_blank">来自：	<SPAN class="blog_title"> 
+enockipp的小'码'头</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/eclipser1987/article/details/8024465,BlogCommendFromBaidu_23"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/eclipser1987/article/details/8024465,BlogCommendFromBaidu_23"}'>
+<DIV class="content"><A title="new (nothrow) T() 的原理 - 噬日者" href="https://blog.csdn.net/eclipser1987/article/details/8024465" 
+target="_blank">
+<H4 class="text-truncate oneline">new (<EM>nothrow</EM>) T() 的原理 - 噬日者				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/E/3/3_eclipser1987.jpg" alt="eclipser1987" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">eclipser1987</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">09-27</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							4254</SPAN></P></DIV></A>
+<P class="content"><A title="new (nothrow) T() 的原理 - 噬日者" href="https://blog.csdn.net/eclipser1987/article/details/8024465" 
+target="_blank"><SPAN class="desc oneline">查看中对new的声明.void* operator 
+new(std::size_t) throw (std::bad_alloc); void* operator new(std::size_t, 
+...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/eclipser1987" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+噬日者</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/hireboy/article/details/8906621,BlogCommendFromBaidu_24"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/hireboy/article/details/8906621,BlogCommendFromBaidu_24"}'>
+<DIV class="content"><A title="利用nothrow new代替普通new - hireboy的专栏" href="https://blog.csdn.net/hireboy/article/details/8906621" 
+target="_blank">
+<H4 class="text-truncate oneline">						利用<EM>nothrow</EM> new代替普通new - 
+hireboy的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/3/1/3_hireboy.jpg" alt="hireboy" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">hireboy</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-09</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							616</SPAN></P></DIV></A>
+<P class="content"><A title="利用nothrow new代替普通new - hireboy的专栏" href="https://blog.csdn.net/hireboy/article/details/8906621" 
+target="_blank"><SPAN 
+class="desc oneline">标准的new头文件可以定义普通的new，同时，它也可以定义一个变体new操作符，这个操作符叫做nothrownew。
+&nbsp; &nbsp; &nbsp; 在这个章节里，我将它的基本原理并向你们展示如何使用nothrow n...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/hireboy" target="_blank">来自：	<SPAN 
+class="blog_title"> hireboy的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/csCrazybing/article/details/53290353,BlogCommendFromBaidu_25"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/csCrazybing/article/details/53290353,BlogCommendFromBaidu_25"}'>
+<DIV class="content"><A title="new(std::nothrow) - purple尘的专栏" href="https://blog.csdn.net/csCrazybing/article/details/53290353" 
+target="_blank">
+<H4 class="text-truncate oneline">new(std::<EM>nothrow</EM>) - 
+purple尘的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/4/1/3_cscrazybing.jpg" alt="csCrazybing" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">csCrazybing</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">11-22</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							267</SPAN></P></DIV></A>
+<P class="content"><A title="new(std::nothrow) - purple尘的专栏" href="https://blog.csdn.net/csCrazybing/article/details/53290353" 
+target="_blank"><SPAN 
+class="desc oneline">转自：http://blog.sina.com.cn/s/blog_65d204330101do6r.html
+源码方面的信息就不详细讲述了，找找代码看看便知，简要说明下：...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/csCrazybing" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+purple尘的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u010129119/article/details/81026455,BlogCommendFromBaidu_26"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u010129119/article/details/81026455,BlogCommendFromBaidu_26"}'>
+<DIV class="content"><A title="nothrow的介绍及使用 - Joe's Blog" href="https://blog.csdn.net/u010129119/article/details/81026455" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>nothrow</EM>的<EM>介绍</EM>及<EM>使用</EM> - 
+Joe's Blog				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/0/4/3_u010129119.jpg" alt="u010129119" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010129119</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-13</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							344</SPAN></P></DIV></A>
+<P class="content"><A title="nothrow的介绍及使用 - Joe's Blog" href="https://blog.csdn.net/u010129119/article/details/81026455" 
+target="_blank"><SPAN class="desc oneline">在C++中new在申请内存失败时默认会抛出一个std::bad_alloc 
+异常。 所以，按照C++标准，如果想检查new是否成功，则应该通过try catch捕捉异常。 但有些编译器不支持try...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/u010129119" 
+target="_blank">来自：	<SPAN class="blog_title"> Joe's 
+Blog</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/bai_lu_sz/article/details/8625439,BlogCommendFromQuerySearch_27"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/bai_lu_sz/article/details/8625439,BlogCommendFromQuerySearch_27"}'>
+<DIV class="content"><A title="noexcept – 阻止异常的传播与扩散 - bai_lu_sz的专栏" href="https://blog.csdn.net/bai_lu_sz/article/details/8625439" 
+target="_blank">
+<H4 class="text-truncate oneline">						noexcept – 阻止异常的传播与扩散 - 
+bai_lu_sz的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/F/C/3_bai_lu_sz.jpg" alt="bai_lu_sz" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">bai_lu_sz</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">03-01</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							837</SPAN></P></DIV></A>
+<P class="content"><A title="noexcept – 阻止异常的传播与扩散 - bai_lu_sz的专栏" href="https://blog.csdn.net/bai_lu_sz/article/details/8625439" 
+target="_blank"><SPAN class="desc oneline">noexcept – 阻止异常的传播与扩散
+http://www.kingofcoders.com/viewNews.php?type=newsCpp&amp;id=181&amp;number=915094122...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/bai_lu_sz" target="_blank">来自：	<SPAN 
+class="blog_title"> bai_lu_sz的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/softn/article/details/51678528,BlogCommendFromQuerySearch_28"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/softn/article/details/51678528,BlogCommendFromQuerySearch_28"}'>
+<DIV class="content"><A title="10.5 异常规范 -  芝麻软件工作室的专栏" href="https://blog.csdn.net/softn/article/details/51678528" 
+target="_blank">
+<H4 class="text-truncate oneline">10.5 异常规范 -  芝麻软件工作室的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/9/6/3_softn.jpg" alt="softn" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">softn</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">06-15</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							232</SPAN></P></DIV></A>
+<P class="content"><A title="10.5 异常规范 -  芝麻软件工作室的专栏" href="https://blog.csdn.net/softn/article/details/51678528" 
+target="_blank"><SPAN class="desc oneline">◆ 1、异常规范（exception 
+specification）是指：提供了一种方案，可以随着函数声明列出该函数可能抛出的异常，并保证该函数不会抛出任何其他类型的异常。例如，在stack类定义中...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/softn" target="_blank">来自：	<SPAN 
+class="blog_title">  芝麻软件工作室的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident" data-track-click='{"mod":"popu_614","con":",https://bbs.csdn.net/topics/380217388,BlogCommendFromQuerySearch_29"}' 
+data-track-view='{"mod":"popu_614","con":",https://bbs.csdn.net/topics/380217388,BlogCommendFromQuerySearch_29"}'><A 
+href="https://bbs.csdn.net/topics/380217388" target="_blank">
+<H4 class="text-truncate oneline"><EM>nothrow</EM></H4>
+<DIV class="info-box d-flex align-content-center">
+<P></P>
+<P><SPAN class="date">03-11</SPAN></P></DIV>
+<P class="content oneline">请问各位：rn我使用VC2010编译unsigned char *aValue = 
+new(nothrow) unsigned char[filterW * filterH];rn总是编译不过：rnerror C2061: syntax 
+error : identifier 'nothrow'rnrn我添加了#include rn using namespace 
+std;rnrn请问是什么原因？			</P></A></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/eagleatustb/article/details/7967139,BlogCommendFromQuerySearch_30"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/eagleatustb/article/details/7967139,BlogCommendFromQuerySearch_30"}'>
+<DIV class="content"><A title="ACE技术使用细节 - 行者无疆的专栏" href="https://blog.csdn.net/eagleatustb/article/details/7967139" 
+target="_blank">
+<H4 class="text-truncate oneline">ACE技术<EM>使用</EM>细节 - 行者无疆的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/A/8/3_eagleatustb.jpg" alt="eagleatustb" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">eagleatustb</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">09-11</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							825</SPAN></P></DIV></A>
+<P class="content"><A title="ACE技术使用细节 - 行者无疆的专栏" href="https://blog.csdn.net/eagleatustb/article/details/7967139" 
+target="_blank"><SPAN 
+class="desc oneline">最近在使用ACE做网络编程工作，写一些在工作中学到的小技巧与深得，循序渐进。1. 
+在ACE中使用new产生对象的时候，如果无法分配内存直接返回错误，最好使用ACE里已经定义的宏ACE_NEW_RE...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/eagleatustb" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+行者无疆的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/p569354158/article/details/6508114,BlogCommendFromQuerySearch_31"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/p569354158/article/details/6508114,BlogCommendFromQuerySearch_31"}'>
+<DIV class="content"><A title="_CRTIMP的意思 - lisency" href="https://blog.csdn.net/p569354158/article/details/6508114" 
+target="_blank">
+<H4 class="text-truncate oneline">_CRTIMP的意思 - lisency				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/0/A/3_p569354158.jpg" alt="p569354158" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">p569354158</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">10-11</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							6410</SPAN></P></DIV></A>
+<P class="content"><A title="_CRTIMP的意思 - lisency" href="https://blog.csdn.net/p569354158/article/details/6508114" 
+target="_blank"><SPAN class="desc oneline">                                    C 
+run time implement “C运行库的实现”的意思。            作为用户代码，不应该使用这个东西。 
+...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/p569354158" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+lisency</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/bluegreen315/article/details/41805875,BlogCommendFromBaidu_32"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/bluegreen315/article/details/41805875,BlogCommendFromBaidu_32"}'>
+<DIV class="content"><A title="C++ 关键字nothrow - bluegreen315的专栏" href="https://blog.csdn.net/bluegreen315/article/details/41805875" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> 关键字<EM>nothrow</EM> - 
+bluegreen315的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/3/D/3_bluegreen315.jpg" alt="bluegreen315" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">bluegreen315</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">12-08</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							341</SPAN></P></DIV></A>
+<P class="content"><A title="C++ 关键字nothrow - bluegreen315的专栏" href="https://blog.csdn.net/bluegreen315/article/details/41805875" 
+target="_blank"><SPAN class="desc oneline">分配内存，C： malloc分配失败，返回NULL C++: 
+早期，也是返回NULL, 现在的gcc、vc都是抛出异常
+ 但是在不支持异常的嵌入式环境中，或者不想使用异常结构时，可以加上关键字n...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/bluegreen315" target="_blank">来自：	<SPAN class="blog_title"> 
+bluegreen315的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_36391009/article/details/53079001,BlogCommendFromBaidu_33"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_36391009/article/details/53079001,BlogCommendFromBaidu_33"}'>
+<DIV class="content"><A title="new(nothrow) - sinat_36391009的博客" href="https://blog.csdn.net/sinat_36391009/article/details/53079001" 
+target="_blank">
+<H4 class="text-truncate oneline">new(<EM>nothrow</EM>) - 
+sinat_36391009的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/4/1/3_sinat_36391009.jpg" alt="sinat_36391009" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">sinat_36391009</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">11-08</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							167</SPAN></P></DIV></A>
+<P class="content"><A title="new(nothrow) - sinat_36391009的博客" href="https://blog.csdn.net/sinat_36391009/article/details/53079001" 
+target="_blank"><SPAN 
+class="desc oneline">http://blog.csdn.net/huyiyang2010/article/details/5984987
+ Manager * pManager = new Manager(); ...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/sinat_36391009" target="_blank">来自：	<SPAN class="blog_title"> 
+sinat_36391009的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/q860896829q/article/details/46323297,BlogCommendFromBaidu_34"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/q860896829q/article/details/46323297,BlogCommendFromBaidu_34"}'>
+<DIV class="content"><A title="#define _ARMABI __declspec(__nothrow) - q860896829q的专栏" 
+href="https://blog.csdn.net/q860896829q/article/details/46323297" target="_blank">
+<H4 class="text-truncate oneline">#define _ARMABI __declspec(__<EM>nothrow</EM>) 
+- q860896829q的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/E/0/3_q860896829q.jpg" alt="q860896829q" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">q860896829q</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">06-02</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1265</SPAN></P></DIV></A>
+<P class="content"><A title="#define _ARMABI __declspec(__nothrow) - q860896829q的专栏" 
+href="https://blog.csdn.net/q860896829q/article/details/46323297" target="_blank"><SPAN 
+class="desc oneline">#define _ARMABI __declspec(__nothrow) extern _ARMABI void 
+*memset(void * /*s*/, int /*c*/, size_t /...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/q860896829q" target="_blank">来自：	<SPAN class="blog_title"> 
+q860896829q的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/liuhannan111/article/details/77976538,BlogCommendFromBaidu_35"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/liuhannan111/article/details/77976538,BlogCommendFromBaidu_35"}'>
+<DIV class="content"><A title="new(std::nothrow) 和 new() 的区别 - hnliu's blog" 
+href="https://blog.csdn.net/liuhannan111/article/details/77976538" target="_blank">
+<H4 class="text-truncate oneline">new(std::<EM>nothrow</EM>) 和 new() 的区别 - 
+hnliu's blog				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/C/C/3_liuhannan111.jpg" alt="liuhannan111" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">liuhannan111</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">09-14</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							199</SPAN></P></DIV></A>
+<P class="content"><A title="new(std::nothrow) 和 new() 的区别 - hnliu's blog" href="https://blog.csdn.net/liuhannan111/article/details/77976538" 
+target="_blank"><SPAN class="desc oneline">源码方面的信息就不详细讲述了，找找代码看看便知，简要说明下： 
+new(std::nothrow) 
+顾名思义，即不抛出异常，当new一个对象失败时，默认设置该对象为NULL，这样可以方便的通过if(p...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/liuhannan111" target="_blank">来自：	<SPAN class="blog_title"> 
+hnliu's blog</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/coloriy/article/details/50503570,BlogCommendFromBaidu_36"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/coloriy/article/details/50503570,BlogCommendFromBaidu_36"}'>
+<DIV class="content"><A title="关于 new(std::nothrow) - 专注流媒体技术与方案！" href="https://blog.csdn.net/coloriy/article/details/50503570" 
+target="_blank">
+<H4 class="text-truncate oneline">关于 new(std::<EM>nothrow</EM>) - 
+专注流媒体技术与方案！				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/D/9/3_coloriy.jpg" alt="coloriy" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">coloriy</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">01-12</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							630</SPAN></P></DIV></A>
+<P class="content"><A title="关于 new(std::nothrow) - 专注流媒体技术与方案！" href="https://blog.csdn.net/coloriy/article/details/50503570" 
+target="_blank"><SPAN class="desc oneline">源码方面的信息就不详细讲述了，找找代码看看便知，简要说明下：
+new(std::nothrow)顾名思义，即不抛出异常，当new一个对象失败时，默认设置该对象为NULL，这样可以方便的通过if(p 
+=...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/coloriy" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+专注流媒体技术与方案！</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/davidsu33/article/details/23162857,BlogCommendFromQuerySearch_37"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/davidsu33/article/details/23162857,BlogCommendFromQuerySearch_37"}'>
+<DIV class="content"><A title="__declspec的详细用法 - davidsu33的专栏" href="https://blog.csdn.net/davidsu33/article/details/23162857" 
+target="_blank">
+<H4 class="text-truncate oneline">__declspec的详细用法 - davidsu33的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/F/1/3_davidsu33.jpg" alt="davidsu33" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">davidsu33</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-08</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							499</SPAN></P></DIV></A>
+<P class="content"><A title="__declspec的详细用法 - davidsu33的专栏" href="https://blog.csdn.net/davidsu33/article/details/23162857" 
+target="_blank"><SPAN class="desc oneline">1. __declspec(align(16)) struct SS{ 
+int a,b; };
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; __declspec(align())与#pragma 
+pack()是一对兄弟，前者规...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/davidsu33" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+davidsu33的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/iamoyjj/article/details/4195635,BlogCommendFromQuerySearch_38"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/iamoyjj/article/details/4195635,BlogCommendFromQuerySearch_38"}'>
+<DIV class="content"><A title="[收藏]__declspec关键字详细用法 - OYJJ的专栏" href="https://blog.csdn.net/iamoyjj/article/details/4195635" 
+target="_blank">
+<H4 class="text-truncate oneline">[收藏]__declspec关键字详细用法 - OYJJ的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/2/E/8/3_iamoyjj.jpg" alt="iamoyjj" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">iamoyjj</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-17</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							15.1万</SPAN></P></DIV></A>
+<P class="content"><A title="[收藏]__declspec关键字详细用法 - OYJJ的专栏" href="https://blog.csdn.net/iamoyjj/article/details/4195635" 
+target="_blank"><SPAN 
+class="desc oneline">原文链接：http://hi.baidu.com/baiyw920/blog/item/a06ddb986314fd0f6e068c0c.html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+__declspec用于指定所给定类型的...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/iamoyjj" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+OYJJ的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/liuzhongsky/article/details/51532503,BlogCommendFromQuerySearch_39"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/liuzhongsky/article/details/51532503,BlogCommendFromQuerySearch_39"}'>
+<DIV class="content"><A title="[c/c++]complex类的标准库实现 - liuzhongsky的专栏" href="https://blog.csdn.net/liuzhongsky/article/details/51532503" 
+target="_blank">
+<H4 class="text-truncate oneline">[c/<EM>c++</EM>]complex类的标准库实现 - 
+liuzhongsky的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/E/C/3_liuzhongsky.jpg" alt="liuzhongsky" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">liuzhongsky</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-29</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							3546</SPAN></P></DIV></A>
+<P class="content"><A title="[c/c++]complex类的标准库实现 - liuzhongsky的专栏" href="https://blog.csdn.net/liuzhongsky/article/details/51532503" 
+target="_blank"><SPAN class="desc oneline">简介：
+ 复数运算在数学领域非常重要，而且C++标准库也完备的实现了关于复数的几乎所有运算。要使用compelx类需要包含文件，并在std命名空间内引用。complex类包含了四则运算（+、-、*...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/liuzhongsky" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+liuzhongsky的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/hollyhock13/article/details/2776276,BlogCommendFromQuerySearch_40"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/hollyhock13/article/details/2776276,BlogCommendFromQuerySearch_40"}'>
+<DIV class="content"><A title=" c++中__declspec用法总结 - hollyhock13的专栏" href="https://blog.csdn.net/hollyhock13/article/details/2776276" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>c++</EM>中__declspec用法总结 - 
+hollyhock13的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/E/B/3_hollyhock13.jpg" alt="hollyhock13" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">hollyhock13</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">08-06</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1.3万</SPAN></P></DIV></A>
+<P class="content"><A title=" c++中__declspec用法总结 - hollyhock13的专栏" href="https://blog.csdn.net/hollyhock13/article/details/2776276" 
+target="_blank"><SPAN class="desc oneline">“__declspec”是Microsoft 
+c++中专用的关键字，它配合着一些属性可以对标准C++进行扩充。这些属性有：align、allocate、deprecated、 
+dllexport、dl...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/hollyhock13" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+hollyhock13的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_36629696/article/details/80047435,BlogCommendFromQuerySearch_41"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_36629696/article/details/80047435,BlogCommendFromQuerySearch_41"}'>
+<DIV class="content"><A title="C++ -- 类的介绍和使用 - 如故的博客" href="https://blog.csdn.net/sinat_36629696/article/details/80047435" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> -- 类的<EM>介绍</EM>和<EM>使用</EM> - 
+如故的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/6/6/3_sinat_36629696.jpg" alt="sinat_36629696" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">sinat_36629696</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-23</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							52</SPAN></P></DIV></A>
+<P class="content"><A title="C++ -- 类的介绍和使用 - 如故的博客" href="https://blog.csdn.net/sinat_36629696/article/details/80047435" 
+target="_blank"><SPAN class="desc oneline">01, C++中的 struct 和C语言的区别a) 
+C++中的struct 不仅可以声明成员变量, 还可以声明成员函数struct Person {    string name;   
+...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/sinat_36629696" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+如故的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/encoder1234/article/details/52814085,BlogCommendFromBaidu_42"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/encoder1234/article/details/52814085,BlogCommendFromBaidu_42"}'>
+<DIV class="content"><A title="new操作符返回null是否需要检测!!! - 学而时习之 不亦乐乎" href="https://blog.csdn.net/encoder1234/article/details/52814085" 
+target="_blank">
+<H4 class="text-truncate oneline">new操作符返回null是否需要检测!!! - 学而时习之 不亦乐乎				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/4/9/3_encoder1234.jpg" alt="encoder1234" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">encoder1234</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">10-14</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1537</SPAN></P></DIV></A>
+<P class="content"><A title="new操作符返回null是否需要检测!!! - 学而时习之 不亦乐乎" href="https://blog.csdn.net/encoder1234/article/details/52814085" 
+target="_blank"><SPAN 
+class="desc oneline">大部分的C++开发者在他们的代码中会广泛的使用STL。如果你直接用STL和Visusal Studio 
+6.0，那么你的程序将在内存很低的情况下极有可能崩溃掉。原因在于没有对new操作的结果进行检验。...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/encoder1234" target="_blank">来自：	<SPAN class="blog_title"> 
+学而时习之 不亦乐乎</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/ganggegel/article/details/80065573,BlogCommendFromBaidu_43"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/ganggegel/article/details/80065573,BlogCommendFromBaidu_43"}'>
+<DIV class="content"><A title="c++ new(nothrow) XX  用法 - ganggegel的博客" href="https://blog.csdn.net/ganggegel/article/details/80065573" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>c++</EM> new(<EM>nothrow</EM>) XX  用法 - 
+ganggegel的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/6/1/3_ganggegel.jpg" alt="ganggegel" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ganggegel</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-24</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							50</SPAN></P></DIV></A>
+<P class="content"><A title="c++ new(nothrow) XX  用法 - ganggegel的博客" href="https://blog.csdn.net/ganggegel/article/details/80065573" 
+target="_blank"><SPAN 
+class="desc oneline">转载自：https://blog.csdn.net/huyiyang2010/article/details/5984987今天和同事review代码时，发现这样的一段代码：&nbsp;Manager 
+* pM...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/ganggegel" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+ganggegel的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident recommend-download-box clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/ltzyID/3230128,BlogCommendFromQuerySearch_44"}' 
+data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/ltzyID/3230128,BlogCommendFromQuerySearch_44"}'><A 
+href="https://download.csdn.net/download/ltzyID/3230128" target="_blank">
+<DIV class="content">
+<DIV><SPAN class="type">下载</SPAN>
+<H4 
+class="text-truncate oneline clearfix"><EM>C++</EM>模板说明及<EM>使用</EM>详解						</H4><SPAN 
+class="data float-right">04-27</SPAN></DIV>
+<DIV class="desc oneline">
+							C++模板专题介绍。介绍了C++中template的使用，并有具体的示例说明，学习C++中template的不错教程！					</DIV></DIV></A></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/xd227/article/details/79004554,BlogCommendFromQuerySearch_45"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/xd227/article/details/79004554,BlogCommendFromQuerySearch_45"}'>
+<DIV class="content"><A title="C++中堆的使用及自定义类型排序 - xd227的专栏" href="https://blog.csdn.net/xd227/article/details/79004554" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM>中堆的<EM>使用</EM>及自定义类型排序 - 
+xd227的专栏				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/7/2/3_xd227.jpg" alt="xd227" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xd227</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">01-08</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							370</SPAN></P></DIV></A>
+<P class="content"><A title="C++中堆的使用及自定义类型排序 - xd227的专栏" href="https://blog.csdn.net/xd227/article/details/79004554" 
+target="_blank"><SPAN class="desc oneline">简介
+C++中堆(heap)是在vector的基础上实现的。具体地，是定义了一些方法在vector类型数据上进行操作，包括 - make_heap 
+建立堆（默认最大堆） - push_heap ...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/xd227" target="_blank">来自：	<SPAN class="blog_title"> 
+xd227的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/qq_40728285/article/details/81112907,BlogCommendFromQuerySearch_46"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/qq_40728285/article/details/81112907,BlogCommendFromQuerySearch_46"}'>
+<DIV class="content"><A title="C++中栈的用法 - qq_40728285的博客" href="https://blog.csdn.net/qq_40728285/article/details/81112907" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM>中栈的用法 - qq_40728285的博客				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/7/A/3_qq_40728285.jpg" alt="qq_40728285" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_40728285</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-19</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							112</SPAN></P></DIV></A>
+<P class="content"><A title="C++中栈的用法 - qq_40728285的博客" href="https://blog.csdn.net/qq_40728285/article/details/81112907" 
+target="_blank"><SPAN 
+class="desc oneline">简单记忆，具体详细见：https://blog.csdn.net/qq_20366761/article/details/70053813
+ c++栈的方法的基本用法：&nbsp;push(): 向栈内压入...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/qq_40728285" target="_blank">来自：	<SPAN class="blog_title"> 
+qq_40728285的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident recommend-download-box clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/jeremy_w/5219139,BlogCommendFromQuerySearch_47"}' 
+data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/jeremy_w/5219139,BlogCommendFromQuerySearch_47"}'><A 
+href="https://download.csdn.net/download/jeremy_w/5219139" target="_blank">
+<DIV class="content">
+<DIV><SPAN class="type">下载</SPAN>
+<H4 class="text-truncate oneline clearfix"><EM>C++</EM>类的教学 - 
+jeremy_w						</H4><SPAN class="data float-right">04-04</SPAN></DIV>
+<DIV 
+class="desc oneline">本PPT介绍了c++中类的介绍和使用，帮助学生学会C++面向对象编程的思想					</DIV></DIV></A></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/summer00072/article/details/80753821,BlogCommendFromQuerySearch_48"}' 
+data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/summer00072/article/details/80753821,BlogCommendFromQuerySearch_48"}'>
+<DIV class="content"><A title="C++ STL中的stack用法介绍 - 小肥羊快快跑" href="https://blog.csdn.net/summer00072/article/details/80753821" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>C++</EM> STL中的stack用法<EM>介绍</EM> - 
+小肥羊快快跑				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/F/2/3_summer00072.jpg" alt="summer00072" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">summer00072</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">06-20</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							192</SPAN></P></DIV></A>
+<P class="content"><A title="C++ STL中的stack用法介绍 - 小肥羊快快跑" href="https://blog.csdn.net/summer00072/article/details/80753821" 
+target="_blank"><SPAN 
+class="desc oneline">转载自：http://www.169it.com/article/2839007600903800247.htmlC++ 
+Stack（堆栈） 是一个容器类的改编，为程序员提供了堆栈的全部功能，——也就...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/summer00072" target="_blank">来自：	<SPAN class="blog_title"> 
+小肥羊快快跑</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_713","con":",http://union.dangdang.com/transfer.php?from=P-338253&amp;ad_type=10&amp;sys_id=1&amp;backurl=http://product.dangdang.com/23473514.html,-"}' 
+data-track-view='{"mod":"popu_713","con":",http://union.dangdang.com/transfer.php?from=P-338253&amp;ad_type=10&amp;sys_id=1&amp;backurl=http://product.dangdang.com/23473514.html,-"}'>
+<DIV class="content"><A title="Python基础教程(第2版·修订版)" href="http://union.dangdang.com/transfer.php?from=P-338253&amp;ad_type=10&amp;sys_id=1&amp;backurl=http://product.dangdang.com/23473514.html" 
+target="_blank">
+<H4 class="text-truncate oneline">Python基础教程(第2版·修订版)					</H4>
+<DIV class="info-box d-flex align-content-center">
+<P class="date-and-readNum"><SPAN 
+class="date hover-show">09-10</SPAN></P></DIV></A>
+<P class="content"><A title="Python基础教程(第2版·修订版)" href="http://union.dangdang.com/transfer.php?from=P-338253&amp;ad_type=10&amp;sys_id=1&amp;backurl=http://product.dangdang.com/23473514.html" 
+target="_blank"><SPAN 
+class="desc oneline">《Python基础教程(第2版．修订版)》包括Python程序设计的方方面面，首先从Python的安装开始，随后介绍了Python的基础知识和基本概念，包括列表、元组、字符串、字典以及各种语句。然后循序渐进地介绍了一些相对高级的主题，包括...</SPAN></A></P></DIV>
+<DIV class="img-box float-left"><IMG alt="" src="new(std%20nothrow)_files/23473514.jpg"></DIV></DIV>
+<DIV class="recommend-loading-box"><IMG src="new(std%20nothrow)_files/feedLoading.gif"></DIV>
+<DIV class="recommend-end-box">
+<P class="text-center">没有更多推荐了，<A class="c-blue c-blue-hover c-blue-focus" href="https://blog.csdn.net/">返回首页</A></P></DIV></DIV></main><ASIDE>
+<DIV id="asideProfile" class="aside-box"><!-- <h3 class="aside-title">个人资料</h3> -->
+<DIV class="profile-intro d-flex">
+<DIV class="avatar-box d-flex justify-content-center flex-column"><A href="https://blog.csdn.net/fengbingchun"><IMG 
+class="avatar_pic" src="new(std%20nothrow)_files/3_fengbingchun.jpg"></A><svg 
+xmlns="http://www.w3.org/2000/svg" id="csdnc-memberhead" 
+viewBox="0 0 1303 1024"><path fill="#fdd840" d="M 1129.77 419.281 A 93.0909 93.0909 0 1 1 1210.2 465.455 h -2.14109 l -56.9716 478.953 c -5.39927 45.2422 -46.7316 79.5927 -95.7905 79.5927 H 249.876 c -48.9658 0 -90.112 -34.1644 -95.6975 -79.4065 L 95.3446 465.455 H 93.1105 a 93.0909 93.0909 0 1 1 80.3375 -46.08 l 229.19 142.057 l 187.485 -398.429 A 93.184 93.184 0 0 1 651.656 0 a 93.0909 93.0909 0 0 1 61.1607 163.281 l 187.485 398.15 l 229.469 -142.15 Z" 
+/><path fill="#ffbe00" d="M 1117.11 372.364 a 93.0909 93.0909 0 1 1 93.0909 93.0909 h -2.14109 l -56.9716 478.953 c -5.39927 45.2422 -46.7316 79.5927 -95.7905 79.5927 H 652.587 C 651.935 845.452 651.656 504.087 651.656 0 a 93.0909 93.0909 0 0 1 61.1607 163.281 l 187.485 398.15 l 229.469 -142.15 A 93.0909 93.0909 0 0 1 1117.11 372.364 Z" 
+/></svg></DIV>
+<DIV class="user-info d-flex justify-content-center flex-column">
+<P class="name csdn-tracking-statistics tracking-click" data-mod="popu_379"><A 
+id="uid" href="https://blog.csdn.net/fengbingchun" 
+target="_blank">fengbingchun</A></P>
+<P class="flag expert"><svg xmlns="http://www.w3.org/2000/svg" class="icon" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-blogexpert" 
+/></svg>博客专家              </P></DIV>
+<DIV class="opt-box d-flex justify-content-center flex-column"><SPAN class="csdn-tracking-statistics tracking-click" 
+data-mod="popu_379"><A id="btnAttent" class="btn btn-sm btn-red-hollow attention">关注</A></SPAN></DIV></DIV>
+<DIV class="data-info d-flex item-tiling">
+<DL class="text-center" title="599">
+  <DT><A href="https://blog.csdn.net/fengbingchun?t=1">原创</A></DT>
+  <DD><A href="https://blog.csdn.net/fengbingchun?t=1"><SPAN 
+  class="count">599</SPAN></A></DD></DL>
+<DL id="fanBox" class="text-center" title="3371">
+  <DT>粉丝</DT>
+  <DD><SPAN id="fan" class="count">3371</SPAN></DD></DL>
+<DL class="text-center" title="581">
+  <DT>喜欢</DT>
+  <DD><SPAN class="count">581</SPAN></DD></DL>
+<DL class="text-center" title="2211">
+  <DT>评论</DT>
+  <DD><SPAN class="count">2211</SPAN></DD></DL></DIV>
+<DIV class="grade-box clearfix">
+<DL>
+  <DT>等级：</DT>
+  <DD><A title="8级,点击查看等级说明" href="https://blog.csdn.net/home/help.html#level" 
+  target="_blank"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon icon-level" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bloglevel-8" /></svg></A></DD></DL>
+<DL>
+  <DT>访问：</DT>
+  <DD title="4815461">481万+            </DD></DL>
+<DL>
+  <DT>积分：</DT>
+  <DD title="44236">4万+            </DD></DL>
+<DL title="102">
+  <DT>排名：</DT>
+  <DD>102</DD></DL></DIV>
+<DIV class="badge-box d-flex"><SPAN>勋章：</SPAN>
+<DIV class="icon-badge" title="持之以恒">
+<DIV class="mouse-box"><svg xmlns="http://www.w3.org/2000/svg" class="icon" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-lasting" 
+/></svg>
+<DIV class="icon-arrow"></DIV></DIV>
+<DIV class="grade-detail-box">
+<DIV class="pos-box">
+<DIV class="left-box d-flex justify-content-center align-items-center flex-column"><svg 
+xmlns="http://www.w3.org/2000/svg" class="icon" aria-hidden="true"><use 
+xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-lasting" 
+/></svg>
+<P>持之以恒</P></DIV>
+<DIV class="right-box d-flex justify-content-center align-items-center">         
+               
+授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！              
+      </DIV></DIV></DIV></DIV>
+<SCRIPT>(function ($) {
+                setTimeout(function(){
+                    $('div.icon-badge.show-moment').removeClass('show-moment');
+                }, 5000);
+            })(window.jQuery)
+        </SCRIPT>
+</DIV></DIV>
+<DIV id="asideCategory" class="aside-box flexible-box">
+<H3 class="aside-title">个人分类</H3>
+<DIV class="aside-content">
+<UL>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/806445"><SPAN 
+  class="title oneline">ActiveX</SPAN><SPAN 
+  class="count float-right">18篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1596463"><SPAN 
+  class="title oneline">Android</SPAN><SPAN 
+  class="count float-right">16篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/839689"><SPAN 
+  class="title oneline">Bar Code</SPAN><SPAN 
+  class="count float-right">16篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/870092"><SPAN 
+  class="title oneline">C#</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/751376"><SPAN 
+  class="title oneline">CImg</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3185663"><SPAN 
+  class="title oneline">Caffe</SPAN><SPAN 
+  class="count float-right">49篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1080069"><SPAN 
+  class="title oneline">Code::Blocks</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/783053"><SPAN 
+  class="title oneline">CMake</SPAN><SPAN 
+  class="count float-right">8篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1531463"><SPAN 
+  class="title oneline">CUDA/TensorRT</SPAN><SPAN 
+  class="count float-right">41篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/787502"><SPAN 
+  class="title oneline">Contour Detection</SPAN><SPAN 
+  class="count float-right">9篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/766827"><SPAN 
+  class="title oneline">CxImage</SPAN><SPAN 
+  class="count float-right">6篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/725584"><SPAN 
+  class="title oneline">C/C++/C++11</SPAN><SPAN 
+  class="count float-right">157篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1224608"><SPAN 
+  class="title oneline">Database/Dataset</SPAN><SPAN 
+  class="count float-right">8篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2134223"><SPAN 
+  class="title oneline">Design Patterns</SPAN><SPAN 
+  class="count float-right">25篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3185667"><SPAN 
+  class="title oneline">Deep Learning</SPAN><SPAN 
+  class="count float-right">66篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1632447"><SPAN 
+  class="title oneline">Eclipse</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/5721721"><SPAN 
+  class="title oneline">Eigen/OpenBLAS</SPAN><SPAN 
+  class="count float-right">11篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1291633"><SPAN 
+  class="title oneline">Emgu CV</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2698115"><SPAN 
+  class="title oneline">FFmpeg</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1106790"><SPAN 
+  class="title oneline">Feature Extraction</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3063045"><SPAN 
+  class="title oneline">FreeType</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/6488566"><SPAN 
+  class="title oneline">Face</SPAN><SPAN 
+  class="count float-right">12篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/956329"><SPAN 
+  class="title oneline">GPU</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2802135"><SPAN 
+  class="title oneline">Git/SVN</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1845993"><SPAN 
+  class="title oneline">GCC/Clang/LLVM</SPAN><SPAN 
+  class="count float-right">8篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/6461698"><SPAN 
+  class="title oneline">GDAL</SPAN><SPAN 
+  class="count float-right">5篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/721608"><SPAN 
+  class="title oneline">Image Recognition</SPAN><SPAN 
+  class="count float-right">10篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/7543439"><SPAN 
+  class="title oneline">Cloud Computing</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2522979"><SPAN 
+  class="title oneline">HTML</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/7535244"><SPAN 
+  class="title oneline">Go</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/694197"><SPAN 
+  class="title oneline">Image Processing</SPAN><SPAN 
+  class="count float-right">21篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/773600"><SPAN 
+  class="title oneline">Image Registration</SPAN><SPAN 
+  class="count float-right">13篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/757990"><SPAN 
+  class="title oneline">ImageMagick</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1161016"><SPAN 
+  class="title oneline">Java</SPAN><SPAN 
+  class="count float-right">6篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1074408"><SPAN 
+  class="title oneline">Linux</SPAN><SPAN 
+  class="count float-right">49篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/950823"><SPAN 
+  class="title oneline">Log</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1845995"><SPAN 
+  class="title oneline">Makefile</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/727004"><SPAN 
+  class="title oneline">Mathematical Knowledge</SPAN><SPAN class="count float-right">31篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/6669818"><SPAN 
+  class="title oneline">Multi-thread</SPAN><SPAN 
+  class="count float-right">12篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/694196"><SPAN 
+  class="title oneline">Matlab</SPAN><SPAN 
+  class="count float-right">33篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/768633"><SPAN 
+  class="title oneline">MFC</SPAN><SPAN 
+  class="count float-right">8篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1094456"><SPAN 
+  class="title oneline">MinGW</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2627737"><SPAN 
+  class="title oneline">Mac</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/780354"><SPAN 
+  class="title oneline">Neural Network</SPAN><SPAN 
+  class="count float-right">25篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/780527"><SPAN 
+  class="title oneline">OCR</SPAN><SPAN 
+  class="count float-right">14篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/807112"><SPAN 
+  class="title oneline">Office</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1531467"><SPAN 
+  class="title oneline">OpenCL</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2628015"><SPAN 
+  class="title oneline">OpenSSL</SPAN><SPAN 
+  class="count float-right">7篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/721609"><SPAN 
+  class="title oneline">OpenCV</SPAN><SPAN 
+  class="count float-right">106篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1928863"><SPAN 
+  class="title oneline">OpenGL</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1619831"><SPAN 
+  class="title oneline">OpenGL ES</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/806446"><SPAN 
+  class="title oneline">OpenMP/Intel TBB</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/807065"><SPAN 
+  class="title oneline">Photoshop</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1244795"><SPAN 
+  class="title oneline">Python</SPAN><SPAN 
+  class="count float-right">18篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3087829"><SPAN 
+  class="title oneline">Qt</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1859913"><SPAN 
+  class="title oneline">SIMD</SPAN><SPAN 
+  class="count float-right">14篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/694174"><SPAN 
+  class="title oneline">Software Development</SPAN><SPAN class="count float-right">5篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1091775"><SPAN 
+  class="title oneline">System architecture</SPAN><SPAN class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2472055"><SPAN 
+  class="title oneline">Skia</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2604495"><SPAN 
+  class="title oneline">Software Testing</SPAN><SPAN 
+  class="count float-right">10篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3142465"><SPAN 
+  class="title oneline">Shell</SPAN><SPAN 
+  class="count float-right">11篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3195627"><SPAN 
+  class="title oneline">Socket</SPAN><SPAN 
+  class="count float-right">3篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1180757"><SPAN 
+  class="title oneline">Target Detection</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1180760"><SPAN 
+  class="title oneline">Target Tracking</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/771262"><SPAN 
+  class="title oneline">VC6</SPAN><SPAN 
+  class="count float-right">6篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/771263"><SPAN 
+  class="title oneline">VS2008</SPAN><SPAN 
+  class="count float-right">16篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1388484"><SPAN 
+  class="title oneline">VS2010</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3088517"><SPAN 
+  class="title oneline">VS2013/VS2017</SPAN><SPAN 
+  class="count float-right">6篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2446069"><SPAN 
+  class="title oneline">vigra</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/3069675"><SPAN 
+  class="title oneline">VLC</SPAN><SPAN 
+  class="count float-right">5篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/6092140"><SPAN 
+  class="title oneline">VLFeat</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/1095143"><SPAN 
+  class="title oneline">wxWidgets</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/831027"><SPAN 
+  class="title oneline">Watermark</SPAN><SPAN 
+  class="count float-right">4篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/818095"><SPAN 
+  class="title oneline">Windows7/10</SPAN><SPAN 
+  class="count float-right">10篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/757323"><SPAN 
+  class="title oneline">Windows Core Programming</SPAN><SPAN class="count float-right">9篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/fengbingchun/article/category/2523597"><SPAN 
+  class="title oneline">XML/JSON</SPAN><SPAN 
+  class="count float-right">5篇</SPAN></A></LI></UL></DIV>
+<P class="text-center"><A class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</A></P></DIV>
+<DIV id="asideNewComments" class="aside-box">
+<H3 class="aside-title">最新评论</H3>
+<DIV class="aside-content">
+<UL class="newcomment-list">
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/fengbingchun/article/details/50573841#comments" 
+  target="_blank">tiny-cnn开源库的使用(MN...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/fengbingchun" 
+  target="_blank">fengbingchun</A>：[reply]maitianpt[/reply]
+   NN_Test下目前包含5个项目，你是运行的ti...                </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/fengbingchun/article/details/72571729#comments" 
+  target="_blank">在Windows10上访问中文维基...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/fengbingchun" 
+  target="_blank">fengbingchun</A>：[reply]weixin_43779965[/reply]刚试过，ip地址还是有效的   
+               </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/fengbingchun/article/details/50573841#comments" 
+  target="_blank">tiny-cnn开源库的使用(MN...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/maitianpt" 
+  target="_blank">maitianpt</A>：您好，我下载了您github的源码，在Win10 x64 VS2013 
+  opencv3.1.0环境...                </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/fengbingchun/article/details/72571729#comments" 
+  target="_blank">在Windows10上访问中文维基...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/weixin_43779965" 
+  target="_blank">weixin_43779965</A>：ip地址不行了吧                </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/fengbingchun/article/details/17335477#comments" 
+  target="_blank">OpenCV中resize函数五种...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/fengbingchun" 
+  target="_blank">fengbingchun</A>：[reply]MrYaoLing[/reply]
+  设置个断点跟踪查找下原因，或者可以参考https...                </P></LI></UL></DIV></DIV>
+<DIV id="asideHotArticle" class="aside-box">
+<H3 class="aside-title">热门文章</H3>
+<DIV class="aside-content">
+<UL class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/details/50529500">卷积神经网络(CNN)基础介绍</A>
+  <P class="read">阅读量：<SPAN>154851</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/details/50274471">人工神经网络简介</A>
+  <P class="read">阅读量：<SPAN>98855</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/details/17335477">OpenCV中resize函数五种插值算法的实现过程</A>
+  <P class="read">阅读量：<SPAN>52551</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/details/49611549">MNIST数据库介绍及转换</A>
+  <P class="read">阅读量：<SPAN>49370</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/details/47378515">Eigen介绍及简单使用</A>
+  <P class="read">阅读量：<SPAN>49333</SPAN></P></LI></UL></DIV></DIV>
+<DIV id="asideArchive" class="aside-box flexible-box">
+<H3 class="aside-title">归档</H3>
+<DIV class="aside-content">
+<UL class="archive-list"><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2018/11">2018年11月       
+               <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2018/10">2018年10月       
+               <SPAN class="count float-right">5篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/09">2018年9月 
+                     <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/08">2018年8月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/07">2018年7月 
+                     <SPAN class="count float-right">15篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/06">2018年6月 
+                     <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/05">2018年5月 
+                     <SPAN class="count float-right">5篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/04">2018年4月 
+                     <SPAN class="count float-right">14篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/03">2018年3月 
+                     <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/02">2018年2月 
+                     <SPAN class="count float-right">10篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2018/01">2018年1月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2017/12">2017年12月       
+               <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2017/11">2017年11月       
+               <SPAN class="count float-right">29篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2017/10">2017年10月       
+               <SPAN class="count float-right">10篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/09">2017年9月 
+                     <SPAN class="count float-right">18篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/08">2017年8月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/07">2017年7月 
+                     <SPAN class="count float-right">14篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/06">2017年6月 
+                     <SPAN class="count float-right">21篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/05">2017年5月 
+                     <SPAN class="count float-right">16篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/04">2017年4月 
+                     <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/03">2017年3月 
+                     <SPAN class="count float-right">16篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/02">2017年2月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2017/01">2017年1月 
+                     <SPAN class="count float-right">19篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2016/12">2016年12月       
+               <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2016/11">2016年11月       
+               <SPAN class="count float-right">8篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2016/10">2016年10月       
+               <SPAN class="count float-right">7篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/09">2016年9月 
+                     <SPAN class="count float-right">16篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/08">2016年8月 
+                     <SPAN class="count float-right">14篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/07">2016年7月 
+                     <SPAN class="count float-right">12篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/06">2016年6月 
+                     <SPAN class="count float-right">10篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/05">2016年5月 
+                     <SPAN class="count float-right">5篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/04">2016年4月 
+                     <SPAN class="count float-right">8篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/03">2016年3月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/02">2016年2月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2016/01">2016年1月 
+                     <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2015/12">2015年12月       
+               <SPAN class="count float-right">7篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2015/11">2015年11月       
+               <SPAN class="count float-right">7篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2015/10">2015年10月       
+               <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/09">2015年9月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/08">2015年8月 
+                     <SPAN class="count float-right">8篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/07">2015年7月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/06">2015年6月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/05">2015年5月 
+                     <SPAN class="count float-right">8篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/04">2015年4月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/03">2015年3月 
+                     <SPAN class="count float-right">10篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/02">2015年2月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2015/01">2015年1月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2014/12">2014年12月       
+               <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2014/11">2014年11月       
+               <SPAN class="count float-right">5篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2014/10">2014年10月       
+               <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/09">2014年9月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/08">2014年8月 
+                     <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/07">2014年7月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/06">2014年6月 
+                     <SPAN class="count float-right">12篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/05">2014年5月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/04">2014年4月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/03">2014年3月 
+                     <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/02">2014年2月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2014/01">2014年1月 
+                     <SPAN class="count float-right">5篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2013/12">2013年12月       
+               <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2013/11">2013年11月       
+               <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2013/10">2013年10月       
+               <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/09">2013年9月 
+                     <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/08">2013年8月 
+                     <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/07">2013年7月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/06">2013年6月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/05">2013年5月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/04">2013年4月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/03">2013年3月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/02">2013年2月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2013/01">2013年1月 
+                     <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2012/11">2012年11月       
+               <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2012/10">2012年10月       
+               <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/09">2012年9月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/08">2012年8月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/07">2012年7月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/06">2012年6月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/05">2012年5月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/04">2012年4月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/03">2012年3月 
+                     <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2012/02">2012年2月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2011/12">2011年12月       
+               <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2011/11">2011年11月       
+               <SPAN class="count float-right">3篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2011/10">2011年10月       
+               <SPAN class="count float-right">6篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/09">2011年9月 
+                     <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/08">2011年8月 
+                     <SPAN class="count float-right">9篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/07">2011年7月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/06">2011年6月 
+                     <SPAN class="count float-right">13篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/05">2011年5月 
+                     <SPAN class="count float-right">16篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/04">2011年4月 
+                     <SPAN class="count float-right">11篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/03">2011年3月 
+                     <SPAN class="count float-right">12篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/02">2011年2月 
+                     <SPAN class="count float-right">16篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2011/01">2011年1月 
+                     <SPAN class="count float-right">4篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2010/12">2010年12月       
+               <SPAN class="count float-right">8篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2010/11">2010年11月       
+               <SPAN class="count float-right">17篇</SPAN></A></LI><!--归档统计-->
+  <LI><A 
+  href="https://blog.csdn.net/fengbingchun/article/month/2010/10">2010年10月       
+               <SPAN class="count float-right">13篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2010/09">2010年9月 
+                     <SPAN class="count float-right">14篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2010/08">2010年8月 
+                     <SPAN class="count float-right">17篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2010/07">2010年7月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2010/06">2010年6月 
+                     <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/fengbingchun/article/month/2010/05">2010年5月 
+                     <SPAN class="count float-right">2篇</SPAN></A></LI></UL></DIV>
+<P class="text-center"><A class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</A></P></DIV>
+<DIV id="asideFooter">
+<DIV class="aside-box">
+<DIV class="persion_article"></DIV></DIV></DIV></ASIDE>
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/publib_footer-1.0.3.js" data-isfootertrack="false"></SCRIPT>
+
+<SCRIPT>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</SCRIPT>
+</DIV>
+<DIV class="mask-dark"></DIV>
+<DIV style="display: block;" class="pulllog-box">
+<DIV class="pulllog clearfix"><SPAN class="text float-left">
+<DIV id="dmp_ad_69">
+<DIV id="kp_box_69" data-pid="69" data-track-click='{"mod":"kp_popu_69-75","con":",,"}' 
+data-track-view='{"mod":"kp_popu_69-75","con":",,"}'>
+<DIV style="padding: 2px 5px 0px; border: 1px solid rgb(241, 61, 61); margin-right: 5px; float: left;">
+<A style="color: rgb(241, 61, 61); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="https://www.csdn.net/2018dev/?utm_source=blogtextlink" 
+target="_blank">开发者调查</A></DIV>
+<DIV style="background: rgb(0, 0, 0); padding: 2px 5px 0px; border: 1px solid rgb(0, 0, 0); margin-right: 5px; float: left;">
+<A style="color: rgb(255, 255, 255); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="https://edu.csdn.net/topic/python115?utm_source=ditong1" 
+target="_blank">Python学习路线！</A></DIV>
+<DIV style="padding: 2px 5px 0px; border: 1px solid rgb(241, 61, 61); margin-right: 5px; float: left;">
+<A style="color: rgb(241, 61, 61); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="https://mall.csdn.net/vip_code?utm_source=blogtextlink" 
+target="_blank">会员任意学</A></DIV>
+<DIV style="background: rgb(0, 0, 0); padding: 2px 5px 0px; border: 1px solid rgb(0, 0, 0); margin-right: 5px; float: left;">
+<A style="color: rgb(255, 255, 255); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="http://bdtc2018.hadooper.cn/?utm_source=bk" target="_blank">中国大数据技术大会</A>
+</DIV>
+<DIV style="float: left;">
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/ndr3h.js"></SCRIPT>
+<!-- 长文字链
+<script type="text/javascript" src="//rabc1.iteye.com/common/5klj5.js?kfxbghx=bx"></script>
+-->
+</DIV></DIV></DIV></SPAN>
+<DIV class="pulllog-btn float-right clearfix">
+<DIV class="float-left csdn-tracking-statistics tracking-click" data-mod="popu_557"><A 
+class="pulllog-login">登录</A></DIV>
+<DIV class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" 
+data-mod="popu_558"><A href="https://passport.csdn.net/account/mobileregister" 
+target="_blank">注册</A></DIV><BUTTON class="btn-close"><svg xmlns="http://www.w3.org/2000/svg" 
+class="icon" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="#csdnc-times" /></svg></BUTTON></DIV></DIV></DIV>
+<DIV style="display: none;" id="loginWrap"></DIV>
+<DIV class="tool-box">
+<UL class="meau-list">
+  <LI class="btn-like-box "><BUTTON class=" low-height hover-box btn-like " 
+  title="点赞"><svg xmlns="http://www.w3.org/2000/svg" class="icon active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-thumbsup-ok" /></svg><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon no-active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-thumbsup" /></svg><SPAN 
+  class="hover-show text-box text"><SPAN class="no-active">点赞</SPAN><SPAN class="active">取消点赞</SPAN></SPAN>
+  <P>0</P></BUTTON></LI>
+  <LI><A class="btn-comments low-height hover-box" title="写评论" href="https://blog.csdn.net/fengbingchun/article/details/63686673#commentBox"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-comments" /></svg><SPAN class="hover-show text">评论</SPAN>
+  <P></P></A></LI>
+  <LI id="liTocBox" class="toc-container-box"><BUTTON class="btn-toc low-height hover-box" 
+  title="目录"><svg xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-contents" /></svg><SPAN 
+  class="hover-show text">目录</SPAN></BUTTON>
+  <DIV class="toc-container">
+  <DIV class="pos-box">
+  <DIV class="icon-arrow"></DIV>
+  <DIV class="scroll-box">
+  <DIV class="toc-box"></DIV></DIV></DIV>
+  <DIV class="opt-box"><BUTTON class="btn-opt prev nomore" title="向上"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon" aria-hidden="true"><use 
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-chevronup" 
+  /></svg></BUTTON><BUTTON class="btn-opt next"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon" aria-hidden="true"><use 
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-chevrondown" 
+  /></svg></BUTTON></DIV></DIV></LI>
+  <LI><BUTTON class="btn-bookmark low-height hover-box" title="收藏"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon active hover-hide" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bookmark-ok" /></svg><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon no-active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bookmark" /></svg><SPAN class="hover-show text">收藏</SPAN><!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> --></BUTTON></LI>
+  <LI class="bdsharebuttonbox"><BUTTON 
+  class="btn-comments low-height hover-box"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon hover-hide" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-usephone" /></svg><SPAN class="hover-show text text3">手机看
+  				</SPAN></BUTTON></LI>
+  <LI class="widescreen-hide"><A class="btn-comments low-height hover-box" 
+  title="C++中头文件<iostream>介绍" href="https://blog.csdn.net/fengbingchun/article/details/63685373"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-chevronleft" /></svg><SPAN 
+  class="hover-show text text3">上一篇</SPAN></A></LI>
+  <LI class="widescreen-hide"><A class="btn-comments hover-box low-height" 
+  title="Caffe源码中Solver文件分析" href="https://blog.csdn.net/fengbingchun/article/details/64444599"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-chevronright" /></svg><SPAN 
+  class="hover-show text text3">下一篇</SPAN></A></LI><!-- 宽屏更多按钮 -->
+  <LI class="widescreen-more"><A class="btn-comments chat-ask-button low-height hover-box" 
+  title="快问" href="https://blog.csdn.net/fengbingchun/article/details/63686673#chatqa"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-more" /></svg><SPAN class="hover-show text">更多</SPAN></A>
+  <UL class="widescreen-more-box">
+    <LI class="widescreen-more"><A class="btn-comments low-height hover-box" 
+    title="C++中头文件<iostream>介绍" href="https://blog.csdn.net/fengbingchun/article/details/63685373"><svg 
+    xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+    aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xlink:href="#csdnc-chevronleft" /></svg><SPAN 
+    class="hover-show text text3">上一篇</SPAN></A></LI>
+    <LI class="widescreen-more"><A class="btn-comments hover-box low-height" 
+    title="Caffe源码中Solver文件分析" href="https://blog.csdn.net/fengbingchun/article/details/64444599"><svg 
+    xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+    aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xlink:href="#csdnc-chevronright" /></svg><SPAN 
+    class="hover-show text text3">下一篇</SPAN></A></LI></UL></LI></UL></DIV>
+<SCRIPT>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</SCRIPT>
+
+<SCRIPT>
+    var recommendCount = 50;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = articleTitles;
+    var ChannelId = 16;
+    var articleId = "63686673";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/fengbingchun/article/details/63686673";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "std%3A%3Anothrow+%E5%88%A0%E9%99%A4";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["c++","nothrow","\u4ecb\u7ecd","\u4f7f\u7528"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"xuqianghit","nick_name":"xuqianghit","avatar":"https:\/\/avatar.csdn.net\/8\/6\/9\/3_xuqianghit.jpg","is_expert":false,"article_count":616},{"user_name":"huang11055","nick_name":"huang11055","avatar":"https:\/\/avatar.csdn.net\/C\/C\/4\/3_huang11055.jpg","is_expert":false,"article_count":28},{"user_name":"vagrxie","nick_name":"\u4e5d\u5929\u96c1\u7fce","avatar":"https:\/\/avatar.csdn.net\/7\/C\/C\/3_vagrxie.jpg","is_expert":true,"article_count":406},{"user_name":"autumn20080101","nick_name":"Hustudent20080101","avatar":"https:\/\/avatar.csdn.net\/C\/B\/C\/3_autumn20080101.jpg","is_expert":false,"article_count":4959},{"user_name":"xhu_eternalcc","nick_name":"Enockipp","avatar":"https:\/\/avatar.csdn.net\/F\/E\/A\/3_xhu_eternalcc.jpg","is_expert":false,"article_count":243},{"user_name":"bai_lu_sz","nick_name":"bai_lu_sz","avatar":"https:\/\/avatar.csdn.net\/6\/F\/C\/3_bai_lu_sz.jpg","is_expert":false,"article_count":255},{"user_name":"softn","nick_name":"seven-soft","avatar":"https:\/\/avatar.csdn.net\/6\/9\/6\/3_softn.jpg","is_expert":false,"article_count":996},{"user_name":"wxwxx","nick_name":"\u8d85\u51e1\u4e09\u773c\u4ed4","avatar":"https:\/\/avatar.csdn.net\/9\/D\/1\/3_wxwxx.jpg","is_expert":false,"article_count":24},{"user_name":"eagleatustb","nick_name":"eagleatustb","avatar":"https:\/\/avatar.csdn.net\/3\/A\/8\/3_eagleatustb.jpg","is_expert":false,"article_count":211},{"user_name":"p569354158","nick_name":"p569354158","avatar":"https:\/\/avatar.csdn.net\/E\/0\/A\/3_p569354158.jpg","is_expert":false,"article_count":98}];
+
+		var articleType = 1;
+		var CopyrightContent = '本文为博主原创文章，未经博主允许不得转载。';
+</SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/sandalstrap.min.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/paging.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/goTop-v1.0.min.js"></SCRIPT>
+
+<SCRIPT>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,articleTit);
+        }
+    })
+</SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/baidu_search-1.1.2.js"></SCRIPT>
+<!-- 高亮未与 markdown兼容  --><LINK rel="stylesheet" href="new(std%20nothrow)_files/chart.css">
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/chart.min.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/widget2chart.js"></SCRIPT>
+<LINK rel="stylesheet" href="new(std%20nothrow)_files/atom-one-dark.css">
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/pc_wap_common-9e177e0136.js"></SCRIPT>
+
+<SCRIPT type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlighting();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/login-box.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/common-1c6034e07d.min.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/detail-60fb5508d0.min.js"></SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/skin-yellow-9376486353.min.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/fixed-sidebar.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/check-adblock.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="new(std%20nothrow)_files/MathJax.js"></SCRIPT>
+
+<SCRIPT type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</SCRIPT>
+
+<SCRIPT type="text/javascript">
+window.baidu_hh_hotword = {
+    di:'24004469_1_oem_dg',
+		id:['content_views'],
+    isMobile:false,
+    page_url:'https://blog.csdn.net/fengbingchun/article/details/63686673',
+    title:'C++中nothrow的介绍及使用',
+    sid:""
+}
+</SCRIPT>
+
+<SCRIPT src="new(std%20nothrow)_files/m_word.js"></SCRIPT>
+</BODY></HTML>

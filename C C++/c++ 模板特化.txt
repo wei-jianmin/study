@@ -1,0 +1,82 @@
+模板特化不是新概念，而是c++98就支持的功能
+
+模板特化包括 类模板特化 和 函数模板特化
+
+模板特化不同于模板的实例化，而是在模板参数为某种特定类型时，该模板类的定义(具体实现),
+模板特化，有时也称为模板的具体化。
+
+函数模板特化
+    template<typename T> T Max(T t1,T t2){
+        return (t1>t2)?t1:t2;
+    }      
+    typedef const char* CCP;
+    template<> CCP Max<CCP>(CCP s1,CCP s2){
+    //-Note : 注意函数名后面还有个<CCP>
+        return (strcmp(s1,s2)>0)?s1:s2;
+    }    
+    const char* p=Max<const char*>("very","good");
+    
+函数模板特化的替换方案
+    在上面的例子中，我们也可以重载普通函数
+    CCP Max(CCP s1,CCP s2){
+        return (strcmp(s1,s2)>0)?s1:s2;
+    }
+    效果和使用函数模板特化基本相同，区别在于:
+    使用模板，则如非必要，目标文件不会包含特化模板函数的二进制代码
+    
+类模板特化
+    template<typename T>class A{
+        T num;
+    public:
+        A(){ num=T(6.6); }
+    };      
+    template<> class A<char*>{  
+    //-Note ：注意类名A后面还有个<char*>
+    //-Note : 前面的template<> 表没有模板参数的模板类
+        char* str;
+    public:
+        A(){ str="A' special definition "; }
+    };      
+    A<int> a1;       //显示模板实参的隐式实例化
+    A<char*> a2;     //使用特化的类模板
+    
+模板特化的其它说明：
+    c++98规定，对模板的特化，必须在相同名字空间进行
+    也就是说，如果在一个名字空间中声明了模板函数或模板类
+    则不应在该名字空间外部，或其它名字空间中，对该模板特化
+    在c++11中，针对这种限制条件，在保持与C++98兼容的思想下，
+    引入了内联名字空间（使用inline namespace关键字）
+    内联名字空间一般出现在某个名字空间中，作为子名字空间，
+    内联名字空间中定义的模板函数或模板类，
+    允许在内联名字空间之外,父名字空间（非内联的）内模板特化。
+    
+C++类模板的多种特化情形
+    https://blog.csdn.net/kybd2006/article/details/1873803
+    以 template<typename T> A; 为例
+    1. 特化为绝对类型 ： template<> A<int>;
+    2. 特化为引用/指针类型 ： template<typename T> A<T*>;
+    3. 特化为另外一个类模板 ： template<typename T> A<vector<T>>;
+    4. template<typename T> A<T>; 
+    5. 变参模板的特化：
+       template<typename ...T> A; 
+       可以特化为：
+       template<typename T> A<T>;  
+       template<typename T> A<T,T>; 
+       template<typename T> A<T,T,T>; 
+       template<typename T1,template ...T2> A<T1,T2...>; 
+       说明： 
+       因为...T是变参，所以 template<typename ...T> 和
+       template<typename T1,template ...T2> 以及 template<typename T>
+       可以认为是等价的。
+    理解： 
+        模板类使用时，都是模板类后面带<>，<>中填写真实类型，
+        再看模板特化的语法，也是模板类后面带<>，
+        <>中可以是真实类型，也可以是对模板类型T的近一步约束，
+        模板类实例化时，就是根据类名后面<>中的数据类型，找最匹配的特化模板
+    
+特化模板，带参构造函数
+    特化模板是可以有带参构造函数的，
+    但需要保证模板类声明的对象，其构造参数，
+    要与(其所对应的特化模板的)构造函数参数相匹配，
+    特别注意的，对于变参模板的偏特化，因为通常会因为模板继承而发生"迭代特化"，
+    此时更应保证"迭代特化"的中间步骤中，带参构造函数的调用匹配问题。

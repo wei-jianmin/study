@@ -1,0 +1,12 @@
+问题描述：
+    写了个签章库，解析ofd文件，调用oes，对ofd文件进行签章
+    执行是，崩溃在oes，报错：
+    CoreApp construct
+    CoreApp::OnInit
+    CoreApp::Go : cfg_file_path = /opt/apps/com.tongzhi.oesplugin/files/lib/cpp.ess.oes/cfg/oesplugin_config.xml
+    munmap_chunk(): invalid pointer
+问题原因：
+    签章库中使用了tinyxml（源文件），oes页面使用了tinyxml，
+    因为这两个tinyxml的接口不一致，相互影响，导致崩溃
+解决办法：
+    将签章库中的所有函数设置为默认不导出

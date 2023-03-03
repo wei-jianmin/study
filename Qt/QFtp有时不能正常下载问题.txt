@@ -1,0 +1,9 @@
+  ret = ftp_->connectToHost(_host, _port.toInt());
+  tool.WriteLog("ftp->connectToHost return %d",iret);
+  iret = ftp_->login(_username, _passwd);
+  tool.WriteLog("ftp->login return %d",iret);
+  ftp_->setTransferMode(QFtp::Active);
+  iret = ftp_->get(_oesfile,file_,QFtp::Binary);
+  tool.WriteLog("ftp->get return %d",iret);
+  
+  ftp有被动模式和主动模式  默认应该是被动模式  我改成了主动模式了  可以下载成功 

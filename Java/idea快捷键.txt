@@ -1,0 +1,79 @@
+● 光标定位：
+光标跑到大括号的开头 Ctrl+[
+光标跑到大括号的结尾 Ctrl+]
+定位上/下一个方法 Alt+↑ Alt+↓
+Ctrl+Up/Down 光标跳转到第一行或最后一行下，相当于鼠标滚轮效果
+Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方
+ALT+ ←/→ 切换标签页
+Ctrl＋Alt＋Up /Ctrl＋Alt＋Down可以快速跳转搜索结果
+Ctrl + F3 调转到所选中的词的下一个引用位置 （必备）
+Ctrl + Shift + B 跳转到类型声明处
+
+● 智能索引
+连按两次Shift 弹出 Search Everywhere 弹出层
+Ctrl+N 查找类
+Ctrl+Shift+N 查找文件
+查找类中的方法或变量 Ctrl+Shift+Alt+N
+Ctrl+B 快速打开光标处的类或方法或显示方法/类所有被调用，找变量的来源 
+Ctrl＋F7可以查询当前元素在当前文件中的引用
+Alt + F7 查找光标所在的方法 / 变量 / 类被调用的地方
+CTRL+H 显示类结构图 //不好用
+显示当前文件的结构 Ctrl+F12
+
+● 智能提示
+Ctrl+空格 代码提示
+Ctrl+Alt+Space 类名或接口名提示
+Ctrl+P 方法参数提示
+Ctrl＋Shift＋F7可以高亮当前元素在当前文件中的使用
+看到当前方法的声明 Alt+Q
+查看方法、类的说明 Ctrl+ Q
+
+● 智能填充
+Alt+回车 导入包
+
+● 代码查看
+Shift + 滚轮前后滚动 当前文件的横向滚动轴滚动 （必备）
+Ctrl + - 折叠代码
+Ctrl + + 展开代码
+Ctrl + Shift + - 折叠所有代码
+Ctrl + Shift + + 展开所有代码
+Ctrl + Alt + H 调用层次
+Ctrl + Shift + H 显示方法层次结构
+Ctrl + Alt + F11 切换全屏模式
+Ctrl + Alt + 左方向键 退回到上一个操作的地方 （必备）
+Ctrl + Alt + 右方向键 前进到上一个操作的地方 （必备）
+
+● 其它
+Ctrl + F8 在 Debug 模式下，设置光标当前行为断点，如果当前已经是断点则去掉断点
+Ctrl + Shift + F8 View BreakPoints
+F11 添加书签
+shift + F10 Run this module
+shift + F9 Debug this module
+shift + alt + F10 Run
+Shift + Alt + F9 Debug
+F7 Step Into
+F8 Step Over
+Shift + F8 Step Out
+Alt + F9 Run to Cursor
+
+● 代码修改
+Ctrl+Alt+L 格式化代码
+CTRL+ALT+I 光标所在行 或 选中部分进行自动代码缩进，有点类似格式化
+Ctrl+Shift+Space 自动补全代码
+Ctrl + D 复制光标所在行 或 复制选择内容，并把复制内容插入光标位置下面 
+删除行 Ctrl+Y 
+CTRL+X 剪切,删除行
+可以选择剪贴板内容并插入 Ctrl+Shift+Insert
+Ctrl+/ 或 Ctrl+Shift+/ 注释（// 或者/…/ ）
+CTRL+SHIFT+UP/DOWN 代码向上/下移动
+Ctrl＋O可以选择父类的方法进行重写
+Ctrl + I 选择可继承的方法
+CTRL+Z 倒退 
+CTRL+SHIFT+Z 向前 
+CTRL+U 大小写切换
+SHIFT+F6 重构-重命名
+可以把代码包在一个块内  Ctrl+Alt+T
+Shift + Enter 开始新一行。光标所在行下空出一行，光标定位到新行位置 （必备
+Ctrl + Alt + Enter 光标所在行上空出一行，光标定位到新行 （必备
+Ctrl + Shift + 前方向键 光标放在方法名上，将方法移动到上一个方法前面，调整方法排序
+Ctrl + Shift + 后方向键 光标放在方法名上，将方法移动到下一个方法前面，调整方法排序

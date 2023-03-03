@@ -1,0 +1,58 @@
+https://manpages.debian.org/testing/strongswan-swanctl/swanctl.8.en.html
+
+swanctl 是一个跨平台的命令行实用程序，
+用于配置、控制和监视 strongSwan IKE 守护程序。 
+它是老的 starter、ipsec 和 stroke 工具的替代品
+swanctl 使用名为 swanctl.conf 的配置文件来解析配置和凭据。 
+从特定目录读取私钥、证书和其他 PKI 相关凭证。
+为了与 IKE 守护进程通信，swanctl 使用 VICI 协议，即多功能 IKE 配置接口。
+这个稳定的接口可供其他工具使用，并且通常比编写 swanctl 脚本和解析其输出更可取
+
+
+swanctl使用vici插件（推荐）
+        位于 /usr/sbin/swanctl
+        使用 /etc/swanctl 目录下的文件
+
+
+swanctl与vici的关系
+    swanctl	是通过 vici 接口进行通信的配置和控制实用程序
+    vici 插件提供了多功能 IKE 控制接口，
+    。顾名思义，它为外部应用程序提供了一个接口，
+    不仅可以配置，还可以控制和监视 IKE 守护程序 charon
+    strongSwan通常用于在针对特定需求的定制系统中提供IKE服务功能
+    此类系统的开发人员通常需要自动配置和控制 IKE 守护程序
+    现有的和接口从未被设计成自动化的。
+    编写这些工具的脚本很困难，返回信息很麻烦。
+    VICI试图通过提供稳定的IPC接口来改善系统集成商的情况，
+    允许外部工具查询，配置和控制IKE守护进程。
+    VICI界面最突出的用户是swanctl，
+    这是一个用于配置和控制charon的命令行应用程序。
+    默认情况下，该插件处于启用状态，
+    但可以使用 ./configure 选项禁用vici ： --disable-vici
+    
+选项                    说明
+-i, --initiate          发起连接
+-t, --terminate         终止连接
+-R, --rekey             重新加密 SA
+-d, --redirect          重定向 IKE_SA
+-p, --install           安装陷阱或分流策略 （install a trap or shunt policy）
+-u, --uninstall         卸载陷阱或分流策略
+-l, --list-sas          列出当前活动的 IKE_SA
+-P, --list-pols         列出当前安装的策略
+-b, --load-authorities  （重新）加载认证机构（certification authorities）信息
+-L, --list-conns        列出加载的配置
+-B, --list-authorities  列出加载的认证机构信息
+-x, --list-certs        列出存储的证书
+-A, --list-pools        列出加载的池配置（list loaded pool configurations）
+-g, --list-algs         列出加载的算法及其实现
+-q, --load-all          （重新）加载凭据、池、权限和连接（credentials, pools, authorities and connections）
+-c, --load-conns        （重新）加载连接配置
+-s, --load-creds        （重新）加载凭据
+-a, --load-pools        （重新）加载池配置
+-T, --log           	跟踪日志输出
+-S, --stats             显示守护进程信息和统计信息
+-f, --flush-certs       刷新缓存的证书
+-r, --reload-settings   重新加载 strongswan.conf 配置
+-v, --version           显示守护进程版本信息
+-h, --help              显示使用信息  
+

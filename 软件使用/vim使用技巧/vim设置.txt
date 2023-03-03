@@ -1,0 +1,51 @@
+在 ~/.vimrc 中控制vim的初始化配置：
+前面带 " ，为注释内容
+
+设置主题：
+    colorscheme darkblue "另外可选的有 pablo slate zellner，别的主题在使用 vim -d 进行文件比较时表现不佳   
+设置行号：
+    set nu    
+设置搜索到的内容高亮：
+    set  hlsearch
+设置语法高亮：
+    参：https://zhuanlan.zhihu.com/p/43194380
+    :syntax enable   启用语法高亮
+    :syntax clear    关闭此功能
+    以上命令只在当前文件中有效。
+    而set syntax=off命令，则会关闭所有缓冲区中文件的语法高亮度；
+    使用:syntax on命令，则会针对所有缓冲区中的文件启用语法高亮度
+    Vim通过识别文件的扩展名来选择相应的语法高亮显示
+    如果没有使用传统的扩展名，那么就需要设置filetype选项，来告诉Vim正在编辑的文件类型
+    例如使用以下命令，告诉Vim我们正在编辑一个C程序文件：
+    :set filetype=c
+设置支持鼠标
+    参：https://blog.csdn.net/qq_27968607/article/details/54966912
+    :set mouse=a
+    :set mouse-=a   关闭鼠标功能
+    mouse’的参数说明
+        // n  普通模式
+        // v  可视模式
+        // i 插入模式
+        // c 命令行模式
+        // h 在帮助文件里，以上所有模式
+        // a 以上所有模式
+        // r 跳过|lit-enter|提示
+        // A 在可是模式下自动选择
+设置自动缩进
+    set autoindent  //自动缩进
+    set cindent  //C自动缩进
+    set shiftwidth=4 //自动缩进空白字符个数
+    set softtabstop=4 //tab键的一个制表符，如果softtabstop=5,tabstop=4,则tab是1个制表符加1个空格的混合
+    set tabstop=4 //tab键的空格数  
+设置搜索忽略大小写
+    set incsearch
+设置使用的文字编码
+    set enc=utf-8
+    set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+高亮显示匹配的括号
+    set showmatch
+    set matchtime=1  匹配括号高亮的时间（单位是十分之一秒）
+记住上次打开位置
+    if has("autocmd")
+        au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    endif

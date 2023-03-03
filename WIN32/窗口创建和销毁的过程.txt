@@ -1,0 +1,66 @@
+下面总结一下ＭＦＣ对话框创建和销毁的函数调用顺序：
+非模态对话框
+MFC应用程序创建窗口的过程
+1.PreCreateWindow()   该函数是一个重载函数，在窗口被创建前，可以在该重载函数中改变创建参数   (可以设置窗口风格等等)
+
+2.PreSubclassWindow() 　这也是一个重载函数，允许首先子分类一个窗口
+
+3.OnGetMinMaxInfo()   该函数为消息响应函数，响应的是WM_GETMINMAXINFO消息，允许设置窗口的最大或者最小尺寸
+
+4.OnNcCreate()        该函数也是一个消息响应函数，响应WM_NCCREATE消息，发送消息以告诉窗口的客户区 即将被创建
+
+5.OnNcCalcSize()      该函数也是消息响应函数,响应WM_NCCALCSIZE消息，作用是允许改变窗口客户区大小
+
+6.OnCreate()          该函数也是一个消息响应函数，响应WM_CREATE消息，发送消息告诉一个窗口已经被创建
+
+7.OnSize()            该函数也是一个消息响应函数，响应WM_SIZE消息，发送该消息以告诉该窗口大小已经 发生变化
+
+8.OnMove()            消息响应函数，响应WM_MOVE消息，发送此消息说明窗口在移动
+
+9.OnChildNotify()     该函数为重载函数，作为部分消息映射被调用，告诉父窗口即将被告知一个窗口刚刚被创建
+
+MFC应用程序关闭窗口的顺序(非模态窗口)
+
+1.OnClose()       消息响应函数，响应窗口的WM_CLOSE消息，当关闭按钮被单击的时候发送此消息
+
+2.OnDestroy()     消息响应函数，响应窗口的WM_DESTROY消息，当一个窗口将被销毁时，发送此消息
+
+3.OnNcDestroy()   消息响应函数，响应窗口的WM_NCDESTROY消息，当一个窗口被销毁后发送此消息
+
+4.PostNcDestroy() 重载函数，作为处理OnNcDestroy()函数的最后动作，被CWnd调用
+
+----------------------------------------------------------------------------------------------------------------
+
+MFC应用程序中创建模态对话框的函数调用顺序：
+
+1.DoModal()             重载函数，重载DoModal()成员函数
+
+2.PreSubclassWindow()   重载函数，允许首先子分类一个窗口
+
+3.OnCreate()            消息响应函数，响应WM_CREATE消息，发送此消息以告诉一个窗口已经被创建
+
+4.OnSize()              消息响应函数，响应WM_SIZE消息，发送此消息以告诉窗口大小发生变化
+
+5.OnMove()              消息响应函数，响应WM_MOVE消息，发送此消息，以告诉窗口正在移动
+
+6.OnSetFont()           消息响应函数，响应WM_SETFONT消息，发送此消息，以允许改变对话框中控件的字体
+
+7.OnInitDialog()        消息响应函数，响应WM_INITDIALOG消息，发送此消息以允许初始化对话框中的控件， 或者是创建新控件
+
+8.OnShowWindow()        消息响应函数，响应WM_SHOWWINDOW消息，该函数被ShowWindow()函数调用
+
+9.OnCtlColor()          消息响应函数，响应WM_CTLCOLOR消息，被父窗口发送已改变对话框或对话框上面控件的颜色
+
+10. OnChildNotify()     重载函数，作为WM_CTLCOLOR消息的结果发送
+
+MFC应用程序中关闭模式对话框的顺序
+
+1.OnClose()        消息响应函数，响应WM_CLOSE消息，当"关闭"按钮被单击的时候，该函数被调用
+
+2.OnKillFocus()    消息响应函数，响应WM_KILLFOCUS消息，当一个窗口即将失去键盘输入焦点以前被发送
+
+3.OnDestroy()      消息响应函数，响应WM_DESTROY消息，当一个窗口即将被销毁时，被发送
+
+4.OnNcDestroy()    消息响应函数，响应WM_NCDESTROY消息，当一个窗口被销毁以后被发送
+
+5.PostNcDestroy()  重载函数，作为处理OnNcDestroy()函数的最后动作被CWnd调用

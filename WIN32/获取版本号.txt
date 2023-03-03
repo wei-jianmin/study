@@ -1,0 +1,77 @@
+struct VS_VERSIONINFO { 
+	WORD  wLength; 
+	WORD  wValueLength; 
+	WORD  wType; 
+	WCHAR szKey[16];
+	WORD  Padding1[1];
+	VS_FIXEDFILEINFO Value;
+	} *pData;
+HMODULE hModule = GetModuleHandle("SignPic.ocx");
+HRSRC hRsrc = FindResource(hModule,(LPCTSTR)VS_VERSION_INFO,RT_VERSION)
+//HINSTANCE hRes = AfxFindResourceHandle(MAKEINTRESOURCE(VS_VERSION_INFO),RT_VERSION);
+HGLOBAL hGlobal = LoadResource(hModule,hRsrc)
+pData = (VS_VERSIONINFO*)LockResource(hGlobal);
+ver1 = pData->Value.dwFileVersionMS>>16;
+ver2 = pData->Value.dwFileVersionMS&0xffff;
+ver3 = pData->Value.dwFileVersionLS>>16;
+ver4 = pData->Value.dwFileVersionLS&0xffff;		
+szVersion.Format(_T("Ocx当前版本号：%d.%d.%d.%d！"),ver1,ver2,ver3,ver4);
+
+
+#define IS_INTRESOURCE(_r) 	((((ULONG_PTR)(_r)) >> 16) == 0)
+#define MAKEINTRESOURCEA(i) 	((LPSTR)((ULONG_PTR)((WORD)(i))))
+
+// Predefined Resource Types
+#define RT_CURSOR          	MAKEINTRESOURCE(1)
+#define RT_BITMAP           	MAKEINTRESOURCE(2)
+#define RT_ICON             	MAKEINTRESOURCE(3)
+#define RT_MENU             	MAKEINTRESOURCE(4)
+#define RT_DIALOG           	MAKEINTRESOURCE(5)
+#define RT_STRING          	MAKEINTRESOURCE(6)
+#define RT_FONTDIR          	MAKEINTRESOURCE(7)
+#define RT_FONT             	MAKEINTRESOURCE(8)
+#define RT_ACCELERATOR      	MAKEINTRESOURCE(9)
+#define RT_RCDATA           	MAKEINTRESOURCE(10)
+#define RT_MESSAGETABLE     	MAKEINTRESOURCE(11)
+#define DIFFERENCE		11
+#define RT_GROUP_CURSOR 	MAKEINTRESOURCE((ULONG_PTR)(RT_CURSOR) + DIFFERENCE)
+#define RT_GROUP_ICON   	MAKEINTRESOURCE((ULONG_PTR)(RT_ICON) + DIFFERENCE)
+#define RT_VERSION      	MAKEINTRESOURCE(16)
+#define RT_DLGINCLUDE   	MAKEINTRESOURCE(17)
+
+#if(WINVER >= 0x0400)
+#define RT_PLUGPLAY     	MAKEINTRESOURCE(19)
+#define RT_VXD          	MAKEINTRESOURCE(20)
+#define RT_ANICURSOR    	MAKEINTRESOURCE(21)
+#define RT_ANIICON      	MAKEINTRESOURCE(22)
+#endif /* WINVER >= 0x0400 */
+
+#define RT_HTML         	MAKEINTRESOURCE(23)
+#define RT_MANIFEST             MAKEINTRESOURCE(24)
+
+=============================================
+
+char szAppFullPath[_MAX_PATH] = {0};
+
+GetModuleFileName(NULL,szAppFullPath,MAX_PATH);//得到程序模块名称，全路径
+
+//获取当前文件的版本信息
+DWORD dwLen = GetFileVersionInfoSize(szAppFullPath,NULL); 
+char *pszAppVersion = new char[dwLen+1];
+if(pszAppVersion)
+{
+	memset(pszAppVersion,0,sizeof(char)*(dwLen+1));
+	GetFileVersionInfo(szAppFullPath,NULL,dwLen,pszAppVersion);
+	CString strVersion;
+	UINT nLen(0);
+	VS_FIXEDFILEINFO *pFileInfo(NULL);
+	VerQueryValue(pszAppVersion,"\\",(LPVOID*)&pFileInfo,&nLen);
+	if(pFileInfo)
+	{
+		//获取版本号
+		strVersion.Format("%d.%d.%d.%d",HIWORD(pFileInfo->dwFileVersionMS),
+						LOWORD(pFileInfo->dwFileVersionMS),
+						HIWORD(pFileInfo->dwFileVersionLS),
+						LOWORD(pFileInfo->dwFileVersionLS));
+	}
+}

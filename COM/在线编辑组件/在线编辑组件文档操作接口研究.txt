@@ -1,0 +1,457 @@
+
+//原地激活对象，主要就是调用对象的DoVerb --> STDMETHODIMP CDsoDocObject::IPActivateView()  -->  hr = m_pole->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, (IOleClientSite*)&m_xOleClientSite, (UINT)-1, m_hwnd, &rcView);
+STDMETHODIMP CDsoFramerControl::XOleObject::DoVerb(LONG iVerb, LPMSG lpmsg, IOleClientSite *pActiveSite, LONG lindex, HWND hwndParent, LPCRECT lprcPosRect)  -->  case OLEIVERB_UIACTIVATE: hr= pThis->InPlaceActivate(iVerb);
+
+----------------------------------------------------------------------------------------------------------------------------
+接收所有修订：STDMETHODIMP CDsoFramerControl::TzzAcceptAllRevisions()
+   --->  get_ActiveDocument(&pActiveDoc);    获取文档指针
+   --->  MSWORD::_DocumentPtr     pWordDoc=pActiveDoc;
+			↓↓↓↓↓			
+			↓↓↓↓↓
+获取文档指针:  STDMETHODIMP CDsoFramerControl::get_ActiveDocument(IDispatch** ppdisp)
+   --->  punk = (IUnknown*) m_pDocObjFrame->GetActiveObject();	获取文档对象的IUnknown接口指针
+   --->  hr = punk->QueryInterface(IID_IDispatch, (void**)ppdisp);
+说明：
+CDsoDocObject          *m_pDocObjFrame;        // The Embedding Class，CDsoFramerControl的成员变量
+			↓↓↓↓↓
+			↓↓↓↓↓
+m_pDocObjFrame的赋值：
+STDMETHODIMP CDsoFramerControl::DoDialogAction(dsoShowDialogType item)  对新建文档的响应
+   --->STDMETHODIMP CDsoFramerControl::CreateNew(BSTR ProgIdOrTemplate)
+      --->  m_pDocObjFrame = CDsoDocObject::CreateInstance((IDsoDocObjectSite*)&m_xDsoDocObjectSite);   文档框架
+GetActiveObject函数：
+inline IOleInPlaceActiveObject*  CDsoDocObject::GetActiveObject()
+{   return m_pipactive;   }    m_pipactiv为文档对象的IUnknown接口指针
+			↓↓↓↓↓
+			↓↓↓↓↓
+m_pipactive对应CDsoDocObject 实现的 IOleInPlaceFrame的接口方法SetActiveObject的第一个参数
+   /*
+	CDsoDocObject 实现的 IOleInPlaceFrame的接口方法：
+	STDMETHODIMP CDsoDocObject::XOleInPlaceFrame::SetActiveObject(LPOLEINPLACEACTIVEOBJECT pIIPActiveObj, LPCOLESTR pszObj)
+	   --->  SAFE_SET_INTERFACE(pThis->m_pipactive, pIIPActiveObj);
+	说明 ： 接口第一个参数传来的即为文档对象的IUnknown接口指针
+   */
+
+
+
+
+
+
+======================================================================================
+
+
+STDMETHODIMP CDsoFramerControl::UIActivate(BOOL fForceUIActive)
+   --->  if (m_pInPlaceFrame)   m_pInPlaceFrame->SetActiveObject((IOleInPlaceActiveObject*)&m_xOleInplaceActiveObject, NULL);
+			↓↓↓↓↓
+			↓↓↓↓↓
+m_xOleInplaceActiveObject:
+这是CDsoFramerControl中的内嵌接口对象
+m_pInPlaceFrame
+这是CDsoFramerControl的成员变量  IOleInPlaceFrame * m_pInPlaceFrame
+  该成员变量的获得：
+  STDMETHODIMP CDsoFramerControl::InPlaceActivate(LONG lVerb)
+     --->  hr = m_pInPlaceSite->GetWindowContext(&m_pInPlaceFrame, &m_pInPlaceUIWindow, &rcPos, &rcClip, &InPlaceFrameInfo);
+			  GetWindowContext(  IOleInPlaceFrame **ppFrame,
+					     IOleInPlaceUIWindow **ppDoc,
+					     LPRECT lprcPosRect,
+				 	     LPRECT lprcClipRect,
+					     LPOLEINPLACEFRAMEINFO lpFrameInfo) = 0;
+	说明：
+	m_pInPlaceSite是IOleInPlaceSite *类型， CDsoFramerControl的成员变量
+	该变量的赋值：
+	STDMETHODIMP CDsoFramerControl::CreateNew(BSTR ProgIdOrTemplate)
+	--->STDMETHODIMP CDsoDocObject::IPActivateView()
+	   --->  hr = m_pole->DoVerb(OLEIVERB_SHOW, NULL,(IOleClientSite*)&m_xOleClientSite, (UINT)-1, m_hwnd, &rcView);
+	     --->  STDMETHODIMP CDsoFramerControl::XOleObject::DoVerb(LONG iVerb, LPMSG lpmsg, IOleClientSite *pActiveSite, LONG lindex, HWND hwndParent, LPCRECT lprcPosRect)
+	       --->  hr= pThis->InPlaceActivate(iVerb);
+	          --->  STDMETHODIMP CDsoFramerControl::InPlaceActivate(LONG lVerb)
+	             --->  hr = m_pClientSite->QueryInterface(IID_IOleInPlaceSite, (void **)&m_pInPlaceSite);
+		m_pClientSite的赋值：
+		STDMETHODIMP CDsoFramerControl::XOleObject::SetClientSite(IOleClientSite *pClientSite)    m_pClientSite = pClientSite;
+		SetClientSite被CDsoDocObject::CreateDocObject调用：hr = pole->SetClientSite((IOleClientSite*)&m_xOleClientSite);
+		CDsoDocObject::CreateDocObject被CDsoFramerControl::CreateNew调用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,999 @@
+/**
+ &<context> 结构:
+ * 包涵了隧道的所有状态
+ * 该结构标识一个vpn隧道：保存一条隧道的信息，另外也包含进程级的数据，如配置选项
+ * tunnel_state（存储vpn隧道状态的结构）关联的页
+ * 描述了该结构在client-mode 和 server-mode 下是如何被使用的
+ */
+// context modes 
+#define CM_P2P            0  /* 独立的P2P会话或Client */
+#define CM_TOP            1  /* 多客户端或一对多的server的top level*/
+#define CM_TOP_CLONE      2  /* CM_TOP 的克隆 for one thread */
+#define CM_CHILD_UDP      3  /* child context of a CM_TOP */
+#define CM_CHILD_TCP      4  /* child context of a CM_TOP */
+struct context
+{
+    struct options options;      /** 从命令行或配置文件读到的配置项 */
+    bool first_time;             /** 标记vpn主循环的第一次迭代 */
+    int mode;                    /** context在vpn进程中的角色 */
+    struct gc_arena gc;          /** 垃圾管理器 */
+    struct env_set *es;          /** 环境变量的集合 */
+    openvpn_net_ctx_t net_ctx;   /** 网络 API opaque context */
+    struct signal_info *sig;     /** 内部错误信号对象 */
+    struct plugin_list *plugins; /** 插件列表 */
+    bool plugins_owned;          /** 当clean本context时，是否要clean插件*/
+    bool did_we_daemonize;       /** demonization是否已经接管 */
+    struct context_persist persist; /** 持久化context（持续时间） */
+    struct context_0 *c0;        /** Level 0 context. @context_0 */
+    struct context_1 c1;         /** Level 1 context. @context_1 */
+    struct context_2 c2;         /** Level 2 context. @context_2 */
+};
+/**
+ * &<context_0>
+ * Level 0 context 包含有关vpn进程的信息.
+ * Level 0 状态在程序启动时就被初始化，然后持续整个进程的声明周期
+ * 该结构包含进程的pid、用户、组和权限
+ */
+struct context_0
+{
+    bool uid_gid_specified;  //是否使用了--user或--group配置项
+    bool uid_gid_chroot_set; //指示是否应该持有privileges
+    struct platform_state_user platform_state_user;
+    struct platform_state_group platform_state_group;
+};
+/**
+ * &<context_1>
+ * Level 1 context 包含的状态将横跨（across） SIGUSR1 restarts.
+ * 每次main函数的外层SIGHUP循环时被初始化，但内存SIGUSR1循环则将被维持不变
+ */
+struct context_1
+{
+    struct link_socket_addr link_socket_addr;    /** 本地或外网地址 */
+    struct key_schedule ks;                     //隧道的会话密钥
+    struct cached_dns_entry *dns_cache;         //预处理的或缓存的host names
+    struct packet_id_persist pid_persist;       //将加密序列号保存到文件/从文件中获取
+    struct tuntap *tuntap;                      /** tun/tap虚拟网络接口  */
+    bool tuntap_owned;                          /** 当清理context时，是否应该clean上面的tun/tap结构  */
+    struct route_list *route_list;              /**路由信息列表. 参看--route命令行选项 */
+    struct route_ipv6_list *route_ipv6_list;    // --route-ipv6 指令列表
+    struct status_output *status_output;        //状态文件
+    bool status_output_owned;                   //是否被清理
+    struct http_proxy_info *http_proxy;         //http代理对象
+    bool http_proxy_owned;                      //是否被清理
+    struct socks_proxy_info *socks_proxy;       //socket代理对象
+    bool socks_proxy_owned;                     //是否被清理
+    struct ifconfig_pool_persist *ifconfig_pool_persist;  //将--ifconfig-pool数据库持久化到文件
+    bool ifconfig_pool_persist_owned;           //是否被清理
+    //如果是client模式，存放从server拉去来的option的字符串的哈希（只有client-mode用）
+    struct sha256_digest pulled_options_digest_save;
+    struct user_pass *auth_user_pass;   //用户名和密码认证
+    const char *ciphername;             /** 配置文件中的数据通道密码(cipher) */
+    const char *authname;               /** 来自配置文件的数据通道授权(auth) */
+    int keysize;                        /** 配置文件中的数据通道密钥大小 */
+};
+/**
+ * &<context_2>
+ * Level 2 context 包含因 SIGHUP 和 SIGUSR1 而重启的状态.
+ * 该结构在如下方法开始时完成初始化, 
+ * tunnel_point_to_point() 
+ * tunnel_server_udp_single_threaded(),
+ * tunnel_server_tcp() 
+ * 也就是说，在main函数内的每次 SIGUSR1 循环中，它将被重置
+ */
+/* io_wait可能返回的事件 */
+#define SOCKET_READ       (1<<0)
+#define SOCKET_WRITE      (1<<1)
+#define TUN_READ          (1<<2)
+#define TUN_WRITE         (1<<3)
+#define ES_ERROR          (1<<4)
+#define ES_TIMEOUT        (1<<5)
+#define MANAGEMENT_READ   (1<<6)
+#define MANAGEMENT_WRITE  (1<<7)
+struct context_2
+{
+    struct gc_arena gc;         /** 垃圾管理器 */
+    struct event_set *event_set;  //全局等待的事件（global wait events）
+    int event_set_max;
+    bool event_set_owned;
+    unsigned int event_set_status;
+    struct link_socket *link_socket;     /* 用于tcp/udp连接到远端的socket */
+    bool link_socket_owned;
+    struct link_socket_info *link_socket_info;
+    const struct link_socket *accept_from; /* 是的可以在父 link_socket 上执行 accept() */
+    struct link_socket_actual *to_link_addr;    /* 远端的ip地址*/
+    struct link_socket_actual from;             /* 接收的 datagram的地址 */
+    /* 最大传输单元帧参数 */
+    struct frame frame;                         /* 活动帧参数 */
+    struct frame frame_initial;                 /* 在新会话上恢复的 */
+    /* 初始高级MUT协商和数据报分片的对象 */
+    struct fragment_master *fragment;
+    struct frame frame_fragment;
+    struct frame frame_fragment_initial;
+    struct frame frame_fragment_omit;
+    // 流量校正（shaper）对象.
+    struct shaper shaper;
+    // 统计数据
+    counter_type tun_read_bytes;
+    counter_type tun_write_bytes;
+    counter_type link_read_bytes;
+    counter_type link_read_bytes_auth;
+    counter_type link_write_bytes;
+    // 用于ping和超时特性的对象
+    struct event_timeout wait_for_connect;
+    struct event_timeout ping_send_interval;
+    struct event_timeout ping_rec_interval;
+    /* --inactive */
+    struct event_timeout inactivity_interval;
+    int inactivity_bytes;
+    /* 在对端之间必须匹配的选项字符串 */
+    char *options_string_local;
+    char *options_string_remote;
+    int occ_op;                 /* 初始化为-1 */
+    int occ_n_tries;
+    struct event_timeout occ_interval;
+    // 跟踪到目前为止收到的最大数据包大小
+    int original_recv_size;     /* 当前 */
+    int max_recv_size_local;    /* 收到的最大的包的大小*/
+    int max_recv_size_remote;   /* 从远端接收的最大包大小*/
+    int max_send_size_local;    /* 发送的最大包大小 */
+    int max_send_size_remote;   /* 远端发送的最大包大小 */
+    /* 远端希望我们发回一个关于thissize的 load test 包 */
+    int occ_mtu_load_size;
+    struct event_timeout occ_mtu_load_test_interval;
+    int occ_mtu_load_n_tries;
+    // TLS-mode crypto对象.
+    struct tls_multi *tls_multi; /** vpn隧道的TSL状态的结构 */
+    struct tls_auth_standalone *tls_auth_standalone;
+    /*
+     * 客户端连接的初始认证需要的TSL状态结构
+     * 该结构被 tls_pre_decrypt_lite() 函数使用，
+     * 当收到新客户发来的第一个连接包，进行HMAC防火墙检查时
+     * 参 --tls-auth 命令行选项
+     */
+    /* 用来优化对tls_multi_process的调用。 */
+    struct interval tmp_int;
+    /* 在TLS错误时抛出这个信号 */
+    int tls_exit_signal;
+    struct crypto_options crypto_options;
+    /**< Security parameters and crypto state
+     *   used by the \link data_crypto Data
+     *   Channel Crypto module\endlink to
+     *   process data channel packet. */
+    struct event_timeout packet_id_persist_interval;
+    struct compress_context *comp_context;
+    /**< Compression context used by the
+     *   \link compression Data Channel
+     *   Compression module\endlink. */
+    // 包处理时使用的buffer.
+    struct context_buffers *buffers;
+    bool buffers_owned; /* 如为真，则关闭时释放所有的buffers */
+    // 这些buffer实际并不占用存储，他们用于指向已经在context_buffers中申请的buffer
+    struct buffer buf;
+    struct buffer to_tun;
+    struct buffer to_link;
+    /* 在包传送时，我们是否应该打印 R|W|r|w 到终端 */
+    bool log_rw;
+    /* 路由相关 */
+    struct event_timeout route_wakeup;
+    struct event_timeout route_wakeup_expire;
+    // 本次循环中我们打开了 tun/tap 设备了吗
+    bool did_open_tun;
+    /* 事件循环信息 */
+    /* 在我们需要服务时，我们应该在 link/tun 上读等待多久 */
+    struct timeval timeval;
+    /* 下次唤醒的粗略定时 (精度大于1秒) */
+    time_t coarse_timer_wakeup;
+    /* 保持一个随机的delta，添加到超时中，以避免上下文同时被唤醒。 */
+    time_t update_timeout_random_component;
+    struct timeval timeout_random_component;
+    /* 定时器，用于任何，直到第一个包，从 openvpn server 的sockets、http代理和没计数的tcp包*/
+    struct event_timeout server_poll_interval;
+    /* 表明 do_up_delay function 已经运行了 */
+    bool do_up_ran;
+    /* 
+     * 当 options->explicit_exit_notification 使能时，
+     * 表明收到了一个 SIGTERM，但我们还没有exit
+     */
+    time_t explicit_exit_notification_time_wait;
+    struct event_timeout explicit_exit_notification_interval;
+    /* 传给脚本的环境变量 */
+    struct env_set *es;
+    bool es_owned;
+    /* 不用等待TUN/TAP/UDP ready to accept write */
+    bool fast_io;
+    /* --ifconfig endpoints to be pushed to client */
+    bool push_request_received;
+    bool push_ifconfig_defined;
+    time_t sent_push_reply_expiry;
+    in_addr_t push_ifconfig_local;
+    in_addr_t push_ifconfig_remote_netmask;
+    in_addr_t push_ifconfig_local_alias;
+    bool push_ifconfig_ipv6_defined;
+    struct in6_addr push_ifconfig_ipv6_local;
+    int push_ifconfig_ipv6_netbits;
+    struct in6_addr push_ifconfig_ipv6_remote;
+    struct event_timeout push_request_interval;
+    int n_sent_push_requests;
+    bool did_pre_pull_restore;
+    /* 拉取来的选项的哈希, 用于当选项改变时进行比较 */
+    bool pulled_options_digest_init_done;
+    md_ctx_t *pulled_options_state;
+    struct sha256_digest pulled_options_digest;
+    struct event_timeout scheduled_exit;
+    int scheduled_exit_signal;
+    /* 包过滤 */
+    struct pf_context pf;
+    struct man_def_auth_context mda_context;
+};
+/*====================================================================*/
+//&<env_set>
+struct env_set {
+    struct gc_arena *gc;
+    struct env_item *list;
+};
+//&<env_item>
+struct env_item {
+    char *string;
+    struct env_item *next;
+};
+/*====================================================================*/
+//&<openvpn_net_ctx_t>
+typedef void *openvpn_net_ctx_t;
+/*====================================================================*/
+//&<signal_info>
+struct signal_info
+{
+    volatile int signal_received;
+    volatile int source;
+    const char *signal_text;
+};
+/*====================================================================*/
+//&<plugin_list>
+struct plugin_list
+{
+    struct plugin_per_client per_client;
+    struct plugin_common *common;
+    bool common_owned;
+};
+//&<plugin_per_client>
+struct plugin_per_client
+{
+    void *per_client_context[MAX_PLUGINS];
+};
+//&<plugin_common>
+struct plugin_common
+{
+    int n;
+    struct plugin plugins[MAX_PLUGINS];
+};
+//&<plugin>
+struct plugin {
+    bool initialized;
+    const char *so_pathname;
+    unsigned int plugin_type_mask;
+    int requested_initialization_point;
+    void *handle;  //或 HMODULE module;
+    openvpn_plugin_open_v1 open1;
+    openvpn_plugin_open_v2 open2;
+    openvpn_plugin_open_v3 open3;
+    openvpn_plugin_func_v1 func1;
+    openvpn_plugin_func_v2 func2;
+    openvpn_plugin_func_v3 func3;
+    openvpn_plugin_close_v1 close;
+    openvpn_plugin_abort_v1 abort;
+    openvpn_plugin_client_constructor_v1 client_constructor;
+    openvpn_plugin_client_destructor_v1 client_destructor;
+    openvpn_plugin_min_version_required_v1 min_version_required;
+    openvpn_plugin_select_initialization_point_v1 initialization_point;
+    openvpn_plugin_handle_t plugin_handle;
+};
+typedef void* (*openvpn_plugin_open_v1)(unsigned int *type_mask,
+                                        const char *argv[],
+                                        const char *envp[]);  
+typedef void* (*openvpn_plugin_open_v2)(unsigned int *type_mask,
+                                        const char *argv[],
+                                        const char *envp[],
+                                        struct openvpn_plugin_string_list **return_list)
+typedef int (*openvpn_plugin_open_v3)(const int version,
+                                      struct openvpn_plugin_args_open_in const *arguments,
+                                      struct openvpn_plugin_args_open_return *retptr);
+//其它函数的定义及各函数的用法说明见openvpn-plugin.h
+/*====================================================================*/
+//&<context_persist>
+struct context_persist
+{
+    int restart_sleep_seconds;
+};
+/*====================================================================*/
+//&<platform_state_user>
+/* Get/Set UID of process */
+struct platform_state_user 
+{
+    int dummy;
+};
+/*====================================================================*/
+//&<platform_state_group>
+/* Get/Set GID of process */
+struct platform_state_group {
+    int dummy;
+};
+/*====================================================================*/
+//&<key_schedule>
+struct key_schedule
+{
+    struct key_type key_type;           /* 标记用哪种cipher、HMAC摘要和key长度 */
+    struct key_ctx_bi static_key;       /* 预共享的静态密钥，从文件中读取的 */
+    struct tls_root_ctx ssl_ctx;        /* 全局 SSL context */
+    struct key_type tls_auth_key_type;  /* TLS控制通道包装的选项 */
+    struct key_ctx_bi tls_wrap_key;
+    struct key_ctx tls_crypt_v2_server_key;
+    struct buffer tls_crypt_v2_wkc;     /** 包装的客户端 key */
+    struct key_ctx auth_token_key;
+};
+//&<key_type>
+struct key_type
+{
+    uint8_t cipher_length;      /** Cipher length */
+    uint8_t hmac_length;        /** HMAC length */
+    const cipher_kt_t *cipher;  /** Cipher static parameters */
+    const md_kt_t *digest;      /** 消息摘要静态参数 */
+};
+typedef EVP_CIPHER cipher_kt_t; //&<EVP_CIPHER>
+typedef EVP_MD md_kt_t;         //&<EVP_MD>
+//&<key_ctx_bi>
+struct key_ctx_bi               //包含收发双向 OpenSSL cipher和 HMAC context
+{
+    struct key_ctx encrypt;     /**发方向的 */
+    struct key_ctx decrypt;     /**收方向的 */
+    bool initialized;
+};
+//&<tls_root_ctx>
+struct tls_root_ctx {   //封装TLS context的结构，使用的ssl库不同，内容不同
+    SSL_CTX *ctx;
+    time_t crl_last_mtime;
+    off_t crl_last_size;
+};
+//&<key_ctx>
+struct key_ctx      //包含一组的 cipher 和/或 HMAC context
+{
+    cipher_ctx_t *cipher;       /** 产生 cipher context. */
+    hmac_ctx_t *hmac;           /** 产生 Generic HMAC context. */
+    uint8_t implicit_iv[OPENVPN_MAX_IV_LENGTH];  // IV（初始向量？） 的隐含部分
+    size_t implicit_iv_len;     /** 上面数组的长度 */
+};
+typedef EVP_CIPHER_CTX cipher_ctx_t;  //&<EVP_CIPHER_CTX>
+typedef HMAC_CTX hmac_ctx_t;          //&<HMAC_CTX>
+/*====================================================================*/
+//&<buffer>
+struct buffer
+{
+    int capacity;               /** 申请的内存内容 */
+    int offset;                 /** 实际数据在申请内存中的偏移量 */
+    int len;                    /** 实际数据的长度 */
+    uint8_t *data;              /** 指向申请的内存 */
+};
+/*====================================================================*/
+//&<cached_dns_entry>
+struct cached_dns_entry {       /* 存放解析的 host names */
+    const char *hostname;
+    const char *servname;
+    int ai_family;
+    int flags;
+    struct addrinfo *ai;
+    struct cached_dns_entry *next;
+};
+/*====================================================================*/
+//&<packet_id_persist>
+struct packet_id_persist    //文件，用以解决跨会话持久化时间和id
+{
+    const char *filename;
+    int fd;
+    time_t time;           /* 时间戳 */
+    packet_id_type id;     /* 序号 */
+    time_t time_last_written;
+    packet_id_type id_last_written;
+};
+typedef uint32_t packet_id_type;
+/*====================================================================*/
+#define TUNNEL_TYPE(tt) ((tt) ? ((tt)->type) : DEV_TYPE_UNDEF)      //&<TUNNEL_TYPE>
+#define TUNNEL_TOPOLOGY(tt) ((tt) ? ((tt)->topology) : TOP_UNDEF)   //&<TUNNEL_TOPOLOGY>
+//&<tuntap>
+struct tuntap  //定义一个 tun/tap 设备
+{
+    int type;       /* 同 proto.h 中的 DEV_TYPE_x */
+    int topology;   /* topology：拓扑，one of the TOP_x values */
+    bool did_ifconfig_setup;
+    bool did_ifconfig_ipv6_setup;
+    bool persistent_if;         /* 如果之前存在, 保持到程序的结束 */
+    struct tuntap_options options; /* 命令行设置的选项 */
+    char *actual_name; /* TUN/TAP 设备的实际名字, 通常包含 unit number */
+    int txqueuelen;  //TX buffers的数量
+    /* ifconfig 参数 */
+    in_addr_t local;  
+    in_addr_t remote_netmask;
+    struct in6_addr local_ipv6;
+    struct in6_addr remote_ipv6;
+    int netbits_ipv6;
+#ifdef _WIN32
+    HANDLE hand;
+    struct overlapped_io reads;
+    struct overlapped_io writes;
+    struct rw_handle rw_handle;
+    /* 用于设置接口地址（借助 IP Helper API 或 DHCP 伪装 */
+    bool ipapi_context_defined;
+    ULONG ipapi_context;
+    ULONG ipapi_instance;
+    in_addr_t adapter_netmask;
+    DWORD adapter_index;  // tap适配器的索引，没定义时为0
+    enum windows_driver_type windows_driver;
+    int standby_iter;
+    HANDLE wintun_send_ring_handle;
+    HANDLE wintun_receive_ring_handle;
+    struct tun_ring *wintun_send_ring;
+    struct tun_ring *wintun_receive_ring;
+#else  /* ifdef _WIN32 */
+    int fd; /* TUN/TAP 设备的文件描述符 */
+#endif /* ifdef _WIN32 */
+    unsigned int rwflags_debug;  //仅用于打印状态信息
+    int post_open_mtu;  // 一些TUN/TAP驱动程序在打开后喜欢被引导到mtu上
+};
+//&<tun_ring>
+struct tun_ring     /** Wintun ring buffer */
+{
+    volatile ULONG head;
+    volatile ULONG tail;
+    volatile LONG alertable;
+    UCHAR data[WINTUN_RING_CAPACITY + WINTUN_RING_TRAILING_BYTES];
+};
+/*====================================================================*/
+#define RL_DID_REDIRECT_DEFAULT_GATEWAY (1<<0)      
+#define RL_DID_LOCAL                    (1<<1)      
+#define RL_ROUTES_ADDED                 (1<<2)
+//&<route_list>
+struct route_list {
+    unsigned int iflags;
+    struct route_special_addr spec;
+    struct route_gateway_info rgi;
+    unsigned int flags;   /* RG_x flags */
+    struct route_ipv4 *routes;
+    struct gc_arena gc;
+};
+//&<route_ipv6_list>
+struct route_ipv6_list {
+    unsigned int iflags;                /* RL_ flags, 参 route_list */
+    unsigned int spec_flags;            /* RTSA_ flags, route_special_addr */
+    struct in6_addr remote_endpoint_ipv6; /* inside tun */
+    struct in6_addr remote_host_ipv6;   /* 远端地址 */
+    int default_metric;
+    struct route_ipv6_gateway_info rgi6;
+    unsigned int flags;                 /* RG_x flags, 参 route_option_list */
+    struct route_ipv6 *routes_ipv6;
+    struct gc_arena gc;
+};
+/*====================================================================*/
+#define STATUS_OUTPUT_READ  (1<<0)
+#define STATUS_OUTPUT_WRITE (1<<1)
+//&<status_output>
+struct status_output   //printf样式的接口，用于输入/输出状态信息
+{
+    unsigned int flags;
+    char *filename;
+    int fd;
+    int msglevel;
+    const struct virtual_output *vout;
+    struct buffer read_buf;
+    struct event_timeout et;
+    bool errors;
+};
+//&<virtual_output>
+ //函数指针，用于 status output
+ struct virtual_output {
+    void *arg;
+    unsigned int flags_default;
+    void (*func) (void *arg, const unsigned int flags, const char *str);
+};
+/*====================================================================*/
+//&<http_proxy_info>
+struct http_proxy_info {
+    bool defined;
+    int auth_method;
+    struct http_proxy_options options;
+    struct user_pass up;
+    char *proxy_authenticate;
+    bool queried_creds;
+};
+#define MAX_CUSTOM_HTTP_HEADER 10
+#define PAR_NO  0   /* don't support any auth retries */
+#define PAR_ALL 1   /* allow all proxy auth protocols */
+#define PAR_NCT 2   /* disable cleartext proxy auth protocols */
+//&<http_proxy_options>
+struct http_proxy_options {
+    const char *server;
+    const char *port;
+    int auth_retry;
+    const char *auth_method_string;
+    const char *auth_file;
+    const char *http_version;
+    const char *user_agent;
+    struct http_custom_header custom_headers[MAX_CUSTOM_HTTP_HEADER];
+    bool inline_creds;
+};
+//&<http_custom_header>
+struct http_custom_header {
+    const char *name;
+    const char *content;
+};
+/*====================================================================*/
+//&<socks_proxy_info>
+struct socks_proxy_info {
+    bool defined;
+    char server[128];
+    const char *port;
+    char authfile[256];
+};
+/*====================================================================*/
+//&<ifconfig_pool_persist>
+struct ifconfig_pool_persist
+{
+    struct status_output *file;
+    bool fixed;
+};
+/*====================================================================*/
+//&<sha256_digest>
+struct sha256_digest {
+    uint8_t digest[SHA256_DIGEST_LENGTH];
+};
+/*====================================================================*/
+#define USER_PASS_LEN 4096  /* username/password 的最大长度*/
+//&<user_pass>
+struct user_pass   //获取和存储 username/password
+{
+    bool defined;
+    /*对于auth-token来说，用户名和令牌可以单独设置，
+     *所以我们使用这第二个bool来跟踪令牌（密码）是否被定义。*/
+    bool token_defined;
+    bool nocache;
+    char username[USER_PASS_LEN];
+    char password[USER_PASS_LEN];
+};
+/*====================================================================*/
+/* &<link_socket>
+ * 定义了openvpn使用的主要的socket结构
+ */
+#define INETD_NONE   0
+#define INETD_WAIT   1
+#define INETD_NOWAIT 2
+#define LS_MODE_DEFAULT           0
+#define LS_MODE_TCP_LISTEN        1
+#define LS_MODE_TCP_ACCEPT_FROM   2 
+#define SF_USE_IP_PKTINFO (1<<0)
+#define SF_TCP_NODELAY (1<<1)
+#define SF_PORT_SHARE (1<<2)
+#define SF_HOST_RANDOMIZE (1<<3)
+#define SF_GETADDRINFO_DGRAM (1<<4)
+struct link_socket
+{
+    struct link_socket_info info;
+    socket_descriptor_t sd;
+    socket_descriptor_t ctrl_sd; /* only used for UDP over Socks */
+#ifdef _WIN32
+    struct overlapped_io reads;  //重叠io，win32.h中定义了该结构
+    struct overlapped_io writes;
+    struct rw_handle rw_handle;  //win32.h中定义了该结构
+    struct rw_handle listen_handle; /* server 模式下监听tcp */
+#endif
+    unsigned int rwflags_debug; /* 仅用于打印状态信息 */
+    /*  用来对预先接受的套接字进行长期排队监听  */
+    bool listen_persistent_queued;  
+    const char *remote_host;
+    const char *remote_port;
+    const char *local_host;
+    const char *local_port;
+    struct cached_dns_entry *dns_cache;
+    bool bind_local;
+    int inetd;
+    int mode;
+    int resolve_retry_seconds;
+    int mtu_discover_type;
+    struct socket_buffer_size socket_buffer_sizes;
+    int mtu;                    /* OS discovered MTU, or 0 if unknown */
+    unsigned int sockflags;
+    int mark;
+    const char *bind_dev;
+    /* for stream sockets */
+    struct stream_buf stream_buf;
+    struct buffer stream_buf_data;
+    bool stream_reset;
+    /* HTTP proxy */
+    struct http_proxy_info *http_proxy;
+    /* Socks proxy */
+    struct socks_proxy_info *socks_proxy;
+    struct link_socket_actual socks_relay; /* Socks UDP 中继地址 */
+    /* 我们将使用代理连接到的OpenVPN服务器 */
+    const char *proxy_dest_host;
+    const char *proxy_dest_port;
+    /* 指向服务器轮询的指针，用于在有自己的循环而不是使用main oop的函数中触发超时 */
+    struct event_timeout *server_poll_timeout;
+    /* 用于获取或设置 TOS(IP协议的tos字段表服务类型：type of service */
+    int ptos;
+    bool ptos_defined;
+    int gremlin; /* --gremlin bits */
+};
+//&<socket_descriptor_t>
+socket_descriptor_t 如果在win下，为 SOCKET，否则，为 int
+//&<rw_handle>
+struct rw_handle {
+    HANDLE read;
+    HANDLE write;
+};
+/*====================================================================*/
+//&<cached_dns_entry> 项目中socket.h中定义
+/* 保存预解析了的 host names */
+struct cached_dns_entry {
+    const char *hostname;
+    const char *servname;
+    int ai_family;
+    int flags;
+    struct addrinfo *ai;
+    struct cached_dns_entry *next;
+};
+/*====================================================================*/
+/* &<stream_buf>
+ * 用于将流中封装的包提取到buffer中
+ * 此中情况下，ip包嵌入在tcp流中
+ */
+struct stream_buf
+{
+    struct buffer buf_init;
+    struct buffer residual;
+    int maxlen;
+    bool residual_fully_formed;
+    struct buffer buf;
+    struct buffer next;
+    int len;   /* 当前不知道时，为-1 */
+    bool error; /* 为真，则表tcp发生了致命错误，需重新建立连接 */
+};
+/*====================================================================*/
+//&<link_socket_actual>
+/* 远端的实际地址，基于收到的包的源地址 */
+struct link_socket_actual
+{
+    struct openvpn_sockaddr dest;
+};
+/*====================================================================*/
+/** &<frame>
+ * 数据包的几何参数
+ */
+#define FRAME_HEADROOM_MARKER_DECRYPT     (1<<0)
+#define FRAME_HEADROOM_MARKER_FRAGMENT    (1<<1)
+#define FRAME_HEADROOM_MARKER_READ_LINK   (1<<2)
+#define FRAME_HEADROOM_MARKER_READ_STREAM (1<<3)
+struct frame {
+    int link_mtu;               /**< 发送到对外的网络接口的包的最大size */
+    int link_mtu_dynamic;       /**< 外部网络接口的动态 MTU 值 */
+    int extra_frame;            /**< 当前处理的所有字节数的最大值？
+                                 *   Maximum number of bytes that all
+                                 *   processing steps together could add.
+                                 *   frame.link_mtu = "socket MTU" - extra_frame;
+                                 */
+    int extra_buffer;           /**< Maximum number of bytes that
+                                 *   processing steps could expand the
+                                 *   internal work buffer.
+                                 *
+                                 *   This is used by the \link compression
+                                 *   Data Channel Compression
+                                 *   module\endlink to give enough working
+                                 *   space for worst-case expansion of
+                                 *   incompressible content. */
+    int extra_tun;              /**< Maximum number of bytes in excess of
+                                 *   the tun/tap MTU that might be read
+                                 *   from or written to the virtual
+                                 *   tun/tap network interface. */
+    int extra_link;             /**< Maximum number of bytes in excess of
+                                 *   external network interface's MTU that
+                                 *   might be read from or written to it. */
+    unsigned int align_flags;   /* 对齐控制 */
+    int align_adjust;
+};
+/*====================================================================*/
+/** &<fragment_master>
+ * 一个VPN隧道实例的分片和重新组合状态。
+ * 这个结构包含了发送和接收与一个VPN隧道相关的
+ * 碎片化数据通道数据包所需的所有状态
+ * 当前被发送到远程OpenVPN对等体的碎片化数据包
+ * 被存储在fragment_master.outgoing中。 
+ * 它被fragment_outgoing()函数复制到该缓冲区中，
+ * 其余要发送的部分可以通过连续调用fragment_ready_to_send()来获取。
+ * 目前正在重新组装的接收数据包被存储在
+ * fragment_master.incoming数组的片段结构中。 
+ * fragment_incoming()函数将新收到的部分加入这个数组中 
+ * 并在重新组装完成后返回整个数据包。
+ */
+struct fragment_master {
+    struct event_timeout wakeup; /**< Timeout structure used by the main
+                                  *   event loop to know when to do
+                                  *   fragmentation housekeeping. */
+    bool received_os_mtu_hint;  /**< Whether the operating system has
+                                 *   explicitly recommended an MTU value. */
+#define N_SEQ_ID            256
+    /**< One more than the maximum fragment
+     *   sequence ID, above which the IDs wrap
+     *   to zero.  Should be a power of 2. */
+    int outgoing_seq_id;        /**< Fragment sequence ID of the current
+                                 *   fragmented packet waiting to be sent.
+                                 *
+                                 *   All parts of a fragmented packet
+                                 *   share the same sequence ID, so that
+                                 *   the remote OpenVPN peer can determine
+                                 *   which parts belong to which original
+                                 *   packet. */
+#define MAX_FRAG_PKT_SIZE 65536
+    /**< (Not used) Maximum packet size before
+     *   fragmenting. */
+    int outgoing_frag_size;     /**< Size in bytes of each part to be
+                                 *   sent, except for the last part which
+                                 *   may be smaller.
+                                 *
+                                 *   This value is computed by the \c
+                                 *   optimal_fragment_size() function. Its
+                                 *   value is sent to the remote peer in
+                                 *   the fragmentation header of the last
+                                 *   part (i.e. with %fragment type \c
+                                 *   FRAG_YES_LAST) using the \c
+                                 *   FRAG_SIZE_MASK and \c FRAG_SIZE_SHIFT
+                                 *   bits. */
+    int outgoing_frag_id;       /**< The fragment ID of the next part to
+                                 *   be sent.  Must have a value between 0
+                                 *   and \c MAX_FRAGS-1. */
+    struct buffer outgoing;     /**< Buffer containing the remaining parts
+                                 *   of the fragmented packet being sent. */
+    struct buffer outgoing_return;
+    /**< Buffer used by \c
+     *   fragment_ready_to_send() to return a
+     *   part to send. */
+    struct fragment_list incoming;
+    /**< List of structures for reassembling
+     *   incoming packets. */
+};
+/*====================================================================*/
+/* &<shaper>
+ * 一个简单的输出方向的流量校正(shaper)器
+ */
+#define SHAPER_MIN 100          /* bytes per second */
+#define SHAPER_MAX 100000000
+#define SHAPER_MAX_TIMEOUT 10   /* seconds */
+#define SHAPER_USE_FP
+struct shaper
+{
+    int bytes_per_second;
+    struct timeval wakeup;
+    double factor;
+};
+/*====================================================================*/
+//&<counter_type>
+typedef unsigned long long int counter_type;
+/*====================================================================*/
+/* &<event_timeout>
+ * 记录一个事件发生以来，已过去了多少秒了
+ */
+struct event_timeout
+{
+    bool defined;
+    interval_t n;
+    time_t last; /* time of last event */
+};
+/*====================================================================*/
+/** &<tls_multi>
+ * 单个VPN隧道的安全参数状态
+ * 一个启用了TLS的活动VPN隧道有一个tls_multi对象，
+ * 其中存储了所有控制通道和数据通道的安全参数状态。 
+ * 这个结构可以包含多个（可能同时活动的）tls_context对象，
+ * 以允许在会话重新协商时进行无中断的转换。
+ * 每个tls_context代表一个控制通道会话，
+ * 它可以跨越（存储在key_state结构中的）多个数据通道安全参数sessions
+ */
+struct tls_multi
+{
+    /* 常量的选项和配置信息 */
+    struct tls_options opt;
+    /* key_state 对象的列表 
+     * 按他们应该被数据通道模块扫描(scan)的顺序*/
+    struct key_state *key_scan[KEY_SCAN_SIZE];
+    /*
+     * 被tls_pre_encrypt使用， 以将加密密钥传递给tls_post_encrypt()
+     */
+    struct key_state *save_ks;  /* 在 pre/post routines 之间使用的临时指针*/
+    /*
+     * 用于从tls_multi_process中返回outgoing address
+     */
+    struct link_socket_actual to_link_addr;
+    int n_sessions;             /** 当前已协商的会话的个数 */
+    enum client_connect_status multi_state;
+    /*
+     * Number of errors.
+     */
+    int n_hard_errors; /* errors due to TLS negotiation failure */
+    int n_soft_errors; /* errors due to 不识别或认证失败的 incoming packets */
+    /*
+     * 我们锁定的通用名称、用户名和证书哈希值
+     *（在这个tls_multi对象的生命周期内不能改变）。
+     */
+    char *locked_cn;
+    char *locked_username;
+    struct cert_hash_set *locked_cert_hash_set;
+    /* Time of last call to tls_authentication_status */
+    time_t tas_last;
+    // 错误信息 to send to client on AUTH_FAILED
+    char *client_reason;
+    /*
+     * 多行字符串，存放一般用途的信息（通过控制通道接收的，对端的）
+     */
+    char *peer_info;
+    char *auth_token;    /*  如果server发送一个 generated auth-token,
+                          *  这就是那个 token 用于之后的  user/pass 
+                          *  认证 in this session.
+                          */
+    char *auth_token_initial;
+    /* 发送给client的第一个auth-token
+     * 用于不更新自动令牌的客户端（旧的OpenVPN3核心版本）
+     */
+#define  AUTH_TOKEN_HMAC_OK              (1<<0)
+    /**< 从客户端发来的 Auth-token 带有无效的 hmac */
+#define  AUTH_TOKEN_EXPIRED              (1<<1)
+    /**< 从客户端发来的 Auth-token 已过期 */
+#define  AUTH_TOKEN_VALID_EMPTYUSER      (1<<2)
+    /**<
+     * Auth-token 只对空的 username 有效
+     * 且不是客户端实际提供的用户名
+     * OpenVPN 3 客户端有时会从他们的配置中抹去(wipe)
+     * 或用一个用户名提示来替换用户名。.
+     */
+    /* For P_DATA_V2 */
+    uint32_t peer_id;
+    bool use_peer_id;
+    char *remote_ciphername;    /* 对方的配置文件中指定的密码 */
+    /*
+     * Our session objects.
+     */
+    struct tls_session session[TM_SIZE];
+    /**< tls_session 对象的数组，
+     * 代表会话的控制通多（同对端的） */
+};
+/*====================================================================*/
+/** &<key_state>
+ * Security parameter state of one TLS and data channel %key session.
+ * @ingroup control_processor
+ *
+ * This structure represents one security parameter session between
+ * OpenVPN peers.  It includes the control channel TLS state and the data
+ * channel crypto state.  It also contains the reliability layer
+ * structures used for control channel messages.
+ *
+ * A new \c key_state structure is initialized for each hard or soft
+ * reset.
+ *
+ * @see
+ *  - This structure should be initialized using the \c key_state_init()
+ *    function.
+ *  - This structure should be cleaned up using the \c key_state_free()
+ *    function.
+ */
+struct key_state
+{
+    int state;
+    /** The state of the auth-token sent from the client */
+    int auth_token_state_flags;
+    /**
+     * Key id for this key_state,  inherited from struct tls_session.
+     * @see tls_session::key_id.
+     */
+    int key_id;
+    struct key_state_ssl ks_ssl; /* contains SSL object and BIOs for the control channel */
+    time_t established;         /* when our state went S_ACTIVE */
+    time_t must_negotiate;      /* key negotiation times out if not finished before this time */
+    time_t must_die;            /* this object is destroyed at this time */
+    int initial_opcode;         /* our initial P_ opcode */
+    struct session_id session_id_remote; /* peer's random session ID */
+    struct link_socket_actual remote_addr; /* peer's IP addr */
+    struct crypto_options crypto_options;/* data channel crypto options */
+    struct key_source2 *key_src;       /* source entropy for key expansion */
+    struct buffer plaintext_read_buf;
+    struct buffer plaintext_write_buf;
+    struct buffer ack_write_buf;
+    struct reliable *send_reliable; /* holds a copy of outgoing packets until ACK received */
+    struct reliable *rec_reliable; /* order incoming ciphertext packets before we pass to TLS */
+    struct reliable_ack *rec_ack; /* buffers all packet IDs we want to ACK back to sender */
+    struct buffer_list *paybuf;
+    counter_type n_bytes;                /* how many bytes sent/recvd since last key exchange */
+    counter_type n_packets;              /* how many packets sent/recvd since last key exchange */
+    /*
+     * If bad username/password, TLS connection will come up but 'authenticated' will be false.
+     */
+    enum ks_auth_state authenticated;
+    time_t auth_deferred_expire;
+#ifdef MANAGEMENT_DEF_AUTH
+    unsigned int mda_key_id;
+    unsigned int mda_status;
+#endif
+#ifdef PLUGIN_DEF_AUTH
+    unsigned int auth_control_status;
+    time_t acf_last_mod;
+    char *auth_control_file;
+#endif
+};
+//&<key_state_ssl>
+struct key_state_ssl {
+    SSL *ssl;                   /* SSL object -- new obj created for each new key */
+    BIO *ssl_bio;                       /* read/write plaintext from here */
+    BIO *ct_in;                 /* write ciphertext to here */
+    BIO *ct_out;                        /* read ciphertext from here */
+};
+//&<session_id>
+struct session_id
+{
+    uint8_t id[8];
+};
+/** &<crypto_options>
+ * Security parameter state for processing data channel packets.
+ * @ingroup data_crypto
+ */
+struct crypto_options
+{
+    struct key_ctx_bi key_ctx_bi;
+    /**< OpenSSL cipher and HMAC contexts for
+     *   both sending and receiving
+     *   directions. */
+    struct packet_id packet_id; /**< Current packet ID state for both
+                                 *   sending and receiving directions. */
+    struct packet_id_persist *pid_persist;
+    /**< Persistent packet ID state for
+     *   keeping state between successive
+     *   OpenVPN process startups. */
+
+#define CO_PACKET_ID_LONG_FORM  (1<<0)
+    /**< Bit-flag indicating whether to use
+    *   OpenVPN's long packet ID format. */
+#define CO_IGNORE_PACKET_ID     (1<<1)
+    /**< Bit-flag indicating whether to ignore
+     *   the packet ID of a received packet.
+     *   This flag is used during processing
+     *   of the first packet received from a
+     *   client. */
+#define CO_MUTE_REPLAY_WARNINGS (1<<2)
+    /**< Bit-flag indicating not to display
+     *   replay warnings. */
+    unsigned int flags;         /**< Bit-flags determining behavior of
+                                 *   security operation functions. */
+};
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/
+/*====================================================================*/

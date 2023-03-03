@@ -1,0 +1,67 @@
+TiXmlDocument::LoadFile( const char* _filename, TiXmlEncoding encoding )
+将文件名存在value成员变量中，value是TIXML_STRING类型
+以二进制读方式打开
+进入TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
+    调用基类的TiXmlNode::Clear()方法
+	location.clear()
+	把文件内容读到一个临时缓冲区中
+    把换行符删掉，只留下回车符
+	Parse( buf, 0, encoding );
+	释放缓冲区
+关闭文件
+返回
+
+char* TiXmlDocument::Parse( const char* p, TiXmlParsingData* prevData, TiXmlEncoding encoding )
+调用自身的ClearError方法，清除错误指示成员变量
+将文件内容p、tab长度、定位行、定位列存到TiXmlParsingData data变量中
+当encoding是TIXML_ENCODING_UNKNOWN时，检查如果是TIXML_ENCODING_UTF8，是则替换
+跳过开头的空白（包括回车换行、space）
+调用TiXmlNode* node = Identify( p, encoding );
+TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )
+    跳过开头空白
+	如果第一个字符不是‘<’,则返回
+	依次检查开头是不是符合"<?xml"、"<!--"、"<!"、"<![CDATA["
+	如果符合，则new TiXmlDeclaration、TiXmlComment、TiXmlUnknown、TiXmlText
+	如果不符合，则检查之后的第一个字符是不是字母或下划线，如果是，则new TiXmlElement("");
+	如果以上都不符合，则new TiXmlUnknown();
+	如果上面成功创建了相应节点，则设置节点的TiXmlNode* parent=this
+	返回创建的节点
+调用node->Parse( p, &data, encoding );  p为xml文本，data是上面第16行创建的
+const char* TiXmlElement::Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding )
+    跳过开头的空白（包括回车换行、space）
+	从this开始，检查是不是Document类型，如果不是，则检查上级parent，直到得到TiXmlDocument* document（目的是可以在出错时，用于设置出错信息）
+	调用data->Stamp( p, encoding );
+	    如果传来的p指向的数据区比data中早先存的数据区位置靠后，｛。。。｝
+		stamp = p;
+	如果p指向的内容不是“<”开头的，则设置错误信息，返回
+	p = ReadName( p, &value, encoding );
+	char* TiXmlBase::ReadName( const char* p, TIXML_STRING * name, TiXmlEncoding encoding )
+	    读字符、_,-,.,:,知道遇到空格，将读到的名字存到name中，p的指向位置发生变化
+	TIXML_STRING endTag="</"+value
+	while ( p && *p )
+	{
+		跳过开头空白
+		如果p指向的是“/>”(空节点时)，给出错误，返回
+		如果p指向的是">"（没有属性时）
+		    p = ReadValue( p, data, encoding );	
+			char* TiXmlElement::ReadValue( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding )
+			    TiXmlDocument* document = GetDocument(),目的是可以在出错时，用于设置出错信息
+				跳过开头的空白（包括回车换行、space）
+				如果p指向的开始字符不是<,说明不是子节点，而是文本
+				    TiXmlText* textNode = new TiXmlText( "" );
+					p = textNode->Parse( p, data, encoding );
+					const char* TiXmlText::Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding )
+					。。。
+					将节点连接到子节点链表中
+				如果p指向的开始字符是<,则说明是子节点，
+					解析此子节点
+					将节点连接到子节点链表中
+				如果p指向的是</，说明解析完毕，返回
+					
+		否则
+			TiXmlAttribute* attrib = new TiXmlAttribute();
+			attrib->SetDocument( document );
+			p = attrib->Parse( p, data, encoding );
+			从attributeSet成员变量中查找attrib->Name()，如果能找到这样的节点，说明有重复的属性，返回错误
+			attributeSet.Add( attrib );
+	}

@@ -1,0 +1,7 @@
+Scintilla是个比RichEdit更强大的文本编辑控件，
+notepad++就是在此控件基础上做起来的
+SciLexer则是Scintilla控件的功能演示程序
+下面是一些该控件的教程资料：
+http://blog.csdn.net/akof1314/article/details/8585917
+http://www.cnblogs.com/superanyi/archive/2011/04/07/2008632.html#3224726
+http://www.naughter.com/scintilla.html

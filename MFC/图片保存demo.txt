@@ -1,0 +1,132 @@
+1，新建MFC 对话框程序
+2，引用头文件  #include "atlimage.h"
+3，在对话框中添加 picture控件，重命名其IDC，为其添加关联变量pic3
+4, 在对话框中添加按钮，在按钮中加入如下语句，编译运行（在D盘下生产1.bmp,1.jpg)。
+
+	CDC* pDC_image = pic3.GetDC();
+	CRect m_rect ;
+	pic3.GetClientRect(m_rect);
+
+	//恢复处理后图像显示区域到原来色彩
+	int k;
+	for (int i = 0; i<m_rect.right;i++)
+		for (int j = 0;j<m_rect.bottom;j++)
+		{
+			k=j%125+130;	
+			pDC_image->SetPixel(i,j,RGB(k,0,0));
+		}
+				
+	/*	COLORREF color;
+		if(EnableIdentificationTwo)
+		{
+			long Back=long(GetRValue(BackSample[0])*RGLine.Line_Red+GetGValue(BackSample[0])*RGLine.Line_Green+RGLine.Line_Blue);
+			for (int i = 0; i<m_rect.right;i++)
+				for (int j = 0;j<m_rect.bottom;j++)
+				{
+					color = pDC_image->GetPixel(i,j);
+
+					long iden=long(GetRValue(color)*RGLine.Line_Red+GetGValue(color)*RGLine.Line_Green+RGLine.Line_Blue);
+					if (iden*Back>0)
+					{
+						pDC_imaged->SetPixel(i,j,RGB(0,255,0));
+					}
+
+				}
+
+		}
+
+		if(EnableIdentificationThird&&Auto)
+		{
+			double cyr,cyg,cyb,Sum_r,Sum_g,Sum_b;
+			Sum_r=Sum_g=Sum_b=0;
+			for (int k=0;k<BackSampleNum;k++)
+			{
+				Sum_r = Sum_r+GetRValue(BackSample[k]);
+				Sum_g = Sum_g+GetGValue(BackSample[k]);
+				Sum_b = Sum_b+GetBValue(BackSample[k]);
+			}
+			cyr=Sum_r/BackSampleNum;
+			cyg=Sum_g/BackSampleNum;
+			cyb=Sum_b/BackSampleNum;
+
+			for (int i = 0; i<m_rect.right;i++)
+				for (int j = 0;j<m_rect.bottom;j++)
+				{
+					color = pDC_image->GetPixel(i,j);
+
+					double iden=sqrt((GetRValue(color)-cyr)*(GetRValue(color)-cyr)+(GetGValue(color)-cyg)*(GetGValue(color)-cyg)+(GetBValue(color)-cyb)*(GetBValue(color)-cyb));
+					if (iden<RGLine.Line_Green)
+					{
+						pDC_imaged->SetPixel(i,j,RGB(0,255,0));
+					}
+
+				}
+
+		}
+		if(EnableIdentificationThird&&Manual)
+		{
+			long Back=long(GetRValue(BackSample[0])*RGBLine_Back.Line_Red+GetGValue(BackSample[0])*RGBLine_Back.Line_Green+RGBLine_Back.Line_Blue);
+
+			for (int i = 0; i<m_rect.right;i++)
+				for (int j = 0;j<m_rect.bottom;j++)
+				{
+					color = pDC_image->GetPixel(i,j);
+
+					long iden=long(GetRValue(color)*RGBLine_Back.Line_Red+GetGValue(color)*RGBLine_Back.Line_Green+RGBLine_Back.Line_Blue);
+					if (iden*Back>0)
+					{
+						pDC_imaged->SetPixel(i,j,RGB(0,255,0));
+					}
+
+				}
+*/
+#pragma region 保存图形
+				HBITMAP hBitmap = NULL;
+				/**
+				* 创建位图段
+				*/
+				BITMAPINFO bmi;
+				LPBYTE pBits;
+				ZeroMemory(&bmi, sizeof(bmi));
+				//CRect rcClient;
+				//GetClientRect( m_rect);
+				bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+				bmi.bmiHeader.biWidth = m_rect.Width();
+				bmi.bmiHeader.biHeight = m_rect.Height();
+				bmi.bmiHeader.biPlanes = 1;
+				bmi.bmiHeader.biBitCount = 24;
+				bmi.bmiHeader.biCompression = BI_RGB;
+				hBitmap  = CreateDIBSection( pDC_image->m_hDC,&bmi,DIB_RGB_COLORS,(void **)&pBits,0,0 );
+
+				/**
+				* 创建兼容dc并选择位图段
+				*/
+				CDC dcMem;
+				dcMem.CreateCompatibleDC(pDC_image);
+				dcMem.SelectObject( hBitmap );
+
+				/**
+				* 在内存dc上(即位图段上)绘图
+				* 此函数你自己把你的绘制代码拿出来做成函数 void Paint( CDC *pDC)就行了
+				*/
+				dcMem.BitBlt(0,0,m_rect.Width(),m_rect.Height(), pDC_image,0,0,SRCCOPY);
+
+				/**
+				* 释放dc
+				*/
+				//ReleaseDC( pic3 );
+		
+
+
+		/**
+		* 保存位图
+		*/
+		if( hBitmap )
+		{
+			CImage img;
+			img.Attach( hBitmap );
+			img.Save(_T("D:\\1.bmp"));
+			img.Save(_T("D:\\1.jpg"));
+			DeleteObject( hBitmap );
+		}
+#pragma endregion

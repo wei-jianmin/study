@@ -1,0 +1,2 @@
+1. 增加get_element_bypath方法
+2. 增加智能指针

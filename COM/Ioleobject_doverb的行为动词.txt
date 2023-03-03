@@ -1,0 +1,29 @@
+Ioleobject::doverb的行为动词：
+OLEIVERB_PRIMARY (0L) 
+说明用户在容器中双击了对象。对象（而非容器）决定要执行的动作。
+如果对象支持原地激活，则该行为动词常常原地激活对象。
+
+OLEIVERB_SHOW (–1) 
+告诉对象显示为可视或可编辑。它被调用显示新插入的对象进行初始编辑并显示链接源。
+通常是一些其他对象定义动词的别名。
+
+OLEIVERB_OPEN (–2) 
+指示对象， including one that otherwise supports in-place activation, 
+在一个独立于容器的窗口中，将自己打开为编辑模式。
+如果该对象不支持原地激活，则该动词有相当于OLEIVERB_SHOW的语义。
+
+OLEIVERB_HIDE (–3) 
+使对象从视图中移除其用户接口. 只用于那些activated in-place的对象 
+
+OLEIVERB_UIACTIVATE (–4) 
+原地激活对象, along with它的用户接口工具的全集, 
+包括菜单、工具栏和他在容器窗口标题栏中的名字。
+如果对象不支持原地激活，则返回E_NOTIMPL.
+
+OLEIVERB_INPLACEACTIVATE (–5) 
+原地激活对象但不显示工具集，如菜单、工具栏等。
+单击这样的对象导致该对象和其容器协商显示其用户工具集。
+如果容器拒绝，该对象仍然激活，但不显示工具集。
+
+OLEIVERB_DISCARDUNDOSTATE (–6) 
+原来告诉对象舍弃所有undo state而不会导致对象inactivating。

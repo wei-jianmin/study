@@ -1,0 +1,112 @@
+1.先建立一个临时文件，在文件中写入如下的内容：
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="saveDir"
+
+abc
+
+2.再在文件中写入：
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="file"; filename="C:\Users\ADMINI~1\AppData\Local\Temp\123.jpg"
+Content-Type: application/octet-stream
+
+
+3.把要传送的文件内容写到临时文件中：
+
+4.写入回车换行
+：至此，文件的内容为：
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="saveDir"
+
+abc
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="file"; filename="C:\Users\ADMINI~1\AppData\Local\Temp\123.jpg"
+Content-Type: application/octet-stream
+
+BM***************************（图片数据）
+
+5.分析url
+    BOOL bParseOk=AfxParseURL(url,dwSeviceType,szServer,szObject,nPort);
+传入的参数为：
+    url="http://127.0.0.1:8080/Demo/FileUpload.jsp?saveDir=abc"
+得到的结果为：
+    DWORD dwSeviceType=3
+    CString szServer="127.0.0.1"
+    CString szObject="/Demo/FileUpload.jsp?saveDir=abc"
+    INTERNET_PORT nPort=8080
+
+6.再在临时文件末尾写入
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="submit"
+
+Commit
+-----------------------------7de399e180368--
+
+：=====================================于是文件变为：=============================================
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="saveDir"
+
+abc
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="file"; filename="C:\Users\ADMINI~1\AppData\Local\Temp\123.jpg"
+Content-Type: application/octet-stream
+
+BM***************************（图片数据）
+-----------------------------7de399e180368
+Content-Disposition: form-data; name="submit"
+
+Commit
+-----------------------------7de399e180368--
+：===================================================================================================
+
+7.计算临时文件的整体长度（1613203），在堆中申请对应长度的内存
+  设定每次传送的长度为65536
+
+8.使用HTTP
+CInternetSession Session;
+CHttpConnection * pHttpConnection = Session.GetHttpConnection(szServer,nPort);	//参数值见第5步
+CHttpFile * pHTTP = pHttpConnection->OpenRequest(CHttpConnection::HTTP_VERB_POST, szObject);	//参数值见第5步
+pHTTP->AddRequestHeaders(strRequestHeaders);
+/* 解释：发送包头请求，参数值：
+"Content-Type: multipart/form-data; boundary=---------------------------7de399e180368
+Content-Length: 1613203
+//nCookie: %s
+"
+*/
+pHTTP->SendRequestEx(dwTotalRequestLength, HSR_SYNC | HSR_INITIATE);	//参数值：1613203（文件长度）
+
+8.循环分段读取临时文件中的内容，并写到HTTP文件中
+dwReadLength = -1;
+while (0 != dwReadLength)
+{
+    dwReadLength = fread(pBuffer,1, dwChunkLength,fpTmp);//文件内容
+    if (0 != dwReadLength)
+    {
+        pHTTP->Write(pBuffer, dwReadLength);//写入服务器本地文件，用二进制进行传送
+    }
+}
+
+9.结束发送
+pHTTP->EndRequest(HSR_SYNC);
+
+10.获取服务器回应
+CString strResponse;
+DWORD dwResponseLength = pHTTP->GetLength();
+while (0 != dwResponseLength)
+{
+	szResponse = (LPSTR)malloc(dwResponseLength + 1);
+	szResponse[dwResponseLength] = '\0';
+	pHTTP->Read(szResponse, dwResponseLength);
+	strResponse += szResponse;
+	SetStatus(strResponse);
+	free(szResponse);
+	dwResponseLength = pHTTP->GetLength();
+}
+
+11.关闭HTTP
+pHTTP->Close();
+delete pHTTP;
+pHttpConnection->Close();
+
+12.删除临时文件，删除堆内存
+
+13.返回strResponse

@@ -1,0 +1,461 @@
+https://segmentfault.com/a/1190000020412259
+
+XFRM -- IPsec协议的内核实现框架
+
+IPsec协议帮助IP层建立安全可信的数据包传输通道。
+当前已经有了如StrongSwan、OpenSwan等比较成熟的解决方案，
+而它们都使用了Linux内核中的XFRM框架进行报文接收发送
+
+XFRM的正确读音是transform(转换), 
+这表示内核协议栈收到的IPsec报文需要经过转换才能还原为原始报文；
+同样地，要发送的原始报文也需要转换为IPsec报文才能发送出去。
+
+IPsec中有两个重要概念：
+安全关联(Security Association)和安全策略(Security Policy)，
+这两类信息都需要存放在内核XFRM
+核XFRM使用netns_xfrm这个结构来组织这些信息，它也被称为xfrm instance(实例)。
+
+
+----------------------------------------------------------------------------------
+https://baike.baidu.com/item/XFRM/8079183
+XFRM是 Linux 2.6 内核为安全处理引入的一个可扩展功能框架
+用来在数据包经过路由路径的过程中对其进行修改
+
+----------------------------------------------------------------------------------
+https://juejin.cn/post/7009869273103335455
+XFRM的正确读音是transform(转换), 
+这表示内核协议栈收到的IPsec报文需要经过转换才能还原为原始报文；
+同样地，要发送的原始报文也需要转换为IPsec报文才能发送出去。
+
+IPsec（Internet协议安全）应该很多人都听过，
+IPsec是一组协议，他们通过对通信会话中的每个数据包进行身份验证和加密，以确保IP流量的安全
+
+XFRM框架是IPsec的“基础设施”，IPsec通过XFRM框架实现的
+XFRM源自USAGI项目，该项目旨在提供适用于生产环境的IPv6和IPsec协议栈。
+自内核2.5之后引入了XFRM框架，
+这个“基础设施”独立于协议簇，包含可同时应用于IPv4和IPv6的通用部分，
+位于源代码的/net/xfrm/目录下。
+
+XFRM框架支持网络命名空间。这是一种轻型的进程虚拟化，
+它可以使得一个或者一组进程有属于自己的网络栈。
+（使得种不同进程使用xfrm互不影响）
+
+每个网络命名空间都含有一个名为xfrm的成员——一个netns_xfrm结构实例。
+这个对象包含着许多的数据结构和变量，
+例如：XFRM策略散列表、XFRM状态散列表、sysctl参数、XFRM状态垃圾收集器、计数器等。
+
+netns_xfrm结构体定义，文件路径include/net/netns/xfrm.h
+struct netns_xfrm {
+        struct hlist_head       *state_bydst;
+        struct hlist_head       *state_bysrc;
+        struct hlist_head       *state_byspi;
+        . . .
+        unsigned int            state_num;
+        . . .
+        struct work_struct      state_gc_work;
+        . . .
+        u32                     sysctl_aevent_etime;
+        u32                     sysctl_aevent_rseqth;
+        int                     sysctl_larval_drop;
+        u32                     sysctl_acq_expires;
+};
+
+XFRM初始：XFRM Init
+在IPv4中，XFRM初始化是通过在ip_rt_init()函数（位于net/ipv4/route.c文件）调用相关函数完成，
+函数调用结构为：ip_rt_init()->xfrm4_init()->xfrm_init()。
+而在IPv6中，在ipv6_route_init()函数中调用xfrm6_init()方法实现了XFRM的初始化
+用户空间和内核之间的通信创建NETLINK_XFRM类型netlink套接字(socket)以及发送和接收netlink消息来完成
+
+XFRM策略和XFRM状态是XFRM框架的基础数据结构
+XFRM策略：XFRM Policy
+    安全策略是一种规则，告诉IPsec一条特定流量是否应该处理或者旁路，xfrm_policy结构用来描述IPsec策略。
+    一个安全策略包含一个选择器（一个xfrm_selector对象）。
+    当其选择器匹配一条流时会提供一种策略。
+    XFRM选择器有一系列属性组成：比如五元组（源ip、源端口、目的ip、目的端口、协议）等等，
+    用这些属性来识别一条流：
+    文件路径：include/uapi/linux/xfrm.h
+    struct xfrm_selector {
+        xfrm_address_t  daddr;          //目的ip
+        xfrm_address_t  saddr;          //源ip
+        __be16  dport;                  //目的端口
+        __be16  dport_mask;             //目的端口蒙版
+        __be16  sport;                  //源端口
+        __be16  sport_mask;             //源端口蒙版
+        __u16   family;                 //协议簇
+        __u8    prefixlen_d;            //目的ip前置字符串长度
+        __u8    prefixlen_s;            //源ip前置字符串长度
+        __u8    proto;                  //协议
+        int     ifindex;                //接口(网卡)索引
+        __kernel_uid32_t  user;         //用户id
+    };
+    xfrm_selector_match()方法使用XFRM selector、flow和family（IPv4对应AF_INET，IPv6对应AF_INET6）作为参数，
+    当特定XFRM流量匹配中特定选择器时返回true ———— 判断一个flow是否匹配一个selector
+    
+    另外xfrm_selector结构同样用在XFRM状态中。
+    
+    安全策略（Security Policy）使用xfrm_policy结构表示,xfrm_policy结构用于描述SP（Security Policy）在内核内部的具体实现:
+    文件路径：include/net/xfrm.h
+    struct xfrm_policy
+    {
+         struct xfrm_policy *next;          // 下一个策略，形成策略链表
+         struct hlist_node bydst;           // 按目的地址HASH的策略链表
+         struct hlist_node byidx;           // 按索引号HASH的策略链表
+         /* This lock only affects elements except for entry. */
+         rwlock_t  lock;                    // 策略结构锁 ： 访问控制
+         atomic_t  refcnt;                  // 引用次数
+         struct timer_list timer;           // 策略定时器
+         u8   type;                         // 类型
+         u32   priority;                    // 策略优先级
+         u32   index;                       // 策略索引号
+         struct xfrm_selector selector;     // 选择子 ： 针对该选择子的策略？
+         struct xfrm_lifetime_cfg lft;      // 策略生命期
+         struct xfrm_lifetime_cur curlft;   // 当前的生命期数据
+         struct dst_entry       *bundles;   // 路由链表
+         __u16   family;                    // 协议族
+         __u8   action;                     // 策略动作, 接受/加密/阻塞...
+         __u8   flags;                      // 标志
+         __u8   dead;                       // 策略死亡标志
+         __u8   xfrm_nr;                    // 使用的xfrm_vec的数量
+         struct xfrm_sec_ctx *security;     // 安全上下文
+         struct xfrm_tmpl   xfrm_vec[XFRM_MAX_DEPTH]; // 状态模板数组
+    };
+    这个结构的字段很多，但大部分并不用关心，我们重点关注下面列举出的这几个字段就行:
+    selector：表示该Policy匹配的流的特征
+    action：取值为XFRM_POLICY_ALLOW(0)或XFRM_POLICY_BLOCK(1)，前者表示允许该流量，后者表示不允许。
+    xfrm_nr: 表示与这条Policy关联的template的数量，template可以理解为xfrm_state的简化版本，
+             xfrm_nr决定了流量进行转换的次数，通常这个值为1
+    xfrm_vec: 表示与这条Policy关联的template，数组的每个元素是xfrm_tmpl, 
+              一个xfrm_tmpl可以还原(resolve)成一个完成state.
+    用户可以通过下面命令，列出当前主机上的xfrm_policy
+    # ip xfrm policy ls
+    
+XFRM状态：XFRM State
+    结构xfrm_state记录IPsec安全关联(include/net/xfrm.h)
+    注：安全关联发生在秘钥交换之后，通信双方约定一些信息
+    它表示的是单向流量，包含加密密钥、标志、请求ID、统计信息、重放参数等信息
+    要添加XFRM状态，可从用户空间套接字发送请求XFRM_MSG_NEWSA，
+    在内核中，这种请求方法由xfrm_state_add()处理（位于文件net/xfrm/xfrm_user.c）。
+    同样，要删除状态，可发送XFRM_MSG_NEWSAXFRM_MSG_DELSA消息，
+    在内核中，这种请求方法由xfrm_del_sa()处理
+    xfrm_state状态结构用来描述SA在内核中的具体实现:
+    struct xfrm_state 
+    { 
+         /* Note: bydst is re-used during gc */ 
+         // 每个状态结构挂接到三个HASH链表中 
+         struct hlist_node bydst;           // 按目的地址HASH 
+         struct hlist_node bysrc;           // 按源地址HASH 
+         struct hlist_node byspi;           // 按SPI值HASH
+         atomic_t  refcnt;                  // 所有使用计数 
+         spinlock_t  lock;                  // 状态锁
+         struct xfrm_id  id;                // ID结构， 即目的地址，SPI，协议三元组 
+         struct xfrm_selector sel;          // 状态选择子
+         u32   genid;                       // 状态的标志值, 防止发生碰撞
+         /* Key manger bits */ 
+         struct { 
+              u8  state; 
+              u8  dying; 
+              u32  seq; 
+         } km;                              // KEY回调管理处理结构参数
+         /* Parameters of this state. */ 
+         struct { 
+              u32  reqid;                   // 请求ID 
+              u8  mode;                     // 模式: 传输/通道 
+              u8  replay_window;            // 回放窗口 
+              u8  aalgo, ealgo, calgo;      // 认证,加密,压缩算法ID值 
+              u8  flags;                    // 一些标准 
+              u16  family;                  // 协议族 
+              xfrm_address_t saddr;         // 源地址 
+              int  header_len;              // 添加的协议头长度 
+              int  trailer_len;             // 
+         } props;                           // SA相关参数结构
+         struct xfrm_lifetime_cfg lft;      // 生存时间配置
+         /* Data for transformer */ 
+         struct xfrm_algo *aalg;            // hash算法 
+         struct xfrm_algo *ealg;            // 加密算法 
+         struct xfrm_algo *calg;            // 压缩算法
+         /* Data for encapsulator */ 
+         struct xfrm_encap_tmpl *encap;     // NAT-T封装信息
+         /* Data for care-of address */ 
+         xfrm_address_t *coaddr;
+         /* IPComp needs an IPIP tunnel for handling uncompressed packets */ 
+         struct xfrm_state *tunnel;         // 通道, 实际是另一个SA
+         /* If a tunnel, number of users + 1 */ 
+         atomic_t  tunnel_users;            // 通道的使用数
+         /* State for replay detection */ 
+         struct xfrm_replay_state replay;   // 回放检测结构,包含各种序列号掩码等信息
+         /* Replay detection state at the time we sent the last notification */ 
+         struct xfrm_replay_state preplay;  // 上次的回放记录值
+         /* internal flag that only holds state for delayed aevent at the moment */ 
+         u32   xflags;                      // 标志
+         /* Replay detection notification settings */ 
+         u32   replay_maxage;               // 回放最大时间间隔 
+         u32   replay_maxdiff;              // 回放最大差值
+         /* Replay detection notification timer */ 
+         struct timer_list rtimer;          // 回放检测定时器
+         /* Statistics */ 
+         struct xfrm_stats stats;           // 统计值
+         struct xfrm_lifetime_cur curlft;   // 当前时间计数器 
+         struct timer_list timer;           // SA定时器
+         /* Last used time */ 
+         u64   lastused;                    // 上次使用时间
+         /* Reference to data common to all the instances of this 
+          * transformer. */ 
+         struct xfrm_type *type;            // 协议, ESP/AH/IPCOMP 
+         struct xfrm_mode *mode;            // 模式, 通道或传输
+         /* Security context */ 
+         struct xfrm_sec_ctx *security;     // 安全上下文, 加密时使用
+         /* Private data of this transformer, format is opaque, 
+          * interpreted by xfrm_type methods. */ 
+         void   *data;                      // 内部数据 
+    };
+    xfrm_state包含的字段很多，这里就不贴了，仅仅列出其中最重要的字段：
+    id: 它是一个xfrm_id结构，包含该SA的目的地址、SPI、和协议(AH/ESP)
+    props：表示该SA的其他属性，包括IPsec Mode(Transport/Tunnel)、源地址等信息
+    每个xfrm_state在内核中会加入多个哈希表，因此，内核可以从多个特征查找到同一个SA：
+    xfrm_state_lookup()：           通过指定的SPI信息查找SA
+    xfrm_state_lookup_byaddr():     通过源地址查找SA
+    xfrm_state_find():              通过目的地址查找SA
+    用户可以通过下面命令，列出当前主机上的xfrm_state
+    # ip xfrm state ls
+    
+XFRM模板：XFRM TMPL
+    xfrm模板结构, 用于状态和策略的查询:
+    struct xfrm_tmpl 
+    { 
+         /* id in template is interpreted as: 
+          * daddr - destination of tunnel, may be zero for transport mode. 
+          * spi   - zero to acquire spi. Not zero if spi is static, then 
+          *         daddr must be fixed too. 
+          * proto - AH/ESP/IPCOMP  */ 
+         struct xfrm_id  id;        // SA三元组, 目的地址, 协议, SOI 
+         /* Source address of tunnel. Ignored, if it is not a tunnel. */ 
+         xfrm_address_t  saddr;     // 源地址 
+         __u32   reqid;             // 请求ID 
+         /* Mode: transport, tunnel etc. */ 
+         __u8   mode;
+         /* Sharing mode: unique, this session only, this user only etc. */ 
+         __u8   share;
+         /* May skip this transfomration if no SA is found */ 
+         __u8   optional;
+         /* Bit mask of algos allowed for acquisition */ 
+         __u32   aalgos; 
+         __u32   ealgos; 
+         __u32   calgos; 
+    };
+
+
+===================================================================================
+
+https://blog.csdn.net/naipeng/article/details/71440014
+IPsec基于XFRM（读作“transform”）框架实现
+术语“transform”指的是在内核协议栈中根据一些IPsec规则转发入方向报文或者出方向报文
+
+Linux内核2.5引入了XFRM框架，XFRM是一种协议族独立（即不与特定的协议挂钩）的基本框架，
+这意味着对于IPv4和IPv6而言存在一个通用的部分，这部分位于net/xfrm之中
+
+IPv4和IPv6拥有各自的ESP、AH和IPCOMP实现，
+例如IPv4 ESP模块位于net/ipv4/esp4.c，IPv6 ESP模块在net/ipv6/esp6.c中
+
+除此之外，IPv4和IPv6为支持XFRM基本框架还实现了一些与各自协议相关的一些模块，
+比如net/ipv4/xfrm4_policy.c或者net/ipv6/xfrm6_policy.c。
+
+===================================================================================
+
+https://blog.csdn.net/bytxl/article/details/48543347
+在Linux2.6内核中自带了IPSEC的实现,该实现包括以下几个部分:
+a. PF_KEY类型套接口, 用来提供和用户层空间进行PF_KEY通信，代码在net/key目录下；
+   参：file://PF_KEY协议.txt
+b. 安全关联SA和安全策略SP管理，是使用xfrm库来实现的，代码在net/xfrm/目录下定义；
+c. ESP，AH等协议实现，在net/ipv4(6)下定义；
+d. 加密认证算法库，在crypto目录下定义，这些算法都是标准代码了
+
+本系列文章主要描述XFRM库的实现以及在IPV4下相关协议的处理部分, IPV6的忽略。
+
+XFRM是 Linux 2.6 内核为安全处理引入的一个可扩展功能框架，
+用来在数据包经过路由路径的过程中对其进行修改，
+包含 3 种数据结构：策略(xfrm policy)，模板(template)和状态(xfrm state)。
+策略是通过模板和状态发生联系的
+
+在net/xfrm目录下的各文件大致功能说明如下:
+    xfrm_state.c: xfrm状态管理
+    xfrm_policy.c: xfrm策略管理
+    xfrm_algo.c: 算法管理
+    xfrm_hash.c: HASH计算函数
+    xfrm_input.c: 安全路径(sec_path)处理,用于进入的ipsec包
+    xfrm_user.c:  netlink接口的SA和SP管理
+在net/ipv4目录下的和ipsec相关各文件大致功能说明如下:
+    ah4.c: IPV4的AH协议处理
+    esp4.c: IPV4的ESP协议处理
+    ipcomp.c: IP压缩协议处理
+    xfrm4_input: 接收的IPV4的IPSEC包处理
+    xfrm4_output: 发出的IPV4的IPSEC包处理
+    xfrm4_state: IPV4的SA处理
+    xfrm4_policy: IPV4的策略处理
+    xfrm4_tunnel: IPV4的通道处理
+    xfrm4_mode_transport: 传输模式
+    xfrm4_mode_tunnel: 通道模式
+    xfrm4_mode_beet: BEET模式
+    
+协议结构  
+    对ESP, AH, IPCOMP等协议的描述是通过xfrm_type结构来描述的, 
+    多个协议的封装就是靠多个协议结构形成的链表来实现
+        struct xfrm_type
+        {
+            char   *description;    // 描述字符串
+            struct module  *owner;  // 协议模块
+            __u8   proto;           // 协议值
+            __u8   flags;           // 标志
+            #define XFRM_TYPE_NON_FRAGMENT 1
+            // 初始化状态
+            int   (*init_state)(struct xfrm_state *x);
+            // 析构函数
+            void   (*destructor)(struct xfrm_state *);
+            // 数据输入函数
+            int   (*input)(struct xfrm_state *, struct sk_buff *skb);
+            // 数据输出函数
+            int   (*output)(struct xfrm_state *, struct sk_buff *pskb);
+            // 拒绝函数
+            int   (*reject)(struct xfrm_state *, struct sk_buff *, struct flowi *);
+            // 头部偏移
+            int   (*hdr_offset)(struct xfrm_state *, struct sk_buff *, u8 **);
+            // 本地地址
+            xfrm_address_t  *(*local_addr)(struct xfrm_state *, xfrm_address_t *);
+            // 远程地址
+            xfrm_address_t  *(*remote_addr)(struct xfrm_state *, xfrm_address_t *);
+            /* Estimate maximal size of result of transformation of a dgram */
+            // 最大数据报长度
+            u32   (*get_max_size)(struct xfrm_state *, int size);
+        };
+    具体的协议结构定义如下, 通常只定义初始化,析构,输入和输出四个成员函数:
+    AH协议定义
+        /* net/ipv4/ah4.c */
+        static struct xfrm_type ah_type =
+        {
+            .description = "AH4",
+            .owner  = THIS_MODULE,
+            .proto       = IPPROTO_AH,
+            .init_state = ah_init_state,
+            .destructor = ah_destroy,
+            .input  = ah_input,
+            .output  = ah_output
+        };
+    ESP协议定义:
+        /* net/ipv4/esp4.c */
+        static struct xfrm_type esp_type =
+        {
+            .description = "ESP4",
+            .owner  = THIS_MODULE,
+            .proto       = IPPROTO_ESP,
+            .init_state = esp_init_state,
+            .destructor = esp_destroy,
+            .get_max_size = esp4_get_max_size,
+            .input  = esp_input,
+            .output  = esp_output
+        };
+    IP压缩协议定义:
+        /* net/ipv4/ipcomp.c */
+        static struct xfrm_type ipcomp_type = {
+            .description = "IPCOMP4",
+            .owner  = THIS_MODULE,
+            .proto       = IPPROTO_COMP,
+            .init_state = ipcomp_init_state,
+            .destructor = ipcomp_destroy,
+            .input  = ipcomp_input,
+            .output  = ipcomp_output
+        };
+    IPIP协议定义:
+        /* net/ipv4/xfrm4_tunnel.c */
+        static struct xfrm_type ipip_type = {
+            .description = "IPIP",
+            .owner  = THIS_MODULE,
+            .proto       = IPPROTO_IPIP,
+            .init_state = ipip_init_state,
+            .destructor = ipip_destroy,
+            .input  = ipip_xfrm_rcv,
+            .output  = ipip_output
+        };
+
+模式结构
+    模式结构用于描述IPSEC连接描述, 可为通道模式或传输模式两种
+        struct xfrm_mode {
+        // 数据输入函数
+        int (*input)(struct xfrm_state *x, struct sk_buff *skb);
+        // 数据输出函数
+        int (*output)(struct xfrm_state *x,struct sk_buff *skb);
+        // 模块指针
+        struct module *owner;
+        // 封装
+        unsigned int encap;
+        };
+    通道模式结构定义:
+        /* net/ipv4/xfrm4_mode_tunnel.c */
+        static struct xfrm_mode xfrm4_tunnel_mode = {
+        .input = xfrm4_tunnel_input,
+        .output = xfrm4_tunnel_output,
+        .owner = THIS_MODULE,
+        .encap = XFRM_MODE_TUNNEL,
+        };
+    传输模式结构定义:
+        /* net/ipv4/xfrm4_mode_transport.c */
+        static struct xfrm_mode xfrm4_transport_mode = {
+        .input = xfrm4_transport_input,
+        .output = xfrm4_transport_output,
+        .owner = THIS_MODULE,
+        .encap = XFRM_MODE_TRANSPORT,
+        };
+    beet模式, 不知道在哪用
+        /* net/ipv4/xfrm4_mode_beet.c */
+        static struct xfrm_mode xfrm4_beet_mode = {
+        .input = xfrm4_beet_input,
+        .output = xfrm4_beet_output,
+        .owner = THIS_MODULE,
+        .encap = XFRM_MODE_BEET,
+        };
+        
+======================================================================
+
+https://blog.csdn.net/GOOD__YOUTH/article/details/120699690
+从Linux 2.6内核开始，内核就自身带有IPSec模块，配合IPSec-Tools，能很好的实现Linux的IPSec功能
+IPSec-Tools主要包含libipsec、setkey、racoon和racoonctl这4个模块，
+    setkey主要用于配置SAD（安全关联数据库）和SPD（安全策略数据库），
+    racoon用于IKE协商
+IPSec-Tools的配置文件均放在/etc/racoon目录下，
+setkey.conf文件保存着sad和spd的配置信息，
+racoon.conf文件保存着IKE各个协商阶段各采用什么方式进行协商。
+
+SPD 的内容用来存放IPSec 的规则,有目的端IP、来源端IP、只执行AH 或ESP、
+同时执行AH 及ESP、目的端Port、来源端Port、走Transport 或Tunnel 模式。
+
+SAD 数据库中的参数有SPI 值、目的端IP、AH 或ESP、AH 验证算法、AH 验证的加密密钥、ESP 验证算法、
+ESP 验证的加密密钥、ESP 的加密算法、ESP 的加密密钥、走Transport 或Tunnel 模式，
+其中SPI（Security ParameterIndex，索引值）是两部VPN 主机之间以随机数或手动指定的唯一值，
+其目的是要作为数据库的索引值，这对整个IPSec 的运行没有其他用途。
+
+主机A 送给主机B 的封包特征有符合主机A 上SPD 数据库内容，
+封包就会被送入到IPSec 的AH 及ESP 机制中，
+接着，AH、ESP 就会到SAD 数据库中找到处理这个封包的参数，
+完成处理后的封包随即被送往主机B ，
+在主机B 找到这个封包之后，就把这个封包的特征与其SPD 数据库的内容进行匹配，
+如果匹配的结果符合，这个封包就会送入AH 及ESP 机制处理，
+接着，AH、ESP 就会从SAD 数据库中找到处理这个封包的参数，
+最后，将处理完成的数据往上层传递。
+
+封装模式
+    传输模式：传输模式在正常的原IP头后面插入AH头或者ESP头，保护了传输层的数据载荷。
+    隧道模式：隧道模式在原IP头之前插入AH头或者ESP头，同时会生成新的IP头，
+              隧道模式不仅保护了传输层的载荷，也对原IP头进行了加密，保护了网络层载荷，更加的安全，
+              但是由于生成了新的IP报头，所以占用的网络带宽更大
+IKE协议
+    基于UDP（User Datagram Protocol）500 端口号，的应用层协议。
+    IKE协议分为两个阶段：IKE SA（阶段一），IPSEC SA（阶段二）。
+    IKE SA：用于交换协商加密算法、验证算法、DH及密钥、隧道两端的IP地址、密钥生存周期
+    IPSEC SA：在第一阶段协商后的基础上，进行加密后的数据交互
+
+交换模式
+1.主模式：
+    经过三个步骤，共交换六条信息，三个步骤是策略协商交换，Diffie-Hellman共享值，nonce交换以及身份验证交换。
+2.野蛮模式：
+    三个步骤，只交换三条信息：：
+    头两条消息协商策略，交换Diffie-Hellman共享值必须的辅助数据以及身份信息；
+    第二条消息认证响应方；
+    第三条认证发起方，并为发起方提供在场证据

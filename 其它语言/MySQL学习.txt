@@ -1,0 +1,162 @@
+MySQL特性：
+与常规的脚本语言类似, MySQL 也具有一套对字符、单词以及特殊符号的使用规定, MySQL 通过执行 SQL 脚本来完成对数据库的操作, 该脚本由一条或多条MySQL语句(SQL语句 + 扩展语句)组成, 保存时脚本文件后缀名一般为 .sql。在控制台下, MySQL 客户端也可以对语句进行单句的执行而不用保存为.sql文件。
+对于标识符是否区分大小写取决于当前的操作系统, Windows下是不敏感的, 但对于大多数 linux\unix 系统来说, 这些标识符大小写是敏感的。
+
+----------------------------------------------
+
+数据类型：
+MySQL有三大类数据类型, 分别为数字、日期\时间、字符串, 这三大类中又更细致的划分了许多子类型:
+●数字类型
+整数: tinyint、smallint、mediumint、int、bigint
+浮点数: float、double、real、decimal
+●日期和时间: 
+date、time、datetime、timestamp、year
+●字符串类型
+字符串: char、varchar
+文本: tinytext、text、mediumtext、longtext
+二进制(可用来存储图片、音乐等): tinyblob、blob、mediumblob、longblob
+○详细介绍：http://www.cnblogs.com/zbseoag/archive/2013/03/19/2970004.html
+
+-------------------------------------------------
+
+命令行登录：
+mysql -h 主机名 -u 用户名 -p
+-h : 该命令用于指定客户端所要登录的MySQL主机名, 登录当前机器该参数可以省略;
+-u : 所要登录的用户名;
+-p : 告诉服务器将会使用一个密码来登录, 如果所要登录的用户名密码为空, 可以忽略此选项。
+如：mysql -u root -p
+登录后，命令提示符会一直以 mysql> 加一个闪烁的光标等待命令的输入, 输入 exit 或 quit 退出登录。
+
+-------------------------------------------------
+
+命令行创建与查看数据库：
+创建一个数据库
+使用 create database 语句可完成对数据库的创建, 创建命令的格式如下:
+create database 数据库名 [其他选项];
+例如我们需要创建一个名为 samp_db 的数据库, 在命令行下执行以下命令:
+create database samp_db character set gbk;
+为了便于在命令提示符下显示中文, 在创建时通过 character set gbk 将数据库字符编码指定为 gbk。创建成功时会得到 Query OK, 1 row affected(0.02 sec) 的响应。
+注意: MySQL语句以分号(;)作为语句的结束, 若在语句结尾不添加分号时, 命令提示符会以 -> 提示你继续输入(有个别特例, 但加分号是一定不会错的);
+提示: 可以使用 show databases; 命令查看已经创建了哪些数据库。使用 describe 表名; 命令可查看已创建的表的详细信息。
+
+----------------------------------------------------
+
+命令行选择所要使用的数据库：
+两种方式对数据库进行使用的选择:
+一: 在登录数据库时指定, 命令: mysql -D 所选择的数据库名 -h 主机名 -u 用户名 -p
+    例如登录时选择刚刚创建的数据库: mysql -D samp_db -u root -p
+二: 在登录后使用 use 语句指定, 命令: use 数据库名
+
+----------------------------------------------------
+
+命令行创建数据库表：
+create table 表名称(列声明);
+例：
+create table students
+(
+	id int unsigned not null auto_increment primary key,
+	name char(8) not null,
+	sex char(4) not null,
+	age tinyint unsigned not null,
+	tel char(13) null default "-"
+);
+括号中的项为列的名称，格式为：
+	列名 数据类型 数据修饰符
+数据修饰符有：
+NULL		数据列可包含NULL值
+NOT NULL	数据列不允许包含NULL值
+DEFAULT		默认值
+PRIMARY KEY	主键
+AUTO_INCREMENT	自动递增，适用于整数类型
+UNSIGNED	无符号
+CHARACTER SET name	指定一个字符集
+参：http://www.cnblogs.com/zbseoag/archive/2013/03/19/2970004.html
+
+----------------------------------------------------
+
+命令行操作表数据项：
+●向表中插入数据：
+insert 语句可以用来将一行或多行数据插到数据库表中, 使用的一般形式如下:
+insert [into] 表名 [(列名1, 列名2, 列名3, ...)] values (值1, 值2, 值3, ...);
+其中 [] 内的内容是可选的, 例如, 要给 samp_db 数据库中的 students 表插入一条记录, 执行语句:
+全写：insert into students (id,name,sex,age,tel)  values(NULL, "王刚", "男", 20, "13811371377");
+简写：insert      students                        values(NULL, "王刚", "男", 20, "13811371377");
+有时我们只需要插入部分数据, 或者不按照列的顺序进行插入, 可以使用这样的形式进行插入:
+      insert into students (name, sex, age)       values("孙丽华", "女", 21);
+●删除表中的数据
+delete 语句用于删除表中的数据, 基本用法为:
+delete from 表名称 where 删除条件;
+使用示例:
+删除id为2的行: delete from students where id=2;
+删除所有年龄小于21岁的数据: delete from students where age<20;
+删除表中的所有数据: delete from students;
+●更改表中的数据
+update 语句可用来修改表中的数据, 基本的使用形式为:
+update 表名称 set 列名称=新值 where 更新条件;
+使用示例:
+将id为5的手机号改为默认的"-": update students set tel=default where id=5;
+将id为2-5的手机号改为默认的"-": update students set tel=default where id>=2 and id<=5;
+将所有人的年龄增加1: update students set age=age+1;
+将手机号为 13288097888 的姓名改为 "张伟鹏", 年龄改为 19: update students set name="张伟鹏", age=19 where tel="13288097888";
+●查询表中的数据
+select 语句常用来根据一定的查询规则到数据库中获取数据, 其基本的用法为:
+select 列名称[,列名称,...] from 表名称 [查询条件];
+例：select name,age,id,sex from students;
+也可以使用通配符 * 查询表中所有的内容, 语句: select * from students;
+按特定条件查询:
+where 关键词用于指定查询条件, 用法形式为: select 列名称 from 表名称 where 条件;
+where 关键词用于指定查询条件, 用法形式为: select 列名称 from 表名称 where 条件;
+以查询所有性别为女的信息为例, 输入查询语句: select * from students where sex="女";
+where 子句不仅仅支持 "where 列名 = 值" 这种名等于值的查询形式, 对一般的比较运算的运算符都是支持的, 例如 =、>、<、>=、<、!= 以及一些扩展运算符 is [not] null、in、like 等等。 还可以对查询条件使用 or 和 and 进行组合查询, 以后还会学到更加高级的条件查询方式, 这里不再多做介绍。
+示例:
+查询年龄在21岁以上的所有人信息: select * from students where age > 21;
+查询名字中带有 "王" 字的所有人信息: select * from students where name like "%王%";
+查询id小于5且年龄大于20的所有人信息: select * from students where id<5 and age>20;
+详参：
+https://www.cnblogs.com/irockcode/p/6841669.html
+https://www.cnblogs.com/drake-guo/p/6104654.html
+https://blog.csdn.net/dancheren/article/details/55094471
+
+----------------------------------------------------------
+
+命令行对表结构进行修改：
+●添加列
+基本形式: alter table 表名 add 列名 列数据类型 [after 插入位置];
+示例:
+在表的最后追加列 address: alter table students add address char(60);
+在名为 age 的列后插入列 birthday: alter table students add birthday date after age;
+●删除列
+基本形式: alter table 表名 drop 列名称;
+示例:
+删除 birthday 列: alter table students drop birthday;
+●修改列
+基本形式: alter table 表名 change 列名称 列新名称 新数据类型;
+示例:
+将表 tel 列改名为 telphone: alter table students change tel telphone char(13) default "-";
+将 name 列的数据类型改为 char(16): alter table students change name name char(16) not null;
+
+----------------------------------------------------------
+
+命令行修改整张表或数据库：
+●重命名表
+基本形式: alter table 表名 rename 新表名;
+示例:
+重命名 students 表为 workmates: alter table students rename workmates;
+●删除整张表
+基本形式: drop table 表名;
+示例: 删除 workmates 表: drop table workmates;
+●删除整个数据库
+基本形式: drop database 数据库名;
+示例: 删除 samp_db 数据库: drop database samp_db;
+
+----------------------------------------------------------
+
+附录
+●修改 root 用户密码
+重设 root 密码的方式也较多, 这里仅介绍一种较常用的方式。
+使用 mysqladmin 方式:
+打开命令提示符界面, 执行命令: mysqladmin -u root -p password 新密码
+执行后提示输入旧密码完成密码修改, 当旧密码为空时直接按回车键确认即可。
+●可视化管理工具 MySQL Workbench
+尽管我们可以在命令提示符下通过一行行的输入或者通过重定向文件来执行mysql语句, 但该方式效率较低, 由于没有执行前的语法自动检查, 输入失误造成的一些错误的可能性会大大增加, 这时不妨试试一些可视化的MySQL数据库管理工具, MySQL Workbench 就是 MySQL 官方 为 MySQL 提供的一款可视化管理工具, 你可以在里面通过可视化的方式直接管理数据库中的内容, 并且 MySQL Workbench 的 SQL 脚本编辑器支持语法高亮以及输入时的语法检查, 当然, 它的功能强大, 绝不仅限于这两点。
+

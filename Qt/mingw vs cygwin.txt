@@ -1,0 +1,9 @@
+首先说mingw cygwin的区别吧，mingw一开始是分为两个部分的w32api和mingwrt，
+前者提供win32的系统头文件和系统dll的导出库，
+而后者提供c运行库msvcrt的导出库顺带添加了部分msvcrt没有得函数用于支持gcc等工具链的构建，
+cygwin是在win32的基础上模拟了posix的接口，前文提到的w32api这个包cygwin也会用到，
+所以它们的区别仅仅在于mingw只提供win32的函数导出，而cygwin在前者的基础上有模拟了posix接口，
+而且mingw只包括编译器和库，cygwin提供了一个完整的类unix运行时环境。
+它们的联系从前面也能看出cygwin包括了除msvcrt库之外的整个mingw，cygwin使用了newlib提供c运行时。
+再补充一点，新版的cygwin1.dll这个库是使用mingw-w64工具编译的，所以说它们的关系是剪不断理还乱，
+你只用注意cygwin提供posix接口mingw不提供posix接口就好了

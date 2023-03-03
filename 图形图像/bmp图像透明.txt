@@ -1,0 +1,110 @@
+/*
+ *知识点：
+ *  windows中，一个图像可以指定任意颜色为前景色和背景色，
+ *  并且windows内部将背景色理解为黑色，将前景色理解为白色
+ *  因此，将某个色设置为前景色，等于是告诉windows这个颜色是黑色（值为0,0,0),
+ *  将某个颜色设置为背景色，等于告诉windows，这个颜色为白色(值为255,255,255)
+ *  另外，设置前景色和背景色只在非二值图像和二值图像之间转换时才起作用
+ *知识点：
+ *  当bitblt的源图像和目的图像，一个为二值图，一个为非二值图时，
+ *  会先将源图像按SetBkColor和SetTextColor的设置，进行图像格式转换，然后再bitblt到目的图像中
+ *说明：
+ *  该函数为TransparentBlt2的精简版，要求源图中要透明的部分设为黑色
+ *消耗： 
+ *  三次bitblt，三次设置前(背)景色，内存dc和内存bitbmp的创建与销毁，耗时接近于0ms
+ */
+void Cdlg_ttDlg::TransparentBlt1(HDC hdcDest,        // 目标DC
+								 int nXOriginDest,   // 目标X偏移
+								 int nYOriginDest,   // 目标Y偏移
+								 int nWidthDest,     // 目标宽度
+								 int nHeightDest,    // 目标高度
+								 HDC hdcSrc         // 源DC
+								 )
+{
+	HBITMAP hOldMaskBMP, hMaskBMP   = CreateBitmap(nWidthDest, nHeightDest, 1, 1, NULL);               // 创建单色掩码位图
+	HDC                hMaskDC  = CreateCompatibleDC(hdcDest);
+	hOldMaskBMP  = (HBITMAP)SelectObject(hMaskDC, hMaskBMP);
+
+	//彩图到二值图转换，设置黑色为背景色(意味着黑色区域转为二值图像的白色区域，其它色区域二值图像的黑色区域)
+	SetBkColor(hdcSrc,RGB(0,0,0));
+	BitBlt(hMaskDC, 0, 0, nWidthDest, nHeightDest, hdcSrc, 0, 0, SRCCOPY);
+
+	//二值图到彩图转换，设置白色为背景色，黑色为前景色
+	//意味着二值图白色部分=RGB(255,255,255)，将先转换为背景色=RGB(255,255,255)，
+	//二值图黑色部分=RGB(0,0,0)，先转换为前景色=RGB(0,0,0),得到个32位临时图像，
+	//然后用临时图像再与目的图像做BitBlt运算
+	SetBkColor(hdcDest, RGB(255, 255, 255));	
+	SetTextColor(hdcDest, RGB(0, 0, 0));
+	BitBlt(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hMaskDC, 0, 0, SRCAND);
+
+	// "或"运算,生成最终效果
+	BitBlt(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hdcSrc, 0, 0, SRCPAINT);
+
+	// 清理、恢复        
+	SelectObject(hMaskDC, hOldMaskBMP);
+	DeleteDC(hMaskDC);
+	DeleteObject(hMaskBMP);
+}
+void Cdlg_ttDlg::TransparentBlt2( HDC hdcDest,       // 目标DC
+								 int nXOriginDest,   // 目标X偏移
+								 int nYOriginDest,   // 目标Y偏移
+								 int nWidthDest,     // 目标宽度
+								 int nHeightDest,    // 目标高度
+								 HDC hdcSrc,         // 源DC
+								 int nXOriginSrc,    // 源X起点
+								 int nYOriginSrc,    // 源Y起点
+								 int nWidthSrc,      // 源宽度
+								 int nHeightSrc,     // 源高度
+								 UINT crTransparent  // 透明色,COLORREF类型
+								 )
+{
+	HBITMAP hOldImageBMP, hImageBMP = CreateCompatibleBitmap(hdcDest, nWidthDest, nHeightDest);        // 创建兼容位图
+	HBITMAP hOldMaskBMP, hMaskBMP   = CreateBitmap(nWidthDest, nHeightDest, 1, 1, NULL);               // 创建单色掩码位图
+	HDC                hImageDC = CreateCompatibleDC(hdcDest);
+	HDC                hMaskDC  = CreateCompatibleDC(hdcDest);
+	hOldImageBMP = (HBITMAP)SelectObject(hImageDC, hImageBMP);
+	hOldMaskBMP  = (HBITMAP)SelectObject(hMaskDC, hMaskBMP);
+	CImage img;
+	// 将源DC中的位图拷贝到临时DC中
+	if (nWidthDest == nWidthSrc && nHeightDest == nHeightSrc)
+		BitBlt(hImageDC, 0, 0, nWidthDest, nHeightDest, hdcSrc, nXOriginSrc, nYOriginSrc, SRCCOPY);
+	else
+		StretchBlt(hImageDC, 0, 0, nWidthDest, nHeightDest, hdcSrc, nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc, SRCCOPY);
+
+	// 设置透明色
+	SetBkColor(hImageDC, crTransparent);	//当彩图转为黑白图时，使用setbkcolor来告诉彩图什么颜色设置为白色，其他颜色设置为黑色
+	img.Attach(hImageBMP);
+	img.Save(_T("C:\\1.bmp"));
+	img.Detach();
+
+	// 生成透明区域为白色，其它区域为黑色的掩码位图
+	// （彩图转二值图）生成背景为透明色，其它颜色为前景色的二值图（默认情况下设备环境的背景色是白色，前景色是黑色）
+	BitBlt(hMaskDC, 0, 0, nWidthDest, nHeightDest, hImageDC, 0, 0, SRCCOPY);
+	img.Attach(hMaskBMP);
+	img.Save(_T("C:\\2.bmp"));
+	img.Detach();
+
+	// 生成透明区域为黑色，其它区域保持不变的位图
+	SetBkColor(hImageDC, RGB(0, 0, 0));
+	SetTextColor(hImageDC, RGB(255, 255, 255));
+	BitBlt(hImageDC, 0, 0, nWidthDest, nHeightDest, hMaskDC, 0, 0, SRCAND);
+	img.Attach(hImageBMP);
+	img.Save(_T("C:\\3.bmp"));
+	img.Detach();
+
+	// 透明部分保持屏幕不变，其它部分变成黑色
+	SetBkColor(hdcDest, RGB(255, 255, 255));	//当黑白图转为彩图时，需要知道彩图中什么颜色是背景色，然后将黑白图中的白色转换成彩图中的背景色，黑色转换为彩图中的前景色，即textcolor。
+	SetTextColor(hdcDest, RGB(0, 0, 0));
+	BitBlt(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hMaskDC, 0, 0, SRCAND);
+
+	// "或"运算,生成最终效果
+	BitBlt(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hImageDC, 0, 0, SRCPAINT);
+
+	// 清理、恢复        
+	SelectObject(hImageDC, hOldImageBMP);
+	DeleteDC(hImageDC);
+	SelectObject(hMaskDC, hOldMaskBMP);
+	DeleteDC(hMaskDC);
+	DeleteObject(hImageBMP);
+	DeleteObject(hMaskBMP);
+}

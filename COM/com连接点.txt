@@ -1,0 +1,22 @@
+概述：
+com支持出接口，说白了，就是com中声明一个接口，但com本身又不不使用该接口，
+而是把该接口视作别的com对象实现的接口，并使用该接口。
+一般使用一个外部com对象的接口时，是先创建com对象并获得该com对象的IUnknown接口，
+然后再间接获得其实现的自定义接口（或自动化接口）。com在使用出接口时，于此稍有不同，
+但其本质也是创建外部相应的com对象（即接收器对象），然后再调用接口中的方法。
+
+连接点容器接口：
+支持出接口的com对象，按照com规范，需要支持一个IConnectionPointContainer接口
+该接口有两个方法：
+EnumConnectionPoints（IEnumConnectionPoints **）=0
+FindConnectionPoint（const IID* ，IConnectionPoint **）=0
+
+容器判断一个对象是否支持出接口（是否为可连接对象）的前提依据就是看其是否支持
+IConnectionPointContainer接口
+
+连接点接口：
+一个连接点接口（IConnectionPoint）对应一个连接点对象
+客户就是通过该接口传来接收器（实现的相应出接口）的指针
+连接点对象没有自己独立的引用计数，而是使用其所在com对象的引用计数
+
+com规范只给出了行为特性，没有规定如何实现

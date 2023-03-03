@@ -1,0 +1,114 @@
+1：显示构造函数，指定m_AppType为WORD，
+并用m_pOuterUnknown记录外部传来的指针（聚合），
+该函数是由CDsoFramerClassFactory::CreateInstance调用的。
+
+2：接下来主要就是容器与IOleObject接口的交互，包括：
+调用GetUserType、GetClassInfo、GetMiscStatus等方法
+调用SetClientSite，将外部站点的IOleClientSite接口传来，
+并用m_pClientSite记录
+
+3. 除了IOleObject接口外，还会调用到如下接口方法：
+ViewObjectEx::SetAdvise
+ViewObjectEx::GetViewStatus
+ViewObjectEx::GetExtent
+ConnectionPoint::Advise
+ConnectionPointContainer::FindConnectionPoint
+
+4. 进入DoVerb，继而调用InPlaceActivate方法
+
+5. InPlaceActivate中，根据第2步得到的m_pClientSite接口，
+QueryInterface到IOleInPlaceSite接口，并记录在m_pInPlaceSite中
+//注：IOleInPlaceSite完成有关对象激活的操作，
+//    对象可通过这些函数控制它在包容器程序中的状态
+m_fInPlaceActive标志反映当前控件是否是激活的，初始时为0，表非激活
+当非激活时，调用m_pInPlaceSite->CanInPlaceActivate，检查是否可以激活，如果允许，就接着调用m_pInPlaceSite->OnInPlaceActivate，
+告诉容器，我们的控件要完成激活操作了。
+现将激活标志m_fInPlaceActive设为真。
+然后调用m_pInPlaceSite->GetWindow，获得容器窗口句柄，记在m_hwndParent中，
+调用m_pInPlaceSite->GetWindowContext，获得容器窗口的上下文，
+包括控件的显示位置与大小、裁剪区、是否是MDI窗口、容器窗口的框架窗口、加速键等，其中，窗口的大小会记录在m_Size成员中，m_pInPlaceFrame, m_pInPlaceUIWindow的值也是通过该方法获得的。
+调用控件自身实现InplaceObject接口的SetObjectRects方法，
+把裁剪区和窗口区传入该函数，该函数会移动控件窗口并处理裁剪区，但由于现在我们的窗口还没创建出来，所以该函数目前只是把传来的窗口区记录到m_rcLocation成员中。
+接下来，如果判断窗口句柄为空，则创建“DSOFramerOCXWnd”类窗口，
+窗口处理过程指定为：CDsoFramerControl::ControlWindowProc。
+然后调用m_pClientSite->ShowObject，这样就完成了原地激活操作。
+但这时我们的控件窗口还是不不可见的，调用SetInPlaceVisible将窗口设为可见。
+如果调用该函数时，要求的是UIActivate，则还要进行一些处理操作，但这里我们并不需要关心这些。
+当我们还没打开文档时（m_pDocObjFrame记录），调用EnableDropFile，开启控件的拖拽打开文档功能。
+最后，调用RaiseAutomationEvent，产生加载完成事件，该函数内部就是调用通过连接点传来的接收器指针（自动化接口），派发ID=100
+
+6. 进入CDsoFramerControl::UIActivate
+
+--------------------------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+
+CDsoFramerControl::Open
+该函数被DoDialogAction调用，传来对话框中选定的文件路径
+如果是网络路径，则会先尝试把改网络文件下载到特定文件夹中，
+从而将网络路径转为本地文档路径
+通过文档路径，获取文档中的CLSID，并得到ProgID
+m_pDocObjFrame = CDsoDocObject::CreateInstance((IDsoDocObjectSite*)&m_xDsoDocObjectSite)  ---参1.1
+//注：m_xDsoDocObjectSite是CDsoFramerControl内部实现的接口类对象，
+//用于和CDsoDocObject对象交互
+因为m_AppType中记录的是“WORD”,所以m_pDocObjFrame->SetIsWps(FALSE)
+如果还没为控件窗口设置过钩子，有指定过在第一次打开是设置，则在这里设置窗口钩子，但这里不满足第二个条件，所以没有设置窗口钩子
+如果open参数中传来了文档路径，判断他是本地路径，还是网络路径
+一般网络路径经过前面的转化，也变成了本地路径
+如果是本地文件路径，调用m_pDocObjFrame->CreateFromFile(pwszDocument, clsidAlt, &bopts);   --参1.2
+关闭拖拽打开文档能力
+m_pDocObjFrame->IPActivateView，完成Word的显示
+如果m_DocType是Word类型
+    枚举m_hwnd，找到word子窗口
+    获得word的进程id，存到dwProcessId成员变量中
+    调用get_ActiveDocument，获得文档指针
+    pWordDoc->Application->Options->AllowDragAndDrop，根据情况设置文档拖拽支持
+RaiseAutomationEvent
+Activate
+RedrawCaption
+函数完成    
+
+1.1 CDsoDocObject::CreateInstance
+新建CDsoDocObject，调用其InitializeNewInstance方法  --参1.1.1
+
+1.1.1 CDsoDocObject::InitializeNewInstance
+m_psiteCtl存放参数传来的(IDsoDocObjectSite*)&m_xDsoDocObjectSite，
+调用IDsoDocObjectSite的GetWindow方法，获得控件的窗口句柄
+如果m_pstgroot（文档对象）还没赋值，则调用StgCreateDocfile  --参1.1.1.1
+创建DSOFramerDocWnd类型窗口，其父窗口为控件窗口
+窗口过程为CDsoDocObject::FrameWindowProc
+用m_psiteCtl请求到IID_IOleCommandTarget接口，存到m_pcmdCtl中
+m_hwndCtl存放控件窗口的句柄
+
+1.1.1.1  StgCreateDocfile：建立一个复合文件,得到根存储对象
+
+1.2 CDsoDocObject::CreateFromFile
+根据文件，获得文档clsid
+如果参数中也传来了文档clsid，则使用参数传来的
+如果判断该clsid是Word程序的clsid：
+    关Word进程
+    Word::_DocumentPtr TZSWdDocTemp;
+    TZSWdAppTemp.CreateInstance("word.application.12");
+    if(TZSWdDocTemp) TZSWdDocTemp=TZSWdAppTemp->Documents->Add();
+    //跟踪发现创建Word进程语句并没有成功执行
+ValidateDocObjectServer判断该clsid是否有效，即检查注册表HKCR/CLSID目录下有没有该clsid
+FIsIECacheFile检查文件是否是IE缓存文件，内部也是通过查注册表完成
+判断是否是使用的参数传来的clsid，如果是：
+    创建绑定环境 CreateBindCtx
+    设置绑定选项 SetBindOptions
+    从文件路径创建文件名字对象 CreateFileMoniker(pwszFile, &pmkfile)   //IMoniker		*pmkfile
+    pmkfile->BindToObject(pbctx, NULL, IID_IOleObject, (void**)&pole);	   //到这一步，启动了word进程
+    将pole存到m_pole中;  //IOleObject *m_pole:Embedded OLE Object
+    m_fDisconnectOnQuit = TRUE
+    m_clsidObject记下clsid
+    m_pole->SetClientSite((IOleClientSite*)&m_xOleClientSite)
+    if (IsWordObject())
+	m_pole->SetHostNames(m_pwszHostName, m_pwszHostName);
+    释放名字对象、绑定环境对象
+释放存储对象pstg
+m_pwszSourceFile记录文件路径名字
+m_idxSourceName记录文件的名字位置
+m_fOpenReadOnly根据绑定环境策略，得出文档是否可编辑
+函数完成
+
+

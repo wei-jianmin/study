@@ -1,0 +1,37 @@
+TypeLib实际上是作为资源放在dll中的。
+
+Step 1: Compile the IDL file using MIDL.exe and get the .tlb file
+Step 2: In VC++6 IDE, WorkSpace->Resource View, View ->Resource Includes, and then you get the resource includes dialog:
+In the "Compile-time directives" column, please enter something in the following format:
+
+1 TYPELIB "MyTypeLib.tlb"
+
+Step 3: Compile your DLL and the .tlb file now is packaged with your dll.
+
+
+-----------------------------------------------------------------------------------------
+
+一个组件DLL中可以包含多个型库文件(TLB) ：
+1 TYPELIB "myatl1.tlb"
+2 TYPELIB "myatl2.tlb"
+
+所以序号是必须的，这样客户可以使用序号通过LoadTypeLib() 等方法将指定TLB从DLL/EXE文件中导出。
+
+-----------------------------------------------------------------------------------------
+
+在VS2005中添加的方法
+1. 用MIDL工具编译idl文件，得到tlb文件
+2. 将tlb文件放在项目目录下
+3. 右键资源文件编辑器中的任意文件(夹)，在右键菜单中选择“资源包括”
+4. 在弹出窗口下面的“编译时指令”中添入：
+   1 TYPELIB "asdf.tlb"
+注：添加的编译时指令其实在资源文件(.rc文件)中能看到
+这样就会被类型库文件集成到dll中了
+
+-----------------------------------------------------------------------------------------
+
+MIDL工具的简单实用：
+在vs提供的命令行工具中，可以直接使用MIDL命令
+有了idl/odl文件之后，，要得到.h/.tlb文件的方法为：
+MIDL /h 文件名.h  /tlb  文件名.tlb   源文件.old 
+或者你也可以直接在项目中添加ild文件，编译项目即可自动得到tlb文件

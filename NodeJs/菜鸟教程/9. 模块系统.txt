@@ -1,0 +1,58 @@
+为了让Node.js的文件可以相互调用，Node.js提供了一个简单的模块系统。
+
+文件和模块是一一对应的，换言之，一个 Node.js 文件就是一个模块，
+这个文件可能是JavaScript 代码、JSON 或者编译过的C/C++ 扩展。
+
+引入模块
+    在 Node.js 中，引入一个模块非常简单，
+    如下我们创建一个 main.js 文件并引入 hello 模块，代码如下:
+    var hello = require('./hello');
+    hello.world();
+    以上实例中，代码 require('./hello') 引入了当前目录下的 hello.js 文件
+    （./ 为当前目录，node.js 默认后缀为 js）
+    
+exports和require对象
+    Node.js 提供了 exports 和 require 两个对象，
+    其中 exports 是模块公开的接口，
+    require 用于从外部获取一个模块的接口，即所获取模块的 exports 对象。
+    用法一：
+        exports.world = function() { console.log('Hello World'); }
+        调用时：
+        var hello = require('./hello')
+        hello.world()
+    用法二：   
+        function Hello() { 
+            var name; 
+            this.setName = function(thyName) { name = thyName; }; 
+            this.sayHello = function() { console.log('Hello ' + name); }; 
+        }; 
+        module.exports = Hello;
+        调用时：
+        var Hello = require('./hello')
+        hello = new Hello();   //必须要new出该对象，没弄明白原理
+        hello.setName("asdfas1234");
+        hello.sayHello();
+        
+exports vs. module.exports
+    exports 是指向的 module.exports 的引用,而 module.exports 初始值为一个空对象 {}
+    所以 exports 初始值也是 {}，require() 返回的是 module.exports 而不是 exports。
+    var name ='nswbmw'; 
+    exports.name = name; 
+    exports.sayName =function(){ console.log(name); } 
+    上例中，给 exports 赋值其实是给 module.exports 这个空对象添加了两个属性而已，
+    上面的代码相当于：
+    var name ='nswbmw'; 
+    module.exports.name = name; 
+    module.exports.sayName =function(){ console.log(name); }
+    
+require加载模块的顺序：
+    先在文件模块缓存中查找，如果没有，则在原生模块缓存中查找，
+    如果还没有，则在原生模块中查找（成功加载后会放在原生模块缓存中），
+    如果还没有，则在文件系统中查找（成功加载后会放在文件模块缓存中）
+    
+require方法接受以下几种参数的传递：
+    http、fs、path等原生模块。
+    ./mod或../mod，相对路径的文件模块。
+    /pathtomodule/mod，绝对路径的文件模块。
+    mod，非原生模块的文件模块。    
+    

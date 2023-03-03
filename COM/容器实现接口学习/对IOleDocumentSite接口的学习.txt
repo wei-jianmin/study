@@ -1,0 +1,53 @@
+IOleDocumentSite接口：
+该接口使文档对象
+（    对应在线编辑组件中的CDOSDocObject，相当于个文档，可以内嵌控件，
+       而这里是要内嵌wps文档服务器，一个控件就是一个服务器，而用户打开、编辑文件
+       用的控件就是文档服务器，这里的文件可以不局限于doc这样的文档，相如PS，
+       也算是文档服务器，它要处理的文档是.psd文件）
+可以分流要发送给原地激活对象的动作序列，并直接要求其站点对象激活自己（文档对象）为一个
+文档对象——通常要内嵌文档服务器时才需要支持该接口，而内嵌一般的ocx，无需支持该接口。
+对每个要托管的文档对象，容器必须提供一个相应的文档站点，这个文档站点是一个
+OLE文档客户站点--除了实现了 IOleClientSite 和IAdviseSink，还实现了IOleDocumentSite。
+每个文档站点为每一个将被激活的文档实现一个独立的文档视图站点对象。
+该文档视图对象实现IOleInPlaceSite接口，并可以选择实现IContinueCallback接口。
+这个接口使得OLE中的复合文档对象可以被实地激活，然后显示工具条，标尺之类的用户界面元素。
+这个接口仅有一个方法ActivateMe，但是却十分重要。ActiveMe接受一个参数
+IOleDocumentView *pView，这个参数是欲激活的OLE对象的接口，我们可以借此接口查询到
+OLE对象的IOleDocument接口，然后调用其方法CreateView建立起OLE对象自身的视图，
+接下来调用IOleDocumentView的方法SetInPlaceSite向OLE对象“注册”OLE包容的IOleInPlaceSite接口。
+接下来顺次调用IOleDocumentView的UIAcitve、SetRect、Show三个方法激活用户界面元素、
+安排好OLE视图位置、最后使之显示出来。
+
+方法列表：
+ActivateMe  	告诉文档站点激活文档对象，并将之是作为文档对象，而非一个实时激活对象，
+		还可以（可选）指定文档对象的哪个视图被激活。
+
+---------------------------------------------------------------------------
+注1：
+当一个容器调用IOleObject::DoVerb了激活一个文档，一个文档对象可以通过调用I
+OleDocumentSite::ActivateMe分流一个实时激活动作。
+当在文档对象上调用IOleObject::DoVerb时，最恰当的动作词语是OLEIVERB_SHOW.
+ 其它允许的动作词语可以是OLEIVERB_PRIMARY和OLEIVERB_UIACTIVATE。 
+OLEIVERB_OPEN不被鼓励，因为它意味着在一个独立窗口中打开一个嵌入对象，
+这与文档对象激活的意图相反。
+注2：
+只有文档对象可以调用该方法。一个普通的原地激活文档应该通过调用IOleInPlaceSite
+接口来响应容器调用的IOleObject::DoVerb方法。
+一个文档对象应该通过调用IOleDocumentSite::ActivateMe来初始其激活行为。
+如果容器没实现IOleDocumentSite, 则文档应默认为正常的就地激活序列。
+一个支持多个数据视图的文档对象可以通过传递视口的IOleDocumentView
+接口指针指明那个视口该被激活。
+然而该IOleDocumentView接口指针是被保持的，容器不用时应该释放该指针。
+注3：
+该方法必须在一个文档对象容器中完全实现，而不能只实现为返回一个E_NOTIMPL的返回值。
+如果一个文档对象传来IOleDocumentView接口指针，容器的ActivateMe方法中应该调用
+IOleDocumentView::SetInPlaceSite，并把它的IOleInPlaceSite指针传回给视口对象。
+如果容器持有IOleDocumentView指针--这是常见情况，则它在调用SetInPlaceSite时，
+应该跟着一个对AddRef的调用。
+如果IOleDocumentView指针为空，容器可以通过查询文档的IOleDocument来获得一个
+文档视图指针，然后调用IOleDocument::CreateView并送其IOleInPlaceSite指针。
+
+
+
+
+

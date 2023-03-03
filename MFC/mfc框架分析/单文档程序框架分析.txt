@@ -1,0 +1,5 @@
+单文档程序框架分析（vs2005）：
+1. 函数是从mainCRTStartup开始的，该函数位于“C:\Program Files (x86)\Microsoft Visual Studio 8\VC\crt\src\crtexe.c”中。该函数
+内部又调用__tmainCRTStartup();
+2. __tmainCRTStartup()函数同样位于crtexe.c，该函数有410行左右。
+

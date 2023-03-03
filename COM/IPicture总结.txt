@@ -1,0 +1,653 @@
+http://www.cppblog.com/niewenlong/archive/2013/04/08/199241.html
+IPicture总结
+1、IPicture接口对象的创建
+         方法1：直接通过文件创建
+LPCSTR szFileUrl;
+ IPicture *pIPicture;
+ OleLoadPicturePath(CComBSTR(szFileUrl), 
+   (LPUNKNOWN)NULL, 
+   0, 
+   0, 
+   IID_IPicture,
+   (LPVOID*)&pIPicture))
+        方法2：通过IStream来创建
+ // 加载电子地图
+ LPCSTR szFileUrl;
+ IStream *pStream = NULL;
+ IPicture *pIPicture = NULL;;
+ CFileStatus fstatus;
+ CFile file;
+ LONG lFileSize;
+ HGLOBAL hGlobal;
+ if(file.Open(szFileUrl, CFile::modeRead) && file.GetStatus(szFileUrl, fstatus) 
+  && ((lFileSize = fstatus.m_size) != -1))
+ {
+  hGlobal = GlobalAlloc(GMEM_MOVEABLE, lFileSize);// 开辟大内存
+  if(hGlobal != NULL)
+  {
+   LPVOID pvData = NULL;
+   pvData = GlobalLock(hGlobal);
+   if(pvData != NULL)
+   { 
+    file.ReadHuge(pvData, lFileSize);   // 将图片数据保存在内存中
+    GlobalUnlock(hGlobal);
+    CreateStreamOnHGlobal(hGlobal, TRUE, &m_pIStream);  // 创建流
+    file.Close();
+   }
+   else
+   {
+    GlobalFree(hGlobal);
+    return;
+   }
+  }
+  else
+  {
+   file.Close();
+   return;
+  }
+ }
+ else
+ {
+  //打开图片失败
+  return;
+ }
+ OleLoadPicture(m_pIStream, fstatus.m_size, TRUE, IID_IPicture, (LPVOID*)&m_pIPicture);
+ GlobalFree(hGlobal);
+
+2、通过IPicture来获取图片的尺寸
+ OLE_XSIZE_HIMETRIC hmPicWidth;       
+ OLE_YSIZE_HIMETRIC hmPicHeight;      
+ pIPicture->get_Width(&hmPicWidth);   // 获取图像宽度
+ pIPicture->get_Height(&hmPicHeight); // 获取图像高度
+ // 转化单位为象素
+ nPicWidth = MulDiv(hmPicWidth, GetDeviceCaps(GetDC()->m_hDC, LOGPIXELSX), HIMETRIC_PER_INCH);
+ nPicHeight = MulDiv(hmPicHeight, GetDeviceCaps(GetDC()->m_hDC, LOGPIXELSY), HIMETRIC_PER_INCH);
+
+3、通过IPicture来画图
+void ShowPicture(CDC *pDC)
+{
+ OLE_XPOS_HIMETRIC xSrc;  // 图片中当前显示区域的x
+ OLE_YPOS_HIMETRIC ySrc;  // 图片中当前显示区域的y
+ OLE_XSIZE_HIMETRIC cxSrc; // 图片中当前显示区域的宽度
+ OLE_YSIZE_HIMETRIC cySrc; // 图片中当前显示区域的高度
+ m_pIPicture->Render(*pDC, 0, 0, m_rcBox.Width(), m_rcBox.Height(), xSrc, ySrc, cxSrc, cySrc, NULL);
+}
+
+
+4、将IPicture中的图片保存起来
+BOOL SaveToFileFromIPicture(LPCSTR szFileName, IPicture *pPic)
+{
+ // Create ILockBytes Buffer
+ ILockBytes *plkbyt = NULL;
+ CreateILockBytesOnHGlobal(NULL, TRUE, &plkbyt);
+
+ // Create IStorage
+ IStorage   *pStorage = NULL;
+ HRESULT hr = ::StgCreateDocfileOnILockBytes(plkbyt,
+  STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_READWRITE, 0, &pStorage);
+ if (FAILED(hr))
+ {
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+
+ // Create IStream
+ IStream    *pStream = NULL;
+ hr = pStorage->CreateStream(L"PICTURE",
+  STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_READWRITE, 0, 0, &pStream);
+ if (FAILED(hr))
+ {
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+ 
+ // Copy Data Stream
+ long  lSize;
+ hr = pPic->SaveAsFile(pStream, TRUE, &lSize); 
+ if (FAILED(hr))
+ {
+  pStream->Release();
+  pStream = NULL;
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+ // Get Statistics For Final Size Of Byte Array
+ STATSTG  statStg;
+ hr = plkbyt->Stat(&statStg, STATFLAG_NONAME);
+ if (FAILED(hr))
+ {
+  pStream->Release();
+  pStream = NULL;
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+
+ // calculate "Pure" Picture Data, Must Be In a 512 Blocks...
+ double  dbSkipFloat = (double(lSize) / 512);   
+ DWORD  dwPicDataSize = 0;
+ if(dbSkipFloat > DWORD(dbSkipFloat)) 
+ {
+  dwPicDataSize = (DWORD)dbSkipFloat + 1;
+ }
+ else 
+ {
+  dwPicDataSize = (DWORD)dbSkipFloat;
+ }
+ dwPicDataSize = dwPicDataSize * 512; 
+ // Allocate Only The "Pure" Picture Data
+ BYTE  *pPicDataBuffer = (BYTE*)malloc(dwPicDataSize);
+ if (pPicDataBuffer == NULL)
+ {
+  pStream->Release();
+  pStream = NULL;
+  plkbyt->Release();
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt = NULL;
+  return FALSE;
+ }
+ 
+ // Read "Pure" Picture Data to Buffer
+ _ULARGE_INTEGER ulOffset;
+ ulOffset.LowPart = 0;
+ ulOffset.HighPart = 0;
+ ulOffset.QuadPart = (DWORD)(statStg.cbSize.QuadPart - dwPicDataSize);
+ DWORD dwRealDataSize;
+ hr = plkbyt->ReadAt(ulOffset, pPicDataBuffer, dwPicDataSize, &dwRealDataSize);
+ if (FAILED(hr))
+ {
+  free(pPicDataBuffer);
+  pPicDataBuffer = NULL;
+  pStream->Release();
+  pStream = NULL;
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+ 
+ // Save "Pure" Picture Data to file
+ CFile  fBmp; 
+ CFileException e;
+ if (!fBmp.Open(szFileName, CFile::typeBinary | CFile::modeCreate | CFile::modeWrite, &e))
+ {
+  free(pPicDataBuffer);
+  pPicDataBuffer = NULL;
+  pStream->Release();
+  pStream = NULL;
+  pStorage->Release();
+  pStorage = NULL;
+  plkbyt->Release();
+  plkbyt = NULL;
+  return FALSE;
+ }
+ fBmp.Write(pPicDataBuffer, dwRealDataSize);
+ fBmp.Close();
+ free(pPicDataBuffer);
+ pPicDataBuffer = NULL;
+ pStream->Release();
+ pStream = NULL;
+ pStorage->Release();
+ pStorage = NULL;
+ plkbyt->Release();
+ plkbyt = NULL;
+ return TRUE;
+}
+
+
+5、将IPicture中图片按规定的尺寸保存
+BOOL CIPictureDlg::Save2File(LPCSTR szFileName, IPicture *pPic, int nWidth, int nHeight)
+{
+ // create a new IPicture
+ OLE_HANDLE hPic = NULL;
+ if (FAILED(pPic->get_Handle(&hPic)))
+ {
+  return FALSE;
+ }
+ HBITMAP hBmp = (HBITMAP)CopyImage((HANDLE)hPic,
+   IMAGE_BITMAP, 
+   nWidth, 
+   nWidth, 
+   LR_CREATEDIBSECTION);
+ if (hBmp == NULL)
+ {
+  return FALSE;
+ }
+ PICTDESC picDesc;
+ picDesc.cbSizeofstruct = sizeof(PICTDESC);
+ picDesc.picType = PICTYPE_BITMAP;
+ picDesc.bmp.hbitmap = hBmp;
+
+ IPicture *pNewPic = NULL;
+ if (SUCCEEDED(OleCreatePictureIndirect(&picDesc, IID_IPicture, FALSE, (LPVOID *)&pNewPic)))
+ {
+  // Save to file
+  Save2File(szFileName, pNewPic);
+  pNewPic->Release();
+  pNewPic = NULL;
+  DeleteObject(hBmp);
+  hBmp = NULL;
+  return TRUE;
+ }
+ DeleteObject(hBmp);
+ hBmp = NULL;
+ return FALSE;
+}
+
+ 
+下面是有关 IPicture 的方法描述：
+方法		描述
+get_Handle 	返回图像对象的Windows GDI句柄 
+get_Hpal 	返回图像对象当前使用的调色板拷贝
+get_Type	返回当前图像对象的的图像类型
+get_Width 	返回当前图像对象的图像宽度
+get_Height 	返回当前图像对象的图像高度
+Render 		在指定的位置、指定的设备上下文
+		上绘制指定的图像部分
+set_Hpal 	设置当前图像的调色板
+get_CurDC 	返回当前选中这个图像的设备上下文
+SelectPicture 	将一个位图图像选入给定的设备上下文，
+		返回选中图像的设备上下文和图像的GDI句柄
+get_KeepOriginalForma 	返回图像对象KeepOriginalFormat
+			属性的当前值
+put_KeepOriginalFormat 	设置图像对象的KeepOriginalFormat
+			属性
+PictureChanged 	通知图像对象它的图像资源改变了
+SaveAsFile 	将图像数据存储到流中，格式与存成文件格式相同
+get_Attributes 	返回图像位属性当前的设置
+
+========================end=======================
+
+1、利用IPicture接口加载、显示图片
+IPicture接口管理一个图片对象和它的属性。图片对象提供对Bitmap Icon Metafile的语言不相关的抽象支持。图像对象的主要接口是IPicture和IPictureDisp。IPictureDisp从IDispatch继承，提供了通过自动化访问图片属性的能力。图片对象可通过OleCreatePictureIndirect创建。关于IPicture支持的其他接口和方法可以看MSDN，一般创建图片对象可以用OleLoadPicture函数，它简化了基于流内容创建图片对象。
+
+IPicture接口管理一个图片对象和它的属性。图片对象提供对Bitmap Icon Metafile的语言不相关的抽象支持。图像对象的主要接口是IPicture和IPictureDisp。IPictureDisp从IDispatch继承，提供了通过自动化访问图片属性的能力。图片对象可通过OleCreatePictureIndirect创建。关于IPicture支持的其他接口和方法可以看MSDN，一般创建图片对象可以用OleLoadPicture函数，它简化了基于流内容创建图片对象。下面的代码中有两个未定义的变量是FilePath和hDC。
+//FilePath是从外部传入的图片路径
+//打开文件
+HANDLE hFile = CreateFile(FilePath, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+_ASSERTE(INVALID_HANDLE_VALUE != hFile);
+//取文件大小
+DWORD dwFileSize = GetFileSize(hFile, NULL);
+_ASSERTE(-1 != dwFileSize);
+LPVOID pvData = NULL;
+//分配内存，准备读入图片文件的数据
+//GlobalAlloc从堆分配指定字节的内存区域
+HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, dwFileSize);
+_ASSERTE(NULL != hGlobal);
+//GlobalLock函数锁住一个全局的内存对象同时返回一个指向对象首字节的指针
+pvData = GlobalLock(hGlobal);
+_ASSERTE(NULL != pvData);
+DWORD dwBytesRead = 0;
+//读取文件的数据到分配的全局内存
+BOOL bRead = ReadFile(hFile, pvData, dwFileSize, &dwBytesRead, NULL);
+_ASSERTE(FALSE != bRead);
+GlobalUnlock(hGlobal);
+CloseHandle(hFile);
+
+//到此，我们已经把文件的数据读到了内存当中
+
+LPSTREAM pstm = NULL;
+//从全局内存创建IStream接口指针
+HRESULT hr = CreateStreamOnHGlobal(hGlobal, TRUE, &pstm);
+_ASSERTE(SUCCEEDED(hr) && pstm);
+//根据图片文件创建IPicture接口指针
+hr = ::OleLoadPicture(pstm, dwFileSize, FALSE, IID_IPicture, (LPVOID *)&gpPicture);
+_ASSERTE(SUCCEEDED(hr) && gpPicture); 
+pstm->Release();
+
+//至此，IPicture接口建立好，下面开始画图片
+//hDC是外部传入的画图设备
+long hmWidth;
+long hmHeight;
+gpPicture->get_Width(&hmWidth);
+gpPicture->get_Height(&hmHeight);
+//转换himetric距离为pixels距离，1英寸=25.4毫米
+int nWidth = MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), 2540);
+int nHeight = MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), 2540);
+RECT rc;
+GetClientRect(hWnd, &rc);
+//IPicture::Render显示图片
+gpPicture->Render(hDC, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, &rc);
+
+2、C++如何调用图片
+有很多办法 ，比如用IPicture，用CBitmap //MFC，更直接的是，用File进行文件操作，用BitBlt显示，具体代码你用以上关键字Google下 
+这里给你推荐几个,末尾给你附一个网上可以找到的CPicture类（需MFC支持）： 
+-------IPicture 
+// pDoc为文档对象指针 
+// pDC为设备描述表指针 
+
+::CoInitialize(NULL); // COM 初始化 
+HRESULT hr; 
+CFile file; 
+
+file.Open(pDoc->GetPathName(), CFile::modeRead | CFile::shareDenyNone ); // 读入文件内容
+DWORD dwSize = file.GetLength(); 
+HGLOBAL hMem = ::GlobalAlloc( GMEM_MOVEABLE, dwSize ); 
+LPVOID lpBuf = ::GlobalLock( hMem ); 
+file.ReadHuge( lpBuf, dwSize ); 
+file.Close(); 
+::GlobalUnlock( hMem ); 
+
+IStream * pStream = NULL; 
+IPicture * pPicture = NULL; 
+
+// 由 HGLOBAL 得到 IStream，参数 TRUE 表示释放 IStream 的同时，释放内存 
+hr = ::CreateStreamOnHGlobal( hMem, TRUE, &pStream ); 
+ASSERT ( SUCCEEDED(hr) ); 
+
+hr = ::OleLoadPicture( pStream, dwSize, TRUE, IID_IPicture, ( LPVOID * )&pPicture );
+ASSERT(hr==S_OK); 
+
+long nWidth,nHeight; // 宽高，MM_HIMETRIC 模式，单位是0.01毫米 
+pPicture->get_Width( &nWidth ); // 宽 
+pPicture->get_Height( &nHeight ); // 高 
+
+CRect rect; 
+GetClientRect(&rect); 
+
+CSize sz( nWidth, nHeight ); 
+pDC->HIMETRICtoDP( &sz ); // 转换 MM_HIMETRIC 模式单位为 MM_TEXT 像素单位 
+long x, y, cx, cy; 
+
+// 原始大小 
+/* 
+cx = sz.cx; 
+cy = sz.cy; 
+x = rect.Width() / 2 - cx / 2; 
+y = rect.Height() / 2 - cy / 2; 
+*/ 
+
+// 自动适应窗口 
+double fRatePic, fRateWnd; 
+fRatePic = (double)sz.cx / (double)sz.cy; 
+fRateWnd = (double)rect.Width() / (double)rect.Height(); 
+if (fRatePic > fRateWnd) 
+{ 
+cx = rect.Width(); 
+cy = (long)(rect.Width() / fRatePic); 
+} 
+else 
+{ 
+cx = (long)(rect.Height() * fRatePic); 
+cy = rect.Height(); 
+} 
+if (cx == rect.Width()) 
+{ 
+x = 0; 
+y = rect.Height() / 2 - cy / 2; 
+} 
+if (cy == rect.Height()) 
+{ 
+x = rect.Width() / 2 - cx / 2; 
+y = 0; 
+} 
+
+pPicture->Render(pDC->m_hDC, x, y, cx, cy, 
+0, nHeight, nWidth, -nHeight, NULL); 
+
+if ( pPicture ) pPicture->Release();// 释放 IPicture 指针 
+if ( pStream ) pStream->Release(); // 释放 IStream 指针，同时释放了 hMem 
+
+::CoUninitialize(); 
+
+--------------------------------CBitmap: 
+HBITMAP bitmap; 
+bitmap=(HBITMAP)LoadImage(AfxGetInstanceHandle(),strFileName,IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
+m_backBitmap.DeleteObject(); 
+if(!m_backBitmap.Attach(bitmap)) 
+{ 
+MessageBox("导入背景图失败!","提示",MB_OK); 
+return; 
+} 
+
+----------------------File：略 
+前提是你要知道图片的编码格式 
+一般比较简单的是BMP,包括 
+BITMAPFILEHEADER，BITMAPINFO,BITMAPINFOHEADER 
+如果图片采用了压缩算法可能会麻烦一点， 
+关于详细情况你也以Google一下 
+
+附CPicture(引用自网上） 
+
+// Picture.h: interface for the CPicture 
+#ifndef PICTURE_H 
+#ifndef picture_h 
+
+#define PICTURE_H 
+#define picture_h 
+
+
+#if _MSC_VER > 1000 
+#pragma once 
+#endif // _MSC_VER > 1000 
+
+
+class CPicture 
+{ 
+public: 
+CPicture(); 
+virtual ~CPicture(); 
+
+public: 
+BOOL LoadPicture(UINT nResource, LPCTSTR lpszResType) 
+{return LoadPicture(MAKEINTRESOURCE(nResource), lpszResType);} 
+BOOL LoadPictureFromFile(LPCTSTR lpszFileName); 
+BOOL LoadPicture(LPCTSTR lpszResource,LPCTSTR lpszResType); 
+BOOL IsValid(){ return m_pPic!=NULL;} 
+CSize GetSize(){return m_size;} 
+void Draw(CDC* pDC, LPCRECT lprcDest, LPCRECT lprcSrc); 
+void Draw(CDC* pDC, int xDest,int yDest, int cxDest, int cyDest , 
+int xSrc ,int ySrc ,int cxSrc ,int cySrc); 
+
+void Release(); 
+
+protected: 
+IPicture* m_pPic; 
+
+OLE_XSIZE_HIMETRIC _w_him; 
+OLE_YSIZE_HIMETRIC _h_him; 
+
+CSize m_size; 
+
+protected: 
+void CalcSize(); 
+}; 
+
+
+#endif // define picture_h 
+#endif // define PICTURE_H 
+
+
+
+////////////////////////////////////////////////////////////////////// 
+// Picture.cpp: implementation of the CPicture class. 
+// Lounge Stdio 2003 
+// 作者：边城浪子（QQ：16168666） 
+// E-mail: krh2001.lpfdiyvbb@163.com 
+////////////////////////////////////////////////////////////////////// 
+
+#include "stdafx.h" 
+#include "Picture.h" 
+
+
+#ifdef _DEBUG 
+#undef THIS_FILE 
+static char THIS_FILE[]=__FILE__; 
+#define new DEBUG_NEW 
+#endif 
+
+
+////////////////////////////////////////////////////////////////////// 
+// Construction/Destruction 
+////////////////////////////////////////////////////////////////////// 
+
+CPicture::CPicture() 
+:m_pPic(NULL), _h_him(0), _w_him(0), m_size(0,0) 
+{ 
+} 
+
+CPicture::~CPicture() 
+{ 
+Release(); 
+} 
+
+void CPicture::Release() 
+{ 
+if(m_pPic != NULL) 
+{ 
+m_pPic->Release(); 
+m_pPic = NULL; 
+_h_him = _w_him = 0; 
+m_size.cx = m_size.cy = 0; 
+} 
+} 
+
+BOOL CPicture::LoadPicture(LPCTSTR lpszResource, LPCTSTR lpszResType) 
+{ 
+Release(); 
+
+HINSTANCE hInst = AfxFindResourceHandle(lpszResource, lpszResType); 
+HRSRC hRsrc = ::FindResource(hInst, lpszResource, lpszResType); 
+if(hRsrc == NULL) return FALSE; 
+HGLOBAL hGlobal = LoadResource(hInst, hRsrc); 
+
+if(hGlobal == NULL) return FALSE; 
+
+
+DWORD dwSize = SizeofResource(hInst, hRsrc); 
+
+HGLOBAL hMem = ::GlobalAlloc(GMEM_MOVEABLE, dwSize); 
+if(hMem == NULL) return FALSE; 
+
+LPVOID pSrc = ::LockResource(hGlobal); 
+if(pSrc == NULL) { 
+::GlobalFree(hMem); 
+return FALSE; 
+} 
+
+LPVOID pDes = ::GlobalLock(hMem); 
+if(pDes == NULL){ 
+//::GlobalUnlock(hGlobal); 
+::GlobalFree(hMem); 
+return FALSE; 
+} 
+
+memcpy(pDes, pSrc, dwSize); 
+
+//GlobalUnlock(hGlobal); 
+GlobalUnlock(hMem); 
+
+::FreeResource(hGlobal); 
+
+IStream* pStm = NULL; 
+CreateStreamOnHGlobal(hMem, TRUE, &pStm); 
+
+if(!SUCCEEDED(OleLoadPicture(pStm,dwSize,TRUE,IID_IPicture,(LPVOID*)&m_pPic))) 
+{ 
+pStm -> Release(); 
+::GlobalFree(hMem); 
+pStm = NULL; 
+return FALSE; 
+} 
+
+pStm->Release(); 
+::GlobalFree(hMem); 
+
+CalcSize(); 
+return TRUE; 
+
+} 
+
+BOOL CPicture::LoadPictureFromFile(LPCTSTR lpszFileName) 
+{ 
+Release(); 
+
+CFile file; 
+if(!file.Open(lpszFileName, CFile::modeRead)) 
+return FALSE; 
+
+DWORD dwSize = file.GetLength(); 
+
+HGLOBAL hMem = ::GlobalAlloc(GMEM_MOVEABLE, dwSize); 
+if(hMem == NULL) return FALSE; 
+
+LPVOID pDes = ::GlobalLock(hMem); 
+if(pDes == NULL){ 
+::GlobalFree(hMem); 
+return FALSE; 
+} 
+
+file.ReadHuge(pDes, dwSize); 
+
+file.Close(); 
+
+GlobalUnlock(hMem); 
+
+IStream* pStm = NULL; 
+CreateStreamOnHGlobal(hMem, TRUE, &pStm); 
+
+if(!SUCCEEDED(OleLoadPicture(pStm,dwSize,TRUE,IID_IPicture,(LPVOID*)&m_pPic))) 
+{ 
+pStm -> Release(); 
+::GlobalFree(hMem); 
+pStm = NULL; 
+return FALSE; 
+} 
+
+pStm->Release(); 
+::GlobalFree(hMem); 
+
+CalcSize(); 
+return TRUE; 
+
+} 
+
+
+void CPicture::CalcSize() 
+{ 
+if(m_pPic == NULL) return; 
+
+m_pPic->get_Width(&_w_him); 
+m_pPic->get_Height(&_h_him); 
+
+CDC* pDC = CWnd::GetDesktopWindow()->GetDC(); 
+m_size.cx = _w_him; 
+m_size.cy = _h_him; 
+
+pDC->HIMETRICtoDP(&m_size); 
+
+CWnd::GetDesktopWindow()->ReleaseDC(pDC); 
+
+} 
+
+void CPicture::Draw(CDC* pDC, LPCRECT lprcDest, LPCRECT lprcSrc) 
+{ 
+if(m_pPic) 
+{ 
+CSize szOrig(lprcSrc->left, lprcSrc->top); 
+CSize szSrc(lprcSrc->right - lprcSrc->left, lprcSrc->bottom - lprcSrc->top); 
+pDC->DPtoHIMETRIC(&szOrig); 
+pDC->DPtoHIMETRIC(&szSrc); 
+
+m_pPic->Render(*pDC, lprcDest->left,lprcDest->top,lprcDest->right-lprcDest->left,
+lprcDest->bottom-lprcDest->top, szOrig.cx, _h_him-szOrig.cy, szSrc.cx, 
+-szSrc.cy, NULL); 
+} 
+} 
+
+void CPicture::Draw(CDC* pDC, int xDest,int yDest, int cxDest, int cyDest , 
+int xSrc ,int ySrc ,int cxSrc ,int cySrc) 
+{ 
+Draw(pDC, CRect(xDest, yDest, xDest+cxDest, yDest+cyDest), CRect(xSrc, ySrc, xSrc+cxSrc, ySrc+cySrc));
+}

@@ -1,0 +1,45 @@
+支持版本  c++11起
+
+https://zh.cppreference.com/w/cpp/thread/thread
+
+引用头文件 #include <thread>
+
+成员方法：
+    构造函数
+        //构造不表示线程的新 thread 对象。
+        thread() noexcept;
+        //移动构造函数。构造表示曾为 other 所表示的执行线程的 thread 对象。此调用后 other 不再表示执行线程
+        thread( thread&& other ) noexcept;
+        //构造新的 std::thread 对象并将它与执行线程关联。新的执行线程开始执行
+        template< class Function, class... Args >  explicit thread( Function&& f, Args&&... args );
+        //复制构造函数被删除； thread 不可复制。
+        thread( const thread& ) = delete;
+    观察器
+        joinable  检查线程是否可合并，即潜在地运行于平行环境中   bool joinable() const noexcept;
+        get_id  返回线程的id   std::thread::id get_id() const noexcept;
+        native_handle  返回底层实现定义的线程句柄   native_handle_type native_handle()
+        hardware_concurrency [静态]  返回实现支持的并发线程数   static unsigned int hardware_concurrency() noexcept;
+    操作
+        join  等待线程完成其执行,不应让多个线程对同一个thread对象执行join操作。   void join();
+        detach  容许线程从线程句柄独立开来执行，执行后joinable变为false  void detach();
+        swap  交换二个 thread 对象  void swap( std::thread& other ) noexcept;
+
+
+创建线程对象（绑定指定函数）
+    std::thread th1(func1);  //没有参数时,func1为函数名
+    std::thread th2(func2,arg1,arg2,...);   //按值传递
+    std::thread th3(func3,std::ref(arg1),std::ref(arg2),...);   //按引用传递
+
+等待线程结束
+    join()  : 让主线程等待线程对象结束，调用完该方法后，主线程就进入阻塞状态
+    joinable() : 判断线程是否可被join，一个默认构造函数（没绑定函数）创建的线程对象不能被join
+                 另外，如果某个线程 已经执行完任务，但是没有被 join 的话，
+                 该线程依然会被认为是一个活动的执行线程，因此也是可以被 join 的。
+
+线程分离                 
+    detach() : Detach 线程。 将当前线程对象所代表的执行实例与该线程对象分离，使得线程的执行可以单独进行。
+               一旦线程执行完毕，它所分配的资源将会被释放。
+    调用 detach 函数之后：
+        *this 不再代表任何的线程执行实例。
+        joinable() == false
+        get_id() == std::thread::id()

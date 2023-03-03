@@ -1,0 +1,45 @@
+https://zhuanlan.zhihu.com/p/183993817
+https://blog.csdn.net/hnjsjsac/article/details/105679467
+
+1、Swing
+Swing 算是 Java 早期代替 AWT 的桌面应用 GUI 开发工具包
+如果 Java GUI 库发展历程分为三代，可以是：AWT --> SWING --> JAVAFX
+
+2、JSF
+JSF：Java Server Faces
+JSF是一种用于构建 Java Web 应用程序的表现层框架，和 Struts 一样性质的框架。
+国内用 JSF 的比较少，有也是老系统了，国外应该还有用 JSF 的，
+不过随着 Spring MVC, Spring Boot 的横空出世，JSF 应该也是过时的技术了。
+
+3、EJB
+EJB：Enterprise Java Beans，即：企业Java Beans
+简单来说，EJB就是部署分布式系统用的，
+就是把A程序放在服务器上，通过B客户端来调用，并且是跨平台的。
+因为 EJB 过于复杂和笨重，调试非常麻烦，
+现在都被轻量级的 RPC 框架（Dubbo）
+及轻量级 Restful 形式的分布式框架 （Spring Cloud） 替代了。
+
+4、JSP
+JSP 全称：Java Server Pages，是由早期的 Sun 公司发布的一种动态网页开发技术
+即在 HTML 网页代码中嵌入 JSP 标签的 Java 代码实现动态网页。
+JSP 的本质其实就是 Servlet，JSP 文件被编译之后，就变成了 Servlet Java 类文件，
+因为 JVM 虚拟机只能识别 Java 字节码文件，而不能识别 JSP 文件。
+在 JSP 的时代，那时候还没有前后端分离的说法，JSP 可以包揽全部，
+即实现静态页面，又实现动态代码逻辑，全部都在一个 JSP 文件里面。
+这样，一个程序员既是前端，又是后端。
+但是，现如今在前后端分离的热潮下，前后端分工明确，
+后端只负责业务逻辑的接口开发，前端负责调用后端接口再做页面数据封装展示，JSP 几乎是被淘汰了。
+虽然 JSP 是被前后端分离取代了，但并不说明 JSP 没有用了，
+不是所有系统都是前后端分离的，比如说一个只有两三个页面的动态系统，JSP、Servlet足以搞定
+
+5、Struts
+Struts2 + Spring + Hibernate 三大框架一起组成了 "SSH"————牛逼哄哄的 Java Web 框架三剑客。
+Struts2在其流行的几年可谓是非常热门，不管你去哪个公司面试，都要求会SSH（Spring+Struts2+Hibernate）
+但是现在，曾经风靡一时的Struts2最终被SpringMVC所取代
+如果说SpringMVC是初步淘汰了Struts2，那么SpringBoot的崛起基本上是彻底淘汰了Struts2，
+除了一些老项目还在维护之外，其他的新项目基本上都在用SpringBoot
+
+6、Memcached
+Redis 这几年的大热，现在已经替代 Memcached 成为缓存技术的首要中间件，
+作为大厂的带头兵，在 BAT 里面，Redis 也已经逐渐取代了 Memcached，
+广泛使用 Redis 作为缓存应用方案。

@@ -1,0 +1,10 @@
+-I,-i
+    xargs -I S 可以把前面管道中的数据明明为一个集合，集合的名字不能省略
+    xargs -i   类似 -I 命令，后面不跟集合名字，而是使用默认名字 {}
+    举例：
+      ls *.c | xargs -i mv {} cpp
+      ls *.c | xargs -I cfiles mv cfiles cpp
+      ls *.c | xargs -i echo "{} cpp"
+-t
+   把参数替换后的执行，在执行前，先打印出来
+    

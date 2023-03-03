@@ -1,0 +1,15 @@
+#!/bin/bash
+pki --gen --type rsa --outform pem > strongswanKey.pem
+pki --self --ca --lifetime 3652 --in strongswanKey.pem --dn "C=CH, O=strongSwan, CN=strongSwan Root CA" --outform pem > strongswanCert.pem
+pki --print --in strongswanCert.pem
+pki --gen --type rsa --size 3072 > moonKey.der
+pki --req --type priv --in moonKey.der --dn "C=CH, O=strongswan, CN=moon.strongswan.org" --san moon.strongswan.org --outform pem > moonReq.pem
+pki --issue --cacert strongswanCert.pem --cakey strongswanKey.pem --type pkcs10 --in moonReq.pem --serial 01 --lifetime 1826 --outform pem > moonCert.pem
+pki --gen --type rsa --size 3072 > sunKey.der
+pki --req --type priv --in sunKey.der --dn "C=CH, O=strongswan, CN=sun.strongswan.org" --san sun.strongswan.org --outform pem > sunReq.pem
+pki --issue --cacert strongswanCert.pem --cakey strongswanKey.pem --type pkcs10 --in sunReq.pem --serial 01 --lifetime 1826 --outform pem > sunCert.pem
+
+cp strongswanCert.pem /etc/swanctl/x509ca/strongswanCert.pem
+cp moonKey.der /etc/swanctl/private/
+rm /etc/swanctl/private/moonKey.pem
+cp moonCert.pem /etc/swanctl/x509/moonCert.pem

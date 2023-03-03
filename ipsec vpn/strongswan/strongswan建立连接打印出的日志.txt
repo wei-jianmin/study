@@ -1,0 +1,132 @@
+vm2启动charon：
+00[DMN] Starting IKE charon daemon (strongSwan 5.7.2, Linux 3.10.0-1160.59.1.el7.x86_64, x86_64)
+00[LIB] openssl FIPS mode(0) - disabled 
+00[CFG] loading ca certificates from '/etc/ipsec.d/cacerts'
+00[CFG] loading aa certificates from '/etc/ipsec.d/aacerts'
+00[CFG] loading ocsp signer certificates from '/etc/ipsec.d/ocspcerts'
+00[CFG] loading attribute certificates from '/etc/ipsec.d/acerts'
+00[CFG] loading crls from '/etc/ipsec.d/crls'
+00[CFG] loading secrets from '/etc/ipsec.secrets'
+00[CFG] expanding file expression '/etc/ipsec.d/*.secrets' failed
+00[CFG] loaded 0 RADIUS server configurations
+00[LIB] loaded plugins: charon aes des rc2 sha2 sha1 md5 mgf1 random nonce x509 revocation constraints pubkey pkcs1 pkcs7 pkcs8 pkcs12 pgp dnskey sshkey pem openssl fips-prf gmp curve25519 xcbc cmac hmac attr kernel-netlink resolve socket-default stroke vici updown eap-identity eap-md5 eap-mschapv2 eap-dynamic eap-radius eap-tls eap-ttls eap-peap eap-tnc xauth-generic xauth-eap tnc-tnccs counters
+00[JOB] spawning 16 worker threads
+
+vm3启动charon：（与vm2的完全一致）
+00[DMN] Starting IKE charon daemon (strongSwan 5.7.2, Linux 3.10.0-1160.59.1.el7.x86_64, x86_64)
+00[LIB] openssl FIPS mode(0) - disabled 
+00[CFG] loading ca certificates from '/etc/ipsec.d/cacerts'
+00[CFG] loading aa certificates from '/etc/ipsec.d/aacerts'
+00[CFG] loading ocsp signer certificates from '/etc/ipsec.d/ocspcerts'
+00[CFG] loading attribute certificates from '/etc/ipsec.d/acerts'
+00[CFG] loading crls from '/etc/ipsec.d/crls'
+00[CFG] loading secrets from '/etc/ipsec.secrets'
+00[CFG] expanding file expression '/etc/ipsec.d/*.secrets' failed
+00[CFG] loaded 0 RADIUS server configurations
+00[LIB] loaded plugins: charon aes des rc2 sha2 sha1 md5 mgf1 random nonce x509 revocation constraints pubkey pkcs1 pkcs7 pkcs8 pkcs12 pgp dnskey sshkey pem openssl fips-prf gmp curve25519 xcbc cmac hmac attr kernel-netlink resolve socket-default stroke vici updown eap-identity eap-md5 eap-mschapv2 eap-dynamic eap-radius eap-tls eap-ttls eap-peap eap-tnc xauth-generic xauth-eap tnc-tnccs counters
+00[JOB] spawning 16 worker threads
+
+vm2执行swanctl --load-all:
+14[CFG] loaded IKE shared key with id 'ike-h2h' for: 'vm2.strongswan.org', 'vm3.strongswan.org'
+04[CFG] added vici connection: h2h
+
+vm3执行swanctl --load-all:
+15[CFG] loaded IKE shared key with id 'ike-h2h' for: 'vm3.strongswan.org', 'vm2.strongswan.org'
+08[CFG] added vici connection: h2h
+
+vm2执行ipsec up h2h:
+11[CFG] received stroke: initiate 'h2h'
+15[IKE] initiating IKE_SA h2h[1] to 192.168.3.166
+15[ENC] generating IKE_SA_INIT request 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(REDIR_SUP) ]
+15[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+07[IKE] retransmit 1 of request with message ID 0
+07[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+14[IKE] retransmit 2 of request with message ID 0
+14[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+05[IKE] retransmit 3 of request with message ID 0
+05[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+
+vm3没有响应输出
+
+vm3执行ipsec up h2h:
+13[CFG] received stroke: initiate 'h2h'
+16[IKE] initiating IKE_SA h2h[1] to 192.168.3.108
+16[ENC] generating IKE_SA_INIT request 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(REDIR_SUP) ]
+16[NET] sending packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+15[NET] received packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+15[ENC] parsed IKE_SA_INIT response 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(MULT_AUTH) ]
+15[CFG] selected proposal: IKE:AES_CBC_128/HMAC_SHA2_256_128/PRF_HMAC_SHA2_256/CURVE_25519
+15[IKE] authentication of 'vm3.strongswan.org' (myself) with pre-shared key
+15[IKE] establishing CHILD_SA h2h_child{1}
+15[ENC] generating IKE_AUTH request 1 [ IDi N(INIT_CONTACT) IDr AUTH SA TSi TSr N(MULT_AUTH) N(EAP_ONLY) N(MSG_ID_SYN_SUP) ]
+15[NET] sending packet: from 192.168.3.166[500] to 192.168.3.108[500] (288 bytes)
+06[NET] received packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+06[ENC] parsed IKE_AUTH response 1 [ IDr AUTH SA TSi TSr N(AUTH_LFT) ]
+06[IKE] authentication of 'vm2.strongswan.org' with pre-shared key successful
+06[IKE] IKE_SA h2h[1] established between 192.168.3.166[vm3.strongswan.org]...192.168.3.108[vm2.strongswan.org]
+06[IKE] scheduling reauthentication in 10274s
+06[IKE] maximum IKE_SA lifetime 11354s
+06[CFG] selected proposal: ESP:AES_GCM_16_128/NO_EXT_SEQ
+06[IKE] CHILD_SA h2h_child{1} established with SPIs c7e5ccf3_i c06b8704_o and TS 192.168.3.166/32 === 192.168.3.108/32
+06[IKE] received AUTH_LIFETIME of 10239s, scheduling reauthentication in 9159s
+09[NET] received packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+09[ENC] parsed IKE_SA_INIT request 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(REDIR_SUP) ]
+09[IKE] 192.168.3.108 is initiating an IKE_SA
+09[CFG] selected proposal: IKE:AES_CBC_128/HMAC_SHA2_256_128/PRF_HMAC_SHA2_256/CURVE_25519
+09[ENC] generating IKE_SA_INIT response 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(MULT_AUTH) ]
+09[NET] sending packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+10[NET] received packet: from 192.168.3.108[500] to 192.168.3.166[500] (272 bytes)
+10[ENC] parsed IKE_AUTH request 1 [ IDi IDr AUTH SA TSi TSr N(MULT_AUTH) N(EAP_ONLY) N(MSG_ID_SYN_SUP) ]
+10[CFG] looking for peer configs matching 192.168.3.166[vm3.strongswan.org]...192.168.3.108[vm2.strongswan.org]
+10[CFG] selected peer config 'h2h'
+10[IKE] authentication of 'vm2.strongswan.org' with pre-shared key successful
+10[IKE] authentication of 'vm3.strongswan.org' (myself) with pre-shared key
+10[IKE] IKE_SA h2h[2] established between 192.168.3.166[vm3.strongswan.org]...192.168.3.108[vm2.strongswan.org]
+10[IKE] scheduling reauthentication in 9816s
+10[IKE] maximum IKE_SA lifetime 10896s
+10[CFG] selected proposal: ESP:AES_GCM_16_128/NO_EXT_SEQ
+10[IKE] CHILD_SA h2h_child{2} established with SPIs c991424a_i cd4f221d_o and TS 192.168.3.166/32 === 192.168.3.108/32
+10[ENC] generating IKE_AUTH response 1 [ IDr AUTH SA TSi TSr N(AUTH_LFT) ]
+10[NET] sending packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+
+vm2响应输出：
+09[IKE] retransmit 4 of request with message ID 0
+09[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+04[NET] received packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+04[ENC] parsed IKE_SA_INIT request 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(REDIR_SUP) ]
+04[IKE] 192.168.3.166 is initiating an IKE_SA
+04[CFG] selected proposal: IKE:AES_CBC_128/HMAC_SHA2_256_128/PRF_HMAC_SHA2_256/CURVE_25519
+04[ENC] generating IKE_SA_INIT response 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(MULT_AUTH) ]
+04[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+08[NET] received packet: from 192.168.3.166[500] to 192.168.3.108[500] (288 bytes)
+08[ENC] parsed IKE_AUTH request 1 [ IDi N(INIT_CONTACT) IDr AUTH SA TSi TSr N(MULT_AUTH) N(EAP_ONLY) N(MSG_ID_SYN_SUP) ]
+08[CFG] looking for peer configs matching 192.168.3.108[vm2.strongswan.org]...192.168.3.166[vm3.strongswan.org]
+08[CFG] selected peer config 'h2h'
+08[IKE] authentication of 'vm3.strongswan.org' with pre-shared key successful
+08[IKE] authentication of 'vm2.strongswan.org' (myself) with pre-shared key
+08[IKE] IKE_SA h2h[2] established between 192.168.3.108[vm2.strongswan.org]...192.168.3.166[vm3.strongswan.org]
+08[IKE] scheduling reauthentication in 10239s
+08[IKE] maximum IKE_SA lifetime 11319s
+08[CFG] selected proposal: ESP:AES_GCM_16_128/NO_EXT_SEQ
+08[IKE] CHILD_SA h2h_child{1} established with SPIs c06b8704_i c7e5ccf3_o and TS 192.168.3.108/32 === 192.168.3.166/32
+08[ENC] generating IKE_AUTH response 1 [ IDr AUTH SA TSi TSr N(AUTH_LFT) ]
+08[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+13[IKE] retransmit 5 of request with message ID 0
+13[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (240 bytes)
+12[NET] received packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+12[ENC] parsed IKE_SA_INIT response 0 [ SA KE No N(NATD_S_IP) N(NATD_D_IP) N(FRAG_SUP) N(HASH_ALG) N(MULT_AUTH) ]
+12[CFG] selected proposal: IKE:AES_CBC_128/HMAC_SHA2_256_128/PRF_HMAC_SHA2_256/CURVE_25519
+12[IKE] authentication of 'vm2.strongswan.org' (myself) with pre-shared key
+12[IKE] establishing CHILD_SA h2h_child{2}
+12[ENC] generating IKE_AUTH request 1 [ IDi IDr AUTH SA TSi TSr N(MULT_AUTH) N(EAP_ONLY) N(MSG_ID_SYN_SUP) ]
+12[NET] sending packet: from 192.168.3.108[500] to 192.168.3.166[500] (272 bytes)
+15[NET] received packet: from 192.168.3.166[500] to 192.168.3.108[500] (240 bytes)
+15[ENC] parsed IKE_AUTH response 1 [ IDr AUTH SA TSi TSr N(AUTH_LFT) ]
+15[IKE] authentication of 'vm3.strongswan.org' with pre-shared key successful
+15[IKE] IKE_SA h2h[1] established between 192.168.3.108[vm2.strongswan.org]...192.168.3.166[vm3.strongswan.org]
+15[IKE] scheduling reauthentication in 10326s
+15[IKE] maximum IKE_SA lifetime 11406s
+15[CFG] selected proposal: ESP:AES_GCM_16_128/NO_EXT_SEQ
+15[IKE] CHILD_SA h2h_child{2} established with SPIs cd4f221d_i c991424a_o and TS 192.168.3.108/32 === 192.168.3.166/32
+15[IKE] received AUTH_LIFETIME of 9816s, scheduling reauthentication in 8736s
+

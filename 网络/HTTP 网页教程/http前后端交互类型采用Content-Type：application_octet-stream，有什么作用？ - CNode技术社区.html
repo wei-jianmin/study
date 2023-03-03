@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="description" content="CNode：Node.js专业中文社区">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content="nodejs, node, express, connect, socket.io">
+  <!-- see http://smerity.com/articles/2013/where_did_all_the_http_referrers_go.html -->
+  <meta name="referrer" content="always">
+
+  
+  <meta name="author" content="EDP@TaoBao">
+  
+  <meta property="wb:webmaster" content="617be6bd946c6b96">
+  
+
+  <link title="RSS" type="application/rss+xml" rel="alternate" href="http://cnodejs.org/rss">
+
+  
+  <link rel="icon" href="http://o4j806krb.qnssl.com/public/images/cnode_icon_32.png" type="image/x-icon">
+  
+
+  <!-- style -->
+  <link rel="stylesheet" href="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/index.min.bdd5dd43.min.css" media="all">
+
+
+  <!-- scripts -->
+  <script async="" src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/analytics.js"></script><script src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/index.min.aeb155e1.min.js"></script>
+
+
+  
+  <title>http前后端交互类型采用Content-Type：application/octet-stream，有什么作用？ - CNode技术社区</title>
+  
+  <meta content="_csrf" name="csrf-param">
+  <meta content="vN6PaWQ3-hL7UIqEALuKA0GAoAgANMnC4zj0" name="csrf-token">
+</head>
+<body>
+<!-- navbar -->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="http://cnodejs.org/">
+        
+          <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/cnodejs_light.svg">
+        
+      </a>
+
+      <form id="search_form" class="navbar-search" action="http://cnodejs.org/search">
+        <input type="text" id="q" name="q" class="search-query span3" value="">
+      </form>
+      <ul class="nav pull-right">
+        <li><a href="http://cnodejs.org/">首页</a></li>
+        
+        <li><a href="http://cnodejs.org/getstart">新手入门</a></li>
+        <li><a href="http://cnodejs.org/api">API</a></li>
+        
+        <li><a href="http://cnodejs.org/about" target="">关于</a></li>
+        
+        
+        <li><a href="http://cnodejs.org/signup">注册</a></li>
+        <li><a href="http://cnodejs.org/signin">登录</a></li>
+        
+      </ul>
+      <a class="btn btn-navbar" id="responsive-sidebar-trigger">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+    </div>
+  </div>
+</div>
+<div id="main">
+  <div id="sidebar">
+  <div class="panel">
+    <div class="header">
+      <span class="col_fade">作者</span>
+    </div>
+    <div class="inner">
+      <div class="user_card">
+  <div>
+    <a class="user_avatar" href="http://cnodejs.org/user/j60017268">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/775259" title="j60017268">
+    </a>
+    <span class="user_name"><a class="dark" href="http://cnodejs.org/user/j60017268">j60017268</a></span>
+
+    <div class="board clearfix">
+      <div class="floor">
+        <span class="big">积分: 305 </span>
+      </div>
+    </div>
+    <div class="space clearfix"></div>
+    <span class="signature">
+        “
+        
+            nodejs从业者
+        
+        ”
+    </span>
+  </div>
+</div>
+
+
+
+    </div>
+  </div>
+
+  
+    
+<div class="panel">
+  <div class="inner ads">
+
+    
+      
+      <a href="http://www.ucloud.cn/site/active/gift.html?utm_source=cnodejs&amp;utm_medium=content_pic_pc&amp;utm_campaign=multicloud&amp;utm_content=gift&amp;ytag=cnodejs" target="_blank" class="banner sponsor_outlink" data-label="ucloud-banner">
+        <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/FgQS-GQDfqwAD_v0NuhyYUOUk5MG">
+      </a>
+    
+      
+        <div class="sep10"></div>
+      
+      <a href="https://alinode.aliyun.com/?ref=cnode" target="_blank" class="banner sponsor_outlink" data-label="alinode">
+        <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/Fn4D6BhOTz1IswvmzeZ1q7QW1ls_">
+      </a>
+    
+  </div>
+</div>
+
+  
+
+  <div class="panel">
+    <div class="header">
+      <span class="col_fade">作者其它话题</span>
+    </div>
+    <div class="inner">
+      
+      <ul class="unstyled">
+        <li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/56971e5e6272216e51bff6a5" title="项目性能优化经验总结">项目性能优化经验总结</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/565842dc690d3b62022f919f" title="怎么在mongodb创建最小权限的备份账户">怎么在mongodb创建最小权限的备份账户</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/563c998f6d966e1a39996bce" title="promise我的理解">promise我的理解</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/56347e9f058da891494003af" title="mongoose查询数据顺序问题">mongoose查询数据顺序问题</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/55e9674225aabdd44b2ae721" title="memcached模块如何正确存储换行符？">memcached模块如何正确存储换行符？</a>
+  </div>
+</li>
+
+      </ul>
+      
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="header">
+      <span class="col_fade">无人回复的话题</span>
+    </div>
+    <div class="inner">
+      
+      <ul class="unstyled">
+        <li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/5a294e2d9807389a1809f20f" title="有没有NodeJs调用tensorflow的example">有没有NodeJs调用tensorflow的example</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/5a292b368230827a18293547" title="浏览器端和服务端都可以使用的验证器">浏览器端和服务端都可以使用的验证器</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/5a29107bd92f2f5b185accbd" title="开源免费接口管理平台eoLinker AMS 开源版3.1.5同步线上版！免费增加大量功能！">开源免费接口管理平台eoLinker AMS 开源版3.1.5同步线上版！免费增加大量功能！</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/5a29019e9807389a1809f1fa" title="使用sequelizejs的bulkCreate设置问题">使用sequelizejs的bulkCreate设置问题</a>
+  </div>
+</li>
+<li>
+  <div><a class="dark topic_title" href="http://cnodejs.org/topic/5a28fdeb8230827a1829353e" title="搭建node环境的docker镜像">搭建node环境的docker镜像</a>
+  </div>
+</li>
+
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+<div id="content">
+  <div class="panel">
+    <div class="header topic_header">
+      <span class="topic_full_title">
+
+        
+
+
+        http前后端交互类型采用Content-Type：application/octet-stream，有什么作用？
+      </span>
+      <div class="changes">
+        <span>
+          发布于 2 年前
+        </span>
+        <span>
+          作者 <a href="http://cnodejs.org/user/j60017268">j60017268</a>
+        </span>
+        <span>
+          37388 次浏览
+        </span>
+        
+          <span>
+            最后一次编辑是 1 年前
+          </span>
+        
+        
+          <span> 来自 问答</span>
+        
+
+        
+
+      </div>
+      
+    </div>
+    <div class="inner topic">
+
+      <div class="topic_content">
+        <div class="markdown-text"><p>http前后端交互类型采用Content-Type：application/octet-stream，有什么好处和坏处？</p>
+<pre class="prettyprint"><code><span class="pln">headers</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+     </span><span class="str">'Content-Type'</span><span class="pun">:</span><span class="str">'application/octet-stream'</span><span class="pln">
+     </span><span class="pun">}</span></code></pre></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="header">
+      <span class="col_fade">9 回复</span>
+    </div>
+    <div class="cell reply_area reply_item
+  " reply_id="571ba9ac5a26c4a841ecbc5a" reply_to_id="" id="571ba9ac5a26c4a841ecbc5a">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/XGHeaven" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/9291212" title="XGHeaven"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/XGHeaven">XGHeaven</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571ba9ac5a26c4a841ecbc5a">1楼•2 年前</a>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-XGHeaven">
+    <div class="markdown-text"><p>这要看你想要干什么了。这个类型主要是用来下载使用。或者未知类型，你可以发现 nginx 默认的 mime-type 就是 octet-stream</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571bcc53fa48138c41110d1c" reply_to_id="" id="571bcc53fa48138c41110d1c">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/myy" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/785f9fb80aee60be64ee4e0cc3e9e9ad" title="myy"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/myy">myy</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571bcc53fa48138c41110d1c">2楼•2 年前</a>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-myy">
+    <div class="markdown-text"><p>就是指“无类型”，一般的字节流。</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571c15733f27a7c841bcb53f" reply_to_id="571ba9ac5a26c4a841ecbc5a" id="571c15733f27a7c841bcb53f">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/j60017268" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/775259" title="j60017268"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/j60017268">j60017268</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571c15733f27a7c841bcb53f">3楼•2 年前</a>
+      
+        <span class="reply_by_author">作者</span>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-j60017268">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/XGHeaven" target="_blank">@XGHeaven</a> 用于数据传输，非文件下载。</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571c15aa3f27a7c841bcb541" reply_to_id="571bcc53fa48138c41110d1c" id="571c15aa3f27a7c841bcb541">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/j60017268" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/775259" title="j60017268"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/j60017268">j60017268</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571c15aa3f27a7c841bcb541">4楼•2 年前</a>
+      
+        <span class="reply_by_author">作者</span>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-j60017268">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/myy" target="_blank">@myy</a> 采用这种方式，不知道http抓包内容能不能解析？</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571c755a5a26c4a841ecbc69" reply_to_id="571c15aa3f27a7c841bcb541" id="571c755a5a26c4a841ecbc69">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/reverland" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/1418726" title="reverland"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/reverland">reverland</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571c755a5a26c4a841ecbc69">5楼•2 年前</a>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-reverland">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/j60017268" target="_blank">@j60017268</a> 浏览器的话，要看content-type</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571c79e53f27a7c841bcb554" reply_to_id="" id="571c79e53f27a7c841bcb554">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/XGHeaven" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/9291212" title="XGHeaven"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/XGHeaven">XGHeaven</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571c79e53f27a7c841bcb554">6楼•2 年前</a>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-XGHeaven">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/j60017268" target="_blank">@j60017268</a> 可以呀。没什么太大的坏处。http抓包当然可以解析了，只不过你能不能看懂是另一回事了</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571cc303fa48138c41110d3e" reply_to_id="571c79e53f27a7c841bcb554" id="571cc303fa48138c41110d3e">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/j60017268" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/775259" title="j60017268"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/j60017268">j60017268</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571cc303fa48138c41110d3e">7楼•2 年前</a>
+      
+        <span class="reply_by_author">作者</span>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-j60017268">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/XGHeaven" target="_blank">@XGHeaven</a> <a href="http://cnodejs.org/user/myy" target="_blank">@myy</a> <a href="http://cnodejs.org/user/reverland" target="_blank">@reverland</a> 白天做了测试，服务端(使用express)内容解析要看bodyparser设置。二进制方式解析代码：</p>
+<pre class="prettyprint"><code><span class="pln">router</span><span class="pun">.</span><span class="pln">post</span><span class="pun">(‘/</span><span class="pln">username</span><span class="pun">’,</span><span class="pln"> bodyParser</span><span class="pun">.</span><span class="pln">raw</span><span class="pun">(),</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">req</span><span class="pun">,</span><span class="pln"> res</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">next</span><span class="pun">){</span><span class="pln">
+	</span><span class="com">// req.body为二进制数据</span><span class="pln">
+</span><span class="pun">});</span></code></pre><p>返回数据后，客户端浏览器数据以附件形式保存在本地，而非直接被浏览器显示。</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571e1aecfa48138c41110dad" reply_to_id="" id="571e1aecfa48138c41110dad">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/XGHeaven" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/9291212" title="XGHeaven"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/XGHeaven">XGHeaven</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571e1aecfa48138c41110dad">8楼•2 年前</a>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-XGHeaven">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/j60017268" target="_blank">@j60017268</a> 没搞懂你什么意思。content-type 是 octet-stream 表明他就是一个字节流，浏览器默认处理字节流的方式就是下载。
+我最开始说了呀，他就是用来下载使用的。</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+<div class="cell reply_area reply_item
+  " reply_id="571ed4f6fa48138c41110de6" reply_to_id="571e1aecfa48138c41110dad" id="571ed4f6fa48138c41110de6">
+  <div class="author_content">
+    <a href="http://cnodejs.org/user/j60017268" class="user_avatar">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/775259" title="j60017268"></a>
+
+    <div class="user_info">
+      <a class="dark reply_author" href="http://cnodejs.org/user/j60017268">j60017268</a>
+      <a class="reply_time" href="http://cnodejs.org/topic/571ba1b35a26c4a841ecbc57#571ed4f6fa48138c41110de6">9楼•2 年前</a>
+      
+        <span class="reply_by_author">作者</span>
+      
+    </div>
+    <div class="user_action">
+      <span>
+        <i class="fa up_btn
+          fa-thumbs-o-up
+          invisible" title="喜欢"></i>
+        <span class="up-count">
+          
+        </span>
+      </span>
+      
+      <span>
+        
+      </span>
+    </div>
+  </div>
+  <div class="reply_content from-j60017268">
+    <div class="markdown-text"><p><a href="http://cnodejs.org/user/XGHeaven" target="_blank">@XGHeaven</a> 学习了，对http协议处于一知半解状态。</p>
+</div>
+  </div>
+  <div class="clearfix">
+    <div class="reply2_area">
+      
+    </div>
+  </div>
+</div>
+
+  </div>
+  
+  
+</div>
+
+<div class="replies_history" style="display: none;">
+  <div class="inner_content"></div>
+  <div class="anchor"></div>
+</div>
+
+<!-- 预览模态对话框 -->
+<div class="modal fade" id="preview-modal">
+  <div class="modal-body" style="max-height: initial;">
+    <img src="" alt="点击内容或者外部自动关闭图片预览" id="preview-image">
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  (function(){
+    var timer = null; //对话框延时定时器
+    // 初始化 $('.replies_history')
+    var $repliesHistory = $('.replies_history');
+    var $repliesHistoryContent = $repliesHistory.find('.inner_content');
+    $repliesHistory.hide();
+    // END
+    // 鼠标移入对话框清除隐藏定时器；移出时隐藏对话框
+    $repliesHistory.on('mouseenter', function(){
+      clearTimeout(timer);
+    }).on('mouseleave', function(){
+      $repliesHistory.fadeOut('fast');
+    });
+    // 显示被 at 用户的本页评论
+    if ($('.reply2_item').length === 0) {
+      // 只在流式评论布局中使用
+
+      $('#content').on('mouseenter', '.reply_content a', function (e) {
+        clearTimeout(timer);
+        var $this = $(this);
+        if ($this.text()[0] === '@') {
+          var thisText = $this.text().trim();
+          var loginname = thisText.slice(1);
+          var offset = $this.offset();
+          var width = $this.width();
+          var mainOffset = $('#main').offset();
+          $repliesHistory.css('left', offset.left-mainOffset.left+width+10); // magic number
+          $repliesHistory.css('top', offset.top-mainOffset.top-10); // magic number
+          $repliesHistory.css({
+            'z-index': 1,
+          });
+          $repliesHistoryContent.empty();
+          var chats = [];
+          var replyToId = $this.closest('.reply_item').attr('reply_to_id');
+          while (replyToId) {
+            var $replyItem = $('.reply_item[reply_id=' + replyToId + ']');
+            var replyContent = $replyItem.find('.reply_content').text().trim();
+            if (replyContent.length > 0) {
+              chats.push([
+                $($replyItem.find('.user_avatar').html()).attr({
+                  height: '30px',
+                  width: '30px',
+                }), // avatar
+                (replyContent.length>300?replyContent.substr(0,300)+'...':replyContent), // reply content
+                '<a href="#'+replyToId+'" class="scroll_to_original" title="查看原文">↑</a>'
+              ]);
+            }
+            replyToId = $replyItem.attr('reply_to_id');
+          }
+          if(chats.length > 0) {
+            chats.reverse();
+
+            $repliesHistoryContent.append('<div class="title">查看对话</div>');
+            chats.forEach(function (pair, idx) {
+              var $chat = $repliesHistoryContent.append('<div class="item"></div>');
+              $chat.append(pair[0]); // 头像
+              $chat.append($('<span>').text(pair[1])); // 内容
+              $chat.append(pair[2]); // 查看原文 anchor
+            });
+            $repliesHistory.fadeIn('fast');
+          }else{
+            $repliesHistory.hide();
+          }
+        }
+      }).on('mouseleave', '.reply_content a', function (e) {
+        timer = setTimeout(function(){
+          $repliesHistory.fadeOut('fast');
+        }, 500);
+      });
+    }
+    // END 显示被 at 用户的本页评论
+  })();
+
+  // 点赞
+  $('.up_btn').click(function (e) {
+    var $this = $(this);
+    var replyId = $this.closest('.reply_area').attr('reply_id');
+    $.ajax({
+      url: '/reply/' + replyId + '/up',
+      method: 'POST',
+    }).done(function (data) {
+      if (data.success) {
+        $this.removeClass('invisible');
+        var currentCount = Number($this.next('.up-count').text().trim()) || 0;
+        if (data.action === 'up') {
+          $this.next('.up-count').text(currentCount + 1);
+          $this.addClass('uped');
+        } else {
+          if (data.action === 'down') {
+            $this.next('.up-count').text(currentCount - 1);
+            $this.removeClass('uped');
+          }
+        }
+      } else {
+        alert(data.message);
+      }
+    }).fail(function (xhr) {
+      if (xhr.status === 403) {
+        alert('请先登录，登陆后即可点赞。');
+      }
+    });
+  });
+  // END 点赞
+  // 图片预览
+  (function(){
+    var $previewModal = $('#preview-modal');
+    var $previewImage = $('#preview-image');
+    var $body = $('body'); // cache
+
+    $(document).on('click', '.markdown-text img', function(e) {
+      var $img = $(this);
+      // 图片被a标签包裹时，不显示弹层
+      if ($img.parent('a').length > 0) {
+        return;
+      }
+      showModal($img.attr('src'));
+    });
+
+    $previewModal.on('click', hideModal);
+
+    $previewModal.on('hidden.bs.modal', function() {
+      // 在预览框消失之后恢复 body 的滚动能力
+      $body.css('overflow-y', 'scroll');
+    })
+
+    $previewModal.on('shown.bs.modal', function() {
+      // 修复上次滚动留下的痕迹,可能会导致短暂的闪烁，不过可以接受
+      // TODO: to be promote
+      $previewModal.scrollTop(0);
+    })
+
+    function showModal(src) {
+      $previewImage.attr('src', src);
+      $previewModal.modal('show');
+      // 禁止 body 滚动
+      $body.css('overflow-y', 'hidden');
+    }
+
+    function hideModal() {
+      $previewModal.modal('hide');
+    }
+
+  })()
+  // END 图片预览
+</script>
+
+</div>
+<div id="backtotop" style="top: 643px; right: 0px; display: none;">回到顶部</div>
+<div id="footer">
+  <div id="footer_main">
+    <div class="links">
+      <a class="dark" href="http://cnodejs.org/rss">RSS</a>
+      |
+      <a class="dark" href="https://github.com/cnodejs/nodeclub/">源码地址</a>
+    </div>
+
+    <div class="col_fade">
+
+  <p>CNode 社区为国内最专业的 Node.js 开源技术社区，致力于 Node.js 的技术研究。</p>
+  <p>服务器赞助商为
+    <a href="http://www.ucloud.cn/?utm_source=zanzhu&amp;utm_campaign=cnodejs&amp;utm_medium=display&amp;utm_content=yejiao&amp;ytag=cnodejs_logo" target="_blank" class="sponsor_outlink" data-label="ucloud_bottom">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/FuIpEaM9bvsZKnQ3QfPtBHWQmLM9" title="ucloud" alt="ucloud" width="92px">
+    </a>
+  ，存储赞助商为
+    <a href="http://www.qiniu.com/?ref=cnode" target="_blank" class="sponsor_outlink" data-label="qiniu_bottom">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/Fg0jtDIcTqVC049oVu5-sn6Om4NX" title="七牛云存储" alt="七牛云存储" width="115px">
+    </a>
+  ，由<a href="https://alinode.aliyun.com/?ref=cnode" target="_blank" class="sponsor_outlink" data-label="alinode_bottom">
+      <img src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/FpMZk31PDyxkC8yStmMQL4XroaGD" title="alinode" alt="alinode" height="54px" width="166px">
+    </a>提供应用性能服务。
+  </p>
+  <p>新手搭建 Node.js 服务器，推荐使用无需备案的 <a href="https://www.digitalocean.com/?refcode=eba02656eeb3">DigitalOcean(https://www.digitalocean.com/)</a></p>
+</div>
+
+
+  </div>
+</div>
+<div id="sidebar-mask"></div>
+
+
+<script>
+  // google analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script', "https://www.google-analytics.com/analytics.js",'ga');
+
+  ga('create', 'UA-41753901-5', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+<div style="display:none;">
+  <script src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/z_stat.php" language="JavaScript"></script><script src="./http前后端交互类型采用Content-Type：application_octet-stream，有什么作用？ - CNode技术社区_files/core.php" charset="utf-8" type="text/javascript"></script><a href="http://www.cnzz.com/stat/website.php?web_id=1254020586" target="_blank" title="站长统计">站长统计</a>
+</div>
+
+
+
+
+</body></html>

@@ -1,0 +1,599 @@
+﻿----------------------- Page 1-----------------------
+
+ >>   >>  >>                                                         
+
+                                                                       6 
+
+    [                         2353 ] 
+                                  
+
+                              VC++ ATL    Office COM  
+                                                     
+                                                     
+                                                
+                                        
+                                        
+                            
+                                                     
+                            
+
+                                      
+
+     
+
+     
+
+       VC++ ATL(Active Template Library) IDTExtensibility2Microsoft 
+
+    WordCOM addin                 
+
+    Office 
+
+       OfficeVBA(Visual Basic for Application),  ATL  
+
+     ATL Office 
+
+     
+
+    1visual C++ WordAddin ATL COM Appwizard  
+
+       server typeDynamic Link Library(DLL) 
+
+    Allow merging of proxy-stub code  Finish ATL project 
+
+                 
+       
+
+----------------------- Page 2-----------------------
+
+    
+
+2 ATL object 
+
+   Insert—>Insert new ATL object, new ATL object category 
+
+object,simple object,                                     
+
+    
+
+names“Short Name:” Addin                            
+
+----------------------- Page 3-----------------------
+
+ 
+
+Attribute Support IsupportErrorInfoOK                   
+
+ 
+
+WordAddin ATL COM object  build                       
+
+2 IDTExtensibility2CAddin 
+
+    IDTExtensibility2MSADDin Designer typelibrary MSADDNDR.dll/MSADDNDR.tlb  
+
+C:\Program Files/Common Files/Designer  IDTExtensibility2  5 
+
+  OnConnection OnDisconnection OnAddInsUpdate  
+
+OnStartupComplete  OnBeginShutdown   
+
+IDTExtensibility2 classview CaddinImplement 
+
+                                                   
+Interface   Implement Interface       Add Tylpelib        
+
+----------------------- Page 4-----------------------
+
+    
+
+     OK           Browse Typelibraries       Microsoft Add-in Designer(1.0)  
+                                                                               
+
+    
+
+                                                          
+   OK,  AddinDesignerObjects        IDTExtensibility2 
+
+----------------------- Page 5-----------------------
+
+ 
+
+        OK            ATL COM object      IDTExtensibility2 5 
+                                                         
+
+COM_INTERFACE_MAP() 
+
+4  
+
+   FileView—>Resource File Addin.rgs  
+
+ 
+
+ 
+
+   
+
+   
+
+     
+
+     
+
+      
+
+       
+
+        
+
+         
+
+          
+
+          
+
+            
+
+            
+
+                    
+
+                    
+
+                  
+
+                  
+
+            
+
+          
+
+        
+
+       
+
+     
+
+----------------------- Page 6-----------------------
+
+   
+
+ 
+
+5  build         
+
+6 Executable Fileword 2000, 
+
+word  
+
+7  
+
+   Office   Office  
+
+  Command  Bar       
+
+     
+
+CommandBars CommandBars 
+
+Add() CommandBar    CommandBar  
+
+CommandBarControls   CommandBar   
+
+Controls  
+
+word 
+
+officeWord stdafx.h 
+
+     
+
+         
+
+   
+
+    
+
+          
+
+   
+
+ office  
+
+   WordApplication  
+
+GetCommandBarsCommandBarsCommandBarsWord 
+
+    
+                     Add 
+
+CommandBar GetControlsCommandBarControls 
+
+CommandBarControls 
+
+                        
+   CommandBarControls    Add 
+
+  
+
+     
+
+       
+
+        
+
+     
+
+         
+
+       
+
+       
+
+----------------------- Page 7-----------------------
+
+   
+
+      
+
+           
+
+ 
+
+         
+
+       
+
+  
+
+  
+
+      
+
+   
+
+  
+
+      
+
+   
+
+       
+
+      
+
+       
+
+      
+
+     
+
+    
+
+   
+
+ 
+
+   
+
+  
+
+   
+
+  
+
+   
+
+   
+
+    
+
+   
+
+ 
+
+    
+
+   
+
+ 
+
+  
+
+----------------------- Page 8-----------------------
+
+    
+
+        
+
+         
+
+           
+
+    
+
+    
+
+ 
+
+   
+
+ 
+
+            
+
+         
+
+           
+
+                                                                          
+
+        
+
+   
+
+ 
+
+     
+
+ 
+
+ 
+
+  
+
+ 
+
+ 
+
+      
+
+ 
+
+   
+
+  
+
+       
+
+ 
+
+ 
+
+ 
+
+   
+
+   
+
+ 
+
+   
+
+ 
+
+ 
+
+   
+
+----------------------- Page 9-----------------------
+
+     
+
+     
+
+     
+
+     
+
+       
+
+       
+
+     
+
+     
+
+ 
+
+   CommandBarsget_ActiveMenuBar                 CommandBar 
+
+CommandBar GetControls  
+
+Word  “   ” 5 CommandBarControls GetItem(5) 
+      
+
+“   ”               CommandBarControls 
+                                       
+
+             Add 
+    
+
+     
+
+        
+
+        
+
+        
+
+        
+
+            
+
+       
+
+      
+
+         
+
+         
+
+       
+
+     
+
+                                                               
+
+      
+
+      
+
+     
+
+      
+
+       
+
+             
+
+        
+
+     
+
+       
+
+     
+
+----------------------- Page 10-----------------------
+
+            
+
+      
+
+       
+
+           
+
+          
+
+        
+
+              
+
+         
+
+                                     
+
+     
+
+     
+
+     
+
+     
+
+               
+
+             
+
+        
+
+     
+
+     
+
+                
+
+              
+
+           
+
+     
+
+        
+
+     
+
+  
+
+   Word  
+
+Word  
+
+8  
+
+   ATL COMIdispatch IDispEventImpl<>IDispEventSimpleImpl 
+
+<>IDispEventSimpleImpl<> IDispEventSimpleImpl<> 
+
+ 
+
+     
+
+        
+
+     
+
+  
+
+                      
+
+----------------------- Page 11-----------------------
+
+   
+
+         
+
+     
+
+  _ATL_SINK_INFO  CAddin.h 
+
+  extern _ATL_FUNC_INFO OnClickButtonInfo;  
+
+  CAddin.cpp 
+
+     
+
+        
+
+   
+
+     
+
+                                    
+
+                                     
+
+    
+
+       
+
+        
+
+                
+
+           
+
+   
+
+   
+
+    
+
+        
+
+                  
+
+                      
+
+       
+
+      CAddin  OnConnection()  OnDisconnection() DispEventAdvise()  
+
+  DispEventUnadvise() 
+
+      COM "Clicked 
+
+  Button1"  
+
+      VBA put_OnAction() 
+
+   
+
+                                                              
+       ATL                        ATL              ATL Internals 
+
+                                                                            
+
+                                                              

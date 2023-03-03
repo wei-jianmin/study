@@ -1,0 +1,141 @@
+http://blog.csdn.net/a1875566250/article/details/7885905
+CoCreateInstance用于创建一个COM Class Object，我从0开始分析这个函数并且解释一个个参数，让你对COM对象的创建有一个根本性的全面认识。
+
+程序传入OBJECT的CLSID和IID再call CoCreateInstance后（为什么需要CLSID和IID，等下再说），CoCreateInstance从注册表里面根据CLSID找到对应的dll文件，并使用LoadLibraryExW将这个文件载入到进程内部，然后调用GetProcAddress取得此文件的DllGetClassObject导出函数地址，并且call这个函数，call时是这样的：
+
+DllGetClassObject(CLSID,{000214E4-0000-0000-C000-000000000046},ppv)
+
+CLSID还是call CoCreateInstance传进来的CLSID，可为什么IID不同？此时这个IID指向的对象是一个Global对象：IClassFactory。
+其实一个dll内可以有多个class，一个class内又可以有多个接口，这就出现了CLSID（类ID）和IID（接口ID）的概念，所以CoCreateInstance先创建一个基于这个class的类工厂（IClassFactory）对象，然后通过IClassFactory的CreateInstance成员传入IID，CreateInstance此时再根据这个IID创建真正的一个COM对象，然后CoCreateInstance带着这个对象返回。
+
+每个class都有类工厂对象，class内的一切接口都根据IID从类工厂对象创建，这就是为什么需要CLSID和IID的原因。
+
+如此一来针对组件的COM Hook就很简单了，狠的可以在LdrLoadDll这个dll组件完成后直接inline DllGetClassObject，直接把整个类工厂替换了，然后Hook类函数做完事情了再call到真正的COM函数。
+简单的也可以直接替换掉CreateInstance，把返回的接口指针中的某个函数替换了（COM类的内存结构，我blog下面也有），这样也稳定点，只是注意下COM函数第一个参数是this指针就行了。
+
+而对于那些用CoCreateInstance来创建的，直接inline CoCreateInstance，ppv返回后，指向COM类的函数表，直接替换指针即可。
+
+-------------------------------------------------------
+
+http://blog.csdn.net/daddy_long_legs/article/details/8884291
+CoCreateInstance
+创建组件的最简单的方法是使用CoCreateInstance函数。
+在COM库中包含一个用于创建组件的名为CoCreateInstance的函数。此函数需要一个CLSID参数，在此基础上创建相应组件的一个实例，并返回此组件的某个接口。
+CoCreateInstance 的声明
+HRESULT _stdcall  CoCreateInstance(REFCLSID rclsid,
+                        LPUNKNOWN pUnkOuter,
+                        DWORD dwClsContext,
+                        REFIID riid,
+                        LPVOID * ppv);
+第一个参数：待创建组件的CLSID。
+第二个参数：用于聚合组件。
+第三个参数：dwClsContext的作用是限定所创建的组件的执行上下文。
+第四个参数：iid为组件上待使用的接口的iid。
+CoCreateInstance 将在最后一个参数中返回此接口的指针。
+通过将一个IID传给CoCreateInstance，客户将无需在创建组件之后去调用其QueryInterface函数。
+CoCreateInstance的实现
+HRESULT CoCreateInstance(const CLSID& clsid,
+                IUnknown* punkonwnDuter,
+                DWORD dwClsContext,
+                const IID& iid,
+                void** ppv)
+{
+    // Set the out paameter to NULL
+    *ppv = NULL;
+
+    // Create the class factory 
+    // and get an IClassFactroy interface pointer.
+    IClassFactory* pIFactory = NULL;
+    HRESULT hr = CoGetClassObject(clsid,
+                        dwClsContext,
+                        NULL,
+                        IID_IClassFactory,
+                        (void**)&pIFactory);
+    if (SUCCEEDED(hr))
+    {
+        // create the component.
+        hr = pIFactory->CreateInstance(punkonwnDuter, iid, ppv);
+        pIFactory->Release()();
+    }
+    return hr;
+}
+CoCreateInstance的使用
+// Create component.
+IX *pIX = NULL;
+HRESULT hr = ::CoCreateInstance(CLSID_Companent1,
+                  NULL,
+                  CLSCTX_INPROC_SERVER,
+                  IID_IX,
+                  (void **)&pIX);
+if (SUCCEEDED(hr))
+{
+    pIX->Fx();
+    pIX->Release();
+}
+CLSCTX_INPROC_SERVER值告诉CoCreateInstance只装载包含进程中服务器或DLL中的组件。
+类上下文
+CoCreateInstance的第三个参数dwClsContext可以控制所创建的组件是在与客户相同的进程中运行，还是在不同的进程中运行，或者是在另外一台机器上运行。 
+CLSCTX_INPROC_SERVER
+客户希望创建在同一进程中运行的组件。为能够同客户在同一进程中运行，组件必须是在DLL中实现。
+CLSCTX_INPROC_HANDLER
+客户希望创建进程中处理器。一个进程中处理器实际上是一只实现了某个组件一部分的进程中组件。该组件的基体附录将由本地或远程服务器上的某个进程外组件实现。
+SLSCTX_LOCAL_SERVER
+客户希望创建一个在同一机器上的另外一个进程中运行的组件。本地服务器是由EXE实现的。
+SLSCTX_REMOTE_SERVER
+客户希望创建一个在远程机器上运行的组件。此标志需要分布式COM正常工作。
+执行上下文标记的一些预定义组合
+常量名称
+值
+CLSCTX_INPROC
+CLSCTX_INPROC_SERVER
+CLSCTX_INPROC_HANDLER
+CLSCTX_ALL
+CLSCTX_INPROC_SERVER
+CLSCTX_INPROC_HANDLER
+SLSCTX_LOCAL_SERVER
+SLSCTX_REMOTE_SERVER
+CLSCTX_SERVER
+CLSCTX_INPROC_SERVER
+SLSCTX_LOCAL_SERVER
+SLSCTX_REMOTE_SERVER
+另外要说明的是，CLSCTX_REMOTE_SERVER值只是在包含OBJEBASE.H之前将_WIN32_WINNT的值定义为大于或等于0x0400时才会被加到CLSCTX_ALL和CISCTX_SERVER中（在包含OBJEBASE.H之前定义_WIN32_DCOM的效果将是一样的。）若在某个不支持DCOM的系统中将CLSCTX_REMOVE_SERVER值会以给CoCreateInstance,此函数将会失败并返回一个E_INVALIDARG值。
+CoCreateInstance例子
+跟之前的区别在于客户创建组件时使用的是::CoCreateInstance,还用了CoInitialize和CoUninitialize来初始化COM库。
+http://www.cnblogs.com/fangyukuan/archive/2010/04/09/1708651.html
+#include "stdafx.h"
+#include<iostream>
+using namespace std;
+#include "http://www.cnblogs.com/ATLComDemo/ATLComDemo/ATLComDemo_i.c"
+#include "http://www.cnblogs.com/ATLComDemo/ATLComDemo/ATLComDemo_i.h"
+int _tmain(int argc, _TCHAR* argv[])
+{
+    //声明HRESULT和Ikuan接口指针
+    Ikuan * IkuanATL = NULL;
+    HRESULT hr = CoInitialize(NULL);    //初始化COM
+    //使用SUCCEEDED宏并检查我们是否能得到一个接口指针
+    if(SUCCEEDED(hr))
+    {
+        hr = CoCreateInstance(CLSID_kuan,
+            NULL,
+            CLSCTX_INPROC_SERVER,
+            IID_Ikuan,
+            (void **)&IkuanATL);
+        //如果成功，则调用AddNumbers方法，否则显示相应的出错信息
+        if(SUCCEEDED(hr))
+        {
+            long ReturnValue;
+            IkuanATL->Add(8,9,&ReturnValue);
+            cout << "The answer for 8+9 is:" << ReturnValue << endl;
+            IkuanATL->Release();
+        }
+        else
+        {
+            cout << "CoCreateInstance Failed." << endl;
+        }
+    }
+    CoUninitialize();//释放COM
+    return 0;
+}
+CoCreateInstance的不灵活性
+CoCreateInstance创建组件的过程是：传给它一个CLSID，然后创建相应的组件，并返回 指向所请求的接口指针。它没有给客户提供一种能够控制组件创建过程的方法。
+当CoCreateInstance完成之后，组件实际上已经建立好了。在建立好一个组件之后，想要控制将组件装载到内存中何处或检查客户是否有来创建该组件基本上已经不可能了。

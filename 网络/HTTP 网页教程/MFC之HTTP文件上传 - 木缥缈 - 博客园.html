@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://www.cnblogs.com/mupiaomiao/p/6402681.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MFC之HTTP文件上传 - 木缥缈 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/bundle-coffee.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/bundle-coffee-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/mupiaomiao/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/mupiaomiao/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/mupiaomiao/wlwmanifest.xml">
+<script async="" src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/analytics.js"></script><script src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'mupiaomiao', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/mupiaomiao/"><img id="blogLogo" src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/mupiaomiao/">木缥缈</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/mupiaomiao/">首页</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E6%9C%A8%E7%BC%A5%E7%BC%88">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/mupiaomiao/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/mupiaomiao/rss"><img src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/xml.gif" alt="订阅"></a></li>
+</ul>
+
+
+			<div class="blogStats">
+				
+				<div id="blog_stats">
+<!--done-->
+随笔- 57&nbsp;
+文章- 0&nbsp;
+评论- 2&nbsp;
+</div>
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/mupiaomiao/p/6402681.html">MFC之HTTP文件上传</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_798414" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="https://www.cnblogs.com/mupiaomiao/p/6402681.html#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div class="line number33 index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div class="line number36 index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div class="line number38 index37 alt1">38</div><div class="line number39 index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div class="line number41 index40 alt2">41</div><div class="line number42 index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div class="line number44 index43 alt1">44</div><div class="line number45 index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div class="line number47 index46 alt2">47</div><div class="line number48 index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div class="line number50 index49 alt1">50</div><div class="line number51 index50 alt2">51</div><div class="line number52 index51 alt1">52</div><div class="line number53 index52 alt2">53</div><div class="line number54 index53 alt1">54</div><div class="line number55 index54 alt2">55</div><div class="line number56 index55 alt1">56</div><div class="line number57 index56 alt2">57</div><div class="line number58 index57 alt1">58</div><div class="line number59 index58 alt2">59</div><div class="line number60 index59 alt1">60</div><div class="line number61 index60 alt2">61</div><div class="line number62 index61 alt1">62</div><div class="line number63 index62 alt2">63</div><div class="line number64 index63 alt1">64</div><div class="line number65 index64 alt2">65</div><div class="line number66 index65 alt1">66</div><div class="line number67 index66 alt2">67</div><div class="line number68 index67 alt1">68</div><div class="line number69 index68 alt2">69</div><div class="line number70 index69 alt1">70</div><div class="line number71 index70 alt2">71</div><div class="line number72 index71 alt1">72</div><div class="line number73 index72 alt2">73</div><div class="line number74 index73 alt1">74</div><div class="line number75 index74 alt2">75</div><div class="line number76 index75 alt1">76</div><div class="line number77 index76 alt2">77</div><div class="line number78 index77 alt1">78</div><div class="line number79 index78 alt2">79</div><div class="line number80 index79 alt1">80</div><div class="line number81 index80 alt2">81</div><div class="line number82 index81 alt1">82</div><div class="line number83 index82 alt2">83</div><div class="line number84 index83 alt1">84</div><div class="line number85 index84 alt2">85</div><div class="line number86 index85 alt1">86</div><div class="line number87 index86 alt2">87</div><div class="line number88 index87 alt1">88</div><div class="line number89 index88 alt2">89</div><div class="line number90 index89 alt1">90</div><div class="line number91 index90 alt2">91</div><div class="line number92 index91 alt1">92</div><div class="line number93 index92 alt2">93</div><div class="line number94 index93 alt1">94</div><div class="line number95 index94 alt2">95</div><div class="line number96 index95 alt1">96</div><div class="line number97 index96 alt2">97</div><div class="line number98 index97 alt1">98</div><div class="line number99 index98 alt2">99</div><div class="line number100 index99 alt1">100</div><div class="line number101 index100 alt2">101</div><div class="line number102 index101 alt1">102</div><div class="line number103 index102 alt2">103</div><div class="line number104 index103 alt1">104</div><div class="line number105 index104 alt2">105</div><div class="line number106 index105 alt1">106</div><div class="line number107 index106 alt2">107</div><div class="line number108 index107 alt1">108</div><div class="line number109 index108 alt2">109</div><div class="line number110 index109 alt1">110</div><div class="line number111 index110 alt2">111</div><div class="line number112 index111 alt1">112</div><div class="line number113 index112 alt2">113</div><div class="line number114 index113 alt1">114</div><div class="line number115 index114 alt2">115</div><div class="line number116 index115 alt1">116</div><div class="line number117 index116 alt2">117</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp color1 bold">BOOL</code> <code class="cpp plain">UploadFile(</code><code class="cpp color1 bold">LPCTSTR</code> <code class="cpp plain">strURL, </code><code class="cpp color1 bold">LPCTSTR</code> <code class="cpp plain">strLocalFileName)</code></div><div class="line number2 index1 alt1"><code class="cpp plain">{</code></div><div class="line number3 index2 alt2"><code class="cpp comments">// 如果URL为空或者文件不存在，直接返回</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(strURL == NULL ||</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strURL == _T(</code><code class="cpp string">""</code><code class="cpp plain">) ||</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strLocalFileName == NULL ||</code></div><div class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strLocalFileName == _T(</code><code class="cpp string">""</code><code class="cpp plain">) ||</code></div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">!PathFileExists(strLocalFileName) ||</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">PathIsDirectory(strLocalFileName))</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code> <code class="cpp plain">FALSE;</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number13 index12 alt2">&nbsp;</div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CHttpFile *pHttpFile = NULL;</code></div><div class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CHttpConnection* connection = NULL;</code></div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CInternetSession session(_T(</code><code class="cpp string">"UploadFile"</code><code class="cpp plain">));</code></div><div class="line number17 index16 alt2">&nbsp;</div><div class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwType;</code></div><div class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">INTERNET_PORT nPort;</code></div><div class="line number20 index19 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString strServer, strObject;</code></div><div class="line number21 index20 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(!AfxParseURL(strURL, dwType, strServer, strObject, nPort)) </code><code class="cpp keyword bold">return</code> <code class="cpp plain">FALSE;</code></div><div class="line number22 index21 alt1">&nbsp;</div><div class="line number23 index22 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">BOOL</code> <code class="cpp plain">bSuccess = FALSE;</code></div><div class="line number24 index23 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwReadLength;</code></div><div class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwResponseLength;</code></div><div class="line number26 index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwTotalRequestLength;</code></div><div class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">const</code> <code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwChunkLength = 1024;</code></div><div class="line number28 index27 alt1">&nbsp;</div><div class="line number29 index28 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">char</code> <code class="cpp plain">pBuffer[dwChunkLength];</code></div><div class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp functions bold">memset</code><code class="cpp plain">(pBuffer, 0, dwChunkLength);</code></div><div class="line number31 index30 alt2">&nbsp;</div><div class="line number32 index31 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">try</code></div><div class="line number33 index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number34 index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">connection = session.GetHttpConnection(strServer, nPort);</code></div><div class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile = connection-&gt;OpenRequest(CHttpConnection::HTTP_VERB_POST, strObject);</code></div><div class="line number36 index35 alt1">&nbsp;</div><div class="line number37 index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CTime ct;</code></div><div class="line number38 index37 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString strTime, strBoundary;</code></div><div class="line number39 index38 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">ct = CTime::GetCurrentTime();</code></div><div class="line number40 index39 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strTime = ct.Format(_T(</code><code class="cpp string">"%Y%m%d%H%M%S"</code><code class="cpp plain">));</code></div><div class="line number41 index40 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strBoundary = _T(</code><code class="cpp string">"*-*-*"</code><code class="cpp plain">) + strTime + _T(</code><code class="cpp string">"*-*-*"</code><code class="cpp plain">);</code></div><div class="line number42 index41 alt1">&nbsp;</div><div class="line number43 index42 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString strPreFileHeaders;</code></div><div class="line number44 index43 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strPreFileHeaders.Format(_T(</code><code class="cpp string">"Content-Type: multipart/form-data; boundary=%s\r\n"</code><code class="cpp plain">), strBoundary);</code></div><div class="line number45 index44 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;AddRequestHeaders(strPreFileHeaders);</code></div><div class="line number46 index45 alt1">&nbsp;</div><div class="line number47 index46 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString strPostData;</code></div><div class="line number48 index47 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">strPostData.Format(_T(</code><code class="cpp string">"--%s\r\nContent-Disposition: form-data; name =\"voice\"; filename=\"%s.wav\"\r\nContent-Type: audio/x-wav\r\n\r\n"</code><code class="cpp plain">), strBoundary, strTime);</code></div><div class="line number49 index48 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString endPostData;</code></div><div class="line number50 index49 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">endPostData.Format(_T(</code><code class="cpp string">"\r\n--%s--\r\n"</code><code class="cpp plain">), strBoundary);</code></div><div class="line number51 index50 alt2">&nbsp;</div><div class="line number52 index51 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CFile file;</code></div><div class="line number53 index52 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">file.Open(strLocalFileName, CFile::shareDenyNone | CFile::modeRead);</code></div><div class="line number54 index53 alt1">&nbsp;</div><div class="line number55 index54 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">sendLength = strPostData.GetLength() + endPostData.GetLength() + file.GetLength();</code></div><div class="line number56 index55 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;SendRequestEx(sendLength, HSR_SYNC | HSR_INITIATE);</code></div><div class="line number57 index56 alt2">&nbsp;</div><div class="line number58 index57 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;Write((</code><code class="cpp color1 bold">LPSTR</code><code class="cpp plain">)(</code><code class="cpp color1 bold">LPCTSTR</code><code class="cpp plain">)strPostData, strPostData.GetLength());</code></div><div class="line number59 index58 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">dwReadLength = -1;</code></div><div class="line number60 index59 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">while</code> <code class="cpp plain">(0 != dwReadLength)</code></div><div class="line number61 index60 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number62 index61 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">dwReadLength = file.Read(pBuffer, dwChunkLength);</code></div><div class="line number63 index62 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(dwReadLength &gt; 0)</code></div><div class="line number64 index63 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number65 index64 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;Write(pBuffer, dwReadLength);</code></div><div class="line number66 index65 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number67 index66 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number68 index67 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">file.Close();</code></div><div class="line number69 index68 alt2">&nbsp;</div><div class="line number70 index69 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;Write((</code><code class="cpp color1 bold">LPSTR</code><code class="cpp plain">)(</code><code class="cpp color1 bold">LPCTSTR</code><code class="cpp plain">)endPostData, endPostData.GetLength());</code></div><div class="line number71 index70 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;EndRequest();</code></div><div class="line number72 index71 alt1">&nbsp;</div><div class="line number73 index72 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">DWORD</code> <code class="cpp plain">dwStauts;</code></div><div class="line number74 index73 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(!pHttpFile-&gt;QueryInfoStatusCode(dwStauts) ||</code></div><div class="line number75 index74 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">dwStauts &lt; 200 || 299 &lt; dwStauts)</code></div><div class="line number76 index75 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number77 index76 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bSuccess = FALSE;</code></div><div class="line number78 index77 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number79 index78 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">else</code></div><div class="line number80 index79 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number81 index80 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">CString response, text;</code></div><div class="line number82 index81 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">for</code> <code class="cpp plain">(</code><code class="cpp color1 bold">int</code> <code class="cpp plain">i = 0; pHttpFile-&gt;ReadString(text); ++i)</code></div><div class="line number83 index82 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number84 index83 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">response += text + </code><code class="cpp string">"\r\n"</code><code class="cpp plain">;</code></div><div class="line number85 index84 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number86 index85 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(response.IsEmpty())</code></div><div class="line number87 index86 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number88 index87 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bSuccess = FALSE;</code></div><div class="line number89 index88 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number90 index89 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">else</code></div><div class="line number91 index90 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number92 index91 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">MPP::Json json = MPP::Json::Parse(response);</code></div><div class="line number93 index92 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bSuccess = json.Contains(</code><code class="cpp string">"state"</code><code class="cpp plain">) &amp;&amp; !json[</code><code class="cpp string">"state"</code><code class="cpp plain">].IsNull() &amp;&amp;</code></div><div class="line number94 index93 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">json[</code><code class="cpp string">"state"</code><code class="cpp plain">].IsBool() &amp;&amp; json[</code><code class="cpp string">"state"</code><code class="cpp plain">].AsBool();</code></div><div class="line number95 index94 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number96 index95 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number97 index96 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number98 index97 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">catch</code> <code class="cpp plain">(...)</code></div><div class="line number99 index98 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number100 index99 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bSuccess = FALSE;</code></div><div class="line number101 index100 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number102 index101 alt1">&nbsp;</div><div class="line number103 index102 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(pHttpFile != NULL)</code></div><div class="line number104 index103 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number105 index104 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile-&gt;Close();</code></div><div class="line number106 index105 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">delete</code> <code class="cpp plain">pHttpFile;</code></div><div class="line number107 index106 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pHttpFile = NULL;</code></div><div class="line number108 index107 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number109 index108 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(connection != NULL)</code></div><div class="line number110 index109 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">{</code></div><div class="line number111 index110 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">connection-&gt;Close();</code></div><div class="line number112 index111 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">delete</code> <code class="cpp plain">connection;</code></div><div class="line number113 index112 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">connection = NULL;</code></div><div class="line number114 index113 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number115 index114 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">session.Close();</code></div><div class="line number116 index115 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code> <code class="cpp plain">bSuccess;</code></div><div class="line number117 index116 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>　　</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/mupiaomiao/category/923104.html" target="_blank">MFC编程</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6402681,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;ba2a1a2c-9413-e511-b908-9dcfd8948a71&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/mupiaomiao/" target="_blank"><img src="./MFC之HTTP文件上传 - 木缥缈 - 博客园_files/20150616033020.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/mupiaomiao/">木缥缈</a><br>
+            <a href="http://home.cnblogs.com/u/mupiaomiao/followees">关注 - 10</a><br>
+            <a href="http://home.cnblogs.com/u/mupiaomiao/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;ba2a1a2c-9413-e511-b908-9dcfd8948a71&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6402681,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6402681,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/mupiaomiao/p/6264840.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/mupiaomiao/p/6264840.html" title="发布于2017-01-10 14:45">MFC编程入门之二十八（常用控件：列表视图控件List Control上）</a><br><a href="http://www.cnblogs.com/mupiaomiao/p/6425308.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/mupiaomiao/p/6425308.html" title="发布于2017-02-21 17:37">MFC录制音频和播放音频</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2017-02-15 18:08</span> <a href="http://www.cnblogs.com/mupiaomiao/">木缥缈</a> 阅读(<span id="post_view_count">766</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6402681" rel="nofollow">编辑</a> <a href="https://www.cnblogs.com/mupiaomiao/p/6402681.html#" onclick="AddToWz(6402681);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=232000,cb_entryId=6402681,cb_blogApp=currentBlogApp,cb_blogUserGuid='ba2a1a2c-9413-e511-b908-9dcfd8948a71',cb_entryCreatedDate='2017/2/15 18:08:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/mupiaomiao/p/6402681.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/mupiaomiao/p/6402681.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/584491/" target="_blank">阿里向大润发母公司发出全面要约收购 已买36%股份</a><br> ·  <a href="https://news.cnblogs.com/n/584487/" target="_blank">联通在线公司正式揭牌成立 全面发力消费互联网</a><br> ·  <a href="https://news.cnblogs.com/n/584483/" target="_blank">如何做项目 Pitch？硅谷顶尖投资人给出了7点建议</a><br> ·  <a href="https://news.cnblogs.com/n/584484/" target="_blank">徐小平爆有投资人讹诈创业者，称其为黑恶势力的抢劫</a><br> ·  <a href="https://news.cnblogs.com/n/584480/" target="_blank">挖矿网站Nicehash被黑：创始人在Facebook直播中致歉</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br> ·  <a href="http://kb.cnblogs.com/page/563790/" target="_blank">关于编程，你的练习是不是有效的？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/mupiaomiao/">木缥缈</a><br>园龄：<a href="http://home.cnblogs.com/u/mupiaomiao/" title="入园时间：2015-06-16">2年5个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/mupiaomiao/followers/">9</a><br>关注：<a href="http://home.cnblogs.com/u/mupiaomiao/followees/">10</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;ba2a1a2c-9413-e511-b908-9dcfd8948a71&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar"><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/11/01&#39;);return false;">&lt;</a></td><td align="center">2017年12月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/01/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td align="center">1</td><td class="CalWeekendDay" align="center">2</td></tr><tr><td class="CalWeekendDay" align="center">3</td><td align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td class="CalTodayDay" align="center">8</td><td class="CalWeekendDay" align="center">9</td></tr><tr><td class="CalWeekendDay" align="center">10</td><td align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td class="CalWeekendDay" align="center">16</td></tr><tr><td class="CalWeekendDay" align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td class="CalWeekendDay" align="center">23</td></tr><tr><td class="CalWeekendDay" align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td class="CalWeekendDay" align="center">30</td></tr><tr><td class="CalWeekendDay" align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/mupiaomiao/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="https://www.cnblogs.com/mupiaomiao/p/6402681.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/mupiaomiao/tag/C%2B%2B/">C++</a>(1)</li><li><a href="http://www.cnblogs.com/mupiaomiao/tag/%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B/">复合类型</a>(1)</li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/mupiaomiao/category/1009394.html">C#高级编程(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/mupiaomiao/category/703722.html">C++(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/mupiaomiao/category/923104.html">MFC编程(27)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/mupiaomiao/category/722106.html">POCO C++(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/mupiaomiao/category/961644.html">产品经理(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/mupiaomiao/category/979231.html">算法(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/mupiaomiao/category/958727.html">团队建设(3)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/mupiaomiao/archive/2017/05.html">2017年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/mupiaomiao/archive/2017/04.html">2017年4月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/mupiaomiao/archive/2017/03.html">2017年3月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/mupiaomiao/archive/2017/02.html">2017年2月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/mupiaomiao/archive/2017/01.html">2017年1月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/mupiaomiao/archive/2016/12.html">2016年12月 (17)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/mupiaomiao/archive/2016/09.html">2016年9月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/mupiaomiao/archive/2016/04.html">2016年4月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/mupiaomiao/archive/2015/10.html">2015年10月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/mupiaomiao/archive/2015/09.html">2015年9月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/mupiaomiao/archive/2015/08.html">2015年8月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/mupiaomiao/archive/2015/07.html">2015年7月 (8)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/mupiaomiao/archive/2015/06.html">2015年6月 (3)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catList">
+<h3 class="catListTitle">iOS相关链接文件</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_2_Link_0" href="https://github.com/forhappy/A-Detailed-Cplusplus-Concurrency-Tutorial" rel="nofollow">C++并发编程</a> </li>
+
+<li><a id="CatList_LinkList_2_Link_1" href="http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" rel="nofollow">iOS 保持界面流畅的技巧</a> </li>
+<li class="c_b_p_link_desc">详细介绍了了AsyncDisplayKit</li>
+<li><a id="CatList_LinkList_2_Link_2" href="http://www.w3school.com.cn/media/media_mimeref.asp" rel="nofollow">MIME参考手册</a> </li>
+
+<li><a id="CatList_LinkList_2_Link_3" href="http://blog.csdn.net/freedom2028/article/details/8658819" rel="nofollow">Xcode头文件问题</a> </li>
+<li class="c_b_p_link_desc">主要解决在Xcode中导入三方库的时候找不到头文件的问题</li>
+<li><a id="CatList_LinkList_2_Link_4" href="http://blog.csdn.net/lg1259156776/article/details/51854717" rel="nofollow">转【VS开发】【智能语音处理】Windows下麦克风语音采集 </a> </li>
+
+</ul>
+
+</div>
+
+<div class="catList">
+<h3 class="catListTitle">Poco C++</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_3_Link_0" href="http://blog.csdn.net/fangaoxin/article/details/6952954" rel="nofollow">cookie</a> </li>
+
+<li><a id="CatList_LinkList_3_Link_1" href="http://blog.csdn.net/arau_sh/article/details/8568654" rel="nofollow">POCO C++ 学习与分析</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catList">
+<h3 class="catListTitle">VS</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_4_Link_0" href="http://blog.csdn.net/lg1259156776/article/details/51854717" rel="nofollow">【VS开发】【智能语音处理】Windows下麦克风语音采集 </a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/mupiaomiao/p/6186691.html#3799546">1. Re:MFC编程入门之六（对话框：创建对话框模板和修改对话框属性）</a></li>
+        <li class="recent_comment_body">一个笔误：【一、创建对话框的应用程序框架】中第二行【假发】应改为【加法】</li>
+        <li class="recent_comment_author">--Monica_Pan</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/mupiaomiao/p/6183950.html#3799544">2. Re:MFC编程入门之五(MFC消息映射机制概述)</a></li>
+        <li class="recent_comment_body">文中一个小笔误，【一、什么是消息】中第二行，【侠义】应该替换为【狭义】</li>
+        <li class="recent_comment_author">--Monica_Pan</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/mupiaomiao/p/4730757.html">1. C++——输入、输出和文件(4830)</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/p/6257507.html">2. MFC编程入门之二十七（常用控件：图片控件PictureControl）(3140)</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/p/4699042.html">3. iOS——Xcode中添加第三方库(2785)</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/p/4723597.html">4. Poco C++——HTTP的post请求和get请求(2435)</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/p/6249118.html">5. MFC编程入门之二十四（常用控件：列表框控件ListBox）(2209)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/mupiaomiao/p/6186691.html">1. MFC编程入门之六（对话框：创建对话框模板和修改对话框属性）(1)</a></li><li><a href="http://www.cnblogs.com/mupiaomiao/p/6183950.html">2. MFC编程入门之五(MFC消息映射机制概述)(1)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/mupiaomiao/p/6183950.html">1. MFC编程入门之五(MFC消息映射机制概述)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 木缥缈
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

@@ -1,0 +1,53 @@
+http://blog.csdn.net/haiross/article/details/38846633 
+做过程序设计的朋友们当然记得我们学习程序设计的控制台程序，永远是那么一个黑黑的窗口。我们在里面尽量做着我们的标准输出，但是我们是否想过控制台也有不为我们所知的一些秘密。在我的上一篇博文中，我写过控制台程序其实和我们的界面程序设计是一样的，这里我想来像大家展示并且证明一下我的观点！（(*^__^*) 嘻嘻……）希望大家喜欢。
+       在Windows下，我想大家都很清楚的知道我们创建了一个窗口，操作系统自然会给我们的窗口在系统内核中会有一个标识--（也就是我们通常说的HWND窗口句柄）。首先，我们大家猜一下，我们的控制台程序有没有窗口呢！呵呵…，当然它是有的，不然我的黑框框是什么呢！它就是一个名副其实的窗口。那我们的控制台程序有没有窗口句柄呢？我想开始大家对于这个问题肯定有点犹豫，因为我们做了很长时间的程序设计都没见过也没人告诉我们，我们的控制台的程序有一个句柄（Hwnd）。上面说了，在操作系统内部对于每个窗口操作系统都会给予一个句柄，当然对于我们的控制台，操作系统也不会特殊对待，它同样也有一个Hwnd。
+       好了，大家都知道控制台程序有窗口句柄。但是他在那里呢？我们怎样得到它呢？各位朋友莫急，我这就告诉大家。下面是一个简单的获取控制台窗口句柄的例子。
+ #include <stdio.h>
+ #include <windows.h>
+ 
+  typedef HWND (WINAPI *PROCGETCONSOLEWINDOW)();
+  PROCGETCONSOLEWINDOW GetConsoleWindow;
+ 
+Int main()
+{
+       HMODULE hKernel32 = GetModuleHandle("kernel32");
+       GetConsoleWindow= (PROCGETCONSOLEWINDOW)GetProcAddress(hKernel32,"GetConsoleWindow");
+       HWND cmd=GetConsoleWindow();
+}
+   首先，我们的需要的系统API在Kernel32里面，然后我们导出GetConsoleWindow函数我们就可以实现获得窗口句柄！那么我们现在得到窗口句柄，我们能干什么呢？在这里我告诉大家一个很兴奋的事，我们得到了窗口句柄，在图像界面下能做的我们现在都可以做！如果你不信，你在窗口中画个圆看看（你就知道我没骗你了，不过记得要改变画刷的颜色啊！）。
+下面是我在控制台中显示一幅位图的代码，大家也可以试试看，绝对是可行的！(要把位图复制到你所建Project目录下面，并且改名为1.bmp)
+#include <stdio.h>
+#include <windows.h>
+ 
+typedef HWND (WINAPI *PROCGETCONSOLEWINDOW)();
+PROCGETCONSOLEWINDOW GetConsoleWindow;
+ 
+Int main()
+{
+       HMODULE hKernel32 = GetModuleHandle("kernel32");
+       GetConsoleWindow= (PROCGETCONSOLEWINDOW)GetProcAddress(hKernel32,"GetConsoleWindow");
+       HWND cmd=GetConsoleWindow();
+       HDC dc = GetDC(cmd);
+       HBITMAP hBitmap;
+       hBitmap=(HBITMAP)LoadImage            (NULL,"1.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE|LR_CREATEDIBSECTION);
+       HDC cmdmem = CreateCompatibleDC(dc);
+       SelectObject(cmdmem , hBitmap);
+       BitBlt(dc , 100 , 100 , 300 , 300 , cmdmem , 0 , 0 , SRCCOPY);
+       Return 1;
+}
+      现在大家觉得怎么样！大家同意我上一篇博文的观点吗！（呵呵…）我们现在可以完成对控制台做你想做的一切！Do it Now！
+      下面在介绍一些实用的控制台函数，这里我就不过多的介绍了，如果有兴趣的朋友可以查看MSDN或者Google！
+GetSystenMenu-----------------------------------取得控制台的系统菜单
+EnableMenuItem----------------------------------对菜单项的操作
+ReadConsoleOutputCharacter-------------------从控制台缓冲区中读出文字并保存到变量中
+GetStdHandle--------------------------------------取得标准输入，输出，错误的句柄
+SetConsoleCursorPosition-----------------------设置控制台光标的位置
+ScrollConsoleScreenBuffer----------------------设置控制台回滚的Buffer大小
+SetConsoleDisplayMode-------------------------设置控制台显示模式（是否全屏）
+mouse_event---------------------------------------模拟鼠标操作
+ReadConsoleInput--------------------------------命令行的控制输出，获取命令行的信息
+GetConsoleMode---------------------------------可以让控制台支持鼠标
+FillConsoleOutputAttribute---------------------彩色控制台设置输出的颜色
+SetConsoleTextAttribute------------------------设置文本颜色
+ 
+如果对于控制台有不同理解的朋友，我希望可以在我的博客中和我交流，让我们都能有更深层次的理解

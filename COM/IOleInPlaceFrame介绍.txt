@@ -1,0 +1,23 @@
+IOleInPlaceFrame接口控制着包容器的顶级框架窗口。允许控件插入它的菜单组到复合菜单中，在适当的窗口框架中安装复合菜单，从复合菜单移去菜单。它设置和显示状态文本到相关的在位(in-place)对应。它也激活或禁止框架的非模式对话框，并预期的为容器框架翻译加速键。
+
+如果你要写一个被在位(in-place)激活的容器应用程序，你将需要实现这个界面。
+
+GetWindow(HWND* phWnd);　　　//IOleWindow方法:获得一个窗口句柄。
+ContextSensitiveHelp(BOOL fEnterMode);  //IOleWindow方法:控件使用上下文相关的帮助可用。
+GetBorder(LPRECT prcBorder);  //(IOleInPlaceUIWindow方法) 
+RequestBorderSpace(LPCBORDERWIDTHS pBW);  //容器顶级框架的状态。(IOleInPlaceUIWindow方法) 
+SetBorderSpace(LPCBORDERWIDTHS pBW);  //容器文档窗口的状态。(IOleInPlaceUIWindow方法) 
+SetActiveObject(LPOLEINPLACEACTIVEOBJECT pIIPActiveObj, LPCOLESTR pszObj);  //小心需要的对象调整边框的间距。(IOleInPlaceUIWindow方法)
+InsertMenus(  //允许容器插入菜单。
+　　　HMENU,                 //空菜单句柄
+　　　LPOLEMENUGROUPWIDTHS//指向数组
+);
+SetMenu( //添加复合菜单到窗口框架。
+　　　HMENU,     //复合菜单句柄
+　　　HOLEMENU,    //菜单描述符句柄
+　　　HWND//对象的窗口句柄
+);
+RemoveMenus(HMENU);  //移去一个容器的菜单 
+SetStatusText(LPCOLESTR);  //设置和显示状态文本
+EnableModeless(BOOL fEnable);  //激活或禁止非模式对话框
+TranslateAccelerator(LPMSG pMSG, WORD wID);  //翻译加速键

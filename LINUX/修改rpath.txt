@@ -1,0 +1,44 @@
+参：https://blog.csdn.net/qq_38311163/article/details/107770648
+1. 首先会根据动态库的rpath查找
+    rpath全称是run-time search path
+    rpath一般可以在编译时指定，在Linux下，执行./configure时就有-Wl,-rpath,选项
+    -wl这是个gcc的参数，表示编译器会将后面的参数传递给链接器ld（默认是传给编译器的）
+2. 然后会根据 LD_LIBRARY_PATH 环境变量查找
+3. 再次，会在 /etc/ld.so.conf.d 目录下的 *.conf 文件中记录的路径中查找
+4. 最后是在默认的 /lib，/usr/lib，/usr/local/lib 路径下查找
+
+========================================================================
+
+关于rpath：
+1. 在执行./configure时，可以通过 -Wl,-rpath= ，设置rpath
+2. 对于已经编译出来的动态库，可以通过 chrpath 工具，修改动态库的rpath的值，
+    chrpath -d 动态库名  #删除编译时的rpath
+    chrpath -r "新的rpath值" 动态库名  #修改rpath的值
+    该工具能力有限，只能修改为比原来路径短或者长度一样的rpath
+3. 对于已经编译出来的动态库，还可以使用 patchelf 工具，它比chrpath功能更强
+    该工具可以修改更长的路径，也可以为没有rpath的程序直接添加上RUNPATH
+    patchelf 提供的部分功能选项：
+        有关soname：
+            --print-soname ：打印 .dynamic 节，DT_SONAME 字段，如果没有该字段，则会报错
+            --set-soname SONAME ： 设置 DT_SONAME 字段
+        有关rpath：
+            --print-rpath ： 打印 RPATH 的值
+            --set-rpath RPATH ： 修改可执行文件或动态库的 RPATH
+            --remove-rpath ： 删除动态库或可执行文件的 DT_RPATH 或 DT_RUNPATH 字段
+            --force-rpath ： 强制使用 DR_RPATH 字段，默认使用 DT_RUNPATH 字段
+            --shrink-rpath ： 缩减rpath：查找rpath记录的每个目录，
+                              如果这下面没有"当前库所依赖的"任何动态库，则将该路径从rpath中删除
+        有关依赖库（动态库记录的依赖库）：
+            --add-needed LIBRARY ： 为动态库添加新的依赖库，修改 NT_NEEDED，该选项可以多次使用
+            --replace-needed LIB_ORIG LIB_NEW : 修改动态库的依赖库名，修改 NT_NEEDED，该选项可以多次使用
+            --remove-needed LIBRARY ： 删除动态库的依赖库，修改 NT_NEEDED，该选项可以多次使用
+            --no-default-lib ： 标记让动态库查找依赖库时，不在默认库路径(/lib、/usr/lib、/usr/local/lib)下查找          
+        其它：
+            --output FILE ： 如果不加，默认在原动态库上直接修改
+            
+========================================================================
+
+runpath和rpath的区别
+    rpath 和 runpath 的区别仅仅是优先级不同， 
+    runpath 中的路径可以被外部的环境变量 LD_LIBRARY_PATH 覆盖，而 rpath 则不会。
+    --对上面这句话的理解是：runpath的优先级 < LD_LIBRARY_PATH < rpath

@@ -1,0 +1,264 @@
+explicited 的作用
+    只用于类的单参构造函数，禁止类的隐式转换
+  
+const_cast,dynamic_cast,static_cast,reinterpret_cast
+    const_cast用于去掉const，如将const char* 转为char* 
+    dynamic_cast 用于父子类之间的转换，会进行运行时检查，所以效率低
+    static_cast 进行简单的编译期检查，可用于父子类之间的转换，int和枚举之间的转换等
+    reinterpret_cast 类似于C的强制类型转换，可以在任意类型之间转换
+  
+extern "C"
+    C编译器把函数编译成_Function这样的名字，忽略参数和返回值信息。
+    C++编译的函数则带有参数信息，具体形式与函数调用约定有关。
+    ELF或PE文件中都有符号表，符号表中保存的信息有两部分：
+    该文件中引用的全局变量及函数 、该文件中定义的全部变量及函数。
+    可以看出，对于C++编译器，无论是其导出的函数，还是引用的外部函数，
+    都是按 C++编译规则存放的，也就是带参数的函数符号，
+    如果加上extern "C" ，则控制符号表中存放的相应函数签名是C格式的。
+    所以，引用C库的导出函数时，可以使用exetrn "C"，
+    生成C形式的函数时，也可以使用extern "C"。
+    ● extern "C"只加在函数声明处，不用加在函数实现处
+    ● extern "C"可以为单个函数添加，也可以为多个函数一并添加，还可以为头文件添加
+
+<stdio.h> 与 <cstdio>
+    cstdio文件前面的c，说明是对C文件<stdio.h>的包装
+    <cstdio>中大概这样：
+    #include <stdio.h>
+    namespace std {
+      using ::puts;
+      using ::fread;
+      using ::printf;
+      ...
+    }
+    这样，就可以使用std::puts了，效果和调用puts函数一样，但前面带了命名空间，
+    而同时puts函数也是可以不带std命名空间而直接使用的，即使仅包含<cstdio>而不包含<stdio.h>
+  
+类内初始化成员变量
+    对于整数类型，如int,char,bool，当其声明为静态常量时(static const)，允许在类内声明时，同时赋值。
+    class A { static const int i=1; }
+    对于浮点型，float和double，vc编译器不允许在类内赋值，gcc编译器则允许在类内赋值
+  
+未初始化的内存空间
+    在vc中，栈空间如果未初始化，则默认值是-52(0xCC)，连续两个0xCC，即0xCCCC在GBK中的编码是“烫”
+    堆未初始化，则默认字符是-51(0xCD)，0xCDCD在GBK中的编码是“屯”
+    
+堆和栈的区别
+    栈是程序自动管理的，堆是开发者手动申请释放的
+    栈的空间较小,vs默认1M，ubuntu默认8M，当然这也是可以自己配置的，堆空间则可以很大，32位程序的堆空间可以达到4G
+    堆内存是向着内存地址增加的方向生长的，栈内存则是向着内存地址减小的方向生长的
+    虽然都是存在内存里，但因为栈操作有系统的底层提供了支持(寄存器存放栈地址、有专门的弹栈压栈指令),所以栈的效率高
+    堆的申请释放会产生内存碎片问题，栈因为其存储方式的特点，决定了其不会产生内存碎片
+    
+new的三种形态
+    new operator  即new关键字
+      new / new[]：完成两件事，先底层调用 malloc 分配了内存，然后调用构造函数（创建对象）。
+      delete/delete[]：也完成两件事，先调用析构函数（清理资源），然后底层调用 free 释放空间。
+    operator new  即new当做操作符来使用， 如 void* p = openstor new(100);
+    placement new 在指定区域中放置对象(完成类的初始化)  new(p) MyClass("param"); 编译器会识别这种语法形式。
+    
+new内存失败后的正确处理
+    默认的new申请内存操作，失败时会抛出bad_alloc异常(继承自std::exception类)
+    如果不想使用异常机制，则可以使用 MyClass *p = new(std::nothrow) MyClass("asdf");
+    
+函数声明后的throw的作用
+    C++函数后面加关键字throw(something)限制，是对这个函数的异常安全作出限制
+    void fun() throw();                 //表示fun函数不允许抛出任何异常，即fun函数是异常安全的。
+    void fun() throw(...);              //表示fun函数可以抛出任何形式的异常。
+    void fun() throw(exceptionType);    // 表示fun函数只能抛出exceptionType类型的异常。
+
+new_handler函数
+    在调用new申请内存错误，并抛出异常前，会先调用该函数
+    函数原型 void new_handler();
+  
+重载new/delete运算符
+    相对于重载其它的操作符，operator new有一定的特殊性：
+    ● 对于用户自定义的类型，如果不重载，其它操作符是不能用的，但operator new却可以
+    ● 在参数方面，重载其它操作符的参数格式必须是特定的，operator new的参数个数却可以是任意的，
+      甚至可以使用不定参数，只需保证第一个参数是size_t，返回类型是void* 即可。
+    ● 需要注意的是，重载了operator new，记得一定要在相同范围内重载operator delete
+      因为你分配出来的内存，只有你才知道应该如果正确释放，
+      如果你没有重载operator delete，编译器会求助于默认的operator delete，但这通常会引发问题
+    例如重载operator new：
+      void * operator new(size_t size,const char* file, int line);
+      void operator delete(size_t size,const char* file ,int line);
+      就可以 string* p = new(__FILE,__LINE) string;
+    重载函数如果是全局函数，则全局范围有效，意味着别人使用了你这个库，则会影响别人的new行为
+    重载函数如果是类静态成员函数，则类范围(包括派生类)内有效
+
+class 和 struct
+    如果class或struct中定义了构造含，就不能使用大括号初始化了。
+    没有定义构造函数，struct可以用大括号初始化，class只有在所有成员变量都是public的情况下，才可以用大括号初始化
+        
+类的三大基本要素
+    ● 一个（或多个）构造函数
+    ● 一个析构函数
+    ● 一个拷贝赋值运算符
+    即使定义了一个空类，编译器也会在编译时，也可以(在需要时)自动加上这三个函数
+    class Empty
+    {
+    public:
+        Empty();
+        Empty(const Empty&);
+        ~Empty();
+        Empty& operator=(const Empty& r);
+    }
+    c++11标准中引入了delete和default两个关键字，用于控制是否让编译器自动加个这些函数
+    default告诉编译器产生一个默认的，delete则告诉编译器不要自动产生这个函数。
+    class A
+    {
+        A() = default;           //告诉编译器自动产生这个默认构造函数
+        virtual ~A() = default;  //告诉编译器自动产生这个默认构造函数
+        A & openator = (const A&) = delete;  //禁止自动生成这个拷贝构造函数
+        A(const A&) = delete;                //禁止自动生成这个赋值函数
+    }
+  
+首选初始化列表方式，实现类成员的初始化
+    类成员的初始化有两种方式：
+    ● 在构造函数后面，利用初始化列表，完成成员变量的初始化
+    ● 在构造函数内部，完成成员变量的赋值
+    第二种本质是赋值操作，第一种才是真正的初始化(如果是类成员，调用构造函数)
+    ● const成员变量只能用初始化列表方式完成初始化（因为const变量不能被赋值）
+    
+基类的析构函数应该为虚函数
+    如B继承自A， B中有指针型成员变量，并在构造时分配空间，析构时释放空间
+    此时如果 A * p = new B;  delete p;
+    如果A的析构函数不是虚函数，则只会调用A的析构函数，而不是B的析构函数链，引发内存泄漏
+    
+绝对不应让构造函数为虚函数
+    首先，在构造函数上加上virtual关键字，编译时就会报错。
+    其次，就算构造函数能为虚函数，也没有使用意义。
+  
+避免在构造/析构函数中调用虚函数
+    构造函数中，因为基类构造函数先被调用，
+    基类构造函数执行期间，会把前4个字节首先指向基类的虚函数表，
+    等到派生类构造函数调用时，才会把前4个字节更改为派生类的虚函数表，
+    所以在基类构造函数中调用的虚函数，不会是派生类的虚函数，而是自己的虚函数
+    析构函数链的调用顺序则是派生类析构函数先被调用，然后是基类析构函数
+    派生类析构函数调用完成之后，基类析构函数会把对象的前4个字节重新指向基类的虚函数表
+    所以在基类中调用的虚函数，也将会使基类自己的虚函数，而不是派生类中的虚函数。
+    试验：
+    class A
+    {
+    public:
+        A()
+        {
+            printf("this = %p\n",this);
+            printf("this 前4字节的值为 %d\n",*(int*)this);
+            pfunc_t p2 = (pfunc_t)(*(int*)(*(int*)this)); 
+            p2();
+        }
+        ~A()
+        {
+            printf("this = %p\n",this);
+            printf("this 前4字节的值为 %d\n",*(int*)this);
+            pfunc_t p2 = (pfunc_t)(*(int*)(*(int*)this)); 
+            p2();
+        }
+        virtual void func()
+        {
+            puts("this is v func in A");
+        }
+    };
+    class B : public A
+    {
+    public:
+        B(){
+            printf("this = %p\n",this);
+            printf("this 前4字节的值为 %d\n",*(int*)this);
+            pfunc_t p2 = (pfunc_t)(*(int*)(*(int*)this)); 
+            p2();
+        }
+        ~B(){
+            printf("this = %p\n",this);
+            printf("this 前4字节的值为 %d\n",*(int*)this);
+            pfunc_t p2 = (pfunc_t)(*(int*)(*(int*)this)); 
+            p2();
+        }
+        virtual void func()
+        {
+            puts("this is v func in B");
+        }
+    };
+    int main()
+    {
+        B * p = new B;
+        delete p;
+        return 0;
+	}
+    执行结果
+    this = 00462320
+    this 前4字节的值为 3772236
+    this is v func in A
+    this = 00462320
+    this 前4字节的值为 3771628
+    this is v func in B
+    this = 00462320
+    this 前4字节的值为 3771628
+    this is v func in B
+    this = 00462320
+    this 前4字节的值为 3772236
+    this is v func in A
+    
+虚函数表并不依赖对象而存在
+    class A
+    {
+    public:
+        virtual void func(){puts("this is virtual func");}
+    };
+    typedef void (*pfunc_t)();
+    int main()
+    {
+        A * p = new A;
+        pfunc_t p2 = (pfunc_t)(*(int*)(*(int*)p));
+        delete p;
+        p2();
+        return 0;
+     }
+     测试结果可以正常调用调用func函数，而这之前p对象已经释放了
+     对main中第二句的解释： 
+     (int *)p 是将p解释为指向int(4字节)的指针，
+     *(int*)p 取到的是p指向的对象的前4字节的内容(指向需表的地址)
+     (int*)(*(int*)p) 把虚表的地址解释为指向int的指针
+     *(int*)(*(int*)p) 取出虚表的前4个字节的内容(指向第一个虚函数)
+
+重载、重写、隐藏(同名覆盖)
+    重载是在同一个类中，函数名相同，但函数签名不同
+    重写是基类和派生类中有相同的函数签名，注意const函数，const也是函数签名的一部分
+    隐藏是指派生类会隐藏基类中具有相同名字的非虚汗，即使函数签名不同
+    
+重载运算符函数
+    ● 重载的运算符函数，是不能被派生类继承的，这是因为编译器会隐含的自动为每个类添加运算符函数，
+    再加上上面的“隐藏”规则，所以派生类总是有自己的赋值运算符
+    ● 有些运算符不能重载为友元函数，而只能重载为成员函数，他们是： = ，-> ，[] ，()
+    其中，=不能重载为友元函数，是因为编译器会自动为类添加=运算符函数
+    ->运算符函数也是一样的道理，当编译器发现类中没有重载这个运算符函数，
+    而类又用到这个运算符函数时，会自动为其填上默认的函数
+    而[]和()运算符函数，因为是特定于对象的，一定要有对象参数，所以编译器要求这两个函数不能是静态函数，
+    而如果声明成友元函数，会因为友元函数是静态函数，而编译不过
+    
+()运算符
+    通过重载()运算符，可以使一个类具有类似函数的调用方式(仿函数)
+    
+内联函数(inline)
+    显示方式:
+    函数声明和定义分开：inline只有和函数定义放在一块时才有意义，在函数声明处的inline关键字会被编译器忽略
+    隐式方式：
+    函数体放在类的内部，此时默认为内联函数，而不管是否有inline关键字
+    无论哪种方式，一般都是把内联函数的定义放在头文件中
+    虚函数是不会内联的（虚函数如果内联的，则意味着调用虚函数的地方都会被替换成虚函数体内的代码，该虚函数名存实亡了），
+    另外，函数体过大的函数也不会内联
+    
+ 慎用私有继承
+    如果使用了私有继承，则派生类不能转型为基类对象(因为成员变量的访问权发生变化)
+
+晚绑定
+    所谓的晚绑定，指的就是虚函数调用
+    一般的函数，在编译/链接时，就确定了其地址
+    而虚函数，则是在运行时，现根据对象中的虚函数表指针，查询虚函数表，继而确定调用的是哪个函数
+    
+运行时类型检测(RTTI)
+    典型的RTTI，是在虚函数表中放一个额外的指针来实现的，这个指针指向一个专门用于描述该特定类型的type_info结构。
+    
+    
+    
+  

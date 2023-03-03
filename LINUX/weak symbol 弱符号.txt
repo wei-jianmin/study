@@ -1,0 +1,28 @@
+t   The symbol is in the text (code) section 
+d   The symbol is in the initialized data section
+r   The symbol is in a read only data section.
+w   The symbol is a weak symbol that has not been specifically tagged as a weak object symbol.  When a weak defined symbol is linked with
+    a normal defined symbol, the normal defined symbol is used with no error.  When a weak undefined symbol is linked and the symbol is
+    not defined, the value of the symbol is determined in a system-specific manner without error.  On some systems, uppercase indicates
+    that a default value has been specified.
+v   The symbol is a weak object.  When a weak defined symbol is linked with a normal defined symbol, the normal defined symbol is used
+    with no error.  When a weak undefined symbol is linked and the symbol is not defined, the value of the weak symbol becomes zero with
+    no error.  On some systems, uppercase indicates that a default value has been specified.
+
+weak symbol 弱符号
+    在Linux开发环境中，有强符号和弱符号，
+    符号简单来说就是函数、变量的名字，
+    对于全局（非局部、非static）的函数和变量，能不能重名是有一定规矩的，
+    强、弱符号就是针对这些全局函数和变量来说的。
+
+    符号类型	对象
+      强	    函数名，赋初值的全局变量
+      弱	    未初始化的全局变量
+
+    当代码中同时存在多个强或弱的全局变量时，要遵守如下规则
+
+    强符号只能定义一次，否则编译错误
+    强弱符号同时存在，以强符号为准
+    没有强符号，则从多个弱符号中任选一个 （用–fno-common编译选项可以在这种情况下给出warning）
+
+    

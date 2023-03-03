@@ -1,0 +1,34 @@
+url模块和querystring模块
+    我们可以对url模块，来对url路径进行分析提取，
+    用querystring模块来对url中的参数进行提取
+    
+    例：
+    server.js:
+        var http = require("http");
+        var url = require("url");
+        var querystring = require("querystring")
+        function func1() {
+              function onRequest(request, response) {
+                  var pathname = url.parse(request.url).pathname;
+                  var query = url.parse(request.url).query;
+                  var param_abc = querystring.parse(query)["abc"];
+                  response.writeHead(200, {"Content-Type": "text/plain"});
+                  response.write("pathname=" + pathname + "\n");
+                  response.write("query=" + query + "\n");
+                  response.write("param_abc=" + param_abc + "\n");
+                  response.end();
+              }
+              http.createServer(onRequest).listen(8888);
+              console.log("Server has started.");
+        }
+        exports.func1 = func1;
+    index.js:
+        var server = require("./server2")
+        server.func1()
+    执行 node index.js
+    在浏览器输入：    
+        http://127.0.0.1:8888/xdadsfasd?abc=123
+    页面显示：
+        pathname=/xdadsfasd
+        query=abc=123
+        param_abc=123

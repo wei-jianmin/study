@@ -1,0 +1,186 @@
+﻿<<百度文库：Log4cplus使用指南>>
+目录
+log4cplus中的主要类		line:11
+使用步骤				line:16
+Appender类介绍			line:25
+Layout类介绍			line:48
+NDC				line:100
+Logger				line:127
+使用配置文件			line:146
+
+● log4cplus中的主要类：
+Layout：输出日志格式控制
+Appender：输出终端
+Logger：日志记录器
+
+● 使用步骤：
+1.创建一个Appender对象（指明日志输出到哪里）
+2.创建一个Layout对象，控制日志的书写格式
+3.Appender对象.setLayout(Layout对象)
+  如果省略2，3步，则默认Appender对象.attach（SimpleLayout对象）
+4.创建一个Logger对象（单例模式，用Logger::getInstance()获取）
+5.Logger对象.addAppender(Appender对象)
+6.设置Logger对象的日志过滤等级，如省略，则不限定等级
+
+● Appender类介绍
+log4cplus提供了三类终端：
+控制台		ConsoleAppender 
+			该类没有构造参数
+本地文件	FileAppender、RoolingFileAppender、DailyRollingFileAppender
+	FileAppender类有3个参数
+		第一个参数指定文件名，当没有给出绝对路径时，从当前路径开始寻找
+		第二个参数指定文件读写模式，默认值为trunc，表示将先前文件删除
+		第三个参数是布尔型的刷新标记，当为true时，表立即输出，否则等缓冲区满或文件关闭时才写入
+	RoolingFileAppender类有4个参数
+		第一个参数为文件名
+		第二个参数为文件最大尺寸（字节单位）
+		第三个参数为备份文件个数，当文件大小超过指定值后，会将后续信息另存到新的文件中
+			当日志存储文件数目 <= 备份文件个数+1，旧的文件会自动删除
+		第四个参数为布尔型的刷新标记
+	DailyRollingFileAppender类有4个参数
+		第一个参数为文件名
+		第二个参数为文件生命时长，当超过这个时长时，会将后续信息写到新的日志文件中
+			时长标记有：MONTHLY、WEEKLY、DAILY、TWICE_DAILY、HOURLY、MINUTELY
+		第三个参数为布尔型的刷新标记
+		第四个参数为备份文件个数
+远程服务器	SocketAppender 略
+
+● Layout类介绍
+log4cplus提供了三种类型的Layouts：SimpleLayout、PatternLayout、TTCCLayout
+SimpleLayout 提供无参的构造函数，
+	日志的输出为固定形式：LogLevel - 日志信息，
+	如：DEBUG - this is the simple formatted log message...
+TTCCLayout	提供的构造函数参数为一个布尔型，默认为false，表示显示的是北京时间
+	日志的输出为固定形式：时间 线程ID Logger名字 NDC
+	如：10-16-04 19:08:27,501 [10234323] DEBUG test_logger <> - test string...
+PatternLayout 的构造函数接受一个std::string类型的参数，用户指定日志输出规则
+	%%			转义为%
+	%c			logger的名称
+	%D			北京时间 如:"2004-10-16 14:23:55"
+	%d			0时区的标准时间，比北京时间（东8区）快8小时
+	%F			日志语句所在源文件名称，如main.cpp
+	%L			日志语句所在源文件行号
+	%l			等同于%F:%L，如“main.cpp:51”
+	%m			日志语句中传入的原始信息数据
+	%n			换行符
+	%x			配合NDC使用（后面讲）
+	%-数字占位符		格式对齐，-表示左对齐，数字表示宽度，如%-5m时，abc会输出为"abc  "
+	%d[/D]{...}		自定义时间格式
+				综合：
+					%c	标准日志+时间，如“Fri Oct 16 18:22:32 2004”
+					%x	标准日期格式，如 31/1/98（98年1月31日）
+					%X	标准时间格式，如“19:32:25”
+				年：
+					%Y	4位数的年份，如2004
+				月：
+					%m	月，1-12
+					%b	月份，英文缩写形式，如“Oct”
+					%B	月份，英文形式，如“October”
+				日：
+					%d	日，1-31
+					%j	日，1-366
+				星期：
+					%w	星期几，0-6
+					%a	星期几，英文缩写形式，如“Fri”
+					%A	星期几、英文形式，如“Friday”
+				周：
+					%U	一年的第几周，0-53
+					%W	同%U
+				时：
+					%H	时，24进制形式
+					%I	时，12进制形式
+					%p	AM/PM
+				分：
+					%M	分，0-59
+				秒：
+					%S	秒，0-59
+				毫秒：
+					%q	毫秒，0-999
+
+● NDC
+当输出终端为远程服务器时，会后多个客户端向服务器写日志，
+或当一个输出终端被多个logger绑定时，会有多个logger向该终端写日志，
+如果要区分到底是谁写的，就需要借助NDC完成
+例：（假定logger1和logger2都绑定了同一个输出终端）
+	NDC &ndc = log4cplus::getNDC();
+	
+	ndc.push("aaa");
+	LOG4CPLUS_DEBUG(logger1,"this is from logger1");
+	LOG4CPLUS_DEBUG(logger1,"this is also from logger1");
+	...
+	ndc.pop();
+	
+	ndc.push("bbb");
+	LOG4CPLUS_DEBUG(logger2,"this is from logger2");
+	...
+	ndc.pop();
+则：Layout使用PatternLayout("NDC:[%X] - %m%n")时，输出结果为：
+	NDC:[aaa] - this is from logger1
+	NDC:[aaa] - this is also from logger1
+	...
+	NDC:[bbb] - this is from logger2
+	...
+如果上例中的logger1和logger2是在不同的线程中，还可用
+	NDCContextCreator ndc("aaa");
+	这样就不必显示的调用push/pop了，而且出现异常时，能确保push和pop的调用是匹配的
+	
+● Logger
+	Logger有一个层次化的结构
+	Logger root = Logger::getRoot();	获取根logger
+	Logger log = Logger::getInstance(“log1”);		在根logger(root)下，创建一个名为“log1”的单例
+	Logger log = Logger::getInstance(“log1.child1”);	在log1下，创建一个名为“child1”的单例
+	日志可以设置过滤等级，如: root.setLogLevel(...);
+	过滤等级标记有：
+		NOT_SET_LOG_LEVEL(-1)
+		ALL_LOG_LEVEL(0)
+		TRACE_LOG_LEVEL(0)
+		DEBUG_LOG_LEVEL(10000)
+		INFO_LOG_LEVEL(20000)
+		WARN_LOG_LEVEL(30000)
+		ERROR_LOG_LEVEL(40000)
+		FATAL_LOG_LEVEL(50000)
+		OFF_LOG_LEVEL(60000)
+		如果设为NOT_SET_LOG_LEVEL，则如果有父logger时，会继承父LogLevel
+		当设置了某一LogLevel后，只能大于等于LogLevel值的日志语句才会真正输出到终端
+	
+● 使用配置文件
+	配置Logger：(根据情况选择配置root Logger或non-root Logger)
+		log4cplus.rootLogger = 	LogLevel,appenderName1,appenderName2,...
+		log4cplus.logger.logger_name = LogLevel/INHERITED(继承父LogLevel),appenderName1,appenderName2,...
+		LogLevel可选值：•TRACE •DEBUG •INFO •WARN •ERROR •FATAL
+	配置Appender：(根据情况选择配置)
+		log4cplus.appender.appenderName1 = log4cplus::DailyRollingFileAppender
+		log4cplus.appender.appenderName1.File = ./log/mylog.txt  注意需使用全路径名
+		log4cplus.appender.appenderName1.Schedule = HOURLY
+		log4cplus.appender.appenderName1.MaxBackupIndex = 1
+		log4cplus.appender.appenderName1.ImmediateFlush = true
+		log4cplus.appender.appenderName1.MaxFileSize = 10MB
+	配置Layout：
+		log4cplus.appender.appenderName1.Append=true
+		log4cplus.appender.appenderName1.layout=log4cplus::PatternLayout
+		log4cplus.appender.appenderName1.layout.ConversionPattern=[%D{%Y-%m-%d %H:%M:%S,%Q}] [%t] %-5p - %m%n
+	使用配置文件:
+		PropertyConfigurator::doConfigure("mycfg.cfg");
+	例：
+	log4cplus.logger.oeslog = TRACE,appenderName1
+	log4cplus.appender.appenderName1 = log4cplus::DailyRollingFileAppender
+	log4cplus.appender.appenderName1.File = ./mylog.txt
+	log4cplus.appender.appenderName1.Schedule = DAILY
+	log4cplus.appender.appenderName1.MaxBackupIndex = 0
+	log4cplus.appender.appenderName1.ImmediateFlush = true
+	log4cplus.appender.appenderName1.MaxFileSize = 10MB
+	log4cplus.appender.appenderName1.Append = true
+	log4cplus.appender.appenderName1.layout = log4cplus::PatternLayout
+	log4cplus.appender.appenderName1.layout.ConversionPattern = [%D{%Y-%m-%d %H:%M:%S,%Q}] %-5p [%t] %m%n
+		
+注意：
+	一个Layout只能被一个appender占用，而不能被多个appender占用，否则将导致写日志时崩溃
+	一个Logger可以连接多个appender
+	Logger.getAppenderList，可以得到Logger所有挂接的终端，在调试时，可以看到其终端对象的相关信息，如终端类型，文件名称等
+	
+其它：	功能			用途
+	LOG4CPLUS_TRACE		函数一般性跟踪,记录函数指定的位置
+	LOG4CPLUS_DEBUG		重点监视、容易出错时
+	LOG4CPLUS_INFO		函数进行了容错，正常不该出现的地方
+	LOG4CPLUS_WARN		警告，这样做虽然不会出错，但不正常，一般条件下不应该出现
+	LOG4CPLUS_ERROR		错误返回

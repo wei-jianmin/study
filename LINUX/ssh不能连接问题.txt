@@ -1,0 +1,80 @@
+https://globedrill.com/ssh-port-22-connection-refused/
+原因：
+1. SSH port 22 is not open/blocked by the server firewall
+2. SSH service might not be running on your server
+3. The server might be having a custom SSH port number
+4. PermitRootLogin might be disabled on your server
+5. Your IP address might be blocked by the server firewall.
+6. Your server might be having sudo, su access OR key based authentication
+排查步骤：
+1. Log into your linux server through console access and disable the server firewall
+    service iptables stop
+    Now check whether you’re able to SSH to the server. If you’re able to access SSH then the issue is related to the firewall.
+    Command to check whether you’re IP address is blocked by the server firewall : iptables -nL | grep
+    Example : iptables -nL | grep 192.168.2.5
+    Remove the iptables rule if your IP address is blocked.
+    Type the command “iptables -nL” and make sure there is no rule blocking the port 22.
+    Open 22 port in server firewall and restart the firewall.
+    Command to Open 22 Port : iptables -A INPUT -p tcp –dport 22 -j ACCEPT
+    If you are using CSF firewall you must open the SSH port in CSF configuration file /etc/csf/csf.conf
+    If you are having Amazon cloud server, the port number should be opened in the security group.
+2. Check whether you have set custom ssh port number in SSH configuration /etc/ssh/sshd_config
+    root@server [~]# grep Port /etc/ssh/ssh_config
+    Port 2222
+    My server had a custom SSH port number 2222 and that is the reason why port 22 was rejected with error message. 
+    Try the below command to ssh
+    ssh root@192.168.2.5 -p 2222
+3. PermitRootLogin should be set to yes in SSH configuration file.
+    root@server [~]# grep -i permit /etc/ssh/sshd_config
+    PermitRootLogin yes
+4. Type the command ‘netstat -tupln | grep ssh’ to check whether SSH service is running.
+    root@server [~]# netstat -tupln | grep -i ssh
+    root@server [~]#
+    Check the status of SSH service: service ssh status OR service sshd status
+    ssh service is not running on the above server and that is the reason why you’re unable to SSH to the server.
+    Restart SSH service using command : service sshd restart
+    [root@server ~]# service sshd restart
+    Stopping sshd: [ OK ]
+    Starting sshd: [ OK ]
+    Run the command “service sshd status” OR “service ssh status” to make sure the service is running fine
+    root@server [~]# netstat -tupln | grep -i ssh
+    tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 28013/sshd
+    tcp 0 0 :::22 :::* LISTEN 28013/sshd
+        
+======================================================================================================================
+
+https://www.cnblogs.com/zhangxuel1ang/p/13929193.html
+重现错误
+    在使用apt-get install openssh-server安装SSH后，使用service sshd start开启SSH服务时提示：
+    Failed to start sshd.service: Unit sshd.service not found.
+解决方案：
+    添加ssh.service ： systemctl enable ssh.service        
+    然后再次尝试 service sshd start
+    
+======================================================================================================================
+
+https://segmentfault.com/q/1010000007543874/a-1020000007544001r
+重现错误
+    debian下无法停止iptables服务
+    root@debian:~# service iptables stop
+    Failed to stop iptables.service: Unit iptables.service not loaded.
+    root@debian:~# service iptables status
+    Loaded: not-found (Reason: No such file or directory)
+解决方案1：
+    iptables 从来都不是一种服务，是Linux内核的组件。
+    所以没有什么所谓的启动服务／停止服务。
+    分别执行这4条来清理所有iptables规则。这样它就啥也不过滤，统统放行。
+    iptables -P INPUT ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -F
+    如果你有ipv6的话 还要另外换成ip6tables再执行一遍
+解决方案2：
+    debian 的 iptables 默认没有开启且没有任何规则。
+    debian 的 iptables 设置规则并重启系统后所有规则都消失(centos有对应的服务保存规则)这一点要注意。
+    需要保存规则的使用iptables-save命令输出所有规则保存到文件并设置开机时使用iptables-restore导入。
+    Ps:
+    用了systemd就不建议再使用service管理服务了。直接使用systemctl命令就可以。
+    systemctl status iptables
+    systemd通过service文件来进行管理。
+    系统默认的控制文件存放在/lib/systemd/system/以.service后缀结尾(如无必要绝对不要随便修改)。

@@ -1,0 +1,103 @@
+https://segmentfault.com/a/1190000009251098
+https://www.cnblogs.com/bakari/p/10613710.html
+https://mp.weixin.qq.com/s/sSQFINJ8RO8Nc4XtcyQIjQ
+
+veth-pair设备的特点
+    veth和其它的网络设备都一样，一端连接的是内核协议栈。
+    veth设备是成对出现的，另一端两个设备彼此相连
+    一个设备收到协议栈的数据发送请求后，会将数据发送到另一个设备上去。
+    它模拟了在物理世界里的两块网卡，以及一条网线。
+    通过它可以将两个虚拟的设备连接起来，让他们之间相互通信
+    
+    事实上，这种软件模拟硬件方式我们一点儿也不陌生，
+    我们本机网络 IO 里的 lo 回环设备也是这样一个用软件虚拟出来设备。
+    Veth 和 lo 的一点区别就是 veth 总是成双成对地出现。
+    
+正因为有这个特性，它常常充当着一个桥梁，连接着各种虚拟网络设备，
+典型的例子像“两个 namespace 之间的连接”
+Bridge、OVS 之间的连接”，“Docker 容器之间的连接” 等等，
+
++----------------------------------------------------------------+
+|                                                                |
+|       +------------------------------------------------+       |
+|       |             Newwork Protocol Stack             |       |
+|       +------------------------------------------------+       |
+|              ↑               ↑               ↑                 |
+|..............|...............|...............|.................|
+|              ↓               ↓               ↓                 |
+|        +----------+    +-----------+   +-----------+           |
+|        |   eth0   |    |   veth0   |   |   veth1   |           |
+|        +----------+    +-----------+   +-----------+           |
+|192.168.1.11  ↑               ↑               ↑                 |
+|              |               +---------------+                 |
+|              |         192.168.2.11     192.168.2.1            |
++--------------|-------------------------------------------------+
+               ↓
+         Physical Network
+ 
+         
+先通过ip link命令添加veth0和veth1，然后为其配置IP，并将两个设备都启动起来        
+dev@debian:~$ sudo ip link add veth0 type veth peer name veth1
+dev@debian:~$ sudo ip addr add 192.168.2.11/24 dev veth0
+dev@debian:~$ sudo ip addr add 192.168.2.11/24 dev veth1
+dev@debian:~$ sudo ip link set veth0 up
+dev@debian:~$ sudo ip link set veth1 up   
+相关参考：
+    file://ip addr命令.txt
+    file://ip link 命令.txt
+
+两个 namespace 之间的连通性
+namespace 是 Linux 2.6.x 内核版本之后支持的特性，主要用于资源的隔离。
+有了 namespace，一个 Linux 系统就可以抽象出多个网络子系统，
+各子系统间都有自己的网络设备，协议栈等，彼此之间互不影响。  
+如果各个 namespace 之间需要通信，怎么办呢，答案就是用 veth-pair 来做桥梁。
+具体又可分为如下几种方式：
+    “直接连通” 方式：
+        方法是创建出一对veth后，将其中的一个分配给ns1，另一个分配被ns2
+        具体步骤：
+            # 创建 namespace
+            ip netns a ns1
+            ip netns a ns2
+
+            # 创建一对 veth-pair veth0 veth1
+            ip l a veth0 type veth peer name veth1  //ip link add
+
+            # 将 veth0 veth1 分别加入两个 ns
+            ip l s veth0 netns ns1      //ip link set
+            ip l s veth1 netns ns2
+
+            # 给两个 veth0 veth1 配上 IP 并启用
+            ip netns exec ns1 ip a a 10.1.1.2/24 dev veth0
+            ip netns exec ns1 ip l s veth0 up
+            ip netns exec ns2 ip a a 10.1.1.3/24 dev veth1
+            ip netns exec ns2 ip l s veth1 up
+    通过 Bridge 相连：
+        方法是创建两对veth，两对veth的一端分别分配被namespace，另一端都连到同一个虚拟网桥上
+        具体步骤：
+            # 首先创建 bridge br0
+            ip l a br0 type bridge
+            ip l s br0 up 
+
+            # 然后创建两对 veth-pair
+            ip l a veth0 type veth peer name br-veth0
+            ip l a veth1 type veth peer name br-veth1
+
+            # 分别将两对 veth-pair 加入两个 ns 和 br0
+            ip l s veth0 netns ns1          //将设备移至与名称ns1关联的网络名称空间
+            ip l s br-veth0 master br0      //设置设备的主设备(即将br-veth0连到br0上)
+            ip l s br-veth0 up
+
+            ip l s veth1 netns ns2
+            ip l s br-veth1 master br0
+            ip l s br-veth1 up
+
+            # 给两个 ns 中的 veth 配置 IP 并启用
+            ip netns exec ns1 ip a a 10.1.1.2/24 dev veth0
+            ip netns exec ns1 ip l s veth0 up
+
+            ip netns exec ns2 ip a a 10.1.1.3/24 dev veth1
+            ip netns exec ns2 ip l s veth1 up
+    通过 OVS 相连
+        OVS 是第三方开源的 Bridge，功能比 Linux Bridge 要更强大
+        具体步骤：
+            参看原链接

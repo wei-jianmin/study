@@ -1,0 +1,36 @@
+sudo command 
+    是临时以root权限执行command命令， 要求该command命令的sudoers中包含当前用户，才能执行
+    此时要求输入的密码，是当前用户的密码
+sudo -i
+    上面的sudo command执行完后，会自动退回的当前用户，
+    而sudo -i ，则是进入到root状态后，不自动退出，需要执行logout或exit指令后才退出
+    命令提示符也会由$变成# ，同样，在这种状态下执行的任何command命令，
+    要求该command命令的sudoers中包含当前用户，才能执行。
+    进入root时要求输入的密码，也是当前用户的密码。
+sudo su
+    与sodu -i 原理不同，但效果一样
+su [-] [用户名]
+    切换用户，如果带 - ，则自动切换到指定用户的主目录，如果不加，则保持当前路径不变
+    如果不带用户名，则默认为root， 所以 su 、 su root 、su - 、 su - root 都是切到root用户
+    这种方式切到root，才是真正的以root身份执行，不用
+    
+sudo vs su root ： 
+    sudo 相当于拿着尚方宝剑， 而su相当于皇帝亲临    
+    拿着尚方宝剑，有些事是能干的，有些事则是不能干的（如假代皇帝颁发诏书，这是不可以的）
+    注意，
+      当普通用户通过sudo执行时，他是以root的身份执行的，此时如果在脚本中执行id命令，
+      得到的结果是：用于id=0(root) 组id=0(root) 组=0(root)
+    
+管理sudoers ：
+    当用户执行sudo时，系统会主动寻找/etc/sudoers文件，判断该用户是否有执行sudo的权
+    /etc/sudoers文件必须使用"visudo"命令编辑
+    /etc/sudoers文件讲解：
+        https://blog.csdn.net/netlai/article/details/79727187
+        https://www.cnblogs.com/yanling-coder/p/10947157.html
+
+为什么在有的电脑上su不行，但sudo su可以：
+    这是因为sudo su，并不是真正的用户切换，而是当前用户以管理员身份运行
+    su 或 su root 不行，是因为这台电脑，还没有为root设置密码，所以不能登录
+    
+如果看当前用户是否有权利通过sudo执行某命令：
+    使用 sodu -l 命令

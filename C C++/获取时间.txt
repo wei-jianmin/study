@@ -1,0 +1,129 @@
+time_t不区分北京时间和格林尼治时间，tm结构才区分
+time_t t = time(NULL); 得到的总是 (当前格林尼治时间 - 1970-01-01 00:00:00Z) 的秒数，
+或认为（当前北京时间 - 北京时间1970-01-01 00:08:00）的秒数。
+遗憾的是，tm结构虽然分北京时间/格林尼治时间，但tm中没有字段来记录时区，因此struct tm结构总是局部的，临时的，
+struct tm tm1 = *localtime(&t);	得到的是北京时间的tm结构，
+struct tm tm2 = *gmtime(&t);得到的是格林尼治时间的tm结构，
+值得注意的是，localtime和gmtime内部使用同一个全局变量，所以一个的调用可能改变另一个的结果，
+所以，如果使用 struct tm *ptm1 = *localtime(&t);
+则 struct tm *ptm2 = *gmtime(&t); 执行后，将改变ptm1原来的值
+如果tm结构当前存的是北京时间的值(通过localtime得到的)，则应使用 time_t t1 = mktime(&tm1); 得到time_t时间，
+如果tm结构当前存的是格林尼治时间(通过gmtime得到的)，则应使用 time_t t2 = _mkgmtime(&tm1); 得到time_t时间,
+通过 char * p1 = ctime(&t); 可得到北京时间的字符串表示，可惜该函数不能控制字符串格式。
+通过 char * p2 = asctime(&tm1); 可将struct tm结构转为字符串形式，同样不能控制字符串格式。
+利用strftime函数，可将tm结构转为格式化的字符串，如 strftime(s2,80,"%Y-%m-%d %H:%M:%SZ",&tm2);
+另外，localtime_s是localtime的安全形式，gmtime_s是gmtime的安全形式，ctime_s是ctime的安全形式，asctime_s是asctime的安全形式。
+
+小结：
+time_t t = time(NULL);
+
+//time_t -> struct tm
+struct tm tm1 = *localtime(&t);	  //localtime_s();							
+struct tm tm2 = *gmtime(&t);	    //gmtime_s();		
+
+//struct tm -> time_t
+time_t t1 = mktime(&tm1);				
+time_t t2 = _mkgmtime(&tm2);	
+
+//time_t -> char*
+char * p1 = ctime(&t);	          //ctime_s();	
+
+//struct tm -> char*
+char * p2 = asctime(&tm1);        //asctime_s();
+char s1[80],s2[80];
+strftime(s1,80,"%Y-%m-%d %H:%M:%S",&tm1);
+strftime(s2,80,"%Y-%m-%d %H:%M:%SZ",&tm2);
+
+
+=========================================================================================================
+
+头文件 <time.h>
+用法（windows）：
+	//以0时区为基准，获取自1970年1月1日凌晨以来的秒数
+	time_t t;
+	time(&t);
+	
+	tm lt,gt;
+	lt = *localtime(&t);		//获得本地时间的tm结构
+	gt = *gmtime(&t);			//获得utc时间的tm结构
+	
+	time_t t1 = mktime(&lt);	//对应localtime
+	time_t t2 = _mkgmtime(&gt);	//对应gmtime
+	
+	char buf1[30]={0};
+	char buf2[30]={0};
+	strftime(buf1,30,"%Y-%m-%d %H:%M:%S",&lt);
+	strftime(buf2,30,"%Y-%m-%d %H:%M:%SZ",&gt);
+说明：
+	● time函数：获取到的t，是以1970年1月1日0时0分0秒为起点，到"现在"所经历的秒数，
+	  这里的"现在"，是以0时区的时间为准
+	● localtime和gmtime，内部都是使用 struct tm *ptm = __getgmtimebuf();申请了一块儿线程内空间存放tm结构，
+	  这个函数只在第一次调用是分配空间，多次调用，使用的是第一次分配的空间，所以如果localtime和gmtime一块用，
+	  则第二个函数的结果会冲掉第一个函数的结构，处理办法就是向上面一样使用。
+	● localtime内部会调用gmtime，并进一步处理得到本时区对应的时间
+	● 如果把本地时间设为0时区1970年1月1日0时0分0秒，则用time函数得到的值为0
+	  如果把本地时间设为东8区1970年1月1日0时0分0秒，则用time函数得到的值为-8 * 3600
+	● _get_timezone()函数可以用来获得当前时区与标准时区相差的秒数
+	● 如果是格林尼治时间（标准时间，0时区时间），一般在后面加个Z,表明是0时区
+	● linux下有strptime，windows下没有
+	● windows下有_mkgmtime,_get_timezone，linux下则是timegm，timezone，还有个timelocal等价于mktime
+	  在linux中：The functions timelocal() and timegm() are the inverses of localtime(3) and gmtime(3).
+	  
+	  
+==========================================================================================================================
+gmtime在boost中的实现：
+inline int32_t is_leap(int32_t year)
+{
+  if(year % 400 == 0)
+  return 1;
+  if(year % 100 == 0)
+  return 0;
+  if(year % 4 == 0)
+  return 1;
+  return 0;
+}
+inline int32_t days_from_0(int32_t year)
+{
+  year--;
+  return 365 * year + (year / 400) - (year/100) + (year / 4);
+}
+inline int32_t days_from_1970(int32_t year)
+{
+  static const int days_from_0_to_1970 = days_from_0(1970);
+  return days_from_0(year) - days_from_0_to_1970;
+}
+inline int32_t days_from_1jan(int32_t year,int32_t month,int32_t day)
+{
+  static const int32_t days[2][12] =
+  {
+    { 0,31,59,90,120,151,181,212,243,273,304,334},
+    { 0,31,60,91,121,152,182,213,244,274,305,335}
+  };
+  return days[is_leap(year)][month-1] + day - 1;
+}
+
+inline time_t internal_timegm(std::tm const *t)
+{
+  int year = t->tm_year + 1900;
+  int month = t->tm_mon;
+  if(month > 11)
+  {
+    year += month/12;
+    month %= 12;
+  }
+  else if(month < 0)
+  {
+    int years_diff = (-month + 11)/12;
+    year -= years_diff;
+    month+=12 * years_diff;
+  }
+  month++;
+  int day = t->tm_mday;
+  int day_of_year = days_from_1jan(year,month,day);
+  int days_since_epoch = days_from_1970(year) + day_of_year;
+
+  time_t seconds_in_day = 3600 * 24;
+  time_t result = seconds_in_day * days_since_epoch + 3600 * t->tm_hour + 60 * t->tm_min + t->tm_sec;
+
+  return result;
+}

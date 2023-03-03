@@ -1,0 +1,1497 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="baidu-site-verification" content="nLiHyR1j8p" />
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>[ZT]ttf文件结构解析 - 嵌入式开发-ChinaUnix.net</title>
+<link href="http://bbs.chinaunix.net/thread-2041402-1-1.html" rel="canonical" /><meta name="description" content=" [ZT]ttf文件结构解析 " />
+<meta name="author" content="Discuz! Team and Comsenz UI Team" />
+<meta name="copyright" content="2001-2011 Comsenz Inc." />
+<meta name="MSSmartTagsPreventParsing" content="True" />
+<meta http-equiv="MSThemeCompatible" content="Yes" />
+<base href="http://bbs.chinaunix.net/" /><link rel="stylesheet" type="text/css" href="data/cache/style_3_common.css?AAN" /><link rel="stylesheet" type="text/css" href="data/cache/style_3_forum_viewthread.css?AAN" /><script type="text/javascript">var STYLEID = '3', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'AAN', charset = 'gbk', discuz_uid = '0', cookiepre = 'ndfU_2132_', cookiedomain = '', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'login|newthread|reply|tradeorder|activity|debate|nav|usergroups|task', creditnotice = '', defaultstyle = '', REPORTURL = 'aHR0cDovL2Jicy5jaGluYXVuaXgubmV0L3RocmVhZC0yMDQxNDAyLTEtMS5odG1s', SITEURL = 'http://bbs.chinaunix.net/', JSPATH = 'static/js/';</script>
+
+<script src="static/js/common.js?AAN" type="text/javascript"></script>
+<!-- 2014 -->
+<script type='text/javascript' src='http://168.it168.com/a/h599.js'></script>
+
+
+<meta name="application-name" content="ChinaUnix.net" />
+<meta name="msapplication-tooltip" content="ChinaUnix.net" />
+<meta name="msapplication-task" content="name=论坛;action-uri=http://bbs.chinaunix.net/forum.php;icon-uri=http://bbs.chinaunix.net/static/image/common/bbs.ico" />
+<link rel="archives" title="ChinaUnix.net" href="http://bbs.chinaunix.net/archiver/" />
+<link rel="stylesheet" id="css_widthauto" type="text/css" href="data/cache/style_3_widthauto.css?AAN" />
+<script type="text/javascript">HTMLNODE.className += ' widthauto'</script>
+
+<script src="static/js/forum.js?AAN" type="text/javascript" charset=gbk></script>
+<style type="text/css">
+.a_pt&(?:(?:/bbs/index|/home|/search|/plugin|/viewthread|/forumdisplay|/member|/portal)\.php|/\?from=|\?fromuid=|/thread-[\w-]+\.htm)##.a_mu {display:none!important;display:none}
+.wp.a_t {display:none!important;display:none}
+.ad,.ad-980x90,.ad-text,[id^="pushAd_"],#sitefocus.focus,.top-ad,.adsbygoogle,[class^="ad_headerbanner"],#gg_head,.ad_column,#header_ad,[class$="_topad"],img[src*="/common/cf/"],#adtext,#ad_headerbanner,font.jammer {display:none!important;display:none}
+#ads_c_tpc,[class^="ad_float_"],.a_fl,.a_fr,.a_h,.a_pb,.a_pr,.wp.a_f,#ad_text,[id^="ad_headerbanner"],.ad1,#abgne_float_ad,.ad_pip,[id^="ad_thread"],.ad2,.a_cn,.bm.a_c,#ad_wrapper,[id^="ad_footerbanner"],[id^="lovexin1"] {display:none!important;display:none}</style>
+</head>
+<body id="nv_forum" class="pg_viewthread"  style="max-width: 1000px; margin: 0 auto;" >
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+<!-- 自定义 -->		
+<!--头-->
+<!--广告位置名称：首页通栏 -->
+<div id="ADV_13039"><script>LG('ADV_13039')</script></div>
+<!--2011.12.1修改 大版宽屏显示 但是莫名其妙设置中的用户组也宽屏了，打印了下gid为28.暂时不清楚为什么 -->
+<div class="wp head_top">
+<table width="100%" cellspacing="0" cellpadding="0" border="0"  align="left">
+<tr>
+<td>
+<a href="member.php?mod=logging&amp;action=login&amp;logsubmit=yes"><img src="http://www.chinaunix.net/images_new/login.gif"></img></a>
+&nbsp;&nbsp;<a href="http://u.it168.com/findPassword?returnUrl=http://bbs.chinaunix.net/home.php?mod=spacecp">忘记密码</a>
+&nbsp;&nbsp;<a href="member.php?mod=register">免费注册</a>
+</td>
+<td align="right">
+<a href="http://bbs.chinaunix.net/listthread.php">查看新帖</a> |
+<!--a href="http://www.chinaunix.net/jh/"><font color="red">论坛精华区</font></a-->
+</td>
+</tr>
+<tr><td height="1" colspan="3" style="background-color:#000"></td></tr>
+</table>
+</div>
+<div id="hd">
+<div class="wp" >
+<!--LOGO和banner  -->
+<table width="100%"  style="clear: both;height:90px">
+<tr>
+<td style="padding:0">
+<h1>
+<!--2011.12.27修改只有首页去www其他去bbs-->
+<a href="http://bbs.chinaunix.net" title="ChinaUnix.net"><img src="static/image/common/logo.gif" alt="ChinaUnix.net" border="0" /></a>
+</h1>
+</td>
+<td style="padding:0" align="center">
+<!--不同页面广告位 -->
+<div id="ADV_21647" style="display:inline;"><script>LG('ADV_21647')</script></div>
+	
+</td>
+<!--2014.07.30添加广告位ADV_20649-->
+<td style="padding:0" align="center">
+<div id="ADV_20649" style="display:inline;"><script>LG('ADV_20649')</script></div>
+</td>
+</tr>
+</table>
+<!--<div id="nv">
+<a href="javascript:;" id="qmenu" onmouseover="showMenu({'ctrlid':'qmenu','pos':'34!','ctrlclass':'a','duration':2});">快捷导航</a>
+<ul> --><!-- <li id="mn_Ne30e" ><a href="plugin.php?id=auction" hidefocus="true" title="Auction"  >竞拍<span>Auction</span></a></li> --><!-- <li id="mn_N2ddf" ><a href="plugin.php?id=itpub_medal:medal_shop" hidefocus="true"  >商店</a></li> --><!-- <li id="mn_forum" ><a href="forum.php" hidefocus="true" title="BBS"  >论坛<span>BBS</span></a></li> --><!-- <li id="mn_N12a7" ><a href="misc.php?mod=ranklist" hidefocus="true" title="Ranklist"  >排行榜<span>Ranklist</span></a></li> --><!--</ul>
+</div> -->
+<div class="p_pop h_pop" id="mn_userapp_menu" style="display: none"></div><div id="mu" class="cl">
+</div><!--搜索框去掉20111024 -->
+</div>
+</div>
+<!--2011.11.30如果是大版则宽屏显示 -->
+<div id="wp" class="wp" >
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="background:url(static/image/common/bg_menu_top.gif)"> 
+<tbody>
+<tr><td height="2" colspan="2"></td></tr>
+<tr>
+<td width="*" valign="center" align="left">&nbsp;
+<font color="#666666"><strong>平台</strong></font> 
+<a target="_blank" class="title2" href="http://bbs.chinaunix.net/"><font color="#5B7DB3">论坛</font></a>   
+<a target="_blank" class="title2" href="http://blog.chinaunix.net/"><font color="#5B7DB3">博客</font></a>
+
+<a target="_blank" class="title2" href="http://wenku.it168.com/"><font color="#5B7DB3">文库</font></a>
+
+</a><font color="#666666"><strong>频道</strong></font>：
+<a target="_blank" class="title2" href="http://www.chinaunix.net/ops/"><font color="#5B7DB3">自动化运维</font></a>   
+<a target="_blank" class="title2" href="http://www.chinaunix.net/virtual/"><font color="#5B7DB3">虚拟化</font></a>   
+ 
+<a target="_blank" class="title2" href="http://www.chinaunix.net/stor/"><font color="#5B7DB3">储存备份</font></a>  
+<a target="_blank" class="title2" href="http://www.chinaunix.net/cpp/"><font color="#5B7DB3">C/C++</font></a>  
+<a target="_blank" class="title2" href="http://www.chinaunix.net/php/"><font color="#5B7DB3">PHP</font></a>   
+<a target="_blank" class="title2" href="http://www.chinaunix.net/mysql/"><font color="#5B7DB3">MySQL</font></a>   
+<a target="_blank" class="title2" href="http://www.chinaunix.net/embedded/"><font color="#5B7DB3">嵌入式</font></a> 
+<a target="_blank" class="title2" href="http://www.chinaunix.net/linux/"><font color="#5B7DB3">Linux系统</font></a>  
+</td>
+<td>
+                            <form id="scbar_form" method="get" autocomplete="off" onSubmit="searchFocus($('scbar_txt'))" action="http://search.bbs.chinaunix.net/cse/search" target="_blank">
+<!--<form id="scbar_form" method="post" autocomplete="off" onSubmit="searchFocus($('scbar_txt'))" action="search.php?searchsubmit=yes" target="_blank">
+<form target="_blank" method="get" action="http://search.chinaunix.net/bbs.php"> 
+<input type="text" name=q  size="15" maxlength="20" style="width:60px">
+<input type="hidden" name="title" value="fulltext">
+<input type="hidden" name="st" value="title">
+<input type="hidden" name="bbs" value="1">
+<input type="hidden" name="forums" value="all">-->
+<input type="text" name="q" id="scbar_txt" autocomplete="off" style="width:80px">
+<!--					<input type="hidden" name="mod" id="scbar_mod" value="forum" />
+<input type="hidden" name="formhash" value="4a770f2c" />
+<input type="hidden" name="srchtype" value="title" />
+<input type="hidden" name="srhfid" value="225" id="dzsearchforumid" />
+<input type="hidden" name="srhlocality" value="forum::viewthread" />
+<input type="hidden" name="source" value="discuz" />
+<input type="hidden" name="fId" value=""  id="cloudsearchforumId" />
+<input type="hidden" name="q" id="cloudsearchquery" value="" />-->
+                                        <input type="hidden" name="click" value="1" />
+                                        <input type="hidden" name="s" value="17746599429486556584" />
+                                        <input type="hidden" name="nsid" value="" />
+<input type="button" value="搜索" onclick="search()">
+</form>
+</td>
+</tr>
+<tr><td height="2" colspan="2"></td></tr> 
+</tbody>
+</table>
+<script>
+function search(){
+    val = document.getElementById("scbar_txt").value;
+    if(val == ""){
+        //location.href = "http://search.bbs.chinaunix.net/";
+        location.href = "http://search.bbs.chinaunix.net/cse/search?q="+val+"&click=1&s=17746599429486556584&nsid= ";
+    }else{
+        location.href = "http://search.bbs.chinaunix.net/cse/search?q="+val+"&click=1&s=17746599429486556584&nsid= ";
+    }
+}
+   
+</script>
+<!--原广告位置 -->
+<!--<div style="margin-top:10px"></div> -->
+<!--广告位置移动这,去掉自带的 换为广告系统标签 -->
+<table width="100%" height="20" cellspacing="0" cellpadding="0" border="0"> 
+<tbody>
+<tr>
+<td align="center"><div id="ADV_17278"><script>LG('ADV_17278')</script></div></td>
+<td align="center"><div id="ADV_18502"><script>LG('ADV_18502')</script></div></td>
+<td align="center"><div id="ADV_18503"><script>LG('ADV_18503')</script></div></td>
+<td align="center"><div id="ADV_18504"><script>LG('ADV_18504')</script></div></td>
+</tr>
+</tbody>
+</table>
+
+<div id="ADV_18508" style=""><script>LG('ADV_18508')</script></div>
+
+<script type="text/javascript">var fid = parseInt('225'), tid = parseInt('2041402');</script>
+
+<script src="static/js/forum_viewthread.js?AAN" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(1);var imagemaxwidth = '700';var aimgcount = new Array();</script>
+
+<style id="diy_style" type="text/css"></style>
+<!--[diy=diynavtop]--><div id="diynavtop" class="area"></div><!--[/diy]-->
+<div id="pt" class="bm cl">
+<div class="z">
+<a href="http://www.chinaunix.net" class="nvhm" title="首页"></a> <em>&rsaquo;</em> <a href='/'>论坛</a> <em>&rsaquo;</em> <a href="forum.php?gid=60">程序设计</a> <em>&rsaquo;</em> <a href="forum-225-1.html">嵌入式开发</a> <em>&rsaquo;</em> <a href="thread-2041402-1-1.html">[ZT]ttf文件结构解析</a>
+</div>
+</div>
+
+
+
+<style id="diy_style" type="text/css"></style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+
+<div id="ct" class="wp cl">
+<div id="pgt" class="pgs mbm cl ">
+<div class="pgt"></div>
+<span class="y pgb"><a href="forum-225-1.html">最近访问板块</a></span>
+
+<!--增加板块跳转  -->
+<span style="float:right; padding:0px 0 4px 0; margin-top:5px">
+<select  style=" padding:5px 0 4px 0" onchange="if(this.options[this.selectedIndex].value != '') {
+window.location=('forum-' + this.options[this.selectedIndex].value + '-1.html') }">
+<option value="">版块跳转</option>
+<optgroup label="--Linux操作系统"><option value="216">新手园地</option><option value="269">&nbsp; &nbsp; &nbsp; 硬件问题</option><option value="217">Linux系统管理</option><option value="218">Linux网络问题</option><option value="223">Linux环境编程</option><option value="271">Linux桌面系统</option><option value="221">国产Linux</option></optgroup><optgroup label="--Unix操作系统"><option value="5">BSD</option><option value="127">&nbsp; &nbsp; &nbsp; BSD文档中心</option><option value="9">AIX</option><option value="193">&nbsp; &nbsp; &nbsp; 新手入门</option><option value="124">&nbsp; &nbsp; &nbsp; AIX文档中心</option><option value="189">&nbsp; &nbsp; &nbsp; 资源下载</option><option value="188">&nbsp; &nbsp; &nbsp; Power高级应用</option><option value="187">&nbsp; &nbsp; &nbsp; IBM存储</option><option value="10">AS400</option><option value="6">Solaris</option><option value="128">&nbsp; &nbsp; &nbsp; Solaris文档中心</option><option value="8">HP-UX</option><option value="129">&nbsp; &nbsp; &nbsp; HP文档中心</option><option value="7">SCO UNIX</option><option value="130">&nbsp; &nbsp; &nbsp; SCO文档中心</option><option value="118">互操作专区</option><option value="12">IRIX</option><option value="11">Tru64 UNIX</option><option value="41">Mac OS X</option></optgroup><optgroup label="--IT运维架构"><option value="141">门户网站运维</option><option value="233">集群和高可用</option><option value="232">服务器应用</option><option value="235">监控和防护</option><option value="283">虚拟化技术</option><option value="185">架构设计</option><option value="285">行业应用和管理</option></optgroup><optgroup label="--IT基础设施"><option value="45">服务器及硬件技术</option><option value="184">&nbsp; &nbsp; &nbsp; 服务器资源下载</option><option value="180">云计算</option><option value="181">&nbsp; &nbsp; &nbsp; 云计算文档中心</option><option value="182">&nbsp; &nbsp; &nbsp; 云计算业界</option><option value="183">&nbsp; &nbsp; &nbsp; 云计算资源下载</option><option value="34">存储备份</option><option value="125">&nbsp; &nbsp; &nbsp; 存储文档中心</option><option value="126">&nbsp; &nbsp; &nbsp; 存储业界</option><option value="145">&nbsp; &nbsp; &nbsp; 存储资源下载</option><option value="194">&nbsp; &nbsp; &nbsp; Symantec技术交流区</option><option value="29">安全技术</option><option value="30">网络技术</option><option value="131">&nbsp; &nbsp; &nbsp; 网络技术文档中心</option></optgroup><optgroup label="--程序设计"><option value="23">C/C++</option><option value="84">&nbsp; &nbsp; &nbsp; GUI编程</option><option value="142">&nbsp; &nbsp; &nbsp; Functional编程</option><option value="224">内核源码</option><option value="220">&nbsp; &nbsp; &nbsp; 内核问题</option><option value="222">移动开发</option><option value="265">&nbsp; &nbsp; &nbsp; 移动开发技术资料</option><option value="24">Shell</option><option value="25">Perl</option><option value="26">Java</option><option value="133">&nbsp; &nbsp; &nbsp; Java文档中心</option><option value="27">PHP</option><option value="135">&nbsp; &nbsp; &nbsp; php文档中心</option><option value="55">Python</option><option value="132">&nbsp; &nbsp; &nbsp; Python文档中心</option><option value="116">Ruby</option><option value="226">CPU与编译器</option><option value="225">嵌入式开发</option><option value="227">驱动开发</option><option value="80">Web开发</option><option value="100">VoIP开发技术</option></optgroup><optgroup label="--数据库技术"><option value="17">MySQL</option><option value="136">&nbsp; &nbsp; &nbsp; MySQL文档中心</option><option value="21">Sybase</option><option value="19">Oracle</option><option value="18">PostgreSQL</option><option value="22">DB2</option><option value="20">Informix</option><option value="140">数据仓库与数据挖掘</option><option value="292">NoSQL技术</option></optgroup><optgroup label="--综合交流区"><option value="46">IT业界新闻与评论</option><option value="32">IT职业生涯</option><option value="293">&nbsp; &nbsp; &nbsp; 猎头招聘</option><option value="82">IT图书与评论</option><option value="156">&nbsp; &nbsp; &nbsp; CU技术图书大系</option><option value="247">&nbsp; &nbsp; &nbsp; Linux书友会</option><option value="54">二手交易</option><option value="249">下载共享</option><option value="250">Linux文档专区</option><option value="53">IT培训与认证</option><option value="295">&nbsp; &nbsp; &nbsp; 培训交流</option><option value="191">&nbsp; &nbsp; &nbsp; 认证培训</option></optgroup><optgroup label="--休闲生活"><option value="31">清茶斋</option><option value="115">投资理财</option><option value="39">运动地带</option><option value="40">快乐数码摄影</option><option value="168">&nbsp; &nbsp; &nbsp; 摄影器材</option><option value="134">&nbsp; &nbsp; &nbsp; 摄影比赛专区</option><option value="121">IT爱车族</option><option value="96">旅游天下</option></optgroup><optgroup label="--站务及频道"><option value="2">站务交流</option><option value="3">版主会议室</option><option value="51">博客SNS站务交流区</option><option value="123">CU活动专区</option><option value="207">&nbsp; &nbsp; &nbsp; Power活动专区</option><option value="169">&nbsp; &nbsp; &nbsp; 拍卖交流区</option><option value="97">频道交流区</option></optgroup></select>
+</span>
+
+<a id="newspecial" style="margin-top:8px" onmouseover="$('newspecial').id = 'newspecialtmp';this.id = 'newspecial';showMenu({'ctrlid':this.id})" onclick="showWindow('newthread', 'forum.php?mod=post&action=newthread&fid=225')" href="javascript:;" title="发新帖"><img src="static/image/common/pn_post.png" alt="发新帖" /></a>
+</div>
+
+
+
+<div id="postlist" class="pl bm">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls ptm pbm" style="background:#9898BA;border-bottom:1px solid #000">
+<div class="hm">
+<span style="color:#fff">查看:</span> 
+<span style="color:#000">25266</span>
+<span class="pipe">|</span>
+
+<span style="color:#fff">回复:</span> 
+<span style="color:#000">4</span>
+</div>
+</td>
+<td class="plc ptm pbn" style="background-color:#9898BA;border-bottom:1px solid #000">
+<div class="y">
+<a href="forum.php?mod=viewthread&amp;action=printable&amp;tid=2041402" title="打印" target="_blank"><img src="static/image/common/print.png" alt="打印" class="vm" /></a>
+<a href="forum.php?mod=redirect&amp;goto=nextoldset&amp;tid=2041402" title="上一主题"><img src="static/image/common/thread-prev.png" alt="上一主题" class="vm" /></a>
+<a href="forum.php?mod=redirect&amp;goto=nextnewset&amp;tid=2041402" title="下一主题"><img src="static/image/common/thread-next.png" alt="下一主题" class="vm" /></a>
+</div>
+
+
+<h1 class="ts">
+<a href="thread-2041402-1-1.html" id="thread_subject">[ZT]ttf文件结构解析</a>
+<!--2011.12.01更改class-->
+<span class="xw0 xs1">
+<!--<span class="xw0 xs1 xg1">-->
+<a href="thread-2041402-1-1.html" onclick="return copyThreadUrl(this)" title="您的朋友访问此链接后，您将获得相应的积分奖励">[复制链接]</a>
+</span>					
+                    <!-- Baidu Button BEGIN -->
+                    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float:right;">
+                        <a class="bds_qzone"></a><a class="bds_tsina"></a><a class="bds_tqq"></a><a class="bds_renren"></a>
+<a class="bds_douban"></a><a class="bds_taobao"></a><a class="bds_fbook"></a><a class="shareCount"></a>
+<span class="bds_more"></span><a class="shareCount"></a>
+                    </div>
+                	<!-- Baidu Button END -->					
+</h1>
+</td>
+</tr>
+</table>
+
+
+<!--1楼标题下面的两条线-->	
+<!-- 
+<table cellspacing="0" cellpadding="0" class="ad">
+<tr>
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+</tr>
+</table>
+ --><div id="post_14408369" style="background-color:#E5EDF2"><table id="pid14408369" summary="pid14408369" cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls" rowspan="2" style="background-color:#F0F3FA">
+<a name="newpost"></a> <div class="pi" style=" border-bottom:none">
+<div class="authi"><a href="space-uid-11344913.html" target="_blank" class="xw1">T-bagwell<em style='display: inline-block;width: 16px;height: 9px;background: url(source/plugin/auction/images/v.jpg) no-repeat;overflow: hidden;'></em></a>
+
+</div>
+
+</div>
+<!--2011.12.01自定义头衔移到用户名下面头像上面  -->
+<div class="p_pop blk bui" id="userinfo14408369" style="display: none; margin-top: -11px;">
+<div class="m z">
+<div id="userinfo14408369_ma"></div>
+</div>
+<div class="i y">
+<div>
+<strong><a href="space-uid-11344913.html" target="_blank" class="xi2">T-bagwell<em style='display: inline-block;width: 16px;height: 9px;background: url(source/plugin/auction/images/v.jpg) no-repeat;overflow: hidden;'></em></a></strong>
+<em>当前离线</em>
+</div>
+<dl class="cl"></dl>
+<div class="imicn">
+<a href="home.php?mod=space&amp;uid=11344913&amp;do=profile" target="_blank" title="查看详细资料"><img src="static/image/common/userinfo.gif" alt="查看详细资料" /></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+<div>
+<div class="avatar" onmouseover="showauthor(this, 'userinfo14408369')"><a href="space-uid-11344913.html" target="_blank"><img src="http://passport.it168.com/avatar.php?uid=11344913&size=middle" /></a></div>
+                        
+                        
+                                        
+                             <p><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=20" 
+target="_blank" >广告杀手</a></em></p>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+</div>
+<p></p>
+<ul class="xl xl2 o cl">
+<!--修改文字部分20111026-->
+<!--
+<li class="callon"><a href="space-uid-11344913.html" target="_blank" title="串个门" class="xi2">串个门</a></li>
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=11344913&amp;handlekey=addfriendhk_11344913" id="a_friend_li_14408369" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">加好友</a></li>
+<li class="poke2"><a href="home.php?mod=spacecp&amp;ac=poke&amp;op=send&amp;uid=11344913" id="a_poke_li_14408369" onclick="showWindow(this.id, this.href, 'get', 0);" title="打招呼" class="xi2">打招呼</a></li>
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_11344913&amp;touid=11344913&amp;pmid=0&amp;daterange=2&amp;pid=14408369&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">发消息</a></li>
+ -->
+<!--2013.05.15 修改串门链接 -->
+                    <li class="callon"><a href="http://ask.chinaunix.net/account/login/" target="_blank" class="xi2" style=" font-weight:bold; color:#F00">问答</a></li>
+
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=11344913&amp;handlekey=addfriendhk_11344913" id="a_friend_li_14408369" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">好友</a></li>
+<!--<li class="poke2"><a href="toblog.php?uid=11344913" class="xi2" target="_blank">博客</a></li>-->
+<li class="poke2"><a href="http://blog.chinaunix.net/dir.php?uid=11344913" class="xi2" target="_blank">博客</a></li> 
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_11344913&amp;touid=11344913&amp;pmid=0&amp;daterange=2&amp;pid=14408369&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">消息</a></li>
+</ul>
+<dl class="pil cl"><dt>论坛徽章:</dt><dd>4</dd></dl><div style="padding:3px; margin-left:5px; margin-right:5px;"><img id='1187' src='/source/plugin/itpub_medal/medalimgs/xin7-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='摩羯座
+日期:2014-07-22 09:03:55' title='摩羯座
+日期:2014-07-22 09:03:55'/><img id='1299' src='/source/plugin/itpub_medal/medalimgs/yuanxiaojie-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='2015元宵节徽章
+日期:2015-03-06 15:50:39' title='2015元宵节徽章
+日期:2015-03-06 15:50:39'/><img id='1326' src='/source/plugin/itpub_medal/medalimgs/daban-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='2015亚冠之大阪钢巴
+日期:2015-06-12 16:01:35' title='2015亚冠之大阪钢巴
+日期:2015-06-12 16:01:35'/><img id='1336' src='/source/plugin/itpub_medal/medalimgs/sacc-24(2).png' width='24px' style='margin:2px;cursor: hand;' alt='2015年中国系统架构师大会
+日期:2015-06-29 16:11:28' title='2015年中国系统架构师大会
+日期:2015-06-29 16:11:28'/></div><!--2011.12.05新增禁止本版发言2011.12.17修改增加是否是本版版主且对管理员全部开放 -->
+</td>
+<td class="plc" style="background-color:#F0F3FA">
+<div class="pi">
+<!--管理操作口移到这-->
+		
+<div id="fj" class="y">
+<label class="z">电梯直达</label>
+<input type="text" class="px p_fre z" size="2" onkeyup="$('fj_btn').href='forum.php?mod=redirect&ptid=2041402&authorid=&postno='+this.value" onkeydown="if(event.keyCode==13) {window.location=$('fj_btn').href;return false;}" title="跳转到指定楼层" />
+<a href="javascript:;" id="fj_btn" class="z" title="跳转到指定楼层"><img src="static/image/common/fj_btn.png" alt="跳转到指定楼层" class="vm" /></a>
+</div>
+<strong>
+<a href="thread-2041402-1-1.html" title="您的朋友访问此链接后，您将获得相应的积分奖励" id="postnum14408369" onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>1</em>楼</a>
+<!--以下新加开始 -->
+
+<!--收藏2011.12.01修改-->
+<a href="home.php?mod=spacecp&amp;ac=favorite&amp;type=thread&amp;id=2041402" id="k_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" onmouseover="this.title = $('favoritenumber').innerHTML + ' 人收藏'">[收藏(<span id="favoritenumber">0</span>)]</a>
+<!--评分-->
+<!--邀请-->
+
+                <!--编辑-->
+
+<!--报告-->
+<a href="javascript:;" onclick="showWindow('miscreport14408369', 'misc.php?mod=report&rtype=post&rid=14408369&tid=2041402&fid=225', 'get', -1);return false;">[报告]</a>
+
+<!--评分2011.12.29-->
+
+<!--评分2011.12.29-->
+					
+ 
+
+
+<!--置顶logo-->
+				
+
+<!--新加的结束-->	
+
+</strong>
+
+<div class="pti">
+<div class="pdbt">
+</div>
+<div class="authi">
+<img class="authicn vm" id="authicon14408369" src="static/image/common/teammo.gif" />
+<em id="authorposton14408369">发表于 2008-07-23 17:13</em>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;page=1&amp;authorid=11344913" rel="nofollow">只看该作者</a>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;extra=page=1&amp;ordertype=1">倒序浏览</a>
+</div>
+</div>
+</div><div class="pct"><style type="text/css">.pcb{margin-right:0}</style><div class="pcb">
+ 
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_14408369">
+pafone 发表于 - 2008-5-22 15:39:00<br />
+<br /><div class="blockcode"><div id="code_GTz"><ol><li>TrueType字体通常包含在单个TrueType字体文件中，其文件后缀为.TTF。OpenType字体是以类似&nbsp; &nbsp;于TrueType字体的格式编码的POSTSCRIPT字体。OPENTYPE字体使用.OTF文件后缀。OPENTYPE还允许把多个OPENTYPE字体组合在一个文件中以利于数据共享。这些字体被称为TrueType字体集（TrueType&nbsp; &nbsp;collection），其文件后缀为.TTC。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;TrueType字体用machintosh的轮廓字体资源的格式编码，有一个唯一的标记名&quot;sfnt&quot;。windows没有macintosh的位图字体资源格式，字体目录&nbsp; &nbsp;包含了字体格式的版本号和几个表，每个表都有一个tableentry结构项，tableentry结构包含了资源标记、校验和、偏移量和每个表的大小。下面是TrueType字体目录的c语言定义：<br /><li>typedef&nbsp; &nbsp;sturct<br /><li>{<br /><li>char&nbsp; &nbsp;tag[4];<br /><li>ULONG&nbsp; &nbsp;checkSum;<br /><li>ULONG&nbsp; &nbsp;offset;<br /><li>ULONG&nbsp; &nbsp;length;<br /><li>}TableEntry;<br /><li><br /><li>typedef&nbsp; &nbsp;struct<br /><li>{<br /><li>Fixed&nbsp; &nbsp;sfntversion;&nbsp; &nbsp;//0x10000&nbsp; &nbsp;for&nbsp; &nbsp;version&nbsp; &nbsp;1.0<br /><li>USHORT&nbsp; &nbsp;numTables;<br /><li>USHORT&nbsp; &nbsp;searchRange;<br /><li>USHORT&nbsp; &nbsp;entrySelector;<br /><li>USHORT&nbsp; &nbsp;rangeShift;<br /><li>TableEntry&nbsp; &nbsp;entries[1];//variable&nbsp; &nbsp;number&nbsp; &nbsp;of&nbsp; &nbsp;TableEntry<br /><li>}TableDirectory;<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;TrueType&nbsp; &nbsp;字体中的所有数据都使用big-endian编码，最高位字节在最前面（因为TrueType字体最初是由apple公司定义的，而apple公司的os运行在motorola的cpu上）。如果一人TrueType字体以00&nbsp; &nbsp;01&nbsp; &nbsp;00&nbsp; &nbsp;00&nbsp; &nbsp;,00&nbsp; &nbsp;17开头，我们就可以知道它的格式是轮廓字体资源（&quot;sfnt&quot;）版本1.0的格式，有23个表。<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;TableDirectory结构的最后一个字段是可变长度的tableentry结构的数组，安体中的每个表对应其中一项。TrueType字体中的每个表都保存了不同的逻辑信息-----如图元中数据、字符到图元的映射、字距调整信息等等。有表是必须的，有些是可选的。下表列出了TrueType字体中常见的表。<br /><li>&nbsp;&nbsp;<br /><li>head&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字体头&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 字体的全局信息<br /><li>cmap&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字符代码到图元的映射&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;把字符代码映射为图元索引<br /><li>glyf&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;图元数据&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;图元轮廓定义以及网格调整指令<br /><li>maxp&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;最大需求表&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字体中所需内存分配情况的汇总数据<br /><li>mmtx&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;水平规格&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;图元水平规格<br /><li>loca&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;位置表索引&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;把元索引转换为图元的位置<br /><li>name&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;命名表&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 版权说明、字体名、字体族名、风格名等等<br /><li>hmtx&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;水平布局&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;字体水平布局星系：上高、下高、行间距、最大前进宽度、最小左支撑、最小右支撑<br /><li>kerm&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字距调整表&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字距调整对的数组<br /><li>post&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;PostScript信息&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;所有图元的PostScript&nbsp; &nbsp;FontInfo目录项和PostScript名<br /><li>PCLT&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;PCL&nbsp; &nbsp;5数据&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; HP&nbsp; &nbsp;PCL&nbsp; &nbsp;5Printer&nbsp; &nbsp;Language&nbsp; &nbsp;的字体信息：字体数、宽度、x高度、风格、记号集等等<br /><li>OS/2&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;OS/2和Windows特有的规格&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;TrueType字体所需的规格集<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;在TableDirectory结构中，所有的TableEntry结构都必须根据它们的标记名排序。比如，cmap必须出现在head前，而head必须在glyf前。但是实际的表可以出现在TrueType字体文件中的任意位置。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;Win32API&nbsp; &nbsp;提供了一个应用程序可用于查询原始TrueType字体信息的函数：<br /><li>DWORD&nbsp; &nbsp;GetFontData(HDC&nbsp; &nbsp;hDC,DWORD&nbsp; &nbsp;dwTable&nbsp; &nbsp;,DWORD&nbsp; &nbsp;dwOffset,&nbsp; &nbsp;LPVOID&nbsp; &nbsp;lpbBuffer&nbsp; &nbsp;,DWORD&nbsp; &nbsp;cbData);<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;GetFontData函数可以用于查询设备上下文中当前逻辑字体所对应的TrueType字体，因此传递的不是逻辑字体句柄，而是设备上下文句柄。你可以查询整个TrueType文件基是文件中的一个表。要查询整个文件的话dwTable参数应该为0；否则，应该传递要查询的表的四字符标记的DWORD格式。参数dwOffset是要查询的表中的起始偏移，要查询整个表的话应该为0；参数;pvBuffer是缓冲区的地址，cbData是缓冲区的大小。如果最后个参数为NULL和0，GetFontData函数返回字体文件或表的大小；就会把到的数据拷贝到应用程序所提供的缓冲区中。<br /><li>下面的例和查询整个TrueType字体的原始数据：<br /><li>&nbsp;&nbsp;TableDirctory&nbsp; &nbsp;*&nbsp; &nbsp;GetTrueTypeFont&nbsp; &nbsp;(HDC&nbsp; &nbsp;hDC&nbsp; &nbsp;,DWORD&nbsp; &nbsp;&amp;nFontSize)<br /><li>{<br /><li>//query&nbsp; &nbsp;font&nbsp; &nbsp;size<br /><li>nFontSize=GetFontData(hDC,0,0,NULL,0);<br /><li><br /><li>TableDirectory&nbsp; &nbsp;*&nbsp; &nbsp;pFont&nbsp; &nbsp;=(TableDirectory&nbsp; &nbsp;*)new&nbsp; &nbsp;BYTE(nFontSize);<br /><li>if&nbsp; &nbsp;(pFont==NULL)<br /><li>return&nbsp; &nbsp;&nbsp;&nbsp;NULL;<br /><li>GetFontData(hDC,0,0,pFont,nFontSize);<br /><li><br /><li>return&nbsp; &nbsp;pFont;<br /><li>}<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;GetFontData使得应用程序能够在自己的文档中内嵌TrueType字体，以确保这些文档能在没有相应字体的其他机器上显示。它的做法是允许应用程序查询字体数据，然后写入到文档中作为文档的一部分，在文档被打于时再安装该字体以确保文档能以创建时同样的方式显示。比如，Windows&nbsp; &nbsp;NT/2000的假脱机程序在打印到远端服务器时会在假脱机文件中内嵌入TrueType字体以保证文档能在另一台机器上正确地打印。<br /><li>一旦接受到TrueType字体的原始数据，它的头中的TableDirectory结构很容易分析。需要检查的只有版本号和表的数目，然后就可以检查单个的表。我们来看一些重要的和有趣的表。<br /><li>1.字体头<br /><li>&nbsp; &nbsp; 字体头表（head表）中包含了TrueType字体的全局信息。下面是字体头表的结构。<br /><li>typedef&nbsp; &nbsp;sturct<br /><li>{<br /><li>Fixed&nbsp; &nbsp;Table;//x00010000&nbsp; &nbsp;ro&nbsp; &nbsp;version&nbsp; &nbsp;1.0<br /><li>Fixed&nbsp; &nbsp;fontRevision;//Set&nbsp; &nbsp;by&nbsp; &nbsp;font&nbsp; &nbsp;manufacturer.<br /><li>ULONG&nbsp; &nbsp;checkSumAdjustment;<br /><li>ULONG&nbsp; &nbsp;magicNumer;&nbsp; &nbsp;//Set&nbsp; &nbsp;to&nbsp; &nbsp;0x5f0f3cf5<br /><li>USHORT&nbsp; &nbsp;flags;<br /><li>USHORT&nbsp; &nbsp;unitsPerEm;&nbsp; &nbsp;//Valid&nbsp; &nbsp;range&nbsp; &nbsp;is&nbsp; &nbsp;from&nbsp; &nbsp;16&nbsp; &nbsp;to&nbsp; &nbsp;16384<br /><li>longDT&nbsp; &nbsp;created;&nbsp; &nbsp;//International&nbsp; &nbsp;date&nbsp; &nbsp;(8-byte&nbsp; &nbsp;field).<br /><li>longDT&nbsp; &nbsp;modified;&nbsp; &nbsp;//International&nbsp; &nbsp;date&nbsp; &nbsp;(8-byte&nbsp; &nbsp;field).<br /><li>FWord&nbsp; &nbsp;xMin;&nbsp; &nbsp;//For&nbsp; &nbsp;all&nbsp; &nbsp;glyph&nbsp; &nbsp;bounding&nbsp; &nbsp;boxes.<br /><li>FWord&nbsp; &nbsp;yMin;&nbsp; &nbsp;//For&nbsp; &nbsp;all&nbsp; &nbsp;glyph&nbsp; &nbsp;bounding&nbsp; &nbsp;boxes.<br /><li>FWord&nbsp; &nbsp;xMax;&nbsp; &nbsp;//For&nbsp; &nbsp;all&nbsp; &nbsp;glyph&nbsp; &nbsp;bounding&nbsp; &nbsp;boxes.<br /><li>FWord&nbsp; &nbsp;xMax;&nbsp; &nbsp;//For&nbsp; &nbsp;all&nbsp; &nbsp;glyph&nbsp; &nbsp;bounding&nbsp; &nbsp;boxes.<br /><li>USHORT&nbsp; &nbsp;macStyle;<br /><li>USHORT&nbsp; &nbsp;lowestRecPPEM;&nbsp; &nbsp;//Smallest&nbsp; &nbsp;readable&nbsp; &nbsp;size&nbsp; &nbsp;in&nbsp; &nbsp;pixels.<br /><li>SHORT&nbsp; &nbsp;fontDirctionHint;<br /><li>SHORT&nbsp; &nbsp;indexToLocFormat;&nbsp; &nbsp;//0&nbsp; &nbsp;for&nbsp; &nbsp;short&nbsp; &nbsp;offsets&nbsp; &nbsp;,1&nbsp; &nbsp;for&nbsp; &nbsp;long.<br /><li>SHORT&nbsp; &nbsp;glyphDataFormat;&nbsp; &nbsp;&nbsp;&nbsp;//0&nbsp; &nbsp;for&nbsp; &nbsp;current&nbsp; &nbsp;format.<br /><li>}Table_head;<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字体的历史记录在三个字段中：字全版本号、字体最初创建时间和字体最后修改时间。有8&nbsp; &nbsp;个字节用于记录时间戳，记录的是从1904年1月1日午夜12：00开始的秒数，因此我们不用担心y2k问题，或是什么y2m问题。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字体设计时是针对一个参考网格设计的，该网格被称为em-square，字体中的图元用网格中的坐标表示。因此em-squrare的大小决定胃该字体的图元被缩放的方式，同时也反映胃该字体的质量。字体头中保存了每个em-square的格数和能&nbsp; &nbsp;包含所有图元的边界框。Em-square的有效值是从16到16384，常见的值是2048、4096和8192。比如，Windings字体的em-square的格数是2048，图元的边界框是[0,-432,2783,1841]。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;字体头表中的其他信息包括最小可读像素大小、字体方向、在位置表中图元索引的格式和图元数据格式等等。<br /><li>最大需求表<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;TrueType字体是一种非常灵活的数据结构，它可以包含可变数目的图元，每个图元可以有不同数目的控制点，甚至还可以有数量可变的图元指令。最大需求表的目的是告知字体栅格器（rasterizer）对内存的需求，以便&nbsp; &nbsp;在出来字体前分配合适大小的内存。因为性能对字体栅格器非常重要，像MFC的CAarray那样需要频繁进行数据拷贝操作的动态增长的数据结构不合要求。下面是maxp表的结构。<br /><li>typedef&nbsp; &nbsp;struct<br /><li>{<br /><li>Fixed&nbsp; &nbsp;Version;//0x00010000&nbsp; &nbsp;for&nbsp; &nbsp;version&nbsp; &nbsp;1.0.<br /><li>USHORT&nbsp; &nbsp;numGlypha;&nbsp; &nbsp;//Number&nbsp; &nbsp;of&nbsp; &nbsp;glyphs&nbsp; &nbsp;in&nbsp; &nbsp;the&nbsp; &nbsp;font&nbsp; &nbsp;.<br /><li>USHORT&nbsp; &nbsp;maxPoints;&nbsp; &nbsp;//Max&nbsp; &nbsp;points&nbsp; &nbsp;in&nbsp; &nbsp;noncomposite&nbsp; &nbsp;glyph&nbsp; &nbsp;.<br /><li>RSHORT&nbsp; &nbsp;maxContours;&nbsp; &nbsp;//Max&nbsp; &nbsp;contours&nbsp; &nbsp;in&nbsp; &nbsp;noncomposite&nbsp; &nbsp;glyph.<br /><li>USHORT&nbsp; &nbsp;maxCompositePoints;//Max&nbsp; &nbsp;points&nbsp; &nbsp;in&nbsp; &nbsp;a&nbsp; &nbsp;composite&nbsp; &nbsp;glyph.<br /><li>USHORT&nbsp; &nbsp;maxCompositeContours;&nbsp; &nbsp;//Max&nbsp; &nbsp;contours&nbsp; &nbsp;in&nbsp; &nbsp;a&nbsp; &nbsp;composite&nbsp; &nbsp;glyph.<br /><li>USHORT&nbsp; &nbsp;maxZones;//&nbsp; &nbsp;1&nbsp; &nbsp;if&nbsp; &nbsp;not&nbsp; &nbsp;use&nbsp; &nbsp;the&nbsp; &nbsp;twilight&nbsp; &nbsp;zone&nbsp; &nbsp;[Z0],<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;//or&nbsp; &nbsp;2&nbsp; &nbsp;if&nbsp; &nbsp;so&nbsp; &nbsp;use&nbsp; &nbsp;Z0;2&nbsp; &nbsp;in&nbsp; &nbsp;most&nbsp; &nbsp;cases.<br /><li>USHORT&nbsp; &nbsp;max&nbsp; &nbsp;TwilightPoints&nbsp; &nbsp;;/&nbsp; &nbsp;Maximum&nbsp; &nbsp;points&nbsp; &nbsp;used&nbsp; &nbsp;in&nbsp; &nbsp;Z0.<br /><li>USHORT&nbsp; &nbsp;maxStorage;&nbsp; &nbsp;//Number&nbsp; &nbsp;of&nbsp; &nbsp;storage&nbsp; &nbsp;area&nbsp; &nbsp;locations.<br /><li>USHORT&nbsp; &nbsp;maxFunctionDefs;&nbsp; &nbsp;//Number&nbsp; &nbsp;of&nbsp; &nbsp;FDEFs.<br /><li>USHORT&nbsp; &nbsp;maxStackElements;&nbsp; &nbsp;//Number&nbsp; &nbsp;of&nbsp; &nbsp;depth.<br /><li>USHORT&nbsp; &nbsp;maxSizeOfInstructions;&nbsp; &nbsp;//Max&nbsp; &nbsp;byte&nbsp; &nbsp;count&nbsp; &nbsp;for&nbsp; &nbsp;glyph&nbsp; &nbsp;inst.<br /><li>USHORT&nbsp; &nbsp;maxComponentElements;&nbsp; &nbsp;//Max&nbsp; &nbsp;number&nbsp; &nbsp;top&nbsp; &nbsp;components&nbsp; &nbsp;refernced.<br /><li>USHORT&nbsp; &nbsp;maxComponentDepth;&nbsp; &nbsp;&nbsp; &nbsp; //Max&nbsp; &nbsp;levels&nbsp; &nbsp;of&nbsp; &nbsp;recursion.<br /><li>}Table_maxp;<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;numGlyphs字段保存了字体中图元的总数，这决定了到位置表的图元索引的数量，可以用于严正图元索引的有效性。TrueType字体中的每个图元都可以是合成图元或简单图元。简单图元可以有一条或多大体上轮廓中国，条用一些控制点定义。合成图元用几个其他图元的组合来定义。maxPoints\maxCountors\maxCompositePoints&nbsp; &nbsp;maxCompositeContours这几个字段说明了图元定义的复杂度。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;除了图元的定义，TrueType字体还使用了图元指令用于提示字体扫描器如何对控制点进行调整以得到更均衡更漂亮的光栅化后的图元。图元指令也可以出现在字体程序表（fpgm表）以及控制值程序表（“prep”）的全局字体层中。TrueType图元指令是一个伪计算机字节指令，该机类似于Java的虚拟机，这些指令可以用堆栈计算机执行。MaxStackElements&nbsp; &nbsp;maxSizeOfInstructions两个字段同志堆栈计算机这些指令的复杂度。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;以Windings字体为例，该字体有226个图元，图元最多有47条轮廓线，简单图元最多有268个点，合成图元最多有141个点，合成图元最多有14条轮廓线，最坏情况下需要492层堆栈，最长的指令有1119个字节。<br /><li>字符到图元索引的映射表（cmap表）定义了从不同代码页中的字符&nbsp; &nbsp;代码到图元索引的映射关系，这是在TrueType字体中存取图元信息的关键。cmap表包含几个了表以支持不同的平台和不同的字符编码方案。<br /><li><br /><li>下面是cmap表的结构。<br /><li><br /><li>&nbsp;&nbsp;typedef&nbsp; &nbsp;struct<br /><li>{<br /><li>USHORT&nbsp; &nbsp;Platform;&nbsp; &nbsp;//platform&nbsp; &nbsp;ID<br /><li>USHORT&nbsp; &nbsp;EncodingID;&nbsp; &nbsp;//encoding&nbsp; &nbsp;ID<br /><li>ULONG&nbsp; &nbsp;TableOffset&nbsp; &nbsp;;//offset&nbsp; &nbsp;to&nbsp; &nbsp;encoding&nbsp; &nbsp;table&nbsp; &nbsp;<br /><li><br /><li><br /><li>typedef&nbsp; &nbsp;struct&nbsp; &nbsp;{<br /><li>WCHAR&nbsp; &nbsp;wcLow;<br /><li>USHORT&nbsp; &nbsp;cGlyphs;<br /><li>}<br /><li><br /><li>typedef&nbsp; &nbsp;struct&nbsp; &nbsp;<br /><li>{<br /><li>DWORD&nbsp; &nbsp;cbThis;&nbsp; &nbsp;&nbsp;&nbsp;//sizeof&nbsp; &nbsp;(GLYPHSET)+sizeof(WCRANGE)+(cRanges-1)<br /><li>DWORD&nbsp; &nbsp;flAccel;<br /><li>DWORD&nbsp; &nbsp;cGlyphsSupported;<br /><li>DWORD&nbsp; &nbsp;cRanges;<br /><li>WCRANGE&nbsp; &nbsp;ranges[1];&nbsp; &nbsp;//ranges[cRanges]<br /><li>}GLYPHSET;<br /><li><br /><li>DWORD&nbsp; &nbsp;GetFontUnicodeRanges(HDC&nbsp; &nbsp;hDC,LPGLYPHSET&nbsp; &nbsp;lpgs);<br /><li>DWORD&nbsp; &nbsp;GetGlyphIndices(HDC&nbsp; &nbsp;hDC,LPCTSTR&nbsp; &nbsp;lpstr,int&nbsp; &nbsp;c&nbsp; &nbsp;,LPWORD&nbsp; &nbsp;pgi,DWORD&nbsp; &nbsp;fl);<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;通常一种字体只提供UNICODE字符集中的字符的一个子集。这些字符可以被分组为多个区域，cmap映射表中就是这么做的。GetFontUnicodeRanges函数在一个GLYPHSET结构中返回支持的图元的数量、支持的UNICODE区域的数量以及设备上下文中字体的这些区域的详细信息。GLYPHSET是一个可变长的结构&nbsp; &nbsp;，其大小取决于所支持的UNICODE区域的数量。因此，和Win32&nbsp; &nbsp;API中支持可变长结构一样，&nbsp; &nbsp;&nbsp; &nbsp; GetFontUnicodeRanges函数通常需要调用两&nbsp; &nbsp;次。第一次调用时得到以NULL指针作为最后一莜参数，GDI会返回所需窨的大小。调用者然后分配所需的内存，再次调用以得到真正的数据。这两&nbsp; &nbsp;种情况下，GetFontUnicodeRanges函数都会返回保存整个结构所需的数据大小。MSDN文档可能还是错误地描述成了如果第二个参数是NULL，GetFontUnicodeRanges函数返回指向GLYPHSET结构的指针。<br /><li>下面是用于查询上下文中当前字体GLYPHSET结构的一个简单函数。<br /><li>GLYPHSET&nbsp; &nbsp;*QueryUnicodeRanges(HDC&nbsp; &nbsp;hDC)<br /><li>{<br /><li>//query&nbsp; &nbsp;for&nbsp; &nbsp;size<br /><li>DWORD&nbsp; &nbsp;size=GetFontUnicodeRanges(hDC,NULL);<br /><li><br /><li>if&nbsp; &nbsp;(size==0)&nbsp; &nbsp;return&nbsp; &nbsp;NULL;<br /><li>GLYPHSET&nbsp; &nbsp;*pGlyphSet=(GLYPHSET&nbsp; &nbsp;*)new&nbsp; &nbsp;BYTE(size);<br /><li><br /><li>//get&nbsp; &nbsp;real&nbsp; &nbsp;data<br /><li>pGlyphSet-&gt;cbThis=size;<br /><li>size=GetFontUnicodeRanges(hDC,pGlyphSet);<br /><li><br /><li>return&nbsp; &nbsp;pGlyphSet;<br /><li>}<br /><li><br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;如果在一些Windows&nbsp; &nbsp;TrueType字体上试着调用GetFontUnicodeRanges函数，你会发现这些字体通常支持1000个以上的图元，这些图元被分成几百个UNICODE区域。比如，“Times&nbsp; &nbsp;New&nbsp; &nbsp;Roman”有我143个图元，分布在145个区域中，和一个区域是0x20到0x7f，即可打印的7位ASCII代码区域。<br /><li>GetFontUnicodeRanges函数只使用了TrueType字体“cmap”表的一部分部分信息，即从UNICODE到图元索引的映射域。GetGlyphIndices函数则能真正使用这些映射关系把一个字符串转换为一个图元索引的数组。它接收一个设备上下文句柄、一个字符串指针、字符串长度、一个WORD数组的指针和一个标志。生成的图元索引将保存在WORD数组中。如果标志为GGI_MASK_NONEXISTING_GLYPHS,找不到的字符的图元索引会被标注成0xFFFF。此函数得到的图元索引可以传给其他GDI函数,如ExtTextOut函数。<br /><li><br /><li>2.位置索引<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;TrueType字体中最有用的信息是glyf表中的图元数据。有了图元索引，要找到相应的图元，需要表（loca表）索引以把图元索引转换为图元数据表内的偏移量。<br /><li>位置索引表中保存了n+1个图元数据表的索引，其中n是保存在最大需求表中的图元数量。最后一个额外&nbsp; &nbsp;的偏移量并不指向一个新图元，而是指向最后一个图元的偏移量和当前图元的偏移量和当前图元的偏移量间的差值得到图元的长度。<br /><li>位置索引表中的每一个索引以无符号短整数对齐的，如果使用了短整数格式，索引表实际存储的是WORD偏移量，而不是BYTE偏移量。这合得短整数格式的位置索引表能&nbsp; &nbsp;支持128KB大小的图元数据表。<br /><li><br /><li>3.图元数据<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;图元数据（glyf表）是TrueType字体的核心信息，因此通常它是最大的表。因为的位置索引是一张单独的表，图元数据表就完全只是图元的序列而已，每个图元以图元头结构开始：<br /><li>typedef&nbsp; &nbsp;struct&nbsp; &nbsp;<br /><li>{<br /><li>WORD&nbsp; &nbsp;numberOfContours;&nbsp; &nbsp;//contor&nbsp; &nbsp;number,negative&nbsp; &nbsp;if&nbsp; &nbsp;composite<br /><li>FWord&nbsp; &nbsp;xMin;&nbsp; &nbsp;&nbsp; &nbsp; //Minimum&nbsp; &nbsp;x&nbsp; &nbsp;for&nbsp; &nbsp;coordinate&nbsp; &nbsp;data.<br /><li>FWord&nbsp; &nbsp;yMin;&nbsp; &nbsp;&nbsp; &nbsp; //Minimum&nbsp; &nbsp;y&nbsp; &nbsp;for&nbsp; &nbsp;coordinate&nbsp; &nbsp;data.<br /><li>FWord&nbsp; &nbsp;xMax;&nbsp; &nbsp;&nbsp; &nbsp; //Maximum&nbsp; &nbsp;x&nbsp; &nbsp;for&nbsp; &nbsp;coordinate&nbsp; &nbsp;data.<br /><li>FWord&nbsp; &nbsp;yMax;&nbsp; &nbsp;&nbsp; &nbsp; //Maximum&nbsp; &nbsp;y&nbsp; &nbsp;for&nbsp; &nbsp;coordinate&nbsp; &nbsp;data.<br /><li>}GlyphHeader;<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;对于简单图元，numberOfContours字段中保存的是当前图元的轮廓线的树木；对于合成图元，numberOfContours字段是一个负值。后者的轮廓线的总数必须基于组成该合成图元的所有图元的数据计算得到。GlyphHeader结构中后四个字段记录了图元的边界框。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;对于简单图元，图元的描述紧跟在GlyphHeader结构之后。图元的描述由几部分信息组成：所有轮廓线结束点的索引、图元指令和一系列的控制点。每个控制点包括一个标志以x和y坐标。概念上而言，控制所需的信息和GDI函数PolyDraw函数所需的信息相同：一组标志和一组点的坐标。但TrueType字体中的控制点的编码要复杂得多。下面是图元描述信息的概述：<br /><li>USHORT&nbsp; &nbsp;endPtsOfContours[n];&nbsp; &nbsp;//n=number&nbsp; &nbsp;of&nbsp; &nbsp;contours<br /><li>USHORT&nbsp; &nbsp;instructionlength;<br /><li>BYTE&nbsp; &nbsp;instruction[i];&nbsp; &nbsp;&nbsp; &nbsp; //i&nbsp; &nbsp;=&nbsp; &nbsp;instruction&nbsp; &nbsp;length<br /><li>BYTE&nbsp; &nbsp;flags[];&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; //variable&nbsp; &nbsp;size<br /><li>BYTE&nbsp; &nbsp;xCoordinates[];&nbsp; &nbsp;&nbsp;&nbsp;//variable&nbsp; &nbsp;size<br /><li>BYTE&nbsp; &nbsp;yCoordinates[];&nbsp; &nbsp;&nbsp;&nbsp;//variable&nbsp; &nbsp;size<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;图元可以包含一条或多条轮廓线。比如，字母&quot;O&quot;有两&nbsp; &nbsp;条轮廓线，一条是内部的轮廓，另一条是外部的轮廓。对于每一条轮廓线，endPtsOfContours数组保存了其终点的索引，从该索引中可以计算出轮廓线中点的数量。比如，endPtsOfContours[0]是第一休轮廓线上点的数量，endPtsOfContours[1]-endPtsOfContours[0]是第二条轮廓线上点的数量。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;终点数组后是图元指令通知度和图元指令数组。我们先跳过它们，先来讨论冬至点。图元的控制点保存在三个数组中：标志获得组、x坐标数组和y坐标数组。找到标志数组的起始点很简单，但是标志数组没有相应的长度字，也没有直接其他两个数组的方法，你必须先解码标志数组才能解释x和y坐标数组。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;我们提到棕em-square被限制为最大为16384个网格，因此通常情况下需要各两个字节来表示x坐标和y坐标。为了节省空间，图元中保存的是相对坐标。第一个点的坐标是相对（0，0）记录的，所有随后的点记录者是和上一个点的坐标差值。有些差值可以用一个字节表示，有些差值为0，另外一些差值则无法用耽搁字节表示。标志数组保存了每个坐标的编码信息以及其他一些信息。下面是标志中各个位的含义的总结：<br /><li><br /><li>typedef&nbsp; &nbsp;enum<br /><li>{<br /><li>G_ONCURVE&nbsp; &nbsp;&nbsp; &nbsp; =&nbsp; &nbsp;0x01,&nbsp; &nbsp;//&nbsp; &nbsp;on&nbsp; &nbsp;curve&nbsp; &nbsp;,off&nbsp; &nbsp;curve<br /><li>G_REPEAT&nbsp; &nbsp;=0x08,&nbsp; &nbsp;&nbsp; &nbsp; //next&nbsp; &nbsp;byte&nbsp; &nbsp;is&nbsp; &nbsp;flag&nbsp; &nbsp;repeat&nbsp; &nbsp;count&nbsp; &nbsp;<br /><li>G_XMASK&nbsp; &nbsp;&nbsp; &nbsp; =0x12,&nbsp; &nbsp;<br /><li>G_XADDBYTE&nbsp; &nbsp;=0x12,&nbsp; &nbsp;//X&nbsp; &nbsp;is&nbsp; &nbsp;positive&nbsp; &nbsp;byte<br /><li>G_XSUBBYTE&nbsp; &nbsp;=0x12,&nbsp; &nbsp;//X&nbsp; &nbsp;is&nbsp; &nbsp;negative&nbsp; &nbsp;byte&nbsp; &nbsp;<br /><li>G_XSAME&nbsp; &nbsp;&nbsp;&nbsp;=0x10,&nbsp; &nbsp;//X&nbsp; &nbsp;is&nbsp; &nbsp;same<br /><li>G_XADDINT&nbsp; &nbsp;=0x00,&nbsp; &nbsp;//X&nbsp; &nbsp;is&nbsp; &nbsp;signed&nbsp; &nbsp;word&nbsp; &nbsp;<br /><li><br /><li>G_YMASK&nbsp; &nbsp;&nbsp;&nbsp;=0x24,<br /><li>G_YADDBYTE&nbsp; &nbsp;=0x24,&nbsp; &nbsp;//Y&nbsp; &nbsp;is&nbsp; &nbsp;positive&nbsp; &nbsp;byte&nbsp; &nbsp;<br /><li>G_YSUBBYTE&nbsp; &nbsp;=0x04,&nbsp; &nbsp;//Y&nbsp; &nbsp;is&nbsp; &nbsp;negative&nbsp; &nbsp;byte<br /><li>G_YSAME&nbsp; &nbsp;=0x20&nbsp; &nbsp;,&nbsp; &nbsp;&nbsp; &nbsp; //Y&nbsp; &nbsp;is&nbsp; &nbsp;same<br /><li>G_YADDINT&nbsp; &nbsp;=0x00,&nbsp; &nbsp;//Y&nbsp; &nbsp;is&nbsp; &nbsp;signed&nbsp; &nbsp;word<br /><li>};<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;在第8章中我们讨论了直线和曲线，我们提到了一段三阶Bezier曲线有四个控制点定义：位于曲线上（on-curve)的起始点、两个不在曲线上（off-curve）的控制点和一个曲线上的结束点。TureType字体中的图元轮廓是用二阶Bezier曲线定义的，有三个点：一个曲线上的点，一个曲线外的点和另一个曲线上的点。多个连续的不在曲线上的点是允许的，但不是用来定义三阶或更高阶的Bezier曲线，而是为了减少控制点的数目。比如，对于on-off-off-on模式的四个点，会加入一个隐含的点使之成为on-off-on-off-on,因此定义的是两段二阶Bezier曲线。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;如果设置了G_ONCURVE位，那么控制点在曲线上，否则不在曲线上。如果设置了G_REPEAT,标志数组中的下一字节表示重复次数，当前标志应该重复指定的次数。因此，标志数组中实际使用了某种类型的行程编码。标志中的其他位用于描述相应&nbsp; &nbsp;的x坐标和y坐标的编码方式，它们可以表示当前相寻坐标是否和上一个相同、正的单字节值、负的单字节值或有符号两字节值。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;解码图元的描述是一个两次扫描的起始点。然后再遍历图元定义中的每一个点把它转换为更容易管理的格式。程序清单14-2列出了解码TrueType图元的函数，它是KTrueType类的一个方法。<br /><li><br /><li>int&nbsp; &nbsp;KTrueType::DecodeGlyph(int&nbsp; &nbsp;index,&nbsp; &nbsp;KCurve&nbsp; &nbsp;&amp;&nbsp; &nbsp;curve,&nbsp; &nbsp;XFORM&nbsp; &nbsp;*&nbsp; &nbsp;xm)&nbsp; &nbsp;const<br /><li>{<br /><li>const&nbsp; &nbsp;GlyphHeader&nbsp; &nbsp;*&nbsp; &nbsp;pHeader&nbsp; &nbsp;=&nbsp; &nbsp;GetGlyph(index);<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;pHeader==NULL&nbsp; &nbsp;)<br /><li>{<br /><li>// assert(false);<br /><li>return&nbsp; &nbsp;0;<br /><li>}<br /><li><br /><li>int nContour&nbsp; &nbsp;=&nbsp; &nbsp;(short)&nbsp; &nbsp;reverse(pHeader-&gt;numberOfContours);<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;nContour&lt;0&nbsp; &nbsp;)<br /><li>{<br /><li>return&nbsp; &nbsp;DecodeCompositeGlyph(pHeader+1,&nbsp; &nbsp;curve);&nbsp; &nbsp;//&nbsp; &nbsp;after&nbsp; &nbsp;the&nbsp; &nbsp;header<br /><li>}<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;nContour==0&nbsp; &nbsp;)<br /><li>return&nbsp; &nbsp;0;<br /><li><br /><li>curve.SetBound(reverse((WORD)pHeader-&gt;xMin),&nbsp; &nbsp;reverse((WORD)pHeader-&gt;yMin),&nbsp; &nbsp;<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; reverse((WORD)pHeader-&gt;xMax),&nbsp; &nbsp;reverse((WORD)pHeader-&gt;yMax));<br /><li><br /><li>const&nbsp; &nbsp;USHORT&nbsp; &nbsp;*&nbsp; &nbsp;pEndPoint&nbsp; &nbsp;=&nbsp; &nbsp;(const&nbsp; &nbsp;USHORT&nbsp; &nbsp;*)&nbsp; &nbsp;(pHeader+1);<br /><li><br /><li>int&nbsp; &nbsp;nPoints&nbsp; &nbsp;=&nbsp; &nbsp;reverse(pEndPoint[nContour-1])&nbsp; &nbsp;+&nbsp; &nbsp;1;&nbsp; &nbsp;&nbsp;&nbsp;//&nbsp; &nbsp;endpoint&nbsp; &nbsp;of&nbsp; &nbsp;last&nbsp; &nbsp;contour&nbsp; &nbsp;+&nbsp; &nbsp;1<br /><li>int&nbsp; &nbsp;nInst&nbsp; &nbsp;&nbsp; &nbsp; =&nbsp; &nbsp;reverse(pEndPoint[nContour]);&nbsp; &nbsp;&nbsp; &nbsp; //&nbsp; &nbsp;instructon&nbsp; &nbsp;length <br /><li><br /><li>curve.m_glyphindex&nbsp; &nbsp;=&nbsp; &nbsp;index;<br /><li>curve.m_glyphsize&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;(int)&nbsp; &nbsp;GetGlyph(index+1)&nbsp; &nbsp;-&nbsp; &nbsp;(int)&nbsp; &nbsp;GetGlyph(index);<br /><li>curve.m_Ascender&nbsp; &nbsp;&nbsp; &nbsp; =&nbsp; &nbsp;m_Ascender;<br /><li>curve.m_Descender&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;m_Descender;<br /><li>curve.m_LineGap&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;=&nbsp; &nbsp;m_LineGap;<br /><li><br /><li>GetMetrics(index,&nbsp; &nbsp;curve.m_advancewidth,&nbsp; &nbsp;curve.m_lsb);<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;curve.m_glyphsize==0&nbsp; &nbsp;)<br /><li>return&nbsp; &nbsp;0;<br /><li><br /><li>curve.m_instrsize&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;nInst;<br /><li><br /><li>const&nbsp; &nbsp;BYTE&nbsp; &nbsp;*&nbsp; &nbsp;pFlag&nbsp; &nbsp;=&nbsp; &nbsp;(const&nbsp; &nbsp;BYTE&nbsp; &nbsp;*)&nbsp; &nbsp;&amp;&nbsp; &nbsp;pEndPoint[nContour]&nbsp; &nbsp;+&nbsp; &nbsp;2&nbsp; &nbsp;+&nbsp; &nbsp;nInst; //&nbsp; &nbsp;first&nbsp; &nbsp;byte&nbsp; &nbsp;in&nbsp; &nbsp;flag<br /><li>const&nbsp; &nbsp;BYTE&nbsp; &nbsp;*&nbsp; &nbsp;pX&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;=&nbsp; &nbsp;pFlag;<br /><li><br /><li>int&nbsp; &nbsp;xlen&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li><br /><li>for&nbsp; &nbsp;(int&nbsp; &nbsp;i=0;&nbsp; &nbsp;i&lt;nPoints;&nbsp; &nbsp;i++,&nbsp; &nbsp;pX++)<br /><li>{<br /><li>int&nbsp; &nbsp;unit&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li><br /><li>switch&nbsp; &nbsp;(&nbsp; &nbsp;pX[0]&nbsp; &nbsp;&amp;&nbsp; &nbsp;G_XMASK&nbsp; &nbsp;)<br /><li>{<br /><li>case&nbsp; &nbsp;G_XADDBYTE:<br /><li>case&nbsp; &nbsp;G_XSUBBYTE:<br /><li>unit&nbsp; &nbsp;=&nbsp; &nbsp;1;<br /><li>break;<br /><li><br /><li>case&nbsp; &nbsp;G_XADDINT:<br /><li>unit&nbsp; &nbsp;=&nbsp; &nbsp;2;<br /><li>}<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;pX[0]&nbsp; &nbsp;&amp;&nbsp; &nbsp;G_REPEAT&nbsp; &nbsp;)<br /><li>{<br /><li>xlen&nbsp; &nbsp;+=&nbsp; &nbsp;unit&nbsp; &nbsp;*&nbsp; &nbsp;(pX[1]+1);&nbsp; &nbsp;<br /><li><br /><li>i&nbsp; &nbsp;+=&nbsp; &nbsp;pX[1];<br /><li>pX&nbsp; &nbsp;++;<br /><li>}<br /><li>else<br /><li>xlen&nbsp; &nbsp;+=&nbsp; &nbsp;unit;<br /><li>}<br /><li><br /><li>const&nbsp; &nbsp;BYTE&nbsp; &nbsp;*&nbsp; &nbsp;pY&nbsp; &nbsp;=&nbsp; &nbsp;pX&nbsp; &nbsp;+&nbsp; &nbsp;xlen;<br /><li><br /><li>int&nbsp; &nbsp;x&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li><br /><li><br /><li> <br /><li><br /><li>KTrueType类处理TrueType字体的装入和解码，随书光盘中有它的完整源代码。DecodeGlyph给出图元索引和可选的变换矩阵，处理的是单个图元的解码。参数curve是KCurve类，用于把TrueType图元定义保存为32位的点的赎罪以及一个标志数组，以梗用GDI进行显示。这些代码可以作为简单TrueType字体编辑器的基础。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;代码中调用了GetGlyph方法，该方法用位置表索引找到该图元的GlyphHeader结构。从中得到图元的轮廓线数目。注意必须反转该值的字节序，因为TrueType字体用的是Big-Endian字节序。如果该值为负值，说明这是一个合成图元，应该转而调用DecodeCompositeGlyph方法。接下支的代码定位了endPtsOfContours数组，找出点的总数，然后跳过指令找到标志数组的起始位置。<br /><li><br /><li></ol></div><em onclick="copycode($('code_GTz'));">复制代码</em></div><br />
+[<i> 本帖最后由 T-bagwell 于 2008-7-23 17:14 编辑 </i>]</td></tr></table>
+
+
+</div>
+<div id="comment_14408369" class="cm">
+</div>
+
+<div id="post_rate_div_14408369"></div>
+<script type="text/javascript">var auc_list_tmp = $('auc_list_tmp');if(auc_list_tmp !== null){document.write(auc_list_tmp.innerHTML);auc_list_tmp.innerHTML='';}
+function lalala(){
+	ajaxget('plugin.php?id=auction:involve&operation=view&tid=2041402&page=1', 'list_ajax');
+	$('list_ajax').style.display = 'block';
+}
+if($('list_ajax')){setTimeout('lalala()', 1000);}
+</script></div>
+</div>
+
+</td></tr>
+<tr><td class="plc plm" style="background-color:#F0F3FA">
+
+<!--这原先是一楼的评分分享收藏的 现在删掉移到上面去 -->
+
+
+        <!--//CHINAUNIX 此处去掉DZ自带相关帖子代码-->
+        
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 start-->
+                                <div class="mtw mbw w90">
+            <div  class="tab011">
+                <ul id="tab011">
+                	                                                            
+                                                            
+                    <li><a>文库|博客</a></li>
+          
+                </ul>
+             </div>
+                           
+            <div id="tab011_Content0" class="tab011Cont">
+               <div class="tab011_l1">
+                   <ul>     
+                   
+                  <li><a href="" target="_blank"></a></li> 
+        
+      
+                  <li><a href="http://blog.chinaunix.net/uid-31544559-id-5787540.html" target="_blank">深入理解分布式系统中的缓存架构(上)</a></li> 
+          
+                   </ul>
+                   <div class="clear"></div>
+               </div> 
+            </div>
+            
+   	    </div>
+   	    <script type=text/javascript>
+function iniMenu(tabObj,selNum,tabTagName,t){
+var collection = document.getElementById(tabObj).getElementsByTagName(tabTagName);
+var selObj = collection[selNum];
+selObj.className = 'here';
+document.getElementById(tabObj+"_Content"+selNum).style.display = "block";
+for(var i = 0; i < collection.length; i++){
+collection[i].num= i;
+collection[i].onmouseover = function(){
+//onclick
+temp = this;
+timer = setTimeout( function(){
+if(temp != selObj){
+selObj.className = '';
+temp.className = 'here';
+document.getElementById( tabObj+"_Content" + temp.num).style.display="block";
+document.getElementById( tabObj+"_Content" + selObj.num).style.display="none";
+selObj = temp;
+}
+},t);
+}
+collection[i].onmouseout = function(){
+clearTimeout(timer);
+}
+}
+}
+iniMenu('tab011',0,'a',200);
+</script> 
+                
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 end-->
+
+        
+        <!--//CUASK 增加CU问答文字链 start by caojingfei at 2012.03.21-->
+                                <!--//ITPUB 增加CU文字链 end by caojingfei at 2012.03.21-->
+</td>
+</tr>
+<tr>
+<td class="pls" style=""></td>
+<td class="plc">
+<div>
+<!--管理操作口移到上面-->
+
+<!--这块原先是每层楼下的回复编辑现在删掉，移到上面去-->
+</div>
+
+</td>
+</tr>
+
+<!--2011.12.01修改 帖子最后一个回帖出现的粗的黑线，有程序部分取得最大pid做对比，参照forum_vithread.php第596行  -->
+<tr class="ad">
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff">
+</td>
+</tr>
+</table>
+</div><div id="post_14408370" style=""><table id="pid14408370" summary="pid14408370" cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls" rowspan="2" style="background-color:#fff">
+ <div class="pi" style=" border-bottom:none">
+<div class="authi"><a href="space-uid-11344913.html" target="_blank" class="xw1">T-bagwell<em style='display: inline-block;width: 16px;height: 9px;background: url(source/plugin/auction/images/v.jpg) no-repeat;overflow: hidden;'></em></a>
+
+</div>
+
+</div>
+<!--2011.12.01自定义头衔移到用户名下面头像上面  -->
+<div class="p_pop blk bui" id="userinfo14408370" style="display: none; margin-top: -11px;">
+<div class="m z">
+<div id="userinfo14408370_ma"></div>
+</div>
+<div class="i y">
+<div>
+<strong><a href="space-uid-11344913.html" target="_blank" class="xi2">T-bagwell<em style='display: inline-block;width: 16px;height: 9px;background: url(source/plugin/auction/images/v.jpg) no-repeat;overflow: hidden;'></em></a></strong>
+<em>当前离线</em>
+</div>
+<dl class="cl"></dl>
+<div class="imicn">
+<a href="home.php?mod=space&amp;uid=11344913&amp;do=profile" target="_blank" title="查看详细资料"><img src="static/image/common/userinfo.gif" alt="查看详细资料" /></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+<div>
+<div class="avatar" onmouseover="showauthor(this, 'userinfo14408370')"><a href="space-uid-11344913.html" target="_blank"><img src="http://passport.it168.com/avatar.php?uid=11344913&size=middle" /></a></div>
+                        
+                        
+                                        
+                             <p><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=20" 
+target="_blank" >广告杀手</a></em></p>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+</div>
+<p></p>
+<ul class="xl xl2 o cl">
+<!--修改文字部分20111026-->
+<!--
+<li class="callon"><a href="space-uid-11344913.html" target="_blank" title="串个门" class="xi2">串个门</a></li>
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=11344913&amp;handlekey=addfriendhk_11344913" id="a_friend_li_14408370" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">加好友</a></li>
+<li class="poke2"><a href="home.php?mod=spacecp&amp;ac=poke&amp;op=send&amp;uid=11344913" id="a_poke_li_14408370" onclick="showWindow(this.id, this.href, 'get', 0);" title="打招呼" class="xi2">打招呼</a></li>
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_11344913&amp;touid=11344913&amp;pmid=0&amp;daterange=2&amp;pid=14408370&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">发消息</a></li>
+ -->
+<!--2013.05.15 修改串门链接 -->
+                    <li class="callon"><a href="http://ask.chinaunix.net/account/login/" target="_blank" class="xi2" style=" font-weight:bold; color:#F00">问答</a></li>
+
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=11344913&amp;handlekey=addfriendhk_11344913" id="a_friend_li_14408370" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">好友</a></li>
+<!--<li class="poke2"><a href="toblog.php?uid=11344913" class="xi2" target="_blank">博客</a></li>-->
+<li class="poke2"><a href="http://blog.chinaunix.net/dir.php?uid=11344913" class="xi2" target="_blank">博客</a></li> 
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_11344913&amp;touid=11344913&amp;pmid=0&amp;daterange=2&amp;pid=14408370&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">消息</a></li>
+</ul>
+<dl class="pil cl"><dt>论坛徽章:</dt><dd>4</dd></dl><div style="padding:3px; margin-left:5px; margin-right:5px;"><img id='1187' src='/source/plugin/itpub_medal/medalimgs/xin7-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='摩羯座
+日期:2014-07-22 09:03:55' title='摩羯座
+日期:2014-07-22 09:03:55'/><img id='1299' src='/source/plugin/itpub_medal/medalimgs/yuanxiaojie-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='2015元宵节徽章
+日期:2015-03-06 15:50:39' title='2015元宵节徽章
+日期:2015-03-06 15:50:39'/><img id='1326' src='/source/plugin/itpub_medal/medalimgs/daban-small.gif' width='24px' style='margin:2px;cursor: hand;' alt='2015亚冠之大阪钢巴
+日期:2015-06-12 16:01:35' title='2015亚冠之大阪钢巴
+日期:2015-06-12 16:01:35'/><img id='1336' src='/source/plugin/itpub_medal/medalimgs/sacc-24(2).png' width='24px' style='margin:2px;cursor: hand;' alt='2015年中国系统架构师大会
+日期:2015-06-29 16:11:28' title='2015年中国系统架构师大会
+日期:2015-06-29 16:11:28'/></div><!--2011.12.05新增禁止本版发言2011.12.17修改增加是否是本版版主且对管理员全部开放 -->
+</td>
+<td class="plc" style="background-color:#fff">
+<div class="pi">
+<!--管理操作口移到这-->
+		
+<strong>
+<a href="forum.php?mod=redirect&goto=findpost&ptid=2041402&pid=14408370" title="您的朋友访问此链接后，您将获得相应的积分奖励" id="postnum14408370" onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>2</em>楼</a>
+<!--以下新加开始 -->
+
+                <!--编辑-->
+
+<!--报告-->
+<a href="javascript:;" onclick="showWindow('miscreport14408370', 'misc.php?mod=report&rtype=post&rid=14408370&tid=2041402&fid=225', 'get', -1);return false;">[报告]</a>
+
+<!--评分2011.12.29-->
+
+<!--评分2011.12.29-->
+					
+ 
+
+
+<!--置顶logo-->
+				
+
+<!--新加的结束-->	
+
+</strong>
+
+<div class="pti">
+<div class="pdbt">
+</div>
+<div class="authi">
+<img class="authicn vm" id="authicon14408370" src="static/image/common/teammo.gif" />
+<em id="authorposton14408370">发表于 2008-07-23 17:14</em>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;page=1&amp;authorid=11344913" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div><div class="pct"><div class="pcb">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_14408370">
+<div class="blockcode"><div id="code_v0e"><ol><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;接下去需要长到的是x坐标数组的始位置和长度，这需要遍历标志数组一次。对于每一个控制点，它在x坐标数组中所占空间可能为0到2个字节，这取决于它的相对坐标是0、单个字节还是两个字节。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;根据x坐标数组的地址和长度可以得到y坐标的地址。接下去的代码遍历所有的轮廓线，解码其中的控制点，把相对坐标转换为绝对坐标，然后把它加入到曲线对象中。如果需要的话，会对每个控制点做变换。<br /><li>回想一下，TrueType使用的是二阶Bezier曲线，允许在两个曲线上的点之间有多个不在曲线上的点。为了简化曲线绘制算法，KCurve::Add方法在每两个不在曲线上的点之间加入一个额外的在曲线上的点。<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;处理了简单图元之后，我们来看看合成图元。合成图元用一个经变换的图元序列定义。每个经变换的图元的定义包括三个部分：一个标志、一个图元索引和一个变换矩阵。标志字段决定了变换矩阵的编码方式。编码的目的也是为了节省一些空间，加外还说明了是否已到达序列的终点。一个完整的2D&nbsp; &nbsp;affine变换需要6个值。但如果只是平移的话，只需要两个值（dx,dy），这两个值可以保存为两个字节或两个字。如果x和y以相同的值缩放，加外还需要一个缩放值。取一般的情况下仍然需要6个值，但是很多时候可以节省几个字节。用于变换的值以2.14的有符号定点格式保存，dx和dy值除外，这两个值以整数形式保存。得到合成图元的过程实际上是变换和组合几个图元的过程。比如，如果字体中的一个图元是另一个图元的精确镜像，它只需定义为一个合成图元，可以通过对另一个图像做镜像变换即可。程序清单14-3列出了解码合成图元的代码。<br /><li><br /><li><br /><li>int&nbsp; &nbsp;KTrueType::DecodeCompositeGlyph(const&nbsp; &nbsp;void&nbsp; &nbsp;*&nbsp; &nbsp;pGlyph,&nbsp; &nbsp;KCurve&nbsp; &nbsp;&amp;&nbsp; &nbsp;curve)&nbsp; &nbsp;const<br /><li>{<br /><li>KDataStream&nbsp; &nbsp;str(pGlyph);<br /><li><br /><li>unsigned&nbsp; &nbsp;flags;<br /><li><br /><li>int&nbsp; &nbsp;len&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li><br /><li>do&nbsp; &nbsp;<br /><li>{<br /><li>flags&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; =&nbsp; &nbsp;str.GetWord();<br /><li><br /><li>unsigned&nbsp; &nbsp;glyphIndex&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li><br /><li>//&nbsp; &nbsp;Argument1&nbsp; &nbsp;and&nbsp; &nbsp;argument2&nbsp; &nbsp;can&nbsp; &nbsp;be&nbsp; &nbsp;either&nbsp; &nbsp;x&nbsp; &nbsp;and&nbsp; &nbsp;y&nbsp; &nbsp;offsets&nbsp; &nbsp;to&nbsp; &nbsp;be&nbsp; &nbsp;added&nbsp; &nbsp;to&nbsp; &nbsp;the&nbsp; &nbsp;glyph&nbsp; &nbsp;or&nbsp; &nbsp;two&nbsp; &nbsp;point&nbsp; &nbsp;numbers.&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;In&nbsp; &nbsp;the&nbsp; &nbsp;latter&nbsp; &nbsp;case,&nbsp; &nbsp;the&nbsp; &nbsp;first&nbsp; &nbsp;point&nbsp; &nbsp;number&nbsp; &nbsp;indicates&nbsp; &nbsp;the&nbsp; &nbsp;point&nbsp; &nbsp;that&nbsp; &nbsp;is&nbsp; &nbsp;to&nbsp; &nbsp;be&nbsp; &nbsp;matched&nbsp; &nbsp;to&nbsp; &nbsp;the&nbsp; &nbsp;new&nbsp; &nbsp;glyph.&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;The&nbsp; &nbsp;second&nbsp; &nbsp;number&nbsp; &nbsp;indicates&nbsp; &nbsp;the&nbsp; &nbsp;new&nbsp; &nbsp;glyph's&nbsp; &nbsp;&quot;matched&quot;&nbsp; &nbsp;point.&nbsp; &nbsp;Once&nbsp; &nbsp;a&nbsp; &nbsp;glyph&nbsp; &nbsp;is&nbsp; &nbsp;added,&nbsp; &nbsp;its&nbsp; &nbsp;point&nbsp; &nbsp;numbers&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;begin&nbsp; &nbsp;directly&nbsp; &nbsp;after&nbsp; &nbsp;the&nbsp; &nbsp;last&nbsp; &nbsp;glyphs&nbsp; &nbsp;(endpoint&nbsp; &nbsp;of&nbsp; &nbsp;first&nbsp; &nbsp;glyph&nbsp; &nbsp;+&nbsp; &nbsp;1).&nbsp; &nbsp;<br /><li><br /><li>//&nbsp; &nbsp;When&nbsp; &nbsp;arguments&nbsp; &nbsp;1&nbsp; &nbsp;and&nbsp; &nbsp;2&nbsp; &nbsp;are&nbsp; &nbsp;an&nbsp; &nbsp;x&nbsp; &nbsp;and&nbsp; &nbsp;a&nbsp; &nbsp;y&nbsp; &nbsp;offset&nbsp; &nbsp;instead&nbsp; &nbsp;of&nbsp; &nbsp;points&nbsp; &nbsp;and&nbsp; &nbsp;the&nbsp; &nbsp;bit&nbsp; &nbsp;ROUND_XY_TO_GRID&nbsp; &nbsp;is&nbsp; &nbsp;set&nbsp; &nbsp;to&nbsp; &nbsp;1,&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;the&nbsp; &nbsp;values&nbsp; &nbsp;are&nbsp; &nbsp;rounded&nbsp; &nbsp;to&nbsp; &nbsp;those&nbsp; &nbsp;of&nbsp; &nbsp;the&nbsp; &nbsp;closest&nbsp; &nbsp;grid&nbsp; &nbsp;lines&nbsp; &nbsp;before&nbsp; &nbsp;they&nbsp; &nbsp;are&nbsp; &nbsp;added&nbsp; &nbsp;to&nbsp; &nbsp;the&nbsp; &nbsp;glyph.&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;X&nbsp; &nbsp;and&nbsp; &nbsp;Y&nbsp; &nbsp;offsets&nbsp; &nbsp;are&nbsp; &nbsp;described&nbsp; &nbsp;in&nbsp; &nbsp;FUnits.&nbsp; &nbsp;<br /><li><br /><li>signed&nbsp; &nbsp;short&nbsp; &nbsp;argument1;<br /><li>signed&nbsp; &nbsp;short&nbsp; &nbsp;argument2;<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;ARG_1_AND_2_ARE_WORDS&nbsp; &nbsp;)<br /><li>{<br /><li>argument1&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();&nbsp; &nbsp;//&nbsp; &nbsp;(SHORT&nbsp; &nbsp;or&nbsp; &nbsp;FWord)&nbsp; &nbsp;argument1;<br /><li>argument2&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();&nbsp; &nbsp;//&nbsp; &nbsp;(SHORT&nbsp; &nbsp;or&nbsp; &nbsp;FWord)&nbsp; &nbsp;argument2;<br /><li>}&nbsp; &nbsp;<br /><li>else&nbsp; &nbsp;<br /><li>{<br /><li>argument1&nbsp; &nbsp;=&nbsp; &nbsp;(signed&nbsp; &nbsp;char)&nbsp; &nbsp;str.GetByte();<br /><li>argument2&nbsp; &nbsp;=&nbsp; &nbsp;(signed&nbsp; &nbsp;char)&nbsp; &nbsp;str.GetByte();<br /><li>}<br /><li><br /><li>signed&nbsp; &nbsp;short&nbsp; &nbsp;xscale,&nbsp; &nbsp;yscale,&nbsp; &nbsp;scale01,&nbsp; &nbsp;scale10;<br /><li><br /><li>xscale&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;1;<br /><li>yscale&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;1;<br /><li>scale01&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li>scale10&nbsp; &nbsp;=&nbsp; &nbsp;0;<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;WE_HAVE_A_SCALE&nbsp; &nbsp;)<br /><li>{<br /><li>xscale&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>yscale&nbsp; &nbsp;=&nbsp; &nbsp;xscale; //&nbsp; &nbsp;Format&nbsp; &nbsp;2.14&nbsp; &nbsp;<br /><li>}&nbsp; &nbsp;<br /><li>else&nbsp; &nbsp;if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;WE_HAVE_AN_X_AND_Y_SCALE&nbsp; &nbsp;)&nbsp; &nbsp;<br /><li>{<br /><li>xscale&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>yscale&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>}&nbsp; &nbsp;<br /><li>else&nbsp; &nbsp;if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;WE_HAVE_A_TWO_BY_TWO&nbsp; &nbsp;)&nbsp; &nbsp;<br /><li>{<br /><li>xscale&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>scale01&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>scale10&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>yscale&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li>}<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;ARGS_ARE_XY_VALUES&nbsp; &nbsp;)<br /><li>{<br /><li>XFORM&nbsp; &nbsp;xm;<br /><li><br /><li>xm.eDx&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;(float)&nbsp; &nbsp;argument1;<br /><li>xm.eDy&nbsp; &nbsp;&nbsp;&nbsp;=&nbsp; &nbsp;(float)&nbsp; &nbsp;argument2;<br /><li>xm.eM11&nbsp; &nbsp;=&nbsp; &nbsp;xscale&nbsp; &nbsp;&nbsp;&nbsp;/&nbsp; &nbsp;(float)&nbsp; &nbsp;16384.0;<br /><li>xm.eM12&nbsp; &nbsp;=&nbsp; &nbsp;scale01&nbsp; &nbsp;/&nbsp; &nbsp;(float)&nbsp; &nbsp;16384.0;<br /><li>xm.eM21&nbsp; &nbsp;=&nbsp; &nbsp;scale10&nbsp; &nbsp;/&nbsp; &nbsp;(float)&nbsp; &nbsp;16384.0;<br /><li>xm.eM22&nbsp; &nbsp;=&nbsp; &nbsp;yscale&nbsp; &nbsp;&nbsp;&nbsp;/&nbsp; &nbsp;(float)&nbsp; &nbsp;16384.0;<br /><li><br /><li>len&nbsp; &nbsp;+=&nbsp; &nbsp;DecodeGlyph(glyphIndex,&nbsp; &nbsp;curve,&nbsp; &nbsp;&amp;&nbsp; &nbsp;xm);<br /><li>}<br /><li>else<br /><li>assert(false);<br /><li>}&nbsp; &nbsp;<br /><li>while&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;MORE_COMPONENTS&nbsp; &nbsp;);<br /><li><br /><li>if&nbsp; &nbsp;(&nbsp; &nbsp;flags&nbsp; &nbsp;&amp;&nbsp; &nbsp;WE_HAVE_INSTRUCTIONS&nbsp; &nbsp;)<br /><li>{<br /><li>unsigned&nbsp; &nbsp;numInstr&nbsp; &nbsp;=&nbsp; &nbsp;str.GetWord();<br /><li><br /><li>for&nbsp; &nbsp;(unsigned&nbsp; &nbsp;i=0;&nbsp; &nbsp;i&lt;numInstr;&nbsp; &nbsp;i++)<br /><li>str.GetByte();<br /><li>}<br /><li><br /><li>//&nbsp; &nbsp;The&nbsp; &nbsp;purpose&nbsp; &nbsp;of&nbsp; &nbsp;USE_MY_METRICS&nbsp; &nbsp;is&nbsp; &nbsp;to&nbsp; &nbsp;force&nbsp; &nbsp;the&nbsp; &nbsp;lsb&nbsp; &nbsp;and&nbsp; &nbsp;rsb&nbsp; &nbsp;to&nbsp; &nbsp;take&nbsp; &nbsp;on&nbsp; &nbsp;a&nbsp; &nbsp;desired&nbsp; &nbsp;value.&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;For&nbsp; &nbsp;example,&nbsp; &nbsp;an&nbsp; &nbsp;i-circumflex&nbsp; &nbsp;(Unicode&nbsp; &nbsp;00ef)&nbsp; &nbsp;is&nbsp; &nbsp;often&nbsp; &nbsp;composed&nbsp; &nbsp;of&nbsp; &nbsp;the&nbsp; &nbsp;circumflex&nbsp; &nbsp;and&nbsp; &nbsp;a&nbsp; &nbsp;dotless-i.&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;In&nbsp; &nbsp;order&nbsp; &nbsp;to&nbsp; &nbsp;force&nbsp; &nbsp;the&nbsp; &nbsp;composite&nbsp; &nbsp;to&nbsp; &nbsp;have&nbsp; &nbsp;the&nbsp; &nbsp;same&nbsp; &nbsp;metrics&nbsp; &nbsp;as&nbsp; &nbsp;the&nbsp; &nbsp;dotless-i,&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;set&nbsp; &nbsp;USE_MY_METRICS&nbsp; &nbsp;for&nbsp; &nbsp;the&nbsp; &nbsp;dotless-i&nbsp; &nbsp;component&nbsp; &nbsp;of&nbsp; &nbsp;the&nbsp; &nbsp;composite.&nbsp; &nbsp;Without&nbsp; &nbsp;this&nbsp; &nbsp;bit,&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;the&nbsp; &nbsp;rsb&nbsp; &nbsp;and&nbsp; &nbsp;lsb&nbsp; &nbsp;would&nbsp; &nbsp;be&nbsp; &nbsp;calculated&nbsp; &nbsp;from&nbsp; &nbsp;the&nbsp; &nbsp;HMTX&nbsp; &nbsp;entry&nbsp; &nbsp;for&nbsp; &nbsp;the&nbsp; &nbsp;composite&nbsp; &nbsp;(or&nbsp; &nbsp;would&nbsp; &nbsp;need&nbsp; &nbsp;to&nbsp; &nbsp;be&nbsp; &nbsp;<br /><li>//&nbsp; &nbsp;explicitly&nbsp; &nbsp;set&nbsp; &nbsp;with&nbsp; &nbsp;TrueType&nbsp; &nbsp;instructions).&nbsp; &nbsp;<br /><li><br /><li>//&nbsp; &nbsp;Note&nbsp; &nbsp;that&nbsp; &nbsp;the&nbsp; &nbsp;behavior&nbsp; &nbsp;of&nbsp; &nbsp;the&nbsp; &nbsp;USE_MY_METRICS&nbsp; &nbsp;operation&nbsp; &nbsp;is&nbsp; &nbsp;undefined&nbsp; &nbsp;for&nbsp; &nbsp;rotated&nbsp; &nbsp;composite&nbsp; &nbsp;components.<br /><li><br /><li>return&nbsp; &nbsp;len;<br /><li>}<br /><li><br /><li><br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;DecodeCompositeGlyph方法解码每个图元的标志、图元索引和变换矩阵，然后调用DecodeGlypgh方法进行解码。注意，对DecodeGlyph方法的调用包含一个有效的变换矩阵参数。当MORE_COMPONENTS标志结束时，该方法随之结束。随书光盘中有该方法完整的源代码。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;解码后的TrueType字体的图元要用GDI绘制还有一个小问题需要处理。GDI只绘制三阶Bezier曲线，因此从图元表解码所得的二阶Bezier曲线的控制点需要转换为三阶Bezier曲线的控制点。通过对Bezier曲线原始数学定义的研究，可以得到如下用GDI绘制二阶Bezier曲线的简单例程。<br /><li><br /><li>//draw&nbsp; &nbsp;a&nbsp; &nbsp;2nd-degree&nbsp; &nbsp;Bezier&nbsp; &nbsp;curve&nbsp; &nbsp;segment<br /><li>BOOL&nbsp; &nbsp;Bezier2(HDC&nbsp; &nbsp;hDC,int&nbsp; &nbsp;&amp;&nbsp; &nbsp;x0,int&nbsp; &nbsp;&amp;&nbsp; &nbsp;y0,&nbsp; &nbsp;int&nbsp; &nbsp;x1,&nbsp; &nbsp;int&nbsp; &nbsp;y1,&nbsp; &nbsp;int&nbsp; &nbsp;x2&nbsp; &nbsp;,int&nbsp; &nbsp;y2)<br /><li>{<br /><li>//&nbsp; &nbsp;p0&nbsp; &nbsp;p1&nbsp; &nbsp;p2&nbsp; &nbsp;-&nbsp; &nbsp;&gt;&nbsp; &nbsp;p0&nbsp; &nbsp;(p0&nbsp; &nbsp;+&nbsp; &nbsp;2p1)/3&nbsp; &nbsp;(2p1+p2)/3,&nbsp; &nbsp;p2<br /><li><br /><li>POINT&nbsp; &nbsp;P[3]&nbsp; &nbsp;=&nbsp; &nbsp;{&nbsp; &nbsp;{&nbsp; &nbsp;(x0+2*x1)/3,(y0+2*y1)/3},<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{(2*x1+x2)/3,(2*y1+y2)/3},<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{x2,y2}&nbsp; &nbsp;}；<br /><li>x0=x2;y0=y2;<br /><li>return&nbsp; &nbsp;PolyBezierTo(hDC,P,3);<br /><li>}<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;对于用三个控制点（p0,p1,p2)定义的二阶Bezier曲线，相应的三阶Bezier曲线的控制点为（p0,(p0+2*p1)/3,(2*p1+p2)/3,p2)。<br /><li><br /><li><br /><li>4.图元指令<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;程序清单14-2和14-3给人的印象是TrueType字体的栅格器可以通过扫描和转换图元的轮廓来轻松地实现，比如，用GDI和StrokeAndFillPath函数来填充图元轮廓绘制出来的路径。这种简单的字体栅格器的实现并不是很有用，除非它只用于高分辨诣的设备如打印机等。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;简单栅格器得到的图像笔画粗细不一，有信息的遗漏，有字符特征的损失以及不对称等缺陷。当点阵变小是，情况不会更糟。总之，简单字体栅格器在小尺寸时会产生字迹模糊的结果。在大尺寸时会产生不好看的结果，只有在点阵增大时结果才会改善。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;当在大的em-square（典型的是2048）中定义的图元轮廓缩小为小得多的网格时（如32＊32），不可避免会损失精度并引入误差。<br /><li><br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;TrueType解决这个问题的方法是控制图元轮廓从em-square到栅格网格的缩放过程，使得到的结果看起来效果更好，和原始图元的设计尽量接近。这种技术被称为网格调整（grid&nbsp; &nbsp;fitting），它想达到的目标有：<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;消除网格位置的可能影响，保证笔画的粗细和网格的相对位置无关。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;控制图元中关键位置的尺寸<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;保持对称性和衬线等&nbsp; &nbsp;重要的图元设计细节。<br /><li>&nbsp; &nbsp; <br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; TrueType字体中网格调整的需求在两个地方中编码：控制值表（control&nbsp; &nbsp;value&nbsp; &nbsp;table)和每个图元的网格调整指令。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;控制值表（&quot;cvt&quot;表)用于保存一个数组，这些值被称为网格调整指令。比如，对于有衬线的字体，基线、衬线高度、大写字母笔划的宽度等值都或以是被控制的值。它们可以以字体设计者已知的次序保存在控制值表中，然后用它们的索引来引用。在字体光栅化过程中，控制值表中的值根据点阵的大小缩放。在网络调整指令中引用这些值&nbsp; &nbsp;可以保证使用的值与网枸的位置无关。比如，如果水平线[14，0，25，200]可以用CVT表中的两个值定义为[14，0，14+CVT[stem_width],0+CVT[cap_height]],那&nbsp; &nbsp;&nbsp;&nbsp;么该线的宽度和高度会和所在网格的相对位置无关，保持不变。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;每一个图元的定义中附加有一个指令序列，该指令序列被称为图元指令，该背景令序列用于控制此图元的网格高速。图元指令线用控制值表中的值，以保证在索引图元中这些值相同。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;图元指令是一种基于堆栈的伪计算机的指令。堆栈计算机常用于计算机语言的解释性实现。比如，Forth(用于嵌入式系统的一种强大而简洁的语言）、RPL（HP计算器使用的语言）和Java虚拟机都是堆栈计算机。<br /><li>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;堆栈计算机通常没有寄存器，所有的计算都在堆栈上进行（有些堆栈计算机使用分开的控制堆栈和数据堆栈）。比如，压入指令把一个值压入堆栈，弹出指令从堆栈中弹出上面的值，二元加法指令弹出上面的两&nbsp; &nbsp;个值&nbsp; &nbsp;，然后把它们的和压入堆栈。<br /><li></ol></div><em onclick="copycode($('code_v0e'));">复制代码</em></div></td></tr></table>
+
+
+</div>
+<div id="comment_14408370" class="cm">
+</div>
+
+<div id="post_rate_div_14408370"></div>
+<div style="margin:10px auto;padding:10px;">
+<style>
+.cl:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; } .cl { zoom: 1; }
+.rebtnw a:hover{text-decoration:none;box-shadow:1px 1px 3px #ccc}
+.rebtnw a{display:inline-block;height:32px;line-height:32px;padding:0 25px;font-size:16px;text-align: center;margin:0 auto;vertical-align: middle;color: #fff;border-radius: 5px;background:#D75847}
+.rebtnw{margin:8px auto 25px;text-align: center}
+.reword{ text-align: center; font-size: 18px;color: #666;line-height: 36px;}
+.relist p{font-size:16px;text-align:center;color:#909090}
+.relist p a{color:#627C97;font-size:16px}
+.relist ul{width:272px;margin:10px auto!important;text-align:center}
+.relist ul li{ margin:0 6px 6px 0;display:inline-block;list-style-type:none!important;}
+.relist ul li img{width:28px;height:28px;display:block}
+</style><style>.rebtnw{margin:10px auto;}.relist{margin-top:20px}</style>
+<div class="rebtnw">
+</div>
+<script>
+function showprconfirm(title,uid,subject,postid,url){
+        var notice = '<style>.alert_info{padding-left:0;background:none}</style>' +
+         '<div class="c altw"><div class="alert_info"><p><style>.alert_info{padding-left:0;background:none}</style></p><div class="cl" style="margin-top:10px;text-align:center" id="inputqrw"><input id="inputqr" class="px" type="number" name="amount" autocomplete="off" value="1"> 元</div><p></p></div></div><p class="o pns"><span class="z xg1">打赏无悔，概不退款</span><button id="fwin_dosubmit" value="true" class="pn pnc"><strong>立即打赏</strong></button><button id="fwin_dialog_cancel" value="true" class="pn" onclick="hideMenu(\'fwin_dialog\', \'dialog\')"><strong>关闭</strong></button></p>';
+        showDialog(notice, 'info', title,null,1);
+        $('fwin_dosubmit').onclick = function(){
+            var price = $('inputqr').value;
+            if(! /^[0-9]+\.{0,1}[0-9]{0,2}$/.test(price)){
+                alert('请输入正确的金额!');
+                $('inputqr').focus();
+                return true;
+            }
+            ajaxget('plugin.php?id=xigua_re:index&ac=pc&uid='+uid+'&price='+price+'&subject='+subject+'&postid='+postid+'&url='+url, 'inputqrw');
+            return true;
+        }
+}
+</script>
+</div></div>
+</div>
+
+</td></tr>
+<tr><td class="plc plm" style="background-color:#fff">
+
+        <!--//CHINAUNIX 此处去掉DZ自带相关帖子代码-->
+        
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 start-->
+                                
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 end-->
+
+        
+        <!--//CUASK 增加CU问答文字链 start by caojingfei at 2012.03.21-->
+                <div class="a_pb"><a href="http://bbs.chinaunix.net/thread-4295908-1-1.html"  target="_blank" style="color:green"><b>实战分享：从技术角度谈机器学习入门</b></a>|
+<a target="_blank" href="http://www.itpub.net/thread-2102243-1-1.html" style=color:red><b>【大话IT】RadonDB低门槛向MySQL集群下战书 </b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4253562-1-1.html" target="_blank" style="color:blue"><b>ChinaUnix打赏功能已上线！</b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4295762-1-1.html"  target="_blank" style="color:#8E236B"><b>新一代分布式关系型数据库RadonDB知多少？</b></a></div>                <!--//ITPUB 增加CU文字链 end by caojingfei at 2012.03.21-->
+</td>
+</tr>
+<tr>
+<td class="pls" style="background-color:#fff"></td>
+<td class="plc">
+<div>
+<!--管理操作口移到上面-->
+
+<!--这块原先是每层楼下的回复编辑现在删掉，移到上面去-->
+</div>
+
+</td>
+</tr>
+
+<!--2011.12.01修改 帖子最后一个回帖出现的粗的黑线，有程序部分取得最大pid做对比，参照forum_vithread.php第596行  -->
+<tr class="ad">
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff">
+</td>
+</tr>
+</table>
+</div><div id="post_14408371" style="background-color:#E5EDF2"><table id="pid14408371" summary="pid14408371" cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls" rowspan="2" style="background-color:#F0F3FA">
+ <div class="pi" style=" border-bottom:none">
+<div class="authi"><a href="space-uid-690866.html" target="_blank" class="xw1">gigabyte</a>
+
+</div>
+
+</div>
+<!--2011.12.01自定义头衔移到用户名下面头像上面  -->
+<div class="p_pop blk bui" id="userinfo14408371" style="display: none; margin-top: -11px;">
+<div class="m z">
+<div id="userinfo14408371_ma"></div>
+</div>
+<div class="i y">
+<div>
+<strong><a href="space-uid-690866.html" target="_blank" class="xi2">gigabyte</a></strong>
+<em>当前离线</em>
+</div>
+<dl class="cl"></dl>
+<div class="imicn">
+<a href="home.php?mod=space&amp;uid=690866&amp;do=profile" target="_blank" title="查看详细资料"><img src="static/image/common/userinfo.gif" alt="查看详细资料" /></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+<div>
+<div class="avatar" onmouseover="showauthor(this, 'userinfo14408371')"><a href="space-uid-690866.html" target="_blank"><img src="http://passport.it168.com/avatar.php?uid=690866&size=middle" /></a></div>
+                        
+                        
+                                        
+                             <p><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=10" 
+target="_blank" >白手起家</a></em></p>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+</div>
+<p id="g_up14408371" onmouseover="showMenu({'ctrlid':this.id, 'pos':'12!'});"></p>
+<div id="g_up14408371_menu" class="tip tip_4" style="display: none;">
+<div class="tip_horn"></div>
+<div class="tip_c">白手起家, 积分 134, 距离下一级还需 66 积分</div>
+</div>
+<ul class="xl xl2 o cl">
+<!--修改文字部分20111026-->
+<!--
+<li class="callon"><a href="space-uid-690866.html" target="_blank" title="串个门" class="xi2">串个门</a></li>
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=690866&amp;handlekey=addfriendhk_690866" id="a_friend_li_14408371" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">加好友</a></li>
+<li class="poke2"><a href="home.php?mod=spacecp&amp;ac=poke&amp;op=send&amp;uid=690866" id="a_poke_li_14408371" onclick="showWindow(this.id, this.href, 'get', 0);" title="打招呼" class="xi2">打招呼</a></li>
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_690866&amp;touid=690866&amp;pmid=0&amp;daterange=2&amp;pid=14408371&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">发消息</a></li>
+ -->
+<!--2013.05.15 修改串门链接 -->
+                    <li class="callon"><a href="http://ask.chinaunix.net/account/login/" target="_blank" class="xi2" style=" font-weight:bold; color:#F00">问答</a></li>
+
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=690866&amp;handlekey=addfriendhk_690866" id="a_friend_li_14408371" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">好友</a></li>
+<!--<li class="poke2"><a href="toblog.php?uid=690866" class="xi2" target="_blank">博客</a></li>-->
+<li class="poke2"><a href="http://blog.chinaunix.net/dir.php?uid=690866" class="xi2" target="_blank">博客</a></li> 
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_690866&amp;touid=690866&amp;pmid=0&amp;daterange=2&amp;pid=14408371&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">消息</a></li>
+</ul>
+<dl class="pil cl"><dt>论坛徽章:</dt><dd>0</dd></dl><div style="padding:3px; margin-left:5px; margin-right:5px;"></div><!--2011.12.05新增禁止本版发言2011.12.17修改增加是否是本版版主且对管理员全部开放 -->
+</td>
+<td class="plc" style="background-color:#F0F3FA">
+<div class="pi">
+<!--管理操作口移到这-->
+		
+<strong>
+<a href="forum.php?mod=redirect&goto=findpost&ptid=2041402&pid=14408371" title="您的朋友访问此链接后，您将获得相应的积分奖励" id="postnum14408371" onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>3</em>楼</a>
+<!--以下新加开始 -->
+
+                <!--编辑-->
+
+<!--报告-->
+<a href="javascript:;" onclick="showWindow('miscreport14408371', 'misc.php?mod=report&rtype=post&rid=14408371&tid=2041402&fid=225', 'get', -1);return false;">[报告]</a>
+
+<!--评分2011.12.29-->
+
+<!--评分2011.12.29-->
+					
+ 
+
+
+<!--置顶logo-->
+				
+
+<!--新加的结束-->	
+
+</strong>
+
+<div class="pti">
+<div class="pdbt">
+</div>
+<div class="authi">
+<img class="authicn vm" id="authicon14408371" src="static/image/common/online_member.gif" />
+<em id="authorposton14408371">发表于 2008-07-23 17:16</em>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;page=1&amp;authorid=690866" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div><div class="pct"><div class="pcb">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_14408371">
+好长…………<img src="static/image/smiley/default/icon_redface.gif" smilieid="54" border="0" alt="" /></td></tr></table>
+
+
+</div>
+<div id="comment_14408371" class="cm">
+</div>
+
+<div id="post_rate_div_14408371"></div>
+<div style="margin:10px auto;padding:10px;">
+<style>.rebtnw{margin:10px auto;}.relist{margin-top:20px}</style>
+<div class="rebtnw">
+</div>
+
+</div></div>
+</div>
+
+</td></tr>
+<tr><td class="plc plm" style="background-color:#F0F3FA">
+
+        <!--//CHINAUNIX 此处去掉DZ自带相关帖子代码-->
+        
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 start-->
+                                
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 end-->
+
+        
+        <!--//CUASK 增加CU问答文字链 start by caojingfei at 2012.03.21-->
+                <div class="a_pb"><a href="http://bbs.chinaunix.net/thread-4295908-1-1.html"  target="_blank" style="color:green"><b>实战分享：从技术角度谈机器学习入门</b></a>|
+<a target="_blank" href="http://www.itpub.net/thread-2102243-1-1.html" style=color:red><b>【大话IT】RadonDB低门槛向MySQL集群下战书 </b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4253562-1-1.html" target="_blank" style="color:blue"><b>ChinaUnix打赏功能已上线！</b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4295762-1-1.html"  target="_blank" style="color:#8E236B"><b>新一代分布式关系型数据库RadonDB知多少？</b></a></div>                <!--//ITPUB 增加CU文字链 end by caojingfei at 2012.03.21-->
+</td>
+</tr>
+<tr>
+<td class="pls" style=""></td>
+<td class="plc">
+<div>
+<!--管理操作口移到上面-->
+
+<!--这块原先是每层楼下的回复编辑现在删掉，移到上面去-->
+</div>
+
+</td>
+</tr>
+
+<!--2011.12.01修改 帖子最后一个回帖出现的粗的黑线，有程序部分取得最大pid做对比，参照forum_vithread.php第596行  -->
+<tr class="ad">
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff">
+</td>
+</tr>
+</table>
+</div><div id="post_22332868" style=""><table id="pid22332868" summary="pid22332868" cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls" rowspan="2" style="background-color:#fff">
+ <div class="pi" style=" border-bottom:none">
+<div class="authi"><a href="space-uid-24241602.html" target="_blank" class="xw1">Microsoftor</a>
+
+</div>
+
+</div>
+<!--2011.12.01自定义头衔移到用户名下面头像上面  -->
+<div class="p_pop blk bui" id="userinfo22332868" style="display: none; margin-top: -11px;">
+<div class="m z">
+<div id="userinfo22332868_ma"></div>
+</div>
+<div class="i y">
+<div>
+<strong><a href="space-uid-24241602.html" target="_blank" class="xi2">Microsoftor</a></strong>
+<em>当前离线</em>
+</div>
+<dl class="cl"></dl>
+<div class="imicn">
+<a href="home.php?mod=space&amp;uid=24241602&amp;do=profile" target="_blank" title="查看详细资料"><img src="static/image/common/userinfo.gif" alt="查看详细资料" /></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+<div>
+<div class="avatar" onmouseover="showauthor(this, 'userinfo22332868')"><a href="space-uid-24241602.html" target="_blank"><img src="http://passport.it168.com/avatar.php?uid=24241602&size=middle" /></a></div>
+                        
+                        
+                                        
+                             <p><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=10" 
+target="_blank" >白手起家</a></em></p>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+</div>
+<p id="g_up22332868" onmouseover="showMenu({'ctrlid':this.id, 'pos':'12!'});"></p>
+<div id="g_up22332868_menu" class="tip tip_4" style="display: none;">
+<div class="tip_horn"></div>
+<div class="tip_c">白手起家, 积分 21, 距离下一级还需 179 积分</div>
+</div>
+<ul class="xl xl2 o cl">
+<!--修改文字部分20111026-->
+<!--
+<li class="callon"><a href="space-uid-24241602.html" target="_blank" title="串个门" class="xi2">串个门</a></li>
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=24241602&amp;handlekey=addfriendhk_24241602" id="a_friend_li_22332868" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">加好友</a></li>
+<li class="poke2"><a href="home.php?mod=spacecp&amp;ac=poke&amp;op=send&amp;uid=24241602" id="a_poke_li_22332868" onclick="showWindow(this.id, this.href, 'get', 0);" title="打招呼" class="xi2">打招呼</a></li>
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_24241602&amp;touid=24241602&amp;pmid=0&amp;daterange=2&amp;pid=22332868&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">发消息</a></li>
+ -->
+<!--2013.05.15 修改串门链接 -->
+                    <li class="callon"><a href="http://ask.chinaunix.net/account/login/" target="_blank" class="xi2" style=" font-weight:bold; color:#F00">问答</a></li>
+
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=24241602&amp;handlekey=addfriendhk_24241602" id="a_friend_li_22332868" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">好友</a></li>
+<!--<li class="poke2"><a href="toblog.php?uid=24241602" class="xi2" target="_blank">博客</a></li>-->
+<li class="poke2"><a href="http://blog.chinaunix.net/dir.php?uid=24241602" class="xi2" target="_blank">博客</a></li> 
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_24241602&amp;touid=24241602&amp;pmid=0&amp;daterange=2&amp;pid=22332868&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">消息</a></li>
+</ul>
+<dl class="pil cl"><dt>论坛徽章:</dt><dd>0</dd></dl><div style="padding:3px; margin-left:5px; margin-right:5px;"></div><!--2011.12.05新增禁止本版发言2011.12.17修改增加是否是本版版主且对管理员全部开放 -->
+</td>
+<td class="plc" style="background-color:#fff">
+<div class="pi">
+<!--管理操作口移到这-->
+		
+<strong>
+<a href="forum.php?mod=redirect&goto=findpost&ptid=2041402&pid=22332868" title="您的朋友访问此链接后，您将获得相应的积分奖励" id="postnum22332868" onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>4</em>楼</a>
+<!--以下新加开始 -->
+
+                <!--编辑-->
+
+<!--报告-->
+<a href="javascript:;" onclick="showWindow('miscreport22332868', 'misc.php?mod=report&rtype=post&rid=22332868&tid=2041402&fid=225', 'get', -1);return false;">[报告]</a>
+
+<!--评分2011.12.29-->
+
+<!--评分2011.12.29-->
+					
+ 
+
+
+<!--置顶logo-->
+				
+
+<!--新加的结束-->	
+
+</strong>
+
+<div class="pti">
+<div class="pdbt">
+</div>
+<div class="authi">
+<img class="authicn vm" id="authicon22332868" src="static/image/common/online_member.gif" />
+<em id="authorposton22332868">发表于 2012-10-30 00:03</em>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;page=1&amp;authorid=24241602" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div><div class="pct"><div class="pcb">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_22332868">
+大牛，我有个对ttf文件操作的想法。<br />
+<br />
+中文的ttf文件都是5mb左右，不利于css3向web页面里引入。<br />
+<br />
+所谓我想在能确定有限的需要按某一字体显示的文字的情况下，对ttf进行“瘦身”，删除某一有限文字之外的内容。<br />
+<br />
+就是对ttf文件进行批量删除。<br />
+<br />
+看这个代码头有点大了，没有解析过这些格式的文件，道路坎坷。<br />
+<br />
+求助~</td></tr></table>
+
+
+</div>
+<div id="comment_22332868" class="cm">
+</div>
+
+<div id="post_rate_div_22332868"></div>
+<div style="margin:10px auto;padding:10px;">
+<style>.rebtnw{margin:10px auto;}.relist{margin-top:20px}</style>
+<div class="rebtnw">
+</div>
+
+</div></div>
+</div>
+
+</td></tr>
+<tr><td class="plc plm" style="background-color:#fff">
+
+        <!--//CHINAUNIX 此处去掉DZ自带相关帖子代码-->
+        
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 start-->
+                                
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 end-->
+
+        
+        <!--//CUASK 增加CU问答文字链 start by caojingfei at 2012.03.21-->
+                <div class="a_pb"><a href="http://bbs.chinaunix.net/thread-4295908-1-1.html"  target="_blank" style="color:green"><b>实战分享：从技术角度谈机器学习入门</b></a>|
+<a target="_blank" href="http://www.itpub.net/thread-2102243-1-1.html" style=color:red><b>【大话IT】RadonDB低门槛向MySQL集群下战书 </b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4253562-1-1.html" target="_blank" style="color:blue"><b>ChinaUnix打赏功能已上线！</b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4295762-1-1.html"  target="_blank" style="color:#8E236B"><b>新一代分布式关系型数据库RadonDB知多少？</b></a></div>                <!--//ITPUB 增加CU文字链 end by caojingfei at 2012.03.21-->
+</td>
+</tr>
+<tr>
+<td class="pls" style="background-color:#fff"></td>
+<td class="plc">
+<div>
+<!--管理操作口移到上面-->
+
+<!--这块原先是每层楼下的回复编辑现在删掉，移到上面去-->
+</div>
+
+</td>
+</tr>
+
+<!--2011.12.01修改 帖子最后一个回帖出现的粗的黑线，有程序部分取得最大pid做对比，参照forum_vithread.php第596行  -->
+<tr class="ad">
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff">
+</td>
+</tr>
+</table>
+</div><div id="post_24586652" style="background-color:#E5EDF2"><table id="pid24586652" summary="pid24586652" cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls" rowspan="2" style="background-color:#F0F3FA">
+ <a name="lastpost"></a><div class="pi" style=" border-bottom:none">
+<div class="authi"><a href="space-uid-31377757.html" target="_blank" class="xw1">range0122</a>
+
+</div>
+
+</div>
+<!--2011.12.01自定义头衔移到用户名下面头像上面  -->
+<div class="p_pop blk bui" id="userinfo24586652" style="display: none; margin-top: -11px;">
+<div class="m z">
+<div id="userinfo24586652_ma"></div>
+</div>
+<div class="i y">
+<div>
+<strong><a href="space-uid-31377757.html" target="_blank" class="xi2">range0122</a></strong>
+<em>当前离线</em>
+</div>
+<dl class="cl"></dl>
+<div class="imicn">
+<a href="home.php?mod=space&amp;uid=31377757&amp;do=profile" target="_blank" title="查看详细资料"><img src="static/image/common/userinfo.gif" alt="查看详细资料" /></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+<div>
+<div class="avatar" onmouseover="showauthor(this, 'userinfo24586652')"><a href="space-uid-31377757.html" target="_blank"><img src="http://passport.it168.com/avatar.php?uid=31377757&size=middle" /></a></div>
+                        
+                        
+                                        
+                             <p><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=10" 
+target="_blank" >白手起家</a></em></p>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+</div>
+<p id="g_up24586652" onmouseover="showMenu({'ctrlid':this.id, 'pos':'12!'});"></p>
+<div id="g_up24586652_menu" class="tip tip_4" style="display: none;">
+<div class="tip_horn"></div>
+<div class="tip_c">白手起家, 积分 2, 距离下一级还需 198 积分</div>
+</div>
+<ul class="xl xl2 o cl">
+<!--修改文字部分20111026-->
+<!--
+<li class="callon"><a href="space-uid-31377757.html" target="_blank" title="串个门" class="xi2">串个门</a></li>
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=31377757&amp;handlekey=addfriendhk_31377757" id="a_friend_li_24586652" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">加好友</a></li>
+<li class="poke2"><a href="home.php?mod=spacecp&amp;ac=poke&amp;op=send&amp;uid=31377757" id="a_poke_li_24586652" onclick="showWindow(this.id, this.href, 'get', 0);" title="打招呼" class="xi2">打招呼</a></li>
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_31377757&amp;touid=31377757&amp;pmid=0&amp;daterange=2&amp;pid=24586652&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">发消息</a></li>
+ -->
+<!--2013.05.15 修改串门链接 -->
+                    <li class="callon"><a href="http://ask.chinaunix.net/account/login/" target="_blank" class="xi2" style=" font-weight:bold; color:#F00">问答</a></li>
+
+<li class="buddy"><a href="home.php?mod=spacecp&amp;ac=friend&amp;op=add&amp;uid=31377757&amp;handlekey=addfriendhk_31377757" id="a_friend_li_24586652" onclick="showWindow(this.id, this.href, 'get', 1, {'ctrlid':this.id,'pos':'00'});" title="加好友" class="xi2">好友</a></li>
+<!--<li class="poke2"><a href="toblog.php?uid=31377757" class="xi2" target="_blank">博客</a></li>-->
+<li class="poke2"><a href="http://blog.chinaunix.net/dir.php?uid=31377757" class="xi2" target="_blank">博客</a></li> 
+<li class="pm2"><a href="home.php?mod=spacecp&amp;ac=pm&amp;op=showmsg&amp;handlekey=showmsg_31377757&amp;touid=31377757&amp;pmid=0&amp;daterange=2&amp;pid=24586652&amp;tid=2041402" onclick="showWindow('sendpm', this.href);" title="发消息" class="xi2">消息</a></li>
+</ul>
+<dl class="pil cl"><dt>论坛徽章:</dt><dd>0</dd></dl><div style="padding:3px; margin-left:5px; margin-right:5px;"></div><!--2011.12.05新增禁止本版发言2011.12.17修改增加是否是本版版主且对管理员全部开放 -->
+</td>
+<td class="plc" style="background-color:#F0F3FA">
+<div class="pi">
+<!--管理操作口移到这-->
+		
+<strong>
+<a href="forum.php?mod=redirect&goto=findpost&ptid=2041402&pid=24586652" title="您的朋友访问此链接后，您将获得相应的积分奖励" id="postnum24586652" onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>5</em>楼</a>
+<!--以下新加开始 -->
+
+                <!--编辑-->
+
+<!--报告-->
+<a href="javascript:;" onclick="showWindow('miscreport24586652', 'misc.php?mod=report&rtype=post&rid=24586652&tid=2041402&fid=225', 'get', -1);return false;">[报告]</a>
+
+<!--评分2011.12.29-->
+
+<!--评分2011.12.29-->
+					
+ 
+
+
+<!--置顶logo-->
+				
+
+<!--新加的结束-->	
+
+</strong>
+
+<div class="pti">
+<div class="pdbt">
+</div>
+<div class="authi">
+<img class="authicn vm" id="authicon24586652" src="static/image/common/online_member.gif" />
+<em id="authorposton24586652">发表于 2016-07-26 09:42</em>
+<span class="pipe">|</span><a href="forum.php?mod=viewthread&amp;tid=2041402&amp;page=1&amp;authorid=31377757" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div><div class="pct"><div class="pcb">
+<div class="t_fsz">
+<table cellspacing="0" cellpadding="0"><tr><td class="t_f" id="postmessage_24586652">
+学到了好多，表示感谢！<br />
+但是还是有一大堆的错别字，希望能治学严谨。</td></tr></table>
+
+
+</div>
+<div id="comment_24586652" class="cm">
+</div>
+
+<div id="post_rate_div_24586652"></div>
+<div style="margin:10px auto;padding:10px;">
+<style>.rebtnw{margin:10px auto;}.relist{margin-top:20px}</style>
+<div class="rebtnw">
+</div>
+
+</div></div>
+</div>
+
+</td></tr>
+<tr><td class="plc plm" style="background-color:#F0F3FA">
+
+        <!--//CHINAUNIX 此处去掉DZ自带相关帖子代码-->
+        
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 start-->
+                                
+        <!--//CHINAUNIX 一楼增加看了又看,相关帖子,本版精华内容 end-->
+
+        
+        <!--//CUASK 增加CU问答文字链 start by caojingfei at 2012.03.21-->
+                <div class="a_pb"><a href="http://bbs.chinaunix.net/thread-4295908-1-1.html"  target="_blank" style="color:green"><b>实战分享：从技术角度谈机器学习入门</b></a>|
+<a target="_blank" href="http://www.itpub.net/thread-2102243-1-1.html" style=color:red><b>【大话IT】RadonDB低门槛向MySQL集群下战书 </b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4253562-1-1.html" target="_blank" style="color:blue"><b>ChinaUnix打赏功能已上线！</b></a> | 
+<a href="http://bbs.chinaunix.net/thread-4295762-1-1.html"  target="_blank" style="color:#8E236B"><b>新一代分布式关系型数据库RadonDB知多少？</b></a></div>                <!--//ITPUB 增加CU文字链 end by caojingfei at 2012.03.21-->
+</td>
+</tr>
+<tr>
+<td class="pls" style=""></td>
+<td class="plc">
+<div>
+<!--管理操作口移到上面-->
+
+<!--这块原先是每层楼下的回复编辑现在删掉，移到上面去-->
+</div>
+
+</td>
+</tr>
+
+<!--2011.12.01修改 帖子最后一个回帖出现的粗的黑线，有程序部分取得最大pid做对比，参照forum_vithread.php第596行  -->
+<tr class="ad">
+<td class="pls" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff"></td>
+<td class="plc" style="border-width:1px 0 1px 0; border-style:solid; border-color:#000; background:#fff">
+</td>
+</tr>
+</table>
+</div>
+<div id="postlistreply" class="pl"><div id="post_new" class="viewthread_table" style="display: none"></div></div>
+</div>
+
+<!--
+
+<style>
+.box0828{ width:960px; margin:0 auto;}
+.box0828_l{ float:left; width:475px;}
+.box0828_r{ float:right; width:475px;}
+</style>
+		<div class="box0828">
+<div class="box0828_l">
+<img border="0" alt="" src="/static/image/common/weixint.jpg">
+
+</div>
+<div class="box0828_r">
+<script type="text/javascript">
+
+    var cpro_id = "u1684206";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+</div>
+</div><br/> -->
+<form method="post" autocomplete="off" name="modactions" id="modactions">
+<input type="hidden" name="formhash" value="4a770f2c" />
+<input type="hidden" name="optgroup" />
+<input type="hidden" name="operation" />
+<input type="hidden" name="listextra" value="page=1" />
+<input type="hidden" name="page" value="1" />
+</form>
+
+<!--2011.12.01去掉mbm-->
+<div class="pgs mtm cl">
+<!--<div class="pgs mtm mbm cl">-->
+<span class="pgb y"><a href="forum-225-1.html">返回列表</a></span>
+<a id="newspecialtmp"  onmouseover="$('newspecial').id = 'newspecialtmp';this.id = 'newspecial';showMenu({'ctrlid':this.id})" onclick="showWindow('newthread', 'forum.php?mod=post&action=newthread&fid=225')" href="javascript:;" title ="发新帖"><img src="static/image/common/pn_post.png" alt="发新帖" /></a>
+</div>
+
+<!--底部的导航-->
+<div id="pt" class="bm cl">
+<div class="z">
+<a href="http://www.chinaunix.net" class="nvhm" title="首页">ChinaUnix.net</a> <em>&rsaquo;</em> <a href='/'>论坛</a> <em>&rsaquo;</em> <a href="forum.php?gid=60">程序设计</a> <em>&rsaquo;</em> <a href="forum-225-1.html">嵌入式开发</a> <em>&rsaquo;</em> <a href="thread-2041402-1-1.html">[ZT]ttf文件结构解析</a>
+</div>
+</div>
+
+
+<!--[diy=diyfastposttop]--><div id="diyfastposttop" class="area"></div><!--[/diy]-->
+<script type="text/javascript">
+var postminchars = parseInt('10');
+var postmaxchars = parseInt('40000');
+var disablepostctrl = parseInt('0');
+</script>
+
+<div id="f_pst" class="pl bm bmw">
+<form method="post" autocomplete="off" id="fastpostform" action="forum.php?mod=post&amp;action=reply&amp;fid=225&amp;tid=2041402&amp;extra=page%3D1&amp;replysubmit=yes&amp;infloat=yes&amp;handlekey=fastpost" onSubmit="return fastpostvalidate(this)">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td class="pls">
+</td>
+<td class="plc">
+
+<span id="fastpostreturn"></span>
+
+
+<div class="cl">
+<div id="fastsmiliesdiv" class="y"><div id="fastsmiliesdiv_data"><div id="fastsmilies"></div></div></div><div class="hasfsl" id="fastposteditor">
+<div class="tedt mtn">
+<div class="bar">
+<span class="y">
+<a href="forum.php?mod=post&amp;action=reply&amp;fid=225&amp;tid=2041402" onclick="return switchAdvanceMode(this.href)">高级模式</a>
+</span><!--   --><script src="static/js/seditor.js?AAN" type="text/javascript"></script>
+<div class="fpd">
+<a href="javascript:;" title="文字加粗" class="fbld">B</a>
+<a href="javascript:;" title="设置文字颜色" class="fclr" id="fastpostforecolor">Color</a>
+<a id="fastpostimg" href="javascript:;" title="图片" class="fmg">Image</a>
+<a id="fastposturl" href="javascript:;" title="添加链接" class="flnk">Link</a>
+<a id="fastpostquote" href="javascript:;" title="引用" class="fqt">Quote</a>
+<a id="fastpostcode" href="javascript:;" title="代码" class="fcd">Code</a>
+<a href="javascript:;" class="fsml" id="fastpostsml">Smilies</a>
+</div>
+</div>
+<div class="area">
+<div class="pt hm">
+您需要登录后才可以回帖 <a href="member.php?mod=logging&amp;action=login" onclick="showWindow('login', this.href)" class="xi2">登录</a> | <a href="member.php?mod=register" class="xi2">注册</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="seccheck_fastpost">
+</div>
+
+
+<input type="hidden" name="formhash" value="4a770f2c" />
+<input type="hidden" name="usesig" value="" />
+<input type="hidden" name="subject" value="  " />
+<p class="ptm pnpost">
+<a href="home.php?mod=spacecp&amp;ac=credit&amp;op=rule&amp;fid=225" class="y" target="_blank">本版积分规则</a>
+<button type="button" onclick="showWindow('login', 'member.php?mod=logging&action=login&guestmessage=yes')" onmouseover="checkpostrule('seccheck_fastpost', 'ac=reply');this.onmouseover=null" name="replysubmit" id="fastpostsubmit" class="pn pnc vm" value="replysubmit" tabindex="5"><strong>发表回复</strong></button>
+<label for="fastpostrefresh"><input id="fastpostrefresh" type="checkbox" class="pc" />回帖后跳转到最后一页</label>
+<script type="text/javascript">if(getcookie('fastpostrefresh') == 1) {$('fastpostrefresh').checked=true;}</script>
+</p>
+</td>
+</tr>
+</table>
+</form>
+</div>
+
+
+<script type="text/javascript">
+new lazyload();
+</script>
+<script type="text/javascript">document.onkeyup = function(e){keyPageScroll(e, 0, 0, 'forum.php?mod=viewthread&tid=2041402', 1);}</script>
+</div>
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=442796" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+
+<!--//CHINAUNIX 记录用户看贴日志 start--><!--script type="text/javascript" src="/sh/viewlog/viewlog_js.php?tid=2041402&amp;fid=225&amp;subject=%5BZT%5Dttf%CE%C4%BC%FE%BD%E1%B9%B9%BD%E2%CE%F6"></script-->
+<!--//CHINAUNIX 记录用户看贴日志 END-->
+
+<!--二维码-->
+<!--
+<style>
+*html{background:url(about:blank);background-attachment:fixed;}
+.fu0915{ height:363px;z-index:9999;width:130px; position:fixed; bottom:20px; left:35px; _position:absolute; _top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0))); border:1px solid #c7c7c7; background:#fff;}
+.close0915{ height:20px; padding:6px 8px 0 0; overflow:hidden;}
+.close0915 span{ background:url(static/image/erweima/close0915.png) no-repeat; cursor:pointer; float:right; width:20px; height:20px;}
+.list0915{ width:130px; overflow:hidden; clear:both;}
+.list0915 li{ float:left; width:130px; height:154px; border-bottom:1px dashed #ccc;}
+.list0915 li.bornone0915{ border:0;}
+.list0915 li span{ display:block; text-align:center; font-size:12px; line-height:30px;}
+.list0915 li img{ display:block; margin:0 auto;}
+.box0915{ text-align:center; color:#03f;}
+.box0915 a{ color:#03f;}
+</style>
+--><!--<div class="fu0915" id="close0915">
+<div class="close0915"><span onclick="closebox()"> </span></div>
+<ul class="list0915">
+<li><span>ChinaUnix官方微信</span><img src="static/image/erweima/Chinaunix.jpg" width="113" height="113" alt="" /></li>
+<li class="bornone0915"><span>构架师技术大会</span><img src="static/image/erweima/sacc.jpg" width="113" height="113" alt="" /></li>
+</ul>
+<div class="box0915"><a href="http://bbs.chinaunix.net/thread-4188049-1-1.html">扫码送文库金币</a></div>
+</div>-->
+<script>
+    function closebox(){
+        document.getElementById("close0915").style.display="none";
+        setcookie("boxtime1",1533694192,24*3600)
+    }
+</script>
+<!--二维码-->	</div>
+&nbsp;&nbsp;<span id="tcss"></span><script type="text/javascript" src="http://tcss.qq.com/ping.js?v=1VERHASH" charset="utf-8"></script><script type="text/javascript" reload="1">pgvMain({"discuzParams":{"r2":"8399146","ui":0,"rt":"forum","md":"viewthread","fi":"225","ti":"2041402","pn":1,"qq":"000"},"extraParams":""});</script><div><div style="text-align:center;margin-bottom:10px;">
+<script type="text/javascript" smua="d=p&s=b&u=u3118757&w=960&h=90" src="//www.nksc
+dn.com/smu0/o.js"></script>
+</div></div><div style="width:960px; margin:0 auto; text-align:center; line-height:18px; padding:0 10px 10px 10px">
+<p>北京盛拓优讯信息技术有限公司. 版权所有 京ICP备16024965号 北京市公安局海淀分局网监中心备案编号：11010802020122<br/>	
+广播电视节目制作经营许可证(京) 字第1234号  中国互联网协会会员&nbsp;&nbsp;联系我们：wangnan@it168.com
+<br >感谢所有关心和支持过ChinaUnix的朋友们    转载本站内容请注明原作者名及出处</p>
+</div>
+
+<table align="center">
+<tr>
+<td align="center">
+<a href="member.php?mod=clearcookies">清除 Cookies</a> - <a target="_blank" href="http://www.chinaunix.net">ChinaUnix</a>
+ 	- <a target="_blank" href="archiver/">Archiver</a> - <a target="_blank" href="/">WAP</a> - <a href="#top">TOP</a>
+</td>
+</tr>
+</table>
+
+<!--广告标签 -->
+<!--  <script type='text/javascript' src='http://168.it168.com/js/599.js'></script>-->
+<!-- <script type='text/javascript' src='http://168.it168.com/js/863.js'></script>-->
+<script>if(typeof(BLA)!='undefined'){BLA();}</script>
+<!--新版测试广告标签 -->
+<script type="text/javascript">
+var SeriesId='';
+var BrandId='';
+</script>
+<!-- <script type='text/javascript' src='http://168.it168.com/ajs/599.js'></script> -->
+<!-- <script type='text/javascript' src='http://168.it168.com/ajs/863.js'></script> -->
+
+    <!--//ITPUB 腾讯分析代码-->
+        &nbsp;&nbsp;<span id="tcss"></span><script type="text/javascript" src="http://tcss.qq.com/ping.js?v=1VERHASH" charset="utf-8"></script><script type="text/javascript" reload="1">pgvMain({"discuzParams":{"r2":"8399146","ui":0,"rt":"forum","md":"viewthread","fi":"225","ti":"2041402","pn":1,"qq":"000"},"extraParams":""});</script>        </script>
+    
+<div id="g_upmine_menu" class="tip tip_3" style="display:none;">
+<div class="tip_c">
+积分 0, 距离下一级还需  积分
+</div>
+<div class="tip_horn"></div>
+</div>
+<script src="home.php?mod=misc&ac=sendmail&rand=1533694192" type="text/javascript"></script>
+<!--回顶部js2011.12.30-->
+<script language="javascript">
+ lastScrollY=0;
+ function heartBeat(){
+ var diffY;
+ if (document.documentElement && document.documentElement.scrollTop)
+     diffY = document.documentElement.scrollTop;
+ else if (document.body)
+     diffY = document.body.scrollTop
+ else
+     {/*Netscape stuff*/}
+ percent=.1*(diffY-lastScrollY);
+ if(percent>0)percent=Math.ceil(percent);
+ else percent=Math.floor(percent);
+ document.getElementById("full").style.top=parseInt(document.getElementById("full").style.top)+percent+"px";
+ lastScrollY=lastScrollY+percent;
+ if(lastScrollY<200)
+ {
+ document.getElementById("full").style.display="none";
+ }
+ else
+ {
+ document.getElementById("full").style.display="block";
+ }
+ }
+ var gkuan=document.body.clientWidth;
+ var ks=(gkuan-960)/2-30;
+ suspendcode="<div id=\"full\" style='right:4px;POSITION:absolute;TOP:500px;z-index:100;width:20px; height:50px;cursor:pointer;'><a href=\"javascript:void(0)\" onclick=\"window.scrollTo(0,0);\"></a></div>"
+ document.write(suspendcode);
+ window.setInterval("heartBeat()",1);
+ </script>
+
+
+<!-- 统计 START -->
+<script src="http://stat.it168.com/pv.js" type="text/javascript" type="text/javascript"></script>
+<script type='text/javascript'>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 35; // 频道类别ID
+    pvTrack.channel = 22; // 频道ID
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script type="text/javascript">
+//  var _gaq = _gaq || [];
+//  _gaq.push(['_setAccount', 'UA-20237423-2']);
+//  _gaq.push(['_setDomainName', '.chinaunix.net']);
+//  _gaq.push(['_trackPageview']);
+//  (function() {
+//    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+//    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+//    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+//  })();
+</script>
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js?0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<!-- 统计 END -->
+
+<!-- 临时加的广告统计 al -->
+<!--  临时加的广告统计 阿狸-->			<div id="discuz_tips" style="display:none;"></div>
+			<script type="text/javascript">
+				var tipsinfo = '8399146|X3.2|0.6||0||0|7|1533694192|fdfd85bd1f52566d220b96c3ba7ec127|2';
+			</script></body>
+</html>
+<!--script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>                                                                                 
+<script>
+$(function(){
+// 主流浏览器如chrome 使用Audio
+$(".voice_logo").click(function(){
+var musics = $(this).prev();
+var music = musics[0];
+if(music.paused){ 
+$("audio").each(function(index,val){
+var vals = $(val);
+var ms = vals[0];
+ms.pause();
+ms.currentTime = 0.0; 
+vals.next().find('span').css("background","url('/static/image/common/voice.png') 0 -2450px"); 
+});
+
+music.play(); 
+$(this).find('span').css("background","url('static/image/common/voice.gif')"); 
+}else{ 
+music.pause(); 
+music.currentTime = 0.0; 
+$(this).find('span').css("background","url('static/image/common/voice.png') 0 -2450px"); 
+} 
+});
+
+$("audio").bind('ended', function(){
+$("audio").each(function(index,val){
+$(val).next().find('span').css("background","url('static/image/common/voice.png') 0 -2450px"); 	
+})
+});
+});
+
+// IE 浏览器使用Embed
+var isPaused = true;
+var mid = 0;
+var ct = '';
+function switchvoice(id){
+var music = document.getElementById('music'+id);
+if(isPaused || id!=mid){
+if(mid > 0){
+var musictmp = document.getElementById('music'+mid);
+document.getElementById('span'+mid).style.background = "url('/static/image/common/voice.png') 0 -2450px";
+musictmp.stop();
+}
+document.getElementById('span'+id).style.background = "url('/static/image/common/voice.gif')";
+music.play();
+var t = music.duration;
+isPaused = false;
+clearTimeout(ct);
+ct = setTimeout(function(){
+document.getElementById('span'+id).style.background = "url('/static/image/common/voice.png') 0 -2450px";	
+}, t*1000);
+mid = id;
+} else {
+document.getElementById('span'+id).style.background = "url('/static/image/common/voice.png') 0 -2450px";
+music.stop();
+isPaused = true;
+}
+}
+</script>
+
+<style>
+.voice_logo{
+box-shadow: #cacaca 0px 0px 5px;
+cursor: pointer;
+padding:3px 5px;
+background-color:#b2e281;
+width:100px;
+margin-top: 10px;
+border-radius: 5px;
+}
+.voice_logo span{
+background:url('/static/image/common/voice.png') 0 -2450px; 
+width: 23px;
+height: 23px;
+vertical-align: middle;
+display: inline-block;
+}
+</style>

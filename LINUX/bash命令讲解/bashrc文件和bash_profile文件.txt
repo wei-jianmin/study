@@ -1,0 +1,28 @@
+当 Bash 作为交互式登录 shell 启动时，Bash 查找/etc/profile文件，
+并且如果文件存在，它会运行文件中的命令。
+然后 Bash 按照顺序搜索~/.bash_profile, ~/.bash_login, 和 ~/.profile 文件，
+并且读取找到的文件，并执行其中的命令。
+
+当 Bash 作为交互式非登录 shell 启动时，
+如果 ~/.bashrc 文件存在并且可读，那么它从 ~/.bashrc文件中读取并执行命令。
+
+在 Bash 作为一个交互式登录 shell 启动时，.bash_profile 被读取，并且执行，
+而.bashrc在交互式非登录 shell 启动时被执行。
+
+使用.bash_profile运行仅仅需要运行一次的命令，例如， 自定义 $PATH 环境变量。
+
+通常，~/.bash_profile包含了内容用来运行.bashrc。
+这意味着，你每次登录终端，两个文件都会被读取和执行
+
+大部分 Linux 发行版使用~/.profile替换~/.bash_profile。
+这个~/.profile被所有的 shell 读取，而~/.bash_profile仅仅被 Bash 读取。
+
+
+什么是shell
+    shell 是一个命令语言解释器，拥有自己内建的 shell 命令集。
+    shell是用户和Linux（或者更准确的说，是用户和Linux内核）之间的接口程序。
+    你在提示符下输入的每个命令都由shell先解释然后传给Linux内核。
+    
+什么是bash
+    Bourne Again Shell，是 Bourne shell 的扩展
+    bash兼容并增强了shell

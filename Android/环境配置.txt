@@ -1,0 +1,59 @@
+安装及配置 NDK 和 CMake
+    https://developer.android.google.cn/studio/projects/install-ndk?hl=zh-cn#kts
+    自动安装 NDK 和 CMake
+        Android Gradle 插件 4.2.0 及更高版本可在您首次构建项目时自动安装所需的 NDK 和 CMake
+        前提是您已预先接受其二者的许可。
+        如果您已阅读并同意许可条款，就可以使用以下命令预先接受脚本中的相应许可：
+        yes | ${sdk}/cmdline-tools/latest/bin/sdkmanager --licenses
+    手动安装 NDK 和 CMake
+        当您安装 NDK 时，Android Studio 会选择可用的最新 NDK 版本。
+        对于大多数项目，安装此默认版本的 NDK 已经足够
+        不过，如果您的项目需要一个或多个特定版本的 NDK，您可以下载并配置特定版本。
+        当多个项目各自依赖于特定版本的 NDK 时，这样做有助于确保各个项目的 build 都可重现
+        Android Studio 会将所有版本的 NDK 安装在 android-sdk/ndk/ 目录中。
+        如需在 Android Studio 中安装 CMake 和默认 NDK，请执行以下操作：
+        1. 打开项目后，依次点击 Tools > SDK Manager。
+        2. 点击 SDK Tools 标签页。
+        3. 选中 NDK (Side by side) 和 CMake 复选框。
+    配置特定版本的 CMake
+        SDK 管理器包含 CMake 的 3.6.0 分支版本和 3.10.2 版本
+        未设置特定 CMake 版本的项目使用 CMake 3.10.2 进行构建
+        如需设置 CMake 版本，请将以下内容添加到模块的 build.gradle 文件中（假定是Groovy语言）
+        android {
+            ...
+            externalNativeBuild {
+                cmake {
+                    ...
+                    version "cmake-version"  //如果是Kotlin，这句改为 version = "cmake-version"
+                }
+            }
+        }
+    安装特定版本的 NDK
+        打开项目后，依次点击 Tools > SDK Manager。
+        点击 SDK Tools 标签页。
+        选中 Show Package Details复选框。
+        选中 NDK (Side by side) 复选框及其下方与您想要安装的 NDK 版本对应的复选框。
+        Android Studio 会将所有版本的 NDK 安装在 android-sdk/ndk/ 目录中。
+        为每个模块配置您想要让其使用的 NDK 版本
+            使用 Android Studio 3.6 或更高版本时，如果您不指定版本，Android Gradle 插件会选择已知兼容的版本。
+    在项目中配置特定版本的 NDK
+        如果满足以下任一条件，您可能需要在项目中配置 NDK 版本：
+        1. 项目是继承的，您需要使用特定版本的 NDK 和 Android Gradle 插件 (AGP)。
+           相关：为 Android Gradle 插件配置 NDK：
+           https://developer.android.google.cn/studio/projects/configure-agp-ndk?hl=zh-cn
+        2. 您安装了多个版本的 NDK，但想要使用某个特定版本。
+           在这种情况下，请在模块的 build.gradle 文件中使用 android.ndkVersion 属性指定相应的版本，
+           android {   // 这是kotlin脚本，如果是groovy脚本，则下面设置 ndkVersion 后面不带 =
+               ndkVersion = "major.minor.build" // e.g.,  ndkVersion "21.3.6528147"
+           }
+        每个 AGP 版本对应的默认 NDK 版本:
+        Android Studio/Gradle 插件版本	为 AGP 版本指定的默认 NDK 版本
+        7.4	                            23.1.7779620
+        7.3	                            23.1.7779620
+        7.0	                            21.4.7075529
+        4.2	                            21.4.7075529
+        4.1	                            21.1.6352462
+        4.0	                            21.0.6113669
+        3.6	                            20.0.5594570
+        3.5                             及更早版本	未指定默认版本
+            

@@ -1,0 +1,17 @@
+https://zhuanlan.zhihu.com/p/426926356
+
+简介
+    我们在使用CentoOS系统时偶尔会遇到配置都正确但network启动不了的问题，
+    这问题经常是由NetworkManager引起的，
+    关闭NetworkManager并取消开机启动network就能正常启动。
+    使用的Linux经常使用命令行模式，所以大家都不怎么去了解NetworkManager，
+    造成了糊里糊涂的解决问题。
+    下面我们看一下NetworkManager的基础使用。
+    
+分析
+    NetworkManage与network功能类似，都是用于管理网络，
+    NetworkManager提供了nmctl和nmtui两个工具：
+    nmctl：命令行工具
+    nmtui：伪图形界面
+    两个都是用来管理网络，但是有一个前提：nmctl networking 状态必须是enable
+    否则设备状态为unmanaged，这会导致network启动不了！

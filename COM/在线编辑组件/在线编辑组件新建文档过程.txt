@@ -1,0 +1,129 @@
+文档打开流程分析：
+//参数传入的是一个可以操控框架的内嵌对象（主要在创建子窗口时获得其父窗口及显示区域）
+// 创建了CDsoDocObject对象，创建了根存储对象m_pstgroot和子窗口m_hwnd
+//在m_pstgroot中创建了m_pstgfile和m_pstmview，将clsid写入m_pstgfile
+//根据clsid创建wps文档服务器，获得其IID_IOleObject接口存到m_pole中
+//获得其IID_IPersistStorage接口指针，根据是否为空，调用接口的InitNew或Load方法，传入m_pstgfile
+//调用m_pole的SetClientSite和SetHostNames方法
+//让DocObject的工具栏不显示
+//显示m_hwnd窗口
+//获得文档服务器的IID_IOleDocument接口，调用其CreateView方法，传入m_xOleInPlaceSite和m_pstmview，结果存储在m_pdocv中
+//调用m_pdocv的SetInPlaceSite方法，传入m_xOleInPlaceSite，以支持原地激活
+//继续调用m_pdocv的激活、显示方法
+//调用m_pole的DoVerb方法，指定站点对象为m_xOleClientSite，指定包含对象的文档窗口为m_hwnd
+//DoVerb会在m_hwnd中创建一个对象的子窗口（这里的对象应该就是文档服务器）
+STDMETHODIMP CDsoFramerControl::CreateNew(BSTR ProgIdOrTemplate)
+{
+    //参数传入的是一个可以操控框架的内嵌对象。 
+    // 创建了CDsoDocObject对象，创建了根存储对象m_pstgroot和子窗口m_hwnd
+    m_pDocObjFrame = CDsoDocObject::CreateInstance((IDsoDocObjectSite*)&m_xDsoDocObjectSite);  //（1）
+
+    //在m_pstgroot中创建了m_pstgfile和m_pstmview，将clsid写入m_pstgfile
+    //根据clsid创建wps文档服务器，获得其IID_IOleObject接口存到m_pole中
+    //获得其IID_IPersistStorage接口指针，根据是否为空，调用接口的InitNew或Load方法，传入m_pstgfile
+    //调用m_pole的SetClientSite和SetHostNames方法
+    m_pDocObjFrame->CreateDocObject(clsid);  //（2）
+
+    if (!m_fShowToolbars)
+        m_pDocObjFrame->OnNotifyChangeToolState(FALSE);     //让DocObject的工具栏不显示
+
+    //显示m_hwnd窗口
+    //获得文档服务器的IID_IOleDocument接口，调用其CreateView方法，传入m_xOleInPlaceSite和m_pstmview，结果存储在m_pdocv中
+    //调用m_pdocv的SetInPlaceSite方法，传入m_xOleInPlaceSite，以支持原地激活
+    //继续调用m_pdocv的激活、显示方法
+    //调用m_pole的DoVerb方法，指定站点对象为m_xOleClientSite，指定包含对象的文档窗口为m_hwnd
+    //DoVerb会在m_hwnd中创建一个对象的子窗口（这里的对象应该就是文档服务器）
+    m_pDocObjFrame->IPActivateView();     //（3）
+}
+（1）：
+STDMETHODIMP_(CDsoDocObject*) CDsoDocObject::CreateInstance(IDsoDocObjectSite* phost)
+{
+    CDsoDocObject* pnew = new CDsoDocObject();
+    pnew->InitializeNewInstance(phost)；
+    return pnew;
+}
+STDMETHODIMP CDsoDocObject::InitializeNewInstance(IDsoDocObjectSite* phost)
+{
+    phost->GetWindow(&hwndCtl)；
+    // 为当前文档对象站点创建一个临时存储
+    if(m_pstgroot==null)
+        StgCreateDocfile(NULL,STGM_TRANSACTED | STGM_READWRITE |STGM_SHARE_EXCLUSIVE | 
+		    STGM_CREATE | STGM_DELETEONRELEASE, 0, &m_pstgroot)；
+    // This function creates a new compound file storage object using the OLE-provided compound file implementation for the IStorage interface.
+    // 该函数创建一个新复合文档存储对象----使用OLE提供的对IStorage接口的复合文档实现。
+    // 第一个参数指明复合文档路径，第二个参数指定模式，第三个参数保留，第四个参数存放结果。
+    
+    wndclass.lpfnWndProc    = CDsoDocObject::FrameWindowProc;
+    wndclass.hCursor  = LoadCursor(NULL, IDC_ARROW);
+    wndclass.lpszClassName  = "DSOFramerDocWnd";
+    RegisterClass(&wndclass)；
+    m_hwnd = CreateWindowEx(0, "DSOFramerDocWnd", ... ,  hwndCtl, NULL, v_hModule, NULL);
+    SetWindowLong(m_hwnd, GWL_USERDATA, (LONG)this);
+    m_hwndCtl = hwndCtl;
+}
+（2）：
+STDMETHODIMP CDsoDocObject::CreateDocObject(REFCLSID rclsid)
+{
+    if(m_pstgfile == NULL)
+        CreateObjectStorage(rclsid)；   //（2.1）创建子存储结构
+    InstantiateDocObjectServer(rclsid, &pole)；   //（2.2）创建文档服务器
+    //pole->SetClientSite((IOleClientSite*)&m_xOleClientSite);     //设置站点对象
+    pole->QueryInterface(IID_IPersistStorage, (void**)&pipstg);     //获得存储接口
+    if(m_pstgfile == NULL)
+        pipstg->InitNew(m_pstgfile);
+    else
+        pipstg->Load(m_pstgfile);	//文档服务器加载新建的文档子对象
+    m_pole = pole;
+    m_clsidObject = clsid;
+    m_pole->SetClientSite((IOleClientSite*)&m_xOleClientSite);     //设置站点对象
+    m_pole->SetHostNames(m_pwszHostName, m_pwszHostName);	//把容器应用程序和复合文档对象的名字传给嵌入对象
+}
+（2.1）：
+STDMETHODIMP CDsoDocObject::CreateObjectStorage(REFCLSID rclsid)
+{
+    m_pstgroot->CreateStorage(pwszName,STGM_TRANSACTED | STGM_READWRITE | 
+                                                   STGM_SHARE_EXCLUSIVE, 0, 0, &m_pstgfile);
+    m_pstgroot->CreateStream(pwszName,STGM_DIRECT | STGM_READWRITE | 
+			 STGM_SHARE_EXCLUSIVE, 0, 0, &m_pstmview);
+    WriteClassStg(m_pstgfile, rclsid);    //  在文档子存储对象中写入clsid
+}
+（2.2）：
+STDMETHODIMP CDsoDocObject::InstantiateDocObjectServer(REFCLSID rclsid, IOleObject **ppole)
+{
+    CoCreateInstance(rclsid, NULL, CLSCTX_LOCAL_SERVER / 
+                                 CLSCTX_INPROC_SERVER,  IID_IUnknown, (void**)&punk);
+    punk->QueryInterface(IID_IOleObject, (void**)ppole);
+} 
+（3）：
+STDMETHODIMP CDsoDocObject::IPActivateView()
+{
+    ShowWindow(m_hwnd, SW_SHOW);
+    m_xOleDocumentSite.ActivateMe(NULL);   //（3.1）
+    GetClientRect(m_hwnd, &rcView);
+    m_pole->DoVerb(OLEIVERB_INPLACEACTIVATE / OLEIVERB_SHOW, NULL,
+		 (IOleClientSite*)&m_xOleClientSite, (UINT)-1, m_hwnd, &rcView);
+    UIActivateView()；
+}
+STDMETHODIMP CDsoDocObject::UIActivateView()
+{
+    if (m_pdocv) // Go UI active...
+        hr = m_pdocv->UIActivate(TRUE);
+    else if (m_pole) // We should never get here, but just in case pdocv is NULL, signal UI active the old way...
+    {
+        GetClientRect(m_hwnd, &rcView);
+        m_pole->DoVerb(OLEIVERB_UIACTIVATE, NULL, (IOleClientSite*)&m_xOleClientSite, (UINT)-1, m_hwnd, &rcView);
+    }
+    SetFocus(m_hwndIPObject);
+}
+（3.1）：
+STDMETHODIMP CDsoDocObject::XOleDocumentSite::ActivateMe(IOleDocumentView* pView)
+{
+    m_pole->QueryInterface(IID_IOleDocument, (void **)&pmsodoc)；
+    pmsodoc->CreateView(m_xOleInPlaceSite,m_pstmview, 0, &pView);
+    pView->ApplyViewState(m_pstmview);
+    m_pdocv = pView;
+    pView->QueryInterface(IID_IOleCommandTarget, m_pcmdt);
+    pView->SetInPlaceSite(m_xOleInPlaceSite);
+    pView->UIActivate(TRUE)；
+    pView->Show(TRUE);
+}

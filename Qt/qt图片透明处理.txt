@@ -1,0 +1,28 @@
+QFile f("C:/1.bmp");
+QByteArray img_data;
+if(f.open(QFile::ReadOnly))
+{
+    img_data = f.readAll();
+    f.close();
+    QImage img;
+    img.loadFromData(img_data);
+    img = img.convertToFormat(QImage::Format::Format_ARGB32);
+    for(int w = 0;w < img.width();++w)
+    {
+        for(int h = 0; h < img.height();++h)
+        {
+            QColor pixelColor = img.pixelColor(w,h);
+
+            if(pixelColor.red()>240 && pixelColor.blue()>240 && pixelColor.green()>240)
+            {
+                pixelColor.setRgb(255,0,0,25);
+                //pixelColor.setAlpha(0);
+                img.setPixelColor(w,h,pixelColor);
+            }
+        }
+    }
+    img.save("C:/1234.png","png");
+}
+
+注意：在对图像像素设置透明之前，需要先转换为支持透明的图片格式（convertToFormat）
+      猜测这会影响QImage内部存储图片数据的方式，否则，对图片像素的透明处理不起作用。

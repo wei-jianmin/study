@@ -1,0 +1,50 @@
+IDispEventSimpleImpl:
+举例：
+IDispEventSimpleImpl<1, CButtonEventAnnotationInsert, &DIID__CommandBarButtonEvents> 
+IDispEventSimpleImpl<1,CWpsTool,&__uuidof(WPS::ApplicationEvents2)> 
+类的实现：
+template <UINT nID, class T, const IID* pdiid>
+class ATL_NO_VTABLE IDispEventSimpleImpl : public _IDispEventLocator<nID, pdiid>
+{
+    //该泛类实现了IUnknown接口和IDispatch接口
+    STDMETHOD(Invoke)(DISPID dispidMember，...)
+    {
+	const _ATL_EVENT_ENTRY<T>* pMap = T::_GetSinkMap();
+	while (pMap->piid != NULL)
+	{
+	    if ((pMap->nControlID == nID) && (pMap->dispid == dispidMember) && 
+					(IsEqualIID(*(pMap->piid), *pdiid)))
+	    {
+		pFound = pMap;
+		break;
+	    }
+	    pMap++;
+	}
+	......
+    }
+}
+● 第一个类模板参数用于从所有的SINK_MAP中过滤出特定ID的项，不同ID的项被相应不同的IDispEventSimpleImpl<>处理。
+● 第二个类模板参数告诉泛类在哪个类中找SINK_MAP。
+● 第三个类模板参数指明模板类实现的接口，这是因为在整个接口映射表中，可能包含多个接口的函数映射，因而，在Invoke时，不光要知道派发方法的ID，还要知道本模板类所实现的接口ID。
+-----------------------------------------------------------------
+struct _ATL_EVENT_ENTRY
+{
+	UINT nControlID;			//ID identifying object instance
+	const IID* piid;			//dispinterface IID
+	int nOffset;				//offset of dispinterface from this pointer
+	DISPID dispid;				//DISPID of method/property
+	void (__stdcall T::*pfn)();	//method to invoke
+	_ATL_FUNC_INFO* pInfo;
+};
+
+
+=============================================
+总结：
+1.针对同一个出接口，允许有多个IDispEventSimpleImpl<>实现该接口。
+2.同一个类，允许继承多个IDispEventSimpleImpl<>从而实现多个相同或不同的接口。
+3.潘爱民com原理与应用188页有这样的话：根据不同的开发环境和运行环境，实现Invoke函数可以采用不同的方法。如果在编译时刻可以决定客户应该响应哪些实现或请求，则可以在程序中建立一张表，把每个事件或请求的分发ID和对应的控制函数作为表项放到表中，我们把这张表成为事件映射表，当然表项中也可以加一些其他的信息，如参数类型，然后再Invoke函数中进行查表操作，如果源对象的的事件或请求的分发ID在表中能找到，则调用响应的控制函数，否则不予处理。
+ATL通过派生类实现出接口时，采用的就是这种方法，而MFC中则使用专门的接收器对象。
+4.IDispEventSimpleImpl<>的第二个参数是个类名，指明了该模板类在查找接口映射表时，应该在哪个类中查找
+5.针对第一条，假设有两个IDispEventSimpleImpl<>（分别记为CIA，CIB）实现的是相同的接口，同时在接口映射表中有这样的两条（分别记为a，b）：他们的接口ID是一样的，方法的派发ID也是一样的，对应的响应函数是不同的，a要求被CIA的Invoke查询到，b要求被CIB的Invoke查询到。如何处理这种情况呢？对于这种情况，ATL通过一个身份号来识别，相当于联络暗号，CIA和CIB分别记录不同的暗号，a和b也记录对应的联络暗号，这样CIA的Invoke就不会错误的找到b了，这个联络暗号就是模板类的第一个参数，也是映射表条目的第一个参数。
+6.下面来探讨类模板还要使用第三个参数，即接口ID。
+考虑第2条的情况，假设有两个IDispEventSimpleImpl<>（分别记为CIA，CIC）实现的是不同的接口，且这两个模板类使用了相同的联络暗号，接口中都是只有一个方法，方法的ID=1。则在接口映射表中，就存在这样的两条（记为a,c）：他们使用的暗号一致，方法的派id也一致，但a需要被CIA识别，c需要被CIC识别，该怎么办，所以这里就需要通过接口ID来区分，类模板的第三个参数记录了其实现的是那个接口中的方法，映射表条目的第二个参数也记录着该条是属于哪个接口的。

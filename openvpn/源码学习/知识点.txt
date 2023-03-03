@@ -1,0 +1,18 @@
+msg方法的flag标记：
+    flag参数的低4位控制日志级别
+    第4位标记致命，会导致退出程序     (M_FATAL)
+    第5位标记非致命错误  (M_NONFATAL)
+    第6位标记使用LOG_WARNING写系统日志  (M_WARN)
+    第7位未知
+    第8位标记显示错误描述 (M_ERROR)
+    第11位标记非沉默   (M_NOMUTE)
+    第12位标记不显示时间日期前缀 (M_NOPREFIX)
+    第13位标记致命options错误，会调用 usave_small (M_USAGE_SMALL)
+    第14位标记使用 msg_status_output 回调函数输出日志信息   (M_MSG_VIRT_OUT)
+    第15位标记打印"options error:"前缀  (M_OPTERR)
+    第16位标记不换行   (M_NOLF)
+    第17位标记不打印实例前缀   (M_NOIPREFIX)
+    
+    M_ERR = (M_FATAL | M_ERRNO)  致命错误，程序退出，显示错误描述
+    M_USAGE = (M_USAGE_SMALL | M_NOPREFIX | M_OPTERR)  显示帮助，不显示时间前缀，加"options error:"前缀
+    M_CLIENT = (M_MSG_VIRT_OUT | M_NOMUTE | M_NOIPREFIX) 使用回调输出日志，非沉默，不打印示例前缀

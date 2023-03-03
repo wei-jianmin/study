@@ -1,0 +1,3899 @@
+strongswan-5.9.6
+----------------
+
+- IKEv2的密钥推导，特别是prf+，已经被模块化，以简化
+  认证（例如FIPS-140），通过一个已经认证的第三方库。
+  botan、openssl和wolfssl插件通过它们的 "HMAC "PRF实现了密钥推导。
+  基于HMAC的PRF，通过他们各自的HKDF实现。 一个通用的
+  新的kdf插件提供了一个通用的实现。
+
+- IKEv2的标签IPsec在SELinux和专有的简单模式下被支持。
+  模式。 在SELinux模式下，符合陷阱策略的流量与一般的
+  上下文（例如：system_u:object_r:ipsec_spd_t:s0）的流量会触发与特定的CHILD_SAs协商。
+  带有特定标签的CHILD_SAs。 在简单模式下，标签不会被设置在
+  SA/政策，但可以作为标识符来选择特定的子配置。
+
+- DoS保护得到了改进。 COOKIE秘密现在是基于一个时间限制（2分钟）来切换的。
+  时间限制（2分钟），一个新的每个IP的阈值（默认3）被用来触发
+  未处理的IKE_SA_INITs已经被计算为半开放的IKE_SAs。
+
+- 在同一个IKE_SA中启动重复的CHILD_SA在很大程度上被阻止了。
+
+- 现在可以通过以下方式立即启动带有陷阱策略的CHILD_SA，即
+  `start_action=trap|start`。
+
+- 当启动IKEv2 SA时，如果源地址未知，NAT情况下
+  现在对IPv4强制采用NAT（对于IPv6，NAT-T被禁用），以避免造成
+  不对称的UDP封装的启用。
+
+- 避免了在FreeBSD上为VPN服务器安装不必要的排除路由。
+
+- 为系统日志记录器新增的 `map_level` 选项允许将日志级别映射到
+  到系统日志级别，并从指定的数字开始。
+
+- addrblock插件允许限制发行商addrblock的验证深度
+  扩展的验证深度。
+
+- 默认的AEAD ESP建议（从5.9.0开始发送）现在包括`noesn`以使其符合标准。
+  它是符合标准的。
+
+- 可以通过 `list-sas` vici 命令查询单个 CHILD_SAs (或
+  `swanctl --list-sas )，可以通过唯一的ID或名称进行查询。
+
+- 与OpenSSL 3.0的兼容性得到了改善。
+
+
+strongswan-5.9.5
+----------------
+
+- 修正了 EAP 客户端实现中的一个漏洞，该漏洞是由以下原因造成的
+  不正确地处理早期 EAP-Success 消息。它可能允许绕过
+  客户端，在某些情况下甚至是服务器的认证，或者可能导致
+  拒绝服务攻击。
+  该漏洞已被注册为CVE-2021-45079。
+
+- 使用TPM 2.0的可信RSA或ECC认可密钥，libtpmtss现在可以
+  分别通过 RSA 加密或短暂的 ECDH 密钥建立安全会话。
+  交换，建立一个安全会话。该会话允许基于HMAC验证的
+  会话允许与TPM 2.0进行基于HMAC的认证通信，并且可以对交换的参数进行加密
+  必要时，可以加密以保证保密性（例如，当使用TPM作为RNG时）。
+
+- 增加了对OpenSSL 3.0的基本支持，特别是新的
+  load_legacy选项（默认启用）允许加载 "遗留 "供应商
+  算法，如MD4和DES（EAP-MSCHAPv2都需要），而现有的
+  现有的fips_mode选项允许明确加载 "fips "提供者，例如
+  如果它在OpenSSL的fipsmodule.cnf中没有被激活。
+
+- 由 macOS 和 FreeBSD 上的 kernel-froute 插件创建的 TUN 设备的 MTU
+  FreeBSD 上由内核-pfroute 插件创建的 TUN 设备的 MTU 现在是可配置的，默认情况下减少到 1400 字节。 这也
+  修复了macOS 12上的一个问题，该问题阻碍了对安装在此类TUN设备上的虚拟IP的检测
+  安装在此类 TUN 设备上的虚拟 IP。
+
+- 当重新键入CHILD_SAs时，旧的出站SA现在会在新的SA被安装在TUN设备上后不久被卸载。
+  新的SA已经安装在启动器/赢家上，旧的出站SA现在会被卸载。这对于
+  IPsec实现时，SA的顺序是不可预测的，我们不能
+  在出站策略上设置SPI来切换到新的SA，而这两个SA都已安装。
+  安装。
+
+- sw-collector 工具现在可以遍历由 logrotate 处理的 APT 历史日志。
+  的APT历史日志。
+
+- openssl插件现在只公布ECDH组，该组实际上由
+  OpenSSL实际支持的ECDH组（通过EC_get_builtin_curves()确定）。
+
+
+strongswan-5.9.4
+----------------
+
+- 修复了gmp插件中的一个拒绝服务漏洞，该漏洞是由以下原因造成的
+  在处理具有非常大的盐长度的 RSASSA-PSS 签名时，整数溢出引起的
+  盐长度的RSASSA-PSS签名时引起的整数溢出。
+  该漏洞已被注册为CVE-2021-41990。
+
+- 修复了内存证书缓存中的一个拒绝服务漏洞
+  如果证书被替换，并且一个非常大的随机值引起整数
+  溢出。
+  该漏洞已被注册为CVE-2021-41991。
+
+- 修复了一个相关的漏洞，该漏洞导致守护程序接受无限多的
+  签名算法字段中的参数而接受无限多的有效证书版本。
+  signatureAlgorithm字段的参数。
+
+- AUTH_LIFETIME通知现在只由响应者发送，如果它不能
+  由于非对称认证（即EAP）或使用虚拟IP而无法重新认证IKE_SA本身时，才会发出AUTH_LIFETIME通知。
+  或使用虚拟IP。
+
+- 修复了几个pki子命令中的序列号生成问题，使其不会以非预期的数字开始。
+  不会以非故意的零字节开始。
+
+- 在所有使用 libtpmtss 的程序和库中初始化了该库。
+
+- 将测试脚本迁移至 Python 3。
+
+
+strongswan-5.9.3
+----------------
+
+- 为 wolfssl 插件添加了 AES_ECB、SHA-3 和 SHAKE-256 支持。
+
+- 为 openssl 插件添加了 AES_CCM 和 SHA-3 签名支持。
+
+- x509 和 openssl 插件现在考虑了 authorityKeyIdentifier，如果有的话。
+  现在，x509 和 openssl 插件在验证签名前会考虑 authorityKeyIdentifier (如果有的话)。
+  如果两个证书都被加载的话，这可以避免在 CA 密钥翻转后进行不必要的签名验证。
+
+- pkcs11 插件更好地处理了像 CKA_TRUSTED 这样的可选属性。
+  之前依赖于版本检查。
+
+- charon-nm 现在支持使用 SAN 作为客户身份，而不仅仅是完整的 DN。
+
+- charon-tkm 现在可以处理 IKE 加密。
+
+- 如果检测到 NAT 映射中的变化，会再次发送 MOBIKE 更新。
+  但端点保持不变。
+
+- 将大部分测试案例场景转换为vici接口
+
+strongswan-5.9.2
+----------------
+
+- 与支持 GRUB 启动程序和 Linux 内核的 IMA 测量的 Linux 5.8 内核一起。
+  和 Linux 内核的 IMA 测量，strongSwan Attestation IMC 允许对整个启动阶段进行
+  对整个启动阶段进行远程验证。一个最新的TPM 2.0设备，带有一个
+  SHA-256 PCR库的最新TPM 2.0设备是必需的，这样BIOS和IMA文件的测量都是
+  基于SHA-256的哈希值。
+
+- 我们自己的TLS库（libtls），我们用于基于TLS的EAP方法和PT-TLS
+  获得了对TLS 1.3的实验性支持。 感谢Méline Sieber（客户端）和
+  Pascal Knecht（客户端和服务器）在这方面的工作。
+  因为TLS 1.3与这些EAP方法的使用还没有标准化（两个互联网草案正在制定中）。
+  互联网草案），目前默认的最大版本是TLS 1.2。
+  设置为TLS 1.2，这也是目前默认的最小版本。然而，TNC
+  使用PT-TLS传输的测试场景已经使用了TLS 1.3。
+
+- libtls的其他改进也会影响到旧的TLS版本。例如，我们
+  增加了对使用Curve25519/448的ECDH的支持（DH组也可以配置
+  现在），支持 EdDSA 密钥和证书以及 RSA-PSS 签名。对
+  旧的和弱的密码套件的支持已被删除（如3DES和MD5），以及
+  以及SHA-1的签名方案。
+
+- listener_t::ike_update事件现在也被调用用于MOBIKE更新。它的
+  它的签名已经改变，所以如果两个地址/端口都发生了变化，我们只需要调用它一次
+  都发生了变化（例如，地址族的切换），我们只需调用一次。 该事件现在也被
+  通过 vici 公开。
+
+- farp插件已被移植到macOS和FreeBSD。感谢Dan James的
+  在这方面的工作。
+
+- 为了修复 DNS 服务器与 systemd-resolved 的安装问题，charon-nm 现在再次创建了一个
+  假的 TUN 设备（在 5.5.1 中已被移除）。
+
+- botan 插件在生成密钥时可以使用其他插件提供的 rng_t 实现。
+  如果 Botan 库支持的话，在生成密钥等时可以使用其他插件提供的 rng_t 实现。
+
+- charon-tkm 现在支持多个 CA 并通过 vici/swanctl 进行配置。
+
+- 简单的glob模式（例如include conf.d/*.conf）现在也可以在Windows上使用。
+  对Windows上路径中正斜线的处理也得到了改进。
+
+- ASN.1 DNs 中的 "姓氏 "和 "序列号 "RDNs 的缩写已经
+  的缩写进行了修改，以与 RFC 4519 保持一致："姓 "的缩写现在是
+  "SN"（以前是 "S"），以前用于 "序列号"，现在可以指定为 "序列号"。
+  现在只能被指定为 "serialNumber"。
+
+- Windows客户端请求以前的IPv6而不是IPv4虚拟
+  IP地址的问题已被修复。
+
+- ike_sa_manager_t:  通过配置检出IKE_SAs现在是原子性的（例如，当
+  同一个连接的不同子节点的获取同时到达）。
+  checkout_new()方法已被重命名为create_new()。一个新的
+  checkout_new()方法允许在检查前向管理器注册一个新的IKE_SA。
+  新的 checkout_new() 方法允许在检查前向管理器注册一个新的 IKE_SA，因此作业可以排队而不丢失，因为它们可以阻止
+  在签出新的SA上。
+
+
+strongswan-5.9.1
+----------------
+
+- 通过TNC进行的远程验证支持基于SHA-256的TPM 2.0 BIOS/EFI
+  测量，并在Linux 5.4内核中引入。
+
+- OCSP 响应中的 nonce 不再被强制执行，仅在实际包含 nonce 的情况下进行验证。
+  nonce的情况下才进行验证。
+
+- 修正了一个问题，当只收到重传的IKEv2消息的某些片段时
+  的问题，该问题导致无法处理后续的碎片信息。
+
+- 所有排队的vici消息现在都会在关机时发送给订阅的客户端。
+  这包括当所有SA被删除时触发的IKE/child-updown事件。
+
+- CHILD_SA IP地址在安装前被更新，以允许MOBIKE更新
+  同时重传CREATE_CHILD_SA请求。
+
+- 当寻找到对等体的路由时，内核-netlink插件忽略了
+  当前的源地址，如果它是废弃的。
+
+- 文件和系统日志记录器支持记录每个消息的日志级别
+  后的子系统（例如 [IKE2]）。
+
+- charon-nm 现在可以在系统关闭时正确地终止了。
+
+- 改进了对vici/swanctl中EdDSA密钥的支持，特别是加密的
+  密钥的支持。
+
+- 一个新的全局 strongswan.conf 选项允许发送 Cisco FlexVPN 供应商 ID
+  以防止思科设备缩小0.0.0.0/0的流量选择器。
+
+- openssl插件接受由非CA证书签发的CRL，如果它们含有
+  cRLSign keyUsage标志（x509插件从4.5.1开始已经这样做）。
+
+- 在SCEP中使用的PKCS#7容器中的属性现在被正确地
+  DER-encoded，即排序。
+
+- 负载测试插件现在支持虚拟 IPv6 地址和 IPv6 源
+  地址池。
+
+
+strongswan-5.9.0
+----------------
+
+- 我们更喜欢ESP的AEAD算法，因此将AES-GCM放在默认的AEAD
+  方案中，以取代之前的默认方案。
+
+- NM后端现在在断开连接时清除了缓存的凭证，将DPD和
+  和关闭动作设置为重启，并通过'remote-ts'支持自定义远程TS
+  选项支持自定义远程 TS（不支持 GUI）。
+
+- pkcs11插件在PKCS#1v1.5 RSA签名时退回到软件散列法
+  如果不支持散列机制（例如 CKM_SHA256_RSA_PKCS）。
+
+- 日志文件的所有者/组现在已被设置，因此如果配置被重新加载，守护进程可以重新打开它们。
+  配置被重新加载，并且它不以根用户身份运行时，守护进程可以重新打开它们。
+
+- wolfssl 插件（使用 wolfSSL 4.4.0+）支持 x448 DH 和 Ed448 密钥。
+
+- vici 插件将所有 CA 证书存储在一个位置，这就避免了
+  问题，从而避免了卸载权威部分或清除所有证书。
+
+- 当用start_action=start卸载一个vici连接时，任何相关的IKE_SAs
+  现在都被终止了（包括那些处于连接状态的）。
+
+- 对hashtable的实现进行了修改，使其保持了插入顺序。
+  这样做主要是为了让 vici 插件能够将其连接存储在一个
+  hashtable中，这样可以更快地管理大量的连接。
+
+- vici消息的默认最大尺寸（512 KiB）现在可以通过以下方式改变
+  VICI_MESSAGE_SIZE_MAX 编译选项改变。
+
+- charon.check_current_path选项允许强制DPD交换检查是否
+  当前路径是否仍在工作，只要检测到接口/地址变化。
+
+- 可以使用CLOCK_MONOTONIC以外的时钟（例如CLOCK_BOOTTIME）。
+  通过TIME_CLOCK_ID编译选项，如果clock_gettime()可用并且
+  pthread_condattr_setclock() 支持该时钟。
+
+- 在运行单元测试时，现在可以对测试用例和函数进行过滤。
+
+
+strongswan-5.8.4
+----------------
+
+- 在IKEv1的快速模式中，在确定一个提议之前，确保存在
+  寿命之前确保提案存在（修复了由于空指针异常导致的崩溃）。
+
+- OpenSSL目前不支持从SHAKE128/256中挤出字节。
+  XOF（扩展输出函数）多次。 不幸的是。
+  EVP_DigestFinalXOF()完全重置了上下文，以后的调用不仅会失败，而且会导致空指针异常。
+  简单地失败，而是在libcrypto中引起一个空指针的解除引用。这
+  修复了崩溃，但代价是要重复初始化整个状态
+  并为后续调用分配过多的数据。
+
+
+strongswan-5.8.3
+----------------
+
+- 对NM后端（和插件）的更新，其中包括。EAP-TLS认证。
+  可配置的本地和远程IKE身份，自定义服务器端口，重定向
+  和重新认证支持。
+
+- 以前使用的reqids现在被重新分配了，以解决FreeBSD上的一个问题
+  守护进程不能使用 > 16383 的 reqids 的问题。
+
+- 在Linux上，为穿透策略安装了抛出型路由。它们的作用是
+  作为其他表中路由的后备措施，需要的信息较少，所以它们可以更早安装，并且不受影响。
+  可以提前安装，并且不受更新的影响。
+
+- 对于IKEv1，选择的转换的寿命会返回给发起者。
+  发起者，这对于在不同转换中提出不同寿命的对等体来说是一个问题。
+  不同转换中提出不同寿命的对等体的问题。 我们还返回正确的转换和提议ID。
+
+- 如果已排队删除，则不再重新建立IKE_SAs。
+
+- 通过openssl插件和pki工具增加了对Ed448密钥和证书的支持。
+  openssl插件还支持SHA-3和SHAKE128/256。
+
+- 现在可以在全局范围内启用私人使用范围内的算法ID的使用。
+  全局启用，以便在没有交换 strongSwan 供应商 ID 的情况下使用它们。
+
+
+strongswan-5.8.2
+----------------
+
+- 基于身份的CA约束是通过vici/swanctl.conf支持的。它们
+  强制要求远程的证书链包含一个具有特定身份的 CA 证书。
+  特定的身份。虽然与现有的CA约束相似，但它们并不要求CA证书在本地安装，如中间CA。
+  它们不要求CA证书是在本地安装的，例如从对等体收到的中间CA
+  从对等体收到的中间CA证书。与通配符身份匹配相比（如
+  "......, OU=Research, CN=*"）相比，这对中间CA的信任度要求较低（以
+  只签发具有合法主体 DN 的证书），只要路径长度
+  基本限制，他们就不能再签发中间CA。
+
+- 中间CA证书现在可以通过以下方式以哈希和URL编码发送
+  为父级CA配置一个基本的URL。
+
+- 实施了NIST SP-800-90A确定型随机比特发生器（DRBG）
+  基于AES-CTR和SHA2-HMAC模式。目前由gmp和ntru插件使用。
+
+- 在OCSP请求中发送的随机nonces现在有望在相应的
+  OCSP 响应中。
+
+- kernel-netlink 插件忽略了 MOBIKE 的废弃 IPv6 地址。
+  是否包括临时或永久的 IPv6 地址取决于
+  charon.prefer_temporary_addrs 设置。
+
+- 如果内核支持扩展序列号（ESN），则通过PF_KEY配置。
+  内核支持的话，通过PF_KEY配置扩展序列号（ESN）。
+
+- 在vici child-updown事件中，唯一的部分名称用于CHILD_SAs和
+  更多的信息（如统计信息）被包括在单独删除的
+  CHILD_SAs（特别是对于IKEv1）。
+
+- 所以回落到其他插件的工作正常，通过openssl插件创建HMACs
+  创建HMACs，如果底层的哈希算法不被支持的话，现在会立即失败（例如
+  FIPS模式下的MD5）。
+
+- 通过SAPI从TPM 2.0读取的RSA密钥的指数现在可以正确转换。
+
+- Linux上的自定义路由支持路由表ID>255。
+
+- 用于 charon-nm 的 D-Bus 配置文件现在被安装在
+  $(datadir)/dbus-1/system.d 而不是 $(sysconfdir)/dbus-1/system.d。
+
+- INVALID_MAJOR_VERSION 通知现在能够正确地在相同交换类型的消息中发送，并且使用相同的消息 ID。
+  交换类型的消息中发送，并使用与请求相同的消息ID。
+
+- 当发送或接收INVALID_SYNTAX通知时，IKEv2 SAs会立即被销毁。
+  通知时，会立即销毁。
+
+
+strongswan-5.8.1
+----------------
+
+- 区分名称中的RDN现在可以选择不那么严格的匹配。全局选项
+  全局选项 charon.rdn_matching 有两个备选值，可以使
+  匹配算法忽略匹配的 RDN 的顺序，或者额外地
+  接受包含比配置的更多 RDNs 的 DNs（未匹配的 RDNs 被视为
+  像通配符匹配一样）。
+
+- updateown 插件现在向脚本传递相同的接口，该接口也用于
+  自动安装的路由所使用的接口，即到达对等体的接口。
+  的接口，而不是找到本地地址的接口。
+
+- TPM 2.0上下文现在由一个突变器来保护，以防止在多个
+  IKE_SAs同时使用同一个私钥时出现问题。
+
+
+strongswan-5.8.0
+----------------
+
+- systemd 服务单元已被重新命名。原先的现代单元名为
+  strongswan-swanctl，现在被称为 strongswan（以前的名称被配置为
+  作为别名）。原有的单元现在叫 strongswan-starter。
+
+- 新增了对 XFRM 接口的支持（自 Linux 4.19 起可用）。
+  可以通过 swanctl.conf 进行配置。 接口可以通过
+  通过 updown/vici 脚本动态地创建，或者在建立 SA 之前或之后静态地创建。
+  建立SA。路由必须根据需要手动添加（守护进程不会为出站策略安装任何路由）。
+  不会为有接口ID的出站策略安装任何路由）。
+
+- 支持启动无子女的IKE_SAs（RFC 6023）。如果启用并
+  响应者支持，则在IKE_AUTH期间不建立CHILD_SA。这样
+  这允许使用单独的DH交换，即使是第一个CHILD_SA，它也是用来自IKE_AUTH的密钥创建的。
+  否则就会用从IKE_SA的密钥材料中提取的密钥来创建。
+
+- NetworkManager 后台和插件支持 IPv6。
+
+- 新的wolfssl插件是一个围绕wolfSSL加密库的封装器。感谢
+  感谢 wolfSSL 公司的 Sean Parkinson 提供的初始补丁。
+
+- IKE的SPI可以通过charon.spi_mask|label选项选择性地进行标注。这个
+  这个功能是从 charon-tkm 中提取的，但现在是按网络顺序应用掩码/标签。
+  网络顺序。
+
+- openssl插件在使用OpenSSL 1.1.0构建时支持ChaCha20-Poly1305。
+
+- 根据RFC 5793第3.2节规定的PB-TNC有限状态机在发送CRETET的时候没有正确实现。
+  在发送CRETRY或SRETRY批处理时没有正确实现。这些
+  这些批处理只能在 "决定 "状态下发送，并且CRETRY批处理可以
+  立即携带通常由CDATA批处理传送的所有消息。目前
+  目前不可能发送SRETRY批，因为不支持PT-TLS传输的全双工模式。
+  PT-TLS传输不支持全双工模式。
+
+- kernel-netlink插件没有将虚拟IPv6地址标记为废弃的，而是使用地址标签来避免它们的使用。
+  插件使用地址标签来避免它们被用于非VPN流量。
+
+- 代理插件动态地创建到ssh/gpg-agent的套接字，并且不
+  保持开放，否则会阻止代理被终止。
+
+- 为了避免广播循环，预测插件现在只重新注入那些
+  被标记或从配置的接口接收的数据包。
+
+- 通过EAP-MSCHAPv2支持UTF-8编码的密码，其内部使用
+  UTF-16LE编码来计算NT哈希值。
+
+- 增加了 build-certs 脚本，用于动态生成用于回归测试的密钥和证书。
+  动态生成用于回归测试的密钥和证书。 它们是与安装在KVM根镜像中的pki版本一起构建的
+  构建的，因此不需要在主机上安装最新的pki版本和所有需要的插件。
+  所有需要的插件安装在主机系统上。
+
+
+strongswan-5.7.2
+----------------
+
+- 私钥的实现可以选择提供一个支持的签名方案列表。
+  签名方案的列表，该列表被TPM插件使用，因为对于TPM 2.0上的每一个密钥
+  TPM 2.0的哈希算法和RSA的填充方案是预定义的。
+
+- 对于带有PSS填充的RSA，TPM 2.0规范规定了最大的盐长度（由PSS的长度定义）。
+  长度（由密钥和哈希的长度定义）。 然而，如果TPM是
+  FIPS-168-4兼容，盐的长度等于哈希长度。 这被假定为
+  但如果不是这样的话，可能需要手动启用charon.plug。
+  有必要手动启用 charon.plugins.tpm.fips_186_4，如果TPM不使用最大的盐分长度。
+  使用最大的盐分长度。
+
+- swanctl 现在可以访问相对于 swanctl.conf 的凭证目录，特别是当它被载入
+  尤其是当它通过 --file 参数从一个自定义位置加载时。 在
+  如果没有给出 --file，则使用的基本目录可以在运行时通过以下方式配置
+  环境变量来配置。
+
+- 在启用RADIUS会计的情况下，eap-radius插件会将会话ID添加到
+  eap-radius插件在访问请求信息中添加会话ID，简化了IP租约和会话会计的数据库条目的关联。
+  租约和会话核算的数据库条目。
+
+- 由RADIUS服务器分配的IP被包括在会计停止中，即使客户
+  也包括在会计停止中，允许在连接错误时提前释放它们。
+
+- kernel-netlink插件安装在传输模式SA上的选择器在IP地址变化时被更新。
+  在 IP 地址变化时更新（例如通过 MOBIKE）。
+
+- 为代理插件增加了对SHA-256和SHA-512的RSA签名的支持。
+  对于只支持 SHA-1 的旧版本 ssh/gpg-agent，IKEv2 签名
+  认证必须通过charon.signature_authentication来禁用。
+
+- sshkey 和 agent 插件支持 Ed25519/Ed448 SSH 密钥和签名。
+
+- openssl插件支持X25519/X448 Diffie-Hellman和Ed25519/Ed448密钥和签名。
+  和签名。
+
+- Ed25519、ChaCha20/Poly1305、SHA-3和AES-CCM被添加到bootan插件中。
+
+- mysql插件现在可以正确处理重载下的交易数据库连接
+  在重载下的数据库连接。
+
+- HA 池中的 IP 地址现在被均匀地分配到了所有网段中。
+
+- 在较新的 FreeBSD 内核上，内核-pfkey 插件直接从 SADB_ACQUIRE 中读取 reqid
+  从 SADB_ACQUIRE 消息中直接读取 reqid，也就是说，不需要事先由插件安装策略，例如
+  插件，例如 
+  
+  
+strongswan-5.7.1
+----------------
+
+- 修复了gmp插件中的一个漏洞，该漏洞是由带有非常小的RSA密钥的手工制作的证书引发的。
+  的RSA密钥引发的漏洞。 在用这种密钥验证签名时。
+  修复了CVE-2018-16151/2的代码导致整数下溢和随后的堆缓冲区溢出。
+  和随后的堆缓冲区溢出，导致守护程序崩溃。
+  该漏洞已被注册为CVE-2018-17540。
+
+
+strongswan-5.7.0
+----------------
+
+- 修复了gmp插件中一个潜在的授权绕过漏洞。
+  该漏洞是由于对PKCS#1 v1.5签名的验证过于宽松造成的。 几个
+  漏洞可能被Bleichenbacher式的攻击所利用，伪造低指数密钥的签名
+  伪造低指数密钥（即e=3）的签名。 CVE-2018-16151已被分配到
+  CVE-2018-16151已被分配给在哈希函数的OID之后接受随机字节的问题。
+  CVE-2018-16152已被分配给不
+  CVE-2018-16152被分配给未验证ASN.1 algorithmIdentifier结构中的参数是
+  是空的。 其他没有直接导致漏洞的缺陷（例如，没有
+  检查至少8个字节的填充物）没有分配单独的CVE。
+
+- swanctl.conf 和 strongswan.conf 中的章节名称不再允许使用圆点。
+  strongswan.conf 中的部分名称不再允许使用圆点。这主要影响到文件记录器的配置。如果
+  的路径包含点，它现在必须在新的
+  `path`设置中任意重命名为`filelog`的小节中。
+  部分中任意重命名的小节中配置。
+
+- swanctl.conf 和 strongswan.conf 中的部分现在可以引用其他部分。
+  所有的设置和分节都会被继承。这允许
+  简化了配置，因为多余的信息只需要指定一次
+  然后可以包含在其他部分（参考 man
+  页面中的例子）。
+
+- 最初选择的IKE配置（基于IP和IKE版本）现在可以
+  如果没有找到匹配的算法建议，可以改变。 这样一来，配置的顺序
+  配置的顺序不再那么重要了，而且可以很容易地
+  为需要弱算法的客户指定单独的配置（而不是在其他地方也添加这些算法）。
+  而不是在其他可能被选中的配置中添加它们）。
+
+- 支持 IKEv2 的后量子预共享密钥 (draft-ietf-ipsecme-qr-ikev2)
+  已被添加。
+
+- 新的botan插件是Botan C++加密库的一个封装器。它
+  它需要从 Botan 的主分支（或即将发布的
+  2.8.0版本）。感谢罗德与施瓦茨公司的René Korthaus和他的团队。
+  网络安全公司提供的初始补丁。
+
+- pki工具接受一个xmppAddr otherName作为subjectAlternativeName，使用的是
+  语法 --san xmppaddr:<jid>。
+
+- 实施RFC 8412 "PA-TNC的软件库存信息和属性（SWIMA）
+  实现RFC 8412 "用于PA-TNC的软件库存信息和属性（SWIMA）"。SWIMA订阅选项在apt.history.log文件上设置CLOSE_WRITE触发器，从而导致客户端的
+  history.log文件，导致ClientRetry PB-TNC批处理以初始化
+  一个新的测量周期。
+
+- 增加了对PA-TNC（RFC 5792）和PB-TNC（RFC 5793）NEA
+  协议的支持。
+
+- 支持英特尔TPM2-TSS TGC软件栈的第二版。存在
+  内核/dev/tpmrm0资源管理器的存在被自动检测。
+
+- 在处理数据包后，标记入站和/或出站的SA应适用于数据包，可在swanctl中配置。
+  在Linux上的swanctl.conf中进行配置。 对于出站SA，这需要至少
+  至少需要4.14内核。 设置掩码和配置入站的标记/掩码
+  SAs将被添加到即将发布的4.19内核中。
+
+- swanctl.conf中的新选项允许配置如何/是否复制IP头中的DF、ECN和DS
+  字段在IPsec处理期间被复制。控制这个
+  目前只能在Linux上实现。
+
+- 为了避免冲突，dhcp插件现在只使用DHCP服务器端口，如果明确配置了
+  明确配置。
+
+
+strongswan-5.6.3
+----------------
+
+- 修复了在FIPS模式下使用openssl插件时，IKEv2密钥推导的DoS漏洞。
+  在FIPS模式下使用，并且HMAC-MD5被协商为PRF。
+  该漏洞已被注册为CVE-2018-10811。
+
+- 修复了 stroke 插件中的一个漏洞，该漏洞在从套接字中读取消息之前没有检查接收的
+  长度，然后再从套接字中读取消息。除非配置了一个组。
+  访问该套接字需要root权限，所以在默认的
+  配置中，这不应该是一个问题。
+  该漏洞已被注册为CVE-2018-5388。
+
+- 尚未生效的CRL现在被忽略，以避免在以下情况下出现问题
+  过期的证书被从CRL中删除，而进行撤销检查的主机上的时钟
+  进行撤销检查的主机的时钟落后于发布CRL的主机的时钟。
+
+- 取出的CRLs的签发者现在与被检查证书的签发者进行比较。
+  证书的签发者进行比较。
+
+- 除撤销之外的CRL验证结果（例如，跳过检查，因为
+  撤销以外的CRL验证结果（例如，由于无法获取CRL而跳过检查）现在也被存储在中间CA
+  而不仅仅是最终实体的证书，所以在这种情况下，严格的CRL政策可以被执行。
+  所以在这种情况下可以执行严格的CRL政策。
+
+- 根据RFC 4945第5.1.3.2节的规定，用于IKE的证书必须
+  现在要么不包含keyUsage扩展（如由pki生成的那些）。
+  或者至少有一个 digitalSignature 或 nonRepudiation 位被设置。
+
+- vici/swanctl的新选项允许强制本地终止IKE_SA。
+  这在已知另一端无法到达的情况下可能很有用
+  或已经删除了IKE_SA，所以重新发送一个
+  DELETE并等待响应是毫无意义的。 只需等待一定的
+  销毁IKE_SA之前，只等待一定时间的响应也是可以的。
+  通过另外指定一个超时时间。
+
+- 当删除路由时，kernel-netlink 插件现在会检查它是否跟踪了其他
+  路由，并替换已安装的路由，而不是直接删除。
+  而不是直接删除它。 在安装过程中也是如此，以前已有的路由
+  没有被替换。 这应该允许在Linux上使用虚拟IP的陷阱。
+
+- dhcp插件只在identity_lease被启用的情况下发送客户端标识符选项。
+  启用。 它还可以发送长度为255字节的身份信息，而不是之前的64字节。
+  之前的64字节。 如果配置了一个服务器地址，DHCP请求将从67端口发送，而不是68端口。
+  现在从端口67而不是68发送，以避免ICMP端口不可达。
+
+- IKEv1协议的漫游事件现在被完全忽略了。
+
+- ChaCha20/Poly1305现在可以正确提出，不需要密钥长度。为了
+  为了与旧版本兼容，可以在提议中加入chacha20poly1305compat关键字，以便同时提议算法。
+  包括在提议中，以提出带有密钥长度的算法。
+
+- 配置IPsec SAs的硬件卸载现在更加灵活，并允许
+  一种新的模式，如果内核和设备支持它，它将自动使用。
+
+- OpenSSL 1.1生成的PKCS#8文件中支持基于SHA-2的PRFs。
+
+- pki --verify工具可以从目录中加载CA证书和CRLs。
+
+- 修正了charon-nm中传递给NetworkManager的DNS服务器的问题。
+
+
+strongswan-5.6.2
+----------------
+
+- 修正了 PKCS#1 RSASSA-PSS 签名解析器中的 DoS 漏洞，该漏洞是由输入验证不足引起的。
+  是由不充分的输入验证引起的。 在算法标识符结构中的一个可配置
+  RSASSA-PSS 签名的算法标识符结构中的一个可配置参数是
+  掩码生成函数（MGF）。 目前只有MGF1被指定用于这一目的
+  目的。 然而，这反过来又需要一个参数来指定底层散列函数。
+  strongSwan 的解析器没有正确处理没有这个参数的情况。
+  该参数不存在的情况，导致未定义的数据读取。
+  该漏洞已被注册为CVE-2018-6459。
+
+- 在重启SA时，先前协商的DH组被重新使用，而不是
+  而不是使用配置建议中的第一个组，这就避免了在对等体选择不同组的情况下进行额外的
+  如果对等体在最初创建SA时通过INVALID_KE_PAYLOAD选择了一个不同的组，这可以避免额外的交换。
+  这可以避免在对等体在最初创建SA时通过INVALID_KE_PAYLOAD选择不同的组时进行额外的交换。
+  选定的 DH 组也被移到所有包含它的发送建议的前面。
+  的所有提议的前面，而所有不包含该提议的提议则被移到后面，以便于
+  向对等体传达对该组的偏爱。
+
+- 对MOBIKE任务队列的处理已得到改进。特别是，对地址更新的响应
+  对地址更新的响应不再被忽略，如果只有地址列表更新或
+  DPD是排队的。
+
+- 在替换已安装的策略中的地址时，为避免流量泄漏而安装的回退丢弃策略
+  现在用临时丢弃策略取代了已安装策略中的地址。
+  因为我们现在删除并重新安装 IPsec
+  SA来更新它们的地址。
+
+- 访问TPM 2.0的非易失性存储中的X.509证书。
+  通过NV索引进行引用。
+
+- 在pki --print中添加--keyid参数，可以打印存储在智能卡中的私钥或证书。
+  或存储在智能卡或TPM 2.0中的证书。
+
+- 如果对等体在ESP中错误地发送DH组，修正了提议的选择。
+  过程中的提议。
+  
+  
+strongswan-5.6.1
+----------------
+
+- 为了符合RFCs 8221和8247的要求，有几种算法被从
+  中删除了几种算法（ESP/AH和IKEv2中的3DES、Blowfish和MD5
+  ESP/AH，IKEv2中的MD5和MODP-1024）。 这些算法仍然可以用在
+  自定义方案中使用。
+
+- 增加了对RSASSA-PSS签名的支持。 为了向后兼容，它们
+  默认情况下不会自动使用，启用charon.rsa_pss可以改变这一点。 要
+  明确使用或要求使用IKEv2签名认证的此类签名
+  (RFC 7427)，无论该选项是否被启用，使用ike:rsa/pss...
+  认证约束。
+
+- pki工具可以选择用RSASSA-PSS签署证书/CRL，通过
+  `--rsa-padding pss`选项。
+
+- sec-updater工具检查基于dpkg的存储库中的安全更新
+  (如Debian/Ubuntu)，并在IMV策略数据库中设置安全标志
+  的安全标志。此外，对于每个新的软件包版本，都会为给定的操作系统和硬件架构创建一个SWID标签。
+  给定的操作系统和硬件架构创建并存储在数据库中。
+  使用sec-updater.sh脚本模板，可以自动查找
+  (例如，通过每小时的cron job）。
+
+- 在IMV数据库方案中引入的文件版本打破了文件
+  参考哈希测量。这一点已经通过创建通用产品
+  版本具有空的包名。
+
+- systime-fix插件的一个新的超时选项在一段时间后停止定期的系统时间
+  检查，并强制执行证书验证，关闭或重新认证所有有问题的SA。
+  重新认证所有具有无效证书的SA。
+
+- 以前只能通过ipsec listcounters获得的IKE事件计数器，现在可以查询/重置。
+  现在可以通过 vici 和新的 swanctl --counters 命令来查询/重置。它们是
+  由新的可选计数器插件提供。
+
+- 在RADIUS访问-接受消息中收到的类属性可以选择性地被添加到
+  添加到RADIUS会计信息中。
+
+- 入站标记可以选择再次安装在SA上（在5.5.2版本中已经删除）。
+  5.5.2中删除的），在swanctl.conf中启用mark_in_sa选项。
+
+
+strongswan-5.6.0
+----------------
+
+- 修正了 gmp 插件中的一个 DoS 漏洞，该漏洞是在验证 RSA 时，由于没有充分的
+  在验证 RSA 签名时，由于输入验证不足而导致的漏洞。
+  操作m^e mod n，其中m是签名，e和n是公开的指数和模数。
+  指数和公钥的模数。 m的值是一个介于
+  0和n-1之间的整数，然而，gmp插件并没有验证这一点。 因此，如果m等于n，那么
+  计算结果为0，在这种情况下，mpz_export()返回NULL。 这个
+  结果没有得到正确的处理，导致了一个空指针的解构。
+  该漏洞已被注册为CVE-2017-11185。
+
+- 新的SWIMA IMC/IMV对实现了 "draft-ietf-sacm-nea-swima-patnc"
+  互联网草案，并已在IETF 99布拉格黑客马拉松上进行了演示。
+
+- IMV数据库模板已经过调整，以实现完全符合
+  与ISO 19770-2:2015的SWID标签标准。
+
+- sw-collector工具从apt历史日志中提取软件事件
+  并将它们存储在一个SQLite数据库中，供SWIMA IMC使用。
+  该工具还可以为已安装和已删除的软件包版本生成SWID标签。
+  包的版本。
+
+- pt-tls-client可以附加和使用TPM 2.0保护的私钥
+  通过--keyid参数。
+
+- libtpmtss支持英特尔的TSS2架构代理和资源
+  管理器接口（tcti-tabrmd）。
+
+- 新的eap-aka-3gpp插件在软件中实现了3GPP MILENAGE算法。
+  在软件中。 K（可选择与OPc相连接）可配置为
+  二进制EAP秘密。
+
+- 在charon-tkm中修复了CHILD_SA重键，并做了些许改变：在新的出站IPsec中切换到新的出站IPsec。
+  切换到新的出站 IPsec SA 现在通过 SPI 在 Linux 上的出站策略发生。
+  政策，并且在丢失重键碰撞的情况下，不会为冗余的SA/政策临时安装出站SA/政策。
+  的情况下，不会为冗余的 CHILD_SA 暂时安装出站 SA/政策。
+
+- mark*设置的新%unique-dir值为每个CHILD_SA方向分配单独的唯一mark
+  为每个CHILD_SA方向（in/out）分配单独的唯一标记。
+
+
+strongswan-5.5.3
+----------------
+
+- 修复了 gmp 插件中的一个 DoS 漏洞，该漏洞是由验证 RSA 签名时的输入验证不足引起的。
+  在验证 RSA 签名时，由于没有进行充分的输入验证而造成的。 更具体地说。
+  mpz_powm_sec()对传递的指数和模数有两个要求。
+  的要求，如果这些要求没有得到满足，计算将导致
+  导致浮点异常，使整个过程崩溃。
+  该漏洞已被注册为CVE-2017-9022。
+
+- 修复了x509插件中的一个DoS漏洞，该漏洞是由于ASN.1
+  解析器没有正确处理 ASN.1 CHOICE 类型，这可能会导致
+  在解析使用这种类型的 X.509 扩展时可能导致无限循环。
+  该漏洞已被注册为CVE-2017-9023。
+
+- IKEv2 CHILD_SA重匙过程中的行为已经改变，以避免
+  流量损失。响应者现在只安装新的入站SA，并推迟安装出站SA，直到它收到新的SA。
+  安装出站SA，直到它收到被替换的
+  CHILD_SA。 同样，被替换的CHILD_SA的入站SA也不会被删除。
+  在DELETE被处理后，在可配置的秒数内（charon.delete_rekeyed_delay）不删除被替换的CHILD_SA的入站SA，以减少
+  DELETE被处理后，在可配置的秒数内（charon.delete_rekeyed_delay）不会删除被替换的CHILD_SA的入站SA，以减少丢弃延迟包的机会。
+
+- 该代码库已被移植到苹果的ARM64 iOS平台上，该平台上的
+  其变量和常规函数的调用惯例是不同的。 这意味着
+  将非变量函数分配给变量函数指针并不可行。
+  为了避免这个问题，enumerator_t接口已经被改变，并且
+  enumerator_create_filter()的回调函数的签名，以及
+  invoke_function() 和 find_first() 方法的签名。
+  find_first() 的返回类型也从 status_t 改为 bool。
+
+- 增加了对默认插件所提供的证书解析器的模糊处理的支持。
+  插件（x509、pem、gmp 等）提供的证书解析器的支持，该插件位于 Google 的 OSS-Fuzz 基础设施上。一些
+  修复了在摸索这些插件时发现的问题。
+
+- charon 的重传设置中加入了两个新的选项。
+  retransmit_limit 和 retransmit_jitter。 前者在计算的重传超时上增加了一个上限
+  计算的重传超时的上限，后者则随机地减少它。
+
+- 修正了 swanctl 的 --load-creds 命令中的一个错误，该错误会导致未加密的
+  的私钥会被卸载，如果该命令被多次调用的话。现在
+  load-key VICI 命令现在在成功时返回所加载的密钥的 ID。
+
+- 凭证管理器现在会在全局凭证集之前列举本地凭证集。
+  全局的。这意味着由对等体提供的证书现在会优先于
+  而不是由本地存储的具有相同身份的证书（例如，在
+  证书缓存）。
+
+- 增加了对Linux 4.11引入的IPsec SAs的硬件卸载的支持
+  引入的 IPsec SA 的硬件卸载支持。
+
+- 当以单片机和静态方式构建库时，插件
+  构造器时，现在每个库中都有硬编码，这样插件代码就不会被链接器删除。
+  被链接器删除，因为它认为它们的符号都没有被引用。
+  被引用。
+
+- pki工具默认加载的是curve25519插件。
+
+
+strongswan-5.5.2
+----------------
+
+- 支持使用 Curve25519 的 Diffie-Hellman 第 31 组，用于 IKE，定义为
+  RFC 8031所定义的Diffie-Hellman第31组。
+
+- 支持Ed25519数字签名算法，适用于IKEv2，定义见
+  draft-ietf-ipsecme-eddsa。基于Ed25519的公钥对、X.509证书
+  和CRLs可以由pki工具生成和打印。
+
+- 新的 "tpm "libtpmtss插件允许使用持久的私有RSA和ECDSA
+  绑定到TPM 2.0上，用于IKE和TLS认证。使用
+  使用TPM 2.0对象句柄作为keyid参数，pki --pub工具可以从TPM提取
+  从TPM中提取公钥，从而取代aikpub2工具。以类似的
+  pki --req可以生成一个用TPM私钥签名的PKCS#10证书请求。
+  的私钥签署的PKCS#10证书请求。
+
+- pki工具获得了对使用RFC 3779生成证书的支持
+  addrblock扩展来生成证书。charon addrblock插件现在可以根据证书的addrblock动态地缩小
+  流量选择器，而不是完全拒绝
+  而不是完全拒绝不匹配的选择器。这允许通用连接，其中
+  允许的选择器仅由使用的证书定义。
+
+- 缓存的基本CRL和Delta CRL的就地更新不会在缓存内存中留下几十个
+  缓存中留下几十个陈旧的副本。
+
+- VICI接口和swanctl工具的一些新功能。查询
+  查询特定的池，枚举和卸载钥匙和共享密匙，加载
+  从PKCS#11令牌加载密钥和证书，能够启动、安装和卸载连接和策略。
+  和卸载连接和策略的能力（如果不同连接中的多个子部分共享同一名称
+  不同连接中的多个子部分共享相同的名称），一个命令来启动
+  的命令，支持以前只由旧的配置文件支持的设置（纯文本），以启动 IKE 和 IPsec SA 的重新加密。
+  支持以前只由旧的配置文件支持的设置（普通pubkeys、dscp、证书策略。
+  IPv6传输代理模式、NT Hash秘密、调解扩展）。
+
+  重要的是。 由于VICI绑定的问题，将子段映射到
+  
+  
+strongswan-5.5.1
+----------------
+
+- newhope插件实现了后量子NewHope密钥交换算法
+  Erdem Alkim, Léo Ducas, Thomas Pöppelmann and
+  Peter Schwabe提出的。
+
+- libstrongswan加密工厂现在提供注册扩展的
+  输出函数（XOFs）。目前支持的 XOFs 有 SHAKE128 和 SHAKE256
+  由sha3插件实现，ChaCHa20由chapoly插件实现
+  以及更传统的基于SHA-1的MGF1掩码生成函数。
+  SHA-256和SHA-512哈希算法，由新的mgf1插件实现。
+
+- pki工具，在pkcs1或openssl插件的帮助下，可以解析任何支持的格式的私钥。
+  的私钥，而不需要知道其确切的类型。
+  因此不必明确指定RSA或ECDSA，而可以用关键字Priv
+  用来表示任何类型的私钥。同样地，swanctl 可以从
+  任何类型的私钥。
+
+- pki工具可以使用sha3和gmp插件处理RSASSA-PKCS1v1.5-with-SHA-3的签名。
+  sha3和gmp插件来处理RSASSA-PKCS1.5-sha-3签名。
+
+- VICI的flush-certs命令可以从易失性证书缓存中刷新证书。
+  证书缓存中的证书。可以选择要刷新的证书类型
+  可以指定要刷新的证书类型(例如 type = x509_crl)。
+
+- 在strongswan.conf中设置cache_crls = yes，vici插件会保存常规。
+  base和delta CRLs保存到磁盘。
+
+- IKE 分片现在被默认启用，默认片段大小为
+  设置为1280字节，适用于两个 IP 地址族。
+
+- libtpmtss: 在 TSS2 API 中，函数 TeardownSocketTcti() 被替换为
+  tss2_tcti_finalize()。
+
+
+strongswan-5.5.0
+----------------
+
+- 新的libtpmtss库提供对TPM 1.2和TPM 2.0的支持
+  可信平台模块。这使得认证IMC/IMV对能够
+  进行基于TPM 2.0的验证。
+
+- IKEv2交换碰撞过程中的行为已被改进/修复。
+  支持TEMPORARY_FAILURE和CHILD_SA_NOT_FOUND。
+  通知的支持，如RFC 7296所定义。
+
+- 可以手动设置IPsec策略的优先级（例如，对于高优先级的放弃策略
+  政策），并且可以将出站政策限制在一个网络接口。
+
+- 自动计算的默认优先级的方案已经改变，现在也考虑到端口掩码。
+  改变了，现在也考虑了端口掩码，这是在5.4.0中添加的。
+
+- 在流量选择器方面，FWD 策略现在在两个方向都安装了
+  选择器。 因为这种 "出站 "FWD策略可能与其他SA的 "入站 "FWD策略相冲突。
+  因为这种 "向外 "的FWD策略可能与其他SA的 "向内 "的FWD策略相冲突，它们被安装在较低的优先级，并且没有
+  有一个reqid设置，这使得内核插件能够区分这两种政策
+  并优先选择那些有reqid的。
+
+- 对于出站的 IPsec SAs，不再配置重放窗口了。
+
+- 增强了 swanctl --list-conns 命令的功能，列出了
+  IKE_SA和CHILD_SA的重新认证和重新密钥设置，以及EAP/XAuth
+  身份和EAP类型。
+
+- 由 resolve 插件安装的 DNS 服务器现在被重新计算了，这应该会
+  修复了其在make-before-break reauthentication的使用。 任何写到
+  stderr/stdout 的输出现在都会被记录下来。
+
+- 内核接口中的方法已被修改为接受结构而非
+  而不是一长串的参数。 同样地，peer_cfg_t 和
+  child_cfg_t 的构造函数现在采用了结构体。
+
+
+strongswan-5.4.0
+----------------
+
+- 增加了对 IKEv2 重定向的支持（RFC 5685）。 插件可以
+  实现 redirect_provider_t 接口来决定是否以及何时重定向
+  连接的客户端。 也可以根据不同的选择器通过VICI重定向已建立的IKE_SAs。
+  的不同选择器来重定向。 除非在strongswan.conf中禁用
+  除非在strongswan.conf中禁用，否则charon守护进程将遵循从服务器收到的重定向请求。
+
+- ike: 前缀可以明确配置签名方案
+  签名方案的约束，这允许在rightauth中使用不同的签名方案进行信任链。
+  允许使用不同的签名方案进行信任链验证和认证。
+
+- IKEv2 "先易后难 "重新认证的发起者现在会暂停
+  在线证书撤销检查（OCSP、CRL），直到新的IKE_SA和所有的
+  CHILD_SAs的建立。 如果检查是通过与新的IKE_SA建立的CHILD_SA进行的，则需要这样做。
+  如果检查是通过与新IKE_SA建立的CHILD_SA进行的，则需要这样做。 这是不可能的，直到发起者安装这个SA，并且
+  发起者安装这个SA时才有可能，而这只发生在认证成功后。
+  成功完成后才能实现。 所以我们在重新认证的时候暂停检查
+  之后再进行检查，如果检查失败，IKE_SA将被关闭。 这个变化对
+  对初始IKE_SA认证期间的行为没有影响。
+
+- 为vici插件添加了一个Vici:Session Perl CPAN模块，以允许
+  允许Perl应用程序使用VICI接口来控制和/或监控IKE守护进程。
+  接口来控制和/或监控 IKE 守护进程，类似于现有的 Python egg 或 Ruby gem。
+
+- 现在可以在Linux内核中配置带有端口范围的流量选择器。
+  例如：remote_ts = 10.1.0.0/16[tcp/20-23] local_ts = dynamic[tcp/32768-65535] 。
+  该端口范围必须映射t
+  
+  
+strongswan-5.3.5
+----------------
+
+- 正确处理 sigwaitinfo(2) 调用中潜在的 EINTR 错误， 这些调用取代了
+  sigwait(3) 的调用，并在 5.3.4 中予以取代。
+
+- 在 Thom Troy 的帮助下，RADIUS 的重传超时可以配置了。
+
+
+strongswan-5.3.4
+----------------
+
+- 修正了 eap-mschapv2 插件中的一个认证绕过漏洞。
+  是由于在处理收到的MSCHAPv2成功信息时，对内部状态的验证不足而导致的。
+  MSCHAPv2成功消息时，没有对内部状态进行充分的验证。
+  该漏洞已被注册为CVE-2015-8023。
+
+- sha3插件实现了SHA3 Keccak-F1600哈希算法系列。
+  在 strongSwan 框架内，SHA3 目前用于 BLISS 签名。
+  因为其他签名算法的OIDs还没有被定义
+  的OID。另外，在 IKEv2 中使用 SHA3 也还没有被标准化。
+
+
+strongswan-5.3.3
+----------------
+
+- 增加了对 RFC 7539 和 RFC 7634 中指定的 ChaCha20/Poly1305 AEAD 密码的支持。
+  RFC 7634中指定的Chacha20poly1305 ike/esp提议关键字的支持。新的chapoly
+  插件实现了该密码，如果可能的话，在x86/x64架构上进行SSE加速。
+  架构上的SSE加速。它既可用于IKEv2，也可用于strongSwan libipsec ESP
+  后端。在 Linux 4.2 或更新的版本中，内核-netlink 插件可以配置
+  ESP SA的密码。
+
+- vici 接口现在支持配置辅助认证机构信息，如 CRL 和 OCSP。
+  vici接口现在支持配置辅助认证机构信息，如CRL和OCSP URI。
+
+- 在 bliss 插件中，使用基于 SHA-512 的随机指数的 c_indices 推导
+  的c_indices推导已经被固定、普及和标准化，采用了MGF1掩码
+  生成函数与SHA-512。因此，使用改进后的神谕的BLISS签名不符合
+  的BLISS签名与早期的实现不兼容。
+
+- 对传输模式连接的自动路由（auto=route）与右键（right=%any）的支持。
+  的支持（ikev2/trap-any 场景提供了例子）。
+
+- 启动器守护程序在停止时不再刷新 IPsec 策略和 SA。
+  停止。 已经存在的重复策略现在会被 IKE
+  守护程序安装其策略时，已经存在的重复策略现在被覆盖。
+
+- 初始限制（如 charon.init_limit_half_open）现在可以在通过 VIC 启动 SA 时选择性地执行
+  现在可以选择在通过VICI启动SA时强制执行。为此，由守护进程发起的IKE_SAs
+  现在也被算作是半开的SA，这样做的一个副作用是修复了连接时的状态
+  输出（例如在ipsec状态中）。
+
+- 当使用相互EAP-only认证时，left|rightauth中的EAP方法的对称性配置现在可以实现了。
+  互相只使用EAP认证时，现在可以在left|rightauth中对称配置EAP方法（以前，客户端必须
+  配置 rightauth=eap 或 rightauth=any，这使得它不能作为响应者使用这个
+  同样的配置作为响应者）。
+
+- IKEv2头中的发起人标志再次被比较（从5.0.0开始就不是这样了
+  自5.0.0以来就不是这样了），那些标志设置不正确的数据包会被再次忽略。
+
+- 在 "硬拷贝设备健康评估 "的基础上，实现了一个演示的硬拷贝设备IMC/IMV对。
+  设备健康评估可信网络连接绑定"(HCD-TNC)
+  由IEEE打印机工作组（PWG）起草的文件。
+
+- 修正了IF-M分段，该分段在一个大属性前面有多个小属性的情况下失败。
+  在一个要分段的巨大属性前面有多个小属性的情况下失败。
+
+
+strongswan-5.3.2
+----------------
+
+- 修复了一个漏洞，该漏洞允许拥有有效证书的流氓服务器
+  的流氓服务器可以欺骗它，使其披露其用户名甚至是
+  密码（如果客户端接受EAP-GTC）。 造成这种情况的原因是
+  导致这种情况的原因是，针对应答者身份验证的约束措施执行得太晚。
+  该漏洞已被注册为CVE-2015-4171。
+
+
+strongswan-5.3.1
+----------------
+
+- 修复了一个由IKEv1/Let's触发的拒绝服务和潜在的远程代码执行漏洞。
+  触发的拒绝服务和潜在的远程代码执行漏洞，这些信息包含各自的
+  其他IKE版本的信息所引发的拒绝服务和潜在的远程代码执行漏洞。自5.2.2以来，此类有效载荷被特殊处理，但由于
+  但由于它们仍由原来的有效载荷类型来识别，因此在某些地方被当作
+  导致无效的函数指针解除引用。
+  该漏洞已被注册为CVE-2015-3991。
+
+- 新的aesni插件提供了CBC、CTR、XCBC、CMAC、CCM和GCM密码基元
+  原理。该插件需要AES-NI和PCLMULQDQ
+  指令，并在x86和x64架构上工作。它提供了
+  它在用户区提供了卓越的加密性能，无需任何外部库。
+
+
+strongswan-5.3.0
+----------------
+
+- 增加了对IKEv2 "先斩后奏 "重认证的支持。通过使用一个全局
+  CHILD_SA reqid分配机制，charon支持重叠的CHILD_SA。
+  这允许使用make-before-break，而不是之前支持的
+  break-before-make的重新认证，避免了在该过程中的连接缺口。
+  过程中的连接缺口。由于新机制在不支持它的对等体中可能会失败（例如
+  由于新机制可能会在不支持它的对等体中失败（比如以前的任何strongSwan版本），因此必须使用
+  charon.make_before_break strongswan.conf选项明确启用。
+
+- 增加了对 "IKEv2中的签名认证"（RFC 7427）的支持。
+  这允许使用更强大的哈希算法进行公钥认证。
+  默认情况下，签名方案是根据签名密钥的强度来选择的。
+  签名密钥的强度来选择签名方案，但具体的哈希算法可以在leftauth中进行配置。
+
+- 在rightauth中指定的密钥类型和哈希算法现在也会被检查到
+  IKEv2签名方案进行检查。 如果在现有的配置中，这种约束被用于证书
+  如果在现有配置中使用这种约束条件进行证书链验证，特别是与不支持RFC 7427的对等体
+  不支持RFC 7427的对等体时，可能需要用
+  charon.signature_authentication_constraints设置来禁用该功能，因为经典IKEv2中使用的签名方案是
+  因为经典IKEv2公钥认证中使用的签名方案可能不够强大
+  足够强大。
+
+- 新的connmark插件允许主机将conntrack流量绑定到一个特定的
+  CHILD_SA，对conntrack条目应用和恢复SA标记。这使得
+  这允许对等体处理来自同一NAT设备的多个传输模式连接。
+  同一个NAT设备上的客户端发起的流量。一个常见的用例是保护
+  L2TP/IPsec，如一些系统所支持的。
+
+- 预测插件可以在连接的客户端和局域网之间转发广播和多播信息。
+  连接的客户端和局域网之间的广播和组播消息。对于使用唯一标记的CHILD_SA，它设置了
+  所需的Netfilter规则，并使用一个多播/广播监听器，将这些信息转发到所有连接的客户端。
+  将这些信息转发给所有连接的客户。这个插件是为
+  Windows 7 IKEv2客户端，如果协商的IPsec策略允许，它将通过隧道宣布其服务。
+  协商的IPsec策略允许的话，它就会在隧道中宣布其服务。
+
+- 对于vici插件，已经添加了一个Python蛋，以允许Python应用程序
+  使用VICI接口来控制或监控IKE守护进程，类似于
+  类似于现有的Ruby gem。这个Python库是由Björn Schuberg贡献的。
+
+- EAP服务器方法现在可以满足公钥约束，比如rightcert
+  或 rightca。此外，公钥和签名约束可以被
+  在 rightauth 关键字中指定 EAP 方法。目前EAP-TLS和
+  EAP-TTLS方法为约束检查提供验证细节。
+
+- 将BLISS后量子签名算法升级为改进的BLISS-B
+  变体。可以与SHA256、SHA384和SHA512哈希算法结合使用。
+  算法，其中SHA512是默认的。
+
+- IF-IMV 1.4接口现在可以提供TNC服务器看到的TNC接入请求者的IP地址
+  所有的IMV都可以看到TNC服务器的IP地址。这一信息可以被
+  转发到政策执行点（如防火墙或路由器）。
+
+- 新的相互tnccs-20插件参数激活了TNC的相互测量。
+  在PB-TNC半双工模式下，两个端点通过PT-EAP或
+  PT-TLS传输介质，以PB-TNC半双工模式激活两个终端之间的相互TNC测量。
+
+
+strongswan-5.2.2
+----------------
+
+- 修正了一个由IKEv2密钥交换引发的拒绝服务漏洞
+  有效载荷引发的拒绝服务漏洞，该载荷包含Diffie-Hellman组1025。 这个标识符是
+  内部用于具有自定义生成器和素数的DH组。 因为
+  在基于KE有效载荷创建DH对象时缺少这些参数
+  发生了一个无效的指针解除引用。 这使得攻击者可以用一个
+  IKE_SA_INIT消息而使IKE守护进程崩溃，该消息包含这样的KE
+  有效载荷的单一 IKE_SA_INIT 消息而崩溃。 该漏洞已被注册为CVE-2014-9221。
+
+- ipsec.conf 中的 left/rightid 选项，或 strongSwan 中的任何其他身份。
+  现在接受前缀以执行明确的类型，如电子邮件：或 fqdn：。
+  请注意，对其余的字符串不做任何转换，请参考
+  ipsec.conf(5) 了解详情。
+
+- 后量子双模格子签名方案（BLISS）可以被用来作为
+  IKEv2公钥认证方法。pki工具提供了完全的支持
+  对BLISS密钥对和证书的生成提供全面支持。
+
+- 修正了通过IKEv1为AH协商的完整性算法的映射。
+  当连接到旧版本的 charon 时，可能导致互操作性问题。
+
+
+strongswan-5.2.1
+----------------
+
+- 新的 charon-systemd IKE 守护进程实现了一个 IKE 守护进程，专门用于
+  的 IKE 守护进程。它避免了对ipsec starter的依赖，使用swanctl
+  作为配置后端，构建了一个简单而轻量级的解决方案。它
+  支持本地 systemd 日志记录。
+
+- 增加了对 RFC 7383 规定的 IKEv2 分片的支持。 与 IKEv1
+  分片一样，可以通过在ipsec.conf中设置fragmentation=yes来启用。
+
+- 支持TCG TNC IF-M属性分段规范提案。
+  所有属性都可以被分割。此外，TCG/SWID标签、TCG/SWID标签ID
+  和IETF/Installed Packages属性可以在每段基础上逐步处理。
+  每段的基础上进行处理。
+
+- 新的ext-auth插件调用一个外部脚本来实现自定义IKE_SA
+  授权逻辑，由Vyronas Tsingaras提供。
+
+- 对于vici插件，已经添加了一个ruby gem，允许ruby应用程序
+  来控制或监控IKE守护进程。vici 文档已被更新
+  以包括对可用操作的描述和一些简单的例子
+  使用 libvici C 接口和 ruby gem。
+
+
+strongswan-5.2.0
+----------------
+
+- strongSwan 已被移植到 Windows 平台上。使用 MinGW 工具链。
+  使用 MinGW 工具链，strongSwan 代码库的许多部分可以在 Windows 7 / 2008 R2
+  和更新的版本上运行。 charon-svc 实现了基于 libcharon 的 Windows IKE 服务。
+  libcharon，kernel-iph 和 kernel-wfp 插件作为网络和 IPsec 的后端。
+  socket-win提供了一个原生的IKE套接字实现，而winhttp则是在Windows平台上获取IPsec。
+  实现，而winhttp使用WinHTTP API获取CRL和OCSP信息。
+  WinHTTP API获取CRL和OCSP信息。
+
+- 新的vici插件为charon提供了一个多功能的IKE配置接口。
+  charon。使用稳定的IPC接口，外部应用程序可以配置。
+  控制和监控IKE守护进程。而不是用脚本编写ipsec工具
+  和生成ipsec.conf，第三方应用程序可以使用新的接口
+  来实现更多的控制和更好的可靠性。
+
+- 在libvici客户端库的基础上，swanctl实现了VICI接口的第一个用户。
+  VICI接口的第一个用户。与swanctl.conf配置文件一起。
+  连接可以被定义、加载和管理。
+  完整的IKE配置和控制界面的命令行。
+  前六个swanctl示例方案已经添加。
+
+- SWID IMV实现了一个基于JSON的REST API，允许交换
+  SWID标签和软件ID与strongTNC策略管理器的交换。
+
+- SWID IMC可以从dpkg中提取所有已安装的软件包（Debian,
+  Ubuntu, Linux Mint等），rpm（Fedora, RedHat, OpenSUSE等），或
+  pacman (Arch Linux, Manjaro, etc.)软件包管理器中提取所有安装的软件包，分别使用
+  swidGenerator (https://github.com/strongswan/swidGenerator)，它可以根据新的ISO标准生成
+  根据新的ISO/IEC 19770-2:2014标准生成SWID标签。
+
+- 现在，所有的IMV都通过一个共同的平台分享访问请求者的ID、设备ID和产品信息。
+  通过一个共同的imv_session对象共享一个访问请求者的ID、设备ID和产品信息。
+
+- Attestation IMC/IMV对支持IMA-NG测量格式
+  在Linux 3.13内核中引入。
+
+- aikgen工具生成一个与TPM绑定的认证身份密钥。
+
+- 实现了PT-EAP传输协议（RFC 7171），用于可信的网络
+  连接。
+
+- ipsec.conf replay_window选项定义了连接特定的IPsec replay
+  窗口。原始补丁由Zheng Zhong和Christophe Gouault提供。
+  6Wind。
+
+
+strongswan-5.1.3
+----------------
+
+- 修正了一个认证绕过漏洞，该漏洞是在未建立的IKEv2 SA被主动启动时，重新键入该SA引发的。
+  在未建立的IKEv2 SA被主动启动时重新加密钥引发的认证绕过漏洞。 这允许
+  攻击者可以欺骗对等体的IKE_SA状态为已建立，而不需要
+  提供任何有效的认证凭证。 该漏洞已被
+  注册为CVE-2014-2338。
+
+- acert插件可以评估X.509属性证书。集团成员
+  编码为字符串的信息可用于履行授权检查
+  用rightgroups选项来定义。属性证书可以在本地加载
+  或在IKEv2证书有效载荷中进行交换。
+
+- pki命令获得了对生成X.509属性证书的支持
+  使用 --acert 子命令，而 --print 命令支持 ac 类型。
+  openac工具已经被移除，以支持新的pki功能。
+
+- EAP-(T)TLS 和其他协议所使用的 libtls TLS 1.2 实现
+  对 AEAD 模式的支持进行了扩展，目前仅限于 AES-GCM。
+
+
+strongswan-5.1.2
+----------------
+
+- 引入了一个新的默认配置文件布局。 新的默认
+  strongswan.conf 文件主要包括来自 strongswan.d
+  和 strongswan.d/charon 目录（后者包含所有
+  插件的片段）。 这些带有注释默认值的片段会自动
+  生成和安装，如果它们还不存在的话。 它们也被安装在
+  在$prefix/share/strongswan/templates中，因此现有的文件可以与
+  当前的默认值。
+
+- 作为非扩展的charon.load设置的替代方案，插件
+  现在可以通过charon.plugins.load来确定在charon中加载的插件（也可以选择其他应用程序）。
+  通过每个插件的 charon.plugins.<name>.load 设置来确定（在
+  新的默认 strongswan.conf 文件中通过 charon.load_modular 选项启用）。
+  负载设置可以选择一个数字的优先级值，以允许
+  重新排列插件的顺序（否则将保留默认的插件顺序）。
+
+- 所有以前定义在库的 "全局 "部分的 strongswan.conf 设置，现在都是针对应用程序的。
+  "全局 "部分中定义的所有strongswan.conf设置现在都是针对具体应用的（例如，对插件的设置在
+  libstrongswan.plugins 中的插件设置现在只能在 charon.plugins 中为 charon 设置）。
+  旧的选项仍然被支持，现在允许为
+  的所有应用程序定义默认值。
+
+- ntru libstrongswan 插件支持 NTRUEncrypt 作为一种后量子化的
+  计算机 IKE 密钥交换机制。该实现是基于
+  ntru-crypto 库，来自 NTRUOpenSourceProject。支持的安全
+  强度是 ntru112, ntru128, ntru192, 和 ntru256。由于私人 DH
+  组 ID 1030...1033 已被分配，strongSwan 供应商 ID 必须被
+  发送（charon.send_vendor_id = yes），以便使用 NTRU。
+
+- 定义了一个 TPMRA 远程认证工作项，并将其支持添加到
+  Attestation IMV。
+
+- IPComp (compress=yes) 和 leftfirewall=yes 之间的兼容性问题。
+  以及 left|rightsubnet 中的多个子网之间的兼容性问题已被修复。
+
+- 当启用其 "session "strongswan.conf选项时，xauth-pam插件会打开并关闭一个PAM会话。
+  并为每个建立的IKE_SA关闭PAM会话。补丁由
+  Andrea Bonomi 提供。
+
+- strongSwan 单元测试框架已被重写，没有 "check "这一依赖关系，以提高灵活性和可移植性。
+  依赖关系，以提高灵活性和可移植性。它现在正确支持
+  多线程和内存泄漏测试，并带来一批新的测试案例。
+
+
+strongswan-5.1.1
+----------------
+
+- 修复了一个拒绝服务漏洞和潜在的授权绕过问题。
+  触发的拒绝服务漏洞和潜在的授权绕过。原因是在比较此类身份时，没有充分
+  长度检查。该漏洞已被
+  注册为CVE-2013-6075。
+
+- 修复了一个由精心制作的IKEv1片段有效载荷触发的拒绝服务漏洞。
+  片段有效载荷引发的拒绝服务漏洞。其原因是取消了对NULL指针的引用。该
+  漏洞已被注册为CVE-2013-6076。
+
+- 精简的独立pt-tls-client可以设置一个RFC 6876 PT-TLS会话
+  与使用 tnc-pdp charon 的 strongSwan 策略执行点建立 RFC 6876 PT-TLS 会话。
+  插件。
+
+- 新的TCG TNC SWID IMC/IMV对支持有针对性的SWID请求，可用于
+  完整的SWID标签或简洁的SWID标签ID清单。
+
+- eap-radius中的XAuth后端现在支持多个XAuth交换，用于不同的证书类型和显示信息。
+  不同的凭证类型和显示信息的多个XAuth交换。所有的用户输入被
+  所有的用户输入都会被串联起来，并通过AAA上的一个用户-密码RADIUS属性进行验证。
+  AAA上的单个用户密码RADIUS属性进行串联和验证。有了支持它的AAA，例如，可以实现
+  密码+令牌认证，并在iOS和OS X客户端上进行适当的对话。
+
+- charon支持推送模式下的IKEv1模式配置交换。ipsec.conf中的
+  modeconfig=push选项在客户端和服务器端都可以使用，与pluto使用的方式相同。
+  与pluto使用的方式相同。
+
+- 在IKEv1和IKEv2连接上使用 "ah "ipsec.conf关键字。
+  charon可以协商并安装由认证头协议完整保护的安全关联。
+  验证头协议的完整性保护。只支持普通的AH(+IPComp)SAs。
+  但不支持被废弃的RFC2401风格的ESP+AH捆绑。
+
+- IKE 和 ESP 的初始化向量的生成 (使用 libipsec 时)
+  的初始化向量已被模块化，例如AES-GCM的IV现在被正确分配为
+  顺序分配，而其他算法如AES-CBC仍使用随机IV。
+
+- ipsec.conf 中的左边和右边选项可以接受多个地址范围
+  和子网。这允许针对更大的地址集进行连接匹配。
+  的地址进行连接匹配，例如，对从内部网络连接的客户使用不同的连接。
+  的客户使用不同的连接。
+
+- 对于所有那些对NIST椭圆曲线集有恐惧感的人来说。
+  RFC 6932引入的用于IKE的Brainpool曲线可能是一个
+  更值得信赖的选择。
+
+- kernel-libipsec用户区IPsec后端现在支持使用统计。
+  基于体积的重密钥，并接受ESPv3风格的TFC填充数据包。
+
+- 通过两个新的 strongswan.conf 选项，fwmarks 可以用来实现
+  使用 kernel-libipsec 实现主机到主机的隧道。
+
+- 负载测试仪支持传输模式连接和更复杂的流量
+  选择器，包括为每个隧道使用独特的端口。
+
+- 新的 dnscert 插件提供了对通过 CERT RRs 认证的支持，这些 RRs
+  通过DNSSEC保护。 该插件是由Ruslan N. Marchenko创建的。
+
+- eap-radius插件支持转发几个Cisco Unity特定的
+  RADIUS属性在相应的配置有效载荷中转发。
+
+- 数据库事务现在被抽象化，并由两个后端实现。
+  如果你使用 MySQL，请确保所有表都使用 InnoDB 引擎。
+
+- libstrongswan 现在可以提供一个实验性的自定义实现的
+  printf 系列函数的实验性定制实现，如果 Vstr 和 glibc 风格的 printf
+  钩子可用。这可以避免在某些系统上对 Vstr 的依赖，但代价是
+  的代价是打印函数的速度和完整性较差。
+
+
+strongswan-5.1.0
+----------------
+
+- 修正了一个由特定的XAuth用户名
+  和EAP身份（自5.0.3起），以及PEM文件（自4.1.11起）引发的拒绝服务漏洞。 崩溃的原因是
+  是由于is_asn1()函数的错误处理不足造成的。
+  该漏洞已被注册为CVE-2013-5018。
+
+- 新的 charon-cmd 命令行 IKE 客户端可以使用 IKEv1 或 IKEv2 建立公路战士连接。
+  使用IKEv1或IKEv2与不同的认证配置文件建立公路战士连接。
+  它不依赖于任何配置文件，可以使用几个简单的命令行选项进行配置。
+  几个简单的命令行选项来配置。
+
+- kernel-pfroute网络后端得到了极大的改进。它现在
+  可以在OS X和FreeBSD的TUN设备上安装虚拟IP，允许这些
+  系统在常见的公路战士场景中充当客户端。
+
+- 新的kernel-libipsec插件使用TUN设备和libipsec来提供IPsec
+  在Linux、FreeBSD和Mac OS X的用户区提供IPsec处理。
+
+- eap-radius插件现在可以作为一个名为xauth-radius的XAuth后端。
+  直接使用 RADIUS 用户名/用户密码来验证 XAuth 凭证
+  属性。这比现有的xauth-eap+eap-radius的组合更有效。
+  的组合更有效，并且允许不支持EAP的RADIUS服务器作为IKEv1的AAA后台。
+  IKEv1的后端。
+
+- 新的osx-attr插件通过SystemConfiguration安装了配置属性（目前是DNS
+  服务器）通过Mac OS X的SystemConfiguration安装。钥匙串插件提供
+  从OS X的钥匙链服务中获取证书。
+
+- sshkey 插件可以解析 SSH 公钥，它与 charon-cmd 的 --agent
+  选项，允许使用 ssh-agent 进行认证。
+  在ipsec.conf中配置SSH密钥时，左|右rsasigkey选项被替换为左|右rsasigkey。
+  替换为 left|rightsigkey，它现在接受三种格式的公钥
+  格式中的一种。SSH（RFC 4253，ssh：前缀）、DNSKEY（RFC 3110，dns：前缀）和
+  PKCS#1（默认的，没有前缀）。
+
+- 从PKCS#12文件中提取证书和私钥现在由新的pkcs12插件提供
+  新的 pkcs12 插件或 openssl 插件。
+  以及 charon (通过ipsec.secrets中的P12令牌) 可以使用这个功能。
+
+- IKEv2现在可以在NAT情况下协商传输模式和IPComp。
+
+- IKEv2交换发起者现在可以正确地关闭已建立的IKE或CHILD_SA
+  在错误条件下使用一个额外的交换，以保持对等体之间的状态同步
+  对等体之间保持同步。
+
+- 使用SQL数据库接口，可信网络连接（TNC）策略管理器
+  可以为任意数量的用户生成特定的测量工作项目。
+  完整性测量验证器（IMV），基于VPN用户和/或设备的历史。
+  和/或设备。
+
+- libstrongswan中的几个核心类现在都经过了单元测试。 这些
+  可以通过 --enable-unit-tests 启用，并通过 "make check "运行。 覆盖率
+  报告可以通过 --enable-coverage 和 'make coverage' 产生（这
+  这将禁用任何优化，所以在构建
+  生产版本时不应启用）。
+
+- 泄漏检测的开发者工具得到了极大的改进。它在多线程情况下工作得更
+  它在多线程下工作得更快/更稳定，不再使用废弃的 malloc 钩子
+  并被移植到了 OS X 上。
+
+- chunk_hash()现在是基于SipHash-2-4和一个随机密钥。 这提供了
+  提供了更好的分布，并在与哈希表一起使用时防止哈希泛滥攻击。
+  哈希表时，提供了更好的分布，并防止了哈希泛滥攻击。
+
+- 所有默认插件都实现了get_features()方法来定义功能
+  和它们的依赖关系。 插件加载器得到了改进，因此，在自定义加载语句中的插件
+  可以自由排序或表达偏好。
+  而不会受到插件特性之间的依赖关系的影响。
+
+- 一个集中的线程可以负责观察多个文件描述符
+  并发。这消除了在不同的插件中对专用监听器线程的需求。
+  各种插件中的专用监听器。用于此类任务的 "保留 "线程的数量已被
+  减少到大约五个，这取决于插件的配置。
+
+- 可以由UNIX套接字IPC机制控制的插件获得了网络
+  透明度。查询这些插件的第三方应用程序现在可以使用
+  来自不同主机的 TCP 连接。
+
+- libipsec 现在支持 AES-GCM。
+
+
+strongswan-5.0.4
+----------------
+
+- 修复了openssl插件的一个安全漏洞，该漏洞是由
+  Kevin Wojtysiak报告的。该漏洞已被注册为CVE-2013-2944。
+  在修复之前，如果使用openssl插件的ECDSA签名验证。
+  由于对OpenSSL的ECDSA_verify()函数返回的错误代码的误解，导致该漏洞。
+  ECDSA_verify()函数返回的错误代码的误读，一个空或零的签名被接受为一个
+  合法的签名。
+
+- 对其他一些与安全无关的openssl返回代码的处理也得到了修正。
+  的处理也得到了修正。
+
+- tnc_ifmap 插件现在可以通过它的以下功能发布虚拟 IPv4 和 IPv6 地址
+  TCG TNC IF-MAP 2.1 接口发布虚拟 IPv4 和 IPv6 地址。
+
+- charon.initiator_only 选项使 charon 忽略了 IKE 启动请求
+  请求。
+
+- openssl插件现在可以使用openssl-fips库了。
+
+
+strongswan-5.0.3
+----------------
+
+- 新的ipseckey插件能够根据存储在IPSECKEY资源中的值得信赖的公钥进行认证。
+  新的ipseckey插件能够根据存储在DNS中的IPSECKEY资源记录和受DNSSEC保护的可信公钥进行认证。
+  为了做到这一点，它使用了一个启用了 DNSSEC 的解析器，比如由新的
+  unbound插件提供的，它是基于libldns和libunbound。 这两个插件都是
+  由Reto Guadagnini创建。
+
+- 实现了TCG TNC IF-IMV 1.4草案，使访问请求者的身份
+  提供给IMV。操作系统IMV将AR的身份和设备ID一起存储在证明数据库中。
+  设备ID存储在证明数据库中。
+
+- openssl插件现在使用AES-NI加速版本的AES-GCM
+  如果硬件支持的话。
+
+- eap-radius插件现在可以使用
+  Framed-IP-Address属性分配给IKE客户端。
+  rightsourceip ipsec.conf选项中使用"%radius "命名的池。Cisco Banner属性被转发到
+  在模式配置期间，Cisco Banner属性会被转发给支持Unity的IKEv1客户端。
+  如果RADIUS服务器要求，charon现在会发送临时会计更新，并在会计中报告
+  发送/接收的数据包，并在会计信息中添加终止原因
+  的终止原因。
+
+- 最近引入的 "ipsec listcounters "命令可以报告连接
+  最近引入的 "ipsec listcounters "命令可以通过传递一个连接名称来报告连接的具体计数器，并且全局或连接的
+  全局或连接计数器可以通过 "ipsec resetcounters "命令重置。
+
+- strongSwan libpttls 库提供了一个实验性的实现，即
+  PT-TLS (RFC 6876)的实验性实现，这是一种TLS上的姿态传输协议。
+
+- charon systime-fix 插件可以在嵌入式系统上禁用证书寿命检查。
+  如果开机后系统时间明显不同步，charon systime-fix插件可以禁用嵌入式系统的证书寿命检查。
+  一旦系统时间变得正常，就会对证书寿命进行检查。
+  或重新认证使用过期证书的连接。
+
+- ipsec.conf的 "ikedscp "选项可以在传出的IKE数据包上设置DiffServ代码点。
+  IKE数据包上设置DiffServ码。
+
+- 新的xauth-noauth插件允许使用基本的RSA或PSK认证
+  客户端使用基本的RSA或PSK认证，这些客户端不能配置为没有XAuth认证。 该插件
+  插件只是成功地结束了XAuth交换，而没有实际执行
+  任何认证。 因此，要使用这个后端，必须选择
+  明确选择rightauth2=xauth-noauth。
+
+- 新的charon-tkm IKEv2守护进程将安全关键操作委托给一个
+  独立的进程。这样做的好处是，面对网络的守护进程不知道
+  对用于保护子SA的密钥材料一无所知。因此，颠覆
+  charon-tkm不会导致加密密钥的泄露。
+  提取的功能已经在一个最小的TCB中从头开始实现了
+  (可信计算基地)中从头实现。更多信息
+  可以在https://www.codelabs.ch/tkm/。
+
+  
+strongswan-5.0.2
+----------------
+
+- 实现了所有IETF标准PA-TNC属性和一个操作系统IMC/IMV
+  对，使用它们来传输操作系统信息。
+
+- 新的 "ipsec listcounters "命令打印了一个全局计数器值的列表
+  关于接收和发送的IKE消息和重新密钥的全局计数器列表。
+
+- 一个新的lookip插件可以使用客户的虚拟IP快速查找隧道信息，并可以发送通知。
+  客户端虚拟IP，并可以发送关于已建立或已删除隧道的通知。
+  隧道的通知。ipsec lookip "命令可以用来查询这些信息或接收通知。
+  或接收通知。
+
+- 新的错误通知插件可以捕获一些常见的错误条件，并允许外部应用程序接收通知。
+  外部应用程序通过UNIX套接字接收通知。
+
+- IKE建议现在可以使用不同于为完整性保护定义的PRF算法。
+  完整性保护的算法。如果一个带有 "prf "前缀的算法被定义为
+  的算法（如prfsha1或prfsha256），则不会将基于完整性算法的隐式PRF算法添加到
+  完整性算法的隐式 PRF 算法被添加到提案中。
+
+- pkcs11 插件现在可以从智能卡中加载 leftcert 证书，用于一个
+  特定的ipsec.conf conn 部分加载 leftcert 证书，并为特定的ca部分加载 cacert CA 证书。
+  部分的 CA 证书。
+
+- 负载测试仪插件获得了更多的证书生成选项
+  并可以从外部文件加载密钥和多个 CA 证书。它可以
+  为每个隧道和隧道启动安装一个专用的外部IP地址
+  可以使用 "ipsec load-tester "工具从外部触发和监控隧道启动的批次。
+  "ipsec load-tester "工具来触发和监测。
+
+- PKCS#7容器解析已经被模块化，openssl插件
+  获得了一个替代性的实现来解密和验证此类文件。
+  与我们自己的DER解析器相比，OpenSSL可以处理BER文件，这是
+  这是我们的scepclient与EJBCA的互操作性所需要的。
+
+- 对专有的IKEv1碎片扩展的支持已被添加。
+  碎片总是在收到时被处理，但只有在对方支持的情况下才会发送
+  并使用新的ipsec.conf选项启用时，才会发送碎片。
+
+- charon中的IKEv1现在可以解析收到的PKCS#7容器中的证书，并且
+  支持 Windows 客户端所使用的 NAT 穿越。补丁由
+  Volker Rümelin。
+
+- 新的rdrand插件提供了一个高质量/高性能的随机
+  新的 rdrand 插件使用 Ivy Bridge 处理器上的 Intel rdrand 指令提供了高质量/高性能的随机源。
+
+- 集成测试环境已经更新，现在使用KVM和可重复的
+  基于Debian的客户镜像。
+
+
+strongswan-5.0.1
+----------------
+
+- 引入了IETF标准评估结果的发送。
+  PA-TNC属性，由所有strongSwan完整性测量验证器发送。
+
+- 扩展 PTS Attestation IMC/IMV 对，以提供 Linux IMA 测量过程的全部证据。
+  Linux IMA 测量过程的全部证据。所有相关的文件信息
+  Linux操作系统的所有相关文件信息都可以被收集并存储在一个SQL数据库中。
+
+- PA-TNC和PB-TNC协议现在可以处理巨大的数据有效载荷
+  >通过将PA-TNC属性分布在多个PA-TNC消息上
+  和这些消息分布在几个PB-TNC批次上。只要没有
+  所有IMV的综合建议，TNC服务器就会向客户发送
+  服务器通过发送一个空的SDATA批次来请求更多的客户数据。
+
+- rightgroups2 ipsec.conf选项可以在第二轮认证时要求组成员资格。
+  rightgroups2 ipsec.conf选项可以在第二轮认证中要求组成员资格，例如在XAuth认证中
+  时要求组成员资格。
+
+- xauth-pam后端可以验证IKEv1 XAuth和Hybrid认证的客户端。
+  客户端。IKEv2 eap-gtc插件不再直接使用
+  PAM了，但可以使用任何XAuth后端来验证证书。
+  包括xauth-pam。
+
+- 新的unity插件带来了对IKEv1 Cisco Unity扩展的某些部分的支持。
+  扩展。作为客户端，charon将流量选择器缩小到收到的
+  分裂包括属性，并自动安装IPsec旁路策略
+  并自动为收到的本地-局域网属性安装IPsec旁路策略。作为服务器，charon发送Split-Include
+  属性，将包含多个子网的左子网定义发送给Unity-
+  识别的客户。
+
+- 如果网关要求使用客户不支持的EAP方法，客户会返回一个EAP-Nak有效载荷。
+  方法时，客户端会返回一个EAP-Nak有效载荷，而客户端不支持该方法。 客户端也可以通过配置一个特定的
+  EAP方法。
+
+- eap-dynamic插件处理客户端返回的EAP-Nak有效载荷，并使用这些有效载荷选择不同的EAP方法。
+  来选择客户端支持/请求的不同的EAP方法。
+  该插件最初请求第一个注册的方法或第一个方法
+  配置的第一个方法。
+
+- 新的left/rightdns选项指定了连接的特定DNS服务器，以便在IKEvv中请求/响应。
+  在IKEv2配置有效载荷或IKEv2模式配置中请求/响应。
+  可以是%config4和%config6的任何（逗号分隔）组合来请求
+  Rightdns可以是%config4和%config6的任意（逗号分隔）组合，以请求多个服务器，包括IPv4和IPv6。
+  IP地址的列表。
+
+- left/rightsourceip选项现在接受多个地址或池。
+  leftsourceip 可以是 %config4, %config6 或固定 IP 地址的任何（逗号分隔）组合。
+  或固定IP地址的任何（逗号分隔）组合来请求。
+  指定或引用的命名池。
+
+- 多个连接现在可以共享一个地址池，当他们使用
+  在其中一个 rightsourceip 池中使用相同的定义时，多个连接现在可以共享一个地址池。
+
+- 选项charon.interfaces_ignore和charon.interfaces_use允许人们
+  配置守护进程所使用的网络接口。
+
+- kernel-netlink插件支持charon.install_virtual_ip_on选项。
+  它指定了安装虚拟IP地址的接口。
+  如果没有指定，当前使用出站接口的行为
+  的行为被保留下来。
+
+- kernel-netlink插件在寻找有效路由到达其他主机时，会尝试保留当前的源地址。
+  寻找有效的路由以到达其他主机。
+
+- autotools 构建已经迁移到使用 config.h 头。
+  开发头文件将在 "make install "时被安装，如果
+  --with-dev-headers 已被传递到 ./configure。
+
+- 所有加密原语在大多数操作中都获得了返回值，允许
+  密码学后端失败，例如在使用硬件加速器时。
+
+
+strongswan-5.0.0
+----------------
+
+- charon IKE 守护进程获得了对 IKEv1 协议的实验性支持。
+  Pluto 已从 5.x 系列中删除，除非 strongSwan 被配置为
+  配置了 --disable-ikev1 或 --disable-ikev2，否则 charon 会处理两种
+  密钥协议。charon中IKEv1的功能集几乎与
+  pluto，但目前不支持AH或捆绑AH+ESP的SA。除了
+  除了RSA/ECDSA、PSK和XAuth，charon还支持混合认证模式。
+  模式。
+
+- Charon的bus_t已经被重构，所以记录器和其他监听器现在被分开处理
+  现在被分开处理。 单一的锁以前是导致死锁的原因
+  如果广泛的监听器，比如updown插件提供的监听器，想要
+  获取由其他线程持有的锁，而这些线程又试图记录
+  消息，从而等待获取当前由调用监听器的线程所持有的相同锁。
+  调用监听器的线程所持有的锁。
+  所做的改变也允许对记录器使用读/写锁。
+  记录器，这在注册了多个记录器的情况下提高了性能。
+  除了几个接口的变化，最后一点也改变了记录器的语义
+  因为这些记录器现在可以被多个线程同时调用。
+
+- 如果接口被重新激活或者IP地址被重新出现，源路由将被重新安装。
+  重新出现。
+
+- 线程池（processor_t）现在对作业的生命周期有了更多的控制。
+  工作的生命周期有了更多的控制权（详见job.h）。 特别是，它现在可以控制
+  执行后的作业销毁和关闭时的作业取消。 由于
+  由于这些变化，以前只适用于callback_job_t的requeueing功能现在对所有作业都可用。
+  可用，现在对所有作业都可用（此外还有一个新的重新安排
+  功能）。
+
+- 除了为不同的公钥系统提供信任链密钥强度定义外
+  系统的信任链密钥强度定义外，rightauth选项现在还接受了一个签名哈希算法的列表
+  考虑保存用于信任链验证。例如，设置
+  rightauth=rsa-2048-ecdsa-256-sha256-sha384-sha512要求信任链
+  至少使用 RSA-2048 或 ECDSA-256 密钥和证书签名
+  使用SHA-256或更高版本。
+
+
+strongswan-4.6.4
+----------------
+
+- 修正了gmp插件的一个安全漏洞。 如果该插件被用于
+  进行RSA签名验证时，一个空的或零的签名会被处理为
+  合法的签名。
+
+- 修正了几个关于重新认证和地址更新的问题。
+
+
+strongswan-4.6.3
+----------------
+
+- tnc-pdp插件实现了一个RADIUS服务器接口，允许
+  strongSwan TNC服务器充当政策决定点。
+
+- eap-radius认证后端使用RFC4478的重复认证和RADIUS认证来执行会话超时属性。
+  使用RFC4478重复认证，并根据RADIUS动态授权扩展（RFC 578）行事。
+  授权扩展，RFC 5176。目前支持的是断开连接
+  请求和包含会话超时的CoA消息。
+
+- eap-radius插件可以使用自定义的IKEv2通知来转发任意的RADIUS属性。
+  客户端使用自定义IKEv2通知有效载荷转发任意RADIUS属性。新的radattr插件可以读取
+  从文件中包含的属性，并将收到的属性打印到
+  控制台。
+
+- 增加了对ESP中未截断的MD5和SHA1 HMACs的支持，如RFC 4595中使用的那样。
+  RFC 4595中使用的。
+
+- cmac插件实现了AES-CMAC-96和AES-CMAC-PRF-128算法。
+  分别定义在RFC 4494和RFC 4615中。
+
+- resolve 插件通过 resolvconf(8) 自动安装名称服务器。
+  而不是直接修改 /etc/resolv.conf。
+
+- IKEv2 charon 守护程序现在支持 RFC 3110 中的原始 RSA 公钥
+  DNSKEY和PKCS#1文件格式。
+
+
+strongswan-4.6.2
+----------------
+
+- 将TCG的IF-IMC和IF-IMV C API升级到即将推出的1.3版本
+  它支持IF-TNCCS 2.0长消息类型、独占标记
+  和多个IMC/IMV ID。TNC客户端和服务器以及
+  测试"、"扫描器 "和 "认证 "IMC/IMV对都已更新。
+
+- 完全实现了 "TCG证明PTS协议。与IF-M的绑定"
+  标准（仅基于TLV的消息）。基于TPM的远程鉴证
+  Linux IMA（完整性测量架构）。测量
+  参考值自动存储在一个SQLite数据库中。
+
+- EAP-RADIUS认证后端支持RADIUS会计。它发送
+  它发送包含用户名、框架IP和输入/输出八位数的启动/停止消息。
+  属性，并对FreeRADIUS和Microsoft NPS进行了测试。
+
+- 通过 libstrongswan 增加了对 PKCS#8 编码的私钥的支持
+  pkcs8 插件。 这是自1.0.0版本以来一些OpenSSL工具所使用的默认格式。
+  1.0.0版本以来，一些OpenSSL工具就采用了这种默认格式（例如，带有-keyout的openssl req）。
+
+- 在 strongSwan TLS 堆栈中添加了会话恢复支持。
+
+
+strongswan-4.6.1
+----------------
+
+- 由于安装前后校验和的变化导致了
+  完整性测试失败，我们避免了直接将 libsimaka、libtls 和
+  libtnccs连接到那些使用这些动态库的libcharon插件。
+  相反，我们将这些库链接到charon守护进程中。不幸的是，Ubuntu
+  11.10激活了 -- as-needed ld选项，该选项会丢弃对那些实际上没有使用的动态库的明确链接
+  到动态库的明确链接，而这些动态库实际上并没有被charon守护程序本身使用。
+  因此，在加载依赖这些库来解析外部符号的插件时，会导致失败。
+  库来解析外部符号。
+
+- 因此，我们计算插件的完整性校验的方法必须要
+  彻底改变，将哈希值的生成从编译阶段移至
+  安装后的阶段。
+
+
+strongswan-4.6.0
+----------------
+
+- 新的 libstrongswan certexpire 插件收集了所有使用过的证书的过期信息，并将其导出到 CSA。
+  所有使用过的证书的过期信息，并将其导出为CSV文件。它可以直接
+  导出或使用 cron 风格的调度来进行批量导出。
+
+- 起动器将未解决的主机名传递给 charon，允许它在连接尝试前进行名称
+  解析，而不是在连接尝试之前。这对于
+  这对使用动态IP地址的主机之间的连接特别有用。感谢Mirko Parthey
+  提供的初始补丁。
+
+- 安卓插件现在可以在没有安卓前台补丁的情况下使用，并且
+  提供DNS服务器注册和日志记录到logcat。
+
+- Pluto和starter（加上stroke和whack）已经被移植到了Android。
+
+- 对 ECDSA 私钥和公钥操作的支持已被添加到
+  pkcs11 插件。 该插件现在还通过PKCS#11提供DH和ECDH，并可以
+  使用令牌作为随机数生成器（RNG）。 默认情况下，只有私钥
+  操作，更多的高级功能需要在strongswan.conf中通过其
+  选项启用。 这也适用于公钥操作（甚至
+  这也适用于之前默认启用的公钥操作（即使是不存储在令牌上的密钥）。
+
+- libstrongswan插件系统现在支持详细的插件依赖关系。
+  许多插件已经被扩展为输出其能力和要求。
+  这使得插件加载器能够自动解决插件的加载顺序。
+  并在未来的版本中，根据需求动态地加载所需的功能。
+  现有的第三方插件是源代码（但不是二进制）兼容的，如果它们
+  正确地将新的get_features()插件函数初始化为NULL。
+
+- tnc-ifmap插件实现了一个TNC IF-MAP 2.0客户端，可以提供
+  通过SOAP接口向MAP服务器提供关于IKE_SAs的元数据。tnc-ifmap
+  插件需要Apache Axis2/C库。
+
+
+strongswan-4.5.3
+----------------
+
+- 我们的私有库（例如libstrongswan）不再直接安装在
+  prefix/lib中了。 而是使用一个子目录（prefix/lib/ipsec/默认为
+  默认）。 插件目录也从libexec/ipsec/移到该
+  目录。
+
+- 动态IMC/IMV库被从plugins目录移到了
+  在prefix/lib/ipsec/子目录下的一个新的imcvs目录。
+
+- 引入了工作优先级，以防止由太多的线程处理阻塞操作（如："我"）引起的线程饿死。
+  许多线程处理阻塞性操作（如获取CRL）所造成的线程饥饿。 请参考
+  strongswan.conf(5) 了解详情。
+
+- 两个新的 strongswan.conf 选项允许对 IKEv2 的性能进行微调
+  网关的性能，在高负载时放弃IKE_SA_INIT请求。
+
+- IKEv2 charon守护进程支持启动PASS和DROP分流策略
+  防止流量通过IPsec连接。安装
+  分流策略可以通过XFRM netfilter或PFKEYv2 IPsec内核接口安装。
+  接口。
+
+- 内核中安装的策略的历史现在被跟踪，因此，例如
+  当重新认证的SA被终止时，陷阱策略被正确更新。
+
+- IMC/IMV 扫描仪对实施 RFC 5792 PA-TNC (IF-M) 协议。
+  使用 "netstat -l"，IMC扫描TNC客户端上开放的监听端口
+  并向IMV发送一个端口列表，IMV根据端口策略决定是否允许该客户端进入网络。
+  客户端是否被允许进入网络。
+  (--enable-imc-scanner/--enable-imv-scanner)。
+
+- IMC/IMV测试对实现RFC 5792 PA-TNC (IF-M)协议。
+  (--enable-imc-test/--enable-imv-test).
+
+- IKEv2关闭动作不使用与ipsec.conf dpdaction相同的值。
+  设置，而是使用其自身closeeaction关键字所定义的值。该动作
+  如果远程对等方意外关闭CHILD_SA，则会触发该动作。
+
+
+strongswan-4.5.2
+----------------
+
+- IKEv2守护程序的白名单插件在内存中维护一个身份的
+  白名单。任何未列入白名单的对等体的连接尝试都会被拒绝。
+  ipsec白名单 "工具提供了一个简单的命令行前台，用于
+  白名单的管理。
+
+- duplicheck插件提供了一种特殊形式的重复检查。
+  在旧的SA上进行有效性检查，并可选择通知第三方的
+  探测到的重复内容通知第三方应用程序。
+
+- 耦合插件通过限制对以前使用过的证书的认证，使两个或更多的设备永久地耦合在一起。
+  对以前使用过的证书进行认证。
+
+- 在对等配置和子配置不具有相同名称的情况下
+  (通常在SQL数据库定义的连接中)，ipsec up|route <peer config>会启动或路由所有相关的子设备。
+  会启动或路由所有相关的子配置，而ipsec up|route <child config>会启动或路由特定的子配置。
+  只启动或路由特定的子配置。
+
+- 修正了X.509证书策略声明（CPS）的编码和解析。
+
+- Duncan Salerno 贡献了 eap-sim-pcsc 插件，实现了一个
+  pcsc-lite的SIM卡后端。
+
+- eap-peap插件实现了EAP PEAP协议。与
+  成功地与FreeRADIUS服务器和Windows 7 Agile VPN客户端互通。
+
+- IKEv2守护进程charon在SIGHUP时重读strongswan.conf并指示
+  所有插件重新加载。目前只有eap-radius和attr插件
+  支持配置重载。
+
+- 为 IKEv2 守护进程增加了对扩展序列号的用户区支持。
+  支持Linux 2.6.39。要在一个连接上启用ESN，请在
+  esn "关键字到提议中。默认情况下，建议使用32位序列
+  默认建议只使用32位序列号（'noesn'），如果没有指定ESN模式，则使用相同的值
+  指定，则使用相同的值。要与对等体协商ESN支持，请同时包括这两个关键字，例如
+  esp=aes128-sha1-esn-noesn.
+
+- 除了ESN，Linux 2.6.39还获得了对大于32个包的重放窗口的支持。
+  大于32个数据包的重放窗口。新的全局strongswan.conf选项 "charon.replay_window
+  配置了重放窗口的大小，以数据包为单位。
+
+
+strongswan-4.5.1
+----------------
+
+- Sansar Choinyambuu实现了RFC 5793《姿态经纪协议》（BP）。
+  与可信网络连接（TNC）兼容。TNCCS 2.0协议
+  需要tnccs_20、tnc_imc和tnc_imv插件，但不依赖于libtnc库。
+  libtnc库。任何可用的IMV/IMC对符合
+  可信计算组的TNC-IF-IMV/IMC 1.2接口规范的任何可用IMV/IMC对
+  可以通过/etc/tnc_config加载。
+
+- 通过使用tnc_imc和tnc_imv来重新实现TNCCS 1.1协议
+  来代替外部的libtnc库。
+
+- 在TNC服务器上加载了tnccs_dynamic插件，此外还有
+  tnccs_11和tnccs_20插件外，还在TNC服务器上加载了tnccs_dynamic插件，动态地检测TNC客户端使用的IF-TNCCS
+  协议版本，并调用相应协议栈的实例。
+  相应的协议栈实例。
+
+- IKE和ESP建议现在可以使用新的建议表存储在SQL数据库中。
+  新的提议表。child_configs表中的start_action字段允许自动启动或路由。
+  表中的start_action字段允许自动启动或路由存储在SQL数据库中的连接
+  的连接。
+
+- 新的 certificate_authorities 和 certificate_distribution_points
+  表使得在SQL数据库中存储CRL和OCSP证书分发点成为可能。
+  点存储在一个SQL数据库中。
+
+- 新的 "include "语句允许递归地包括在
+  strongswan.conf中的其他文件。 现有的部分和数值因此被扩展和
+  分别被替换。
+
+- 由于 strongswan.conf 的解析器的变化，attr 插件的配置语法也有变化。
+  的语法已经改变。 以前，它可以
+  指定一个特定属性类型的多个值，通过添加多个
+  键/值对（例如 dns）到 plugins.attr 部分。
+  由于具有相同键的值现在取代了以前定义的值
+  这已经不可能了。 作为一种选择，多个值可以
+  用逗号隔开来指定(例如 dns = 1.2.3.4, 2.3.4.5)。
+
+- ipsec listalgs 现在会在每个加密算法后面加上（设置在方括号内）。
+  算法列出注册该功能的插件。
+
+- Linux 2.6.38支持的流量保密性填充可以被
+  IKEv2守护进程使用。ipsec.conf的'tfc'关键字将所有数据包填充到一个给定的
+  边界，特殊值'%mtu'将所有数据包填充到路径MTU。
+
+- 新的af-alg插件可以使用Linux Crypto API的各种加密原语。
+  API的各种加密基元，使用2.6.38引入的AF_ALG接口。这样就不需要
+  这消除了对对称密码、哈希、hmac 和
+  xcbc算法。
+
+- IKEv2守护进程支持INITIAL_CONTACT通知，作为发起方和响应方。
+  响应者。该通知是在启动配置时发送的，该配置具有独特的
+  政策时发送通知，该政策在ipsec.conf中通过全局 "uniqueids "选项设置。
+
+- conftest一致性测试框架使IKEv2协议栈能够使用不同的工具和配置执行许多测试。
+  使用一个独特的工具和配置前端进行许多测试。各种钩子
+  可以改变保留位、标志、添加自定义通知和建议、重新排序或删除消息等等。
+  或放弃消息等等。它可以使用 --enable-conftest
+  ./configure开关启用。
+
+- 新的libstrongswan约束插件提供先进的X.509约束
+  检查。除了X.509的pathLen约束外，该插件还检查了
+  nameConstraints 和 certificatePolicies，包括 policyMappings 和
+  PolicyConstraints。x509证书插件和pki工具已被增强以支持这些扩展。
+  增强以支持这些扩展。新的 left/rightcertpolicy ipsec.conf
+  连接关键字采取对等方证书必须具备的OID。
+
+- left/rightauth ipsec.conf关键字接受最小强度的值
+  的值，例如 rsa-2048 或 ecdsa-256，用于信任链公钥。
+
+- 撤销和 x509 libstrongswan 插件以及 pki 工具获得了对 delta CRLs 的基本支持。
+  对delta CRLs的基本支持。
+
+
+strongswan-4.5.0
+----------------
+
+- 重要提示：默认的密钥交换模式'ike'将随着4.5版的发布而改变
+  从'ikev1'改为'ikev2'，以纪念
+  IKEv2 RFC 4306和其成熟的继承者RFC 5996的五周年。现在已经到了明确的时间
+  是时候让IKEv1退休了，并将其位置让给更强大、更强大和更全面的IKEv2。
+  稳健、强大和多功能的IKEv2协议的时候到了!
+
+- 增加了新的 ctr, ccm 和 gcm 插件，提供计数器、带 CBC-MAC 的计数器
+  以及基于现有CBC实现的Galois/Counter模式。这些
+  这些新插件带来了对AES和Camellia计数器和CCM算法的支持
+  以及用于IKEv2的AES GCM算法。
+
+- 新的pkcs11插件为IKEv2守护程序和pki工具带来了全面的智能卡支持。
+  使用一个或多个PKCS#11库的pki工具。它目前支持
+  RSA私钥和公钥操作，并从令牌中加载X.509证书。
+  令牌。
+
+- 实现了一个通用的TLS堆栈，基于密码和凭证的
+  libtls支持TLS的1.0, 1.1和1.2版本。
+  ECDHE-ECDSA/RSA、DHE-RSA和RSA密钥交换算法以及基于RSA/ECDSA的
+  客户端认证。
+
+- 基于libtls，eap-tls插件带来了基于证书的EAP
+  客户端和服务器的认证。它与Windows 7 IKEv2兼容。
+  智能卡认证和基于OpenSSL的FreeRADIUS EAP-TLS后端。
+
+- 实现了TNCCS 1.1可信网络连接协议，使用了
+  libtnc库在strongSwan客户端和服务器端通过tnccs_11
+  插件，并选择性地连接到TNC@FHH增强的FreeRADIUS AAA服务器。
+  根据所产生的TNC建议，strongSwan客户端被授予
+  接入 strongSwan 网关后面的网络（允许），或被放入一个
+  补救区（隔离）或被阻止（无），分别。任何数量的
+  完整性测量收集器/验证器对可以通过 tnc-imc 和 tnc-imc 连接。
+  通过tnc-imc和tnc-imv charon插件连接。
+
+- IKEv1守护进程pluto现在使用与IKEv2守护进程charon相同的内核接口。
+  守护程序 charon 使用相同的内核接口。因此，pluto现在支持xfrm标记。
+  在charon中引入了4.4.1版本。
+
+- 用于Maemo 5（诺基亚）的Applets允许轻松配置和控制基于IKEv2
+  的VPN连接，并在支持的设备上进行EAP认证。
+
+- RADIUS插件eap-radius现在支持多个RADIUS服务器，用于
+  冗余设置。服务器可以通过定义的优先级、服务器负载和可用性来选择。
+  可用性。
+
+- Simple led插件通过Linux的LED子系统控制硬件LED。
+  它目前显示IKE守护进程的活动，是一个很好的例子。
+  实现一个简单的事件监听器。
+
+- 改进了MOBIKE在一些角落的行为，例如，如果
+  初始响应者移动到不同的地址。
+
+- 修正了 left-/rightnexthop 选项，该选项自 4.4.0 起已被破坏。
+
+- 修正了一个错误，如果XAUTH
+  身份与IKE身份不同的情况下，不能将虚拟IP地址释放到池中。
+
+- 修正了ModeConfig消息在4字节边界上的对齐问题。
+  属性不是4字节的倍数的情况下（例如Cisco的
+  UNITY_BANNER）。
+
+- 修正了 socket_raw 和 socket_default 的互操作性。
+  charon 插件的互操作性。
+
+- 添加了 strongswan.conf 的手册页
+
+
+strongswan-4.4.1
+----------------
+
+- 在IPsec SAs和IPsec策略中支持xfrm标记。
+  的IPsec SA和IPsec策略中支持xfrm标记，这是由Linux 2.6.34内核引入的。详见示例方案
+  ikev2/nat-two-rw-mark, ikev2/rw-nat-mark-in-out 和 ikev2/net2net-psk-dscp。
+
+- PLUTO_MARK_IN和PLUTO_ESP_ENC环境变量可以用于
+  环境变量可以在用户特定的更新脚本中使用，以设置入站ESP或
+  ESP_IN_UDP 数据包上设置标记。
+
+- openssl插件现在支持X.509证书和CRL功能。
+
+- IKEv2中的OCSP/CRL检查已被转移到撤销插件中，并默认启用
+  默认启用。请更新strongswan.conf中的手动加载指令。
+
+- RFC3779 ipAddrBlock约束检查已被移至addrblock
+  插件，默认情况下是禁用的。启用它并更新strongswan.conf中的手动加载指令
+  如果需要的话，请更新 strongswan.conf 中的手动加载指令。
+
+- pki工具支持使用-signcrl命令生成CRL。
+
+- ipsec pki --self, --issue 和 --req 命令现在支持以
+  PEM格式，使用--outform pem选项。
+
+- IKEv1模式配置功能的主要重构现在允许
+  传输和处理任何模式配置属性。
+
+- RADIUS代理插件eap-radius现在支持多个服务器。配置的
+  服务器是随机选择的，可以选择一个特定的服务器。
+  无响应的服务器在选择过程中被降级。
+
+- ipsec pool工具可以管理存储在SQL数据库中的任意配置属性。
+  ipsec pool --help给出了细节。
+
+- 新的eap-simaka-sql插件作为EAP-SIM和EAP-AKA的后端。
+  从SQL数据库中读取三联体/五联体。
+
+- 高可用性插件现在支持启用HA的内存地址
+  池和节点的重新整合，而不需要IKE_SA的重新密钥。后者允许
+  客户端在不支持IKE_SA重启的情况下保持连接。
+  重新整合过程中保持连接。此外，许多其他问题已经在ha
+  插件。
+
+- 修复了一个潜在的远程代码执行漏洞，该漏洞由
+  滥用 snprintf()而导致的潜在远程代码执行漏洞。该漏洞可由
+  未认证的用户利用。
+
+
+strongswan-4.4.0
+----------------
+
+- IKEv2高可用性插件已被集成。它提供了
+  在目前两个节点的集群中提供负载分担和故障转移功能。
+  基于一个扩展的 ClusterIP 内核模块。
+  高可用性功能的开发是由
+  secunet Security Networks AG 赞助。
+
+- 增加了IKEv1和IKEv2配置支持AES-GMAC
+  认证的 ESP 密码的配置支持。我们的 aes_gmac 内核补丁或 Linux
+  2.6.34内核，才能通过XFRM
+  内核接口。
+
+- 在 gmp、gcrypt 和 openssl 插件中增加了对 Diffie-Hellman 22、23 和 24 组的支持。
+  和 openssl 插件，pluto 和 charon 都可以使用。新的建议
+  关键字是modp1024s160、modp2048s224和modp2048s256。感谢IBM的Joy Latten
+  的贡献。
+
+- IKEv1 pluto守护程序支持基于RAM的虚拟IP池，使用
+  rightsourceip指令来支持基于RAM的虚拟IP池，该指令有一个子网，地址从该子网中
+  分配的子网。
+
+- ipsec pki --gen和-pub命令现在允许输出PEM格式的私钥和公钥。
+  私钥和公钥的PEM格式，并使用--outform pem
+  命令行选项输出PEM格式的私钥和公钥。
+
+- 新的DHCP插件可以从DHCP服务器上为客户查询虚拟IP地址。
+  服务器的虚拟IP地址，或者使用
+  charon.plugins.dhcp.server strongswan.conf选项为客户查询虚拟IP地址。DNS/WINS服务器信息
+  如果DHCP服务器提供了这样的信息，就会额外地提供给客户。
+  信息。该插件用于ipsec.conf配置中，其配置为
+  rightsourceip设置为%dhcp。
+
+- 一个名为farp的新插件为虚拟IP地址伪造了ARP响应。
+  IKEv2守护程序charon发给客户的ARP响应。这个插件让一个
+  如果它使用一个来自响应者子网的虚拟IP，就可以在本地局域网上充当客户端。
+  的虚拟IP，例如使用DHCP插件获得的。
+
+- 现有的IKEv2套接字实现已经被迁移到了
+  socket-default 和 socket-raw 插件。新的socket-dynamic插件
+  将套接字动态绑定到通过left-/rightikeport配置的端口上。
+  ipsec.conf连接参数配置的端口。
+
+- android charon插件将收到的DNS服务器信息存储为 "net.dns"
+  系统属性，正如Android平台所使用的那样。
+
+
+strongswan-4.3.6
+----------------
+
+- IKEv2守护进程支持RFC 3779 IP地址块约束。
+  作为对等方证书中的重要X.509v3扩展来携带。
+
+- ipsec pool --add|del dns|nbns命令管理DNS和NBNS名称服务器条目。
+  命令管理通过IKEv1模式配置或IKEv2模式配置有效载荷发送给远程客户端的DNS和NBNS名称服务器条目。
+  配置有效载荷发送给远程客户端。
+
+- 山茶花密码可以作为IKEv1的加密算法使用。
+
+- IKEv1和IKEV2守护程序现在可以检查证书路径长度限制。
+
+- 新的ipsec.confn选项 "inactivity "在没有流量的情况下关闭了一个CHILD_SA
+  如果在给定的时间间隔内没有发送或接收任何流量，则关闭CHILD_SA。要关闭完整的IKE_SA
+  要关闭整个IKE_SA，如果其唯一的CHILD_SA处于非活动状态，可以设置全局strongswan.conf选项
+  "charon.inactivity_close_ike "为yes。
+
+- 调试输出中更详细的IKEv2 EAP有效载荷信息
+
+- IKEv2 EAP-SIM和EAP-AKA共享联合libsimaka库
+
+- 为ESP中正确的SHA256和SHA384/512添加了所需的用户区修改。
+  将在 Linux 2.6.33 中引入。现在 "sha256"/"sha2_256 "关键字
+  配置内核为128位截断，而不是以前使用的非标准的96
+  位的截断，而不是以前的版本所使用的非标准的96位截断。要使用旧的96位截断法
+  方案，引入了新的 "sha256_96 "建议关键字。
+
+- 修正了隧道模式下的 IPComp，剥离了重复的外部头。这个
+  变化使得 IPcomp 隧道模式的连接与以前的版本不兼容。
+  版本不兼容；在这种隧道上禁用压缩。
+
+- 通过安装带有适当流量选择器的 SA，在最近的内核上修正了 BEET 模式的连接。
+  基于 Michael Rossberg 的补丁，通过安装带有适当流量选择器的 SA，在最近的内核上修正了 BEET 模式的连接。
+
+- 使用扩展（如 BEET 模式）和加密算法（如 twofish,
+  蛇，sha256_96）分配在私人使用空间，现在需要我们
+  知道它的含义，也就是说，我们是在与 strongSwan 对话。使用新的
+  "charon.send_vendor_id "选项来让远程对等机知道
+  是这样的情况。
+
+- 对 draft-eronen-ipsec-ikev2-eap-auth 的实验性支持，在这种情况下
+  响应者省略公钥认证，而采用相互认证方式
+  方法。要启用纯EAP认证，请在响应方设置rightauth=eap
+  只依赖MSK构建的AUTH有效载荷。这个尚未标准化的
+  需要上面介绍的strongSwan供应商ID。
+
+- IKEv1守护进程忽略瞻博网络SRX通知类型40001，因此
+  允许互操作性。
+
+
+strongswan-4.3.5
+----------------
+
+- IKEv1 pluto守护进程现在可以使用基于SQL的地址池来处理
+  虚拟IP地址的模式配置服务器。该地址池功能已经
+  从 charon 的 sql 插件迁移到一个新的 attr-sql 插件上，该插件被加载到
+  该插件由 libstrongswan 加载，并且可以被两个守护程序使用，无论是 SQLite
+  或 MySQL 数据库和相应的插件。
+
+- 插件名称已被精简。EAP插件现在在eap后面有一个破折号
+  (例如：eap-sim)，因为它被用于 --enable-eap-sim ./configure 选项。
+  strongswan.conf 中的插件配置部分现在使用与
+  插件本身的名称相同（即有一个破折号）。请确保更新 "load "指令和
+  现有strongswan.conf文件中受影响的插件部分。
+
+- 私钥/公钥的解析和编码已被拆分为
+  独立的 pkcs1, pgp, pem 和 dnskey 插件。公钥的实现
+  插件gmp、gcrypt和openssl都可以使用它们。
+
+- EAP-AKA插件可以使用不同的后端进行USIM/quintuplet
+  计算，与EAP-SIM插件非常相似。现有的3GPP2软件
+  实现已经被迁移到一个单独的插件中。
+
+- IKEv2守护程序charon获得了基本的PGP支持。它可以使用本地安装的
+  对方证书，并可以基于RSA私钥发布签名。
+
+- 新的 "ipsec pki "工具提供了一组命令来维护公钥基础设施。
+  基础设施。它目前支持创建RSA和ECDSA
+  私钥/公钥，计算指纹和签发或验证证书。
+
+- Charon使用单调的时间源进行统计和作业排队，在系统时间发生变化时（如在美国）表现得很正确。
+  如果系统时间发生变化（例如，当使用NTP时），Charon会正确地表现出来。
+
+- 除了基于时间的重新密钥，charon还支持基于处理量或数据包数量的IPsec SA寿命。
+  处理量或数据包数量的IPsec SA寿命。它们是新的ipsec.conf参数
+  'lifetime'（"keylife "的别名）、'lifebytes'和'lifepackets'处理
+  SA超时，而参数'margintime'（alias to rekeymargin）。
+  marginbytes'和'marginpackets'在SA过期前触发重键。
+  现有的参数'rekeyfuzz'影响到所有的保证金。
+
+- 如果在NetworkManager插件中没有指定CA/Gateway证书。
+  charon使用一套由发行版预装的可信根证书。
+  包含CA证书的目录可以用
+  --with-nm-ca-dir=path 配置选项。
+
+- 修正了left|rightid语句中的Email相对区分名的编码问题。
+  语句中电子邮件相对区分名的编码。
+
+- 修正了pluto守护程序对PKCS#7包装的证书的解析错误。
+
+- 修正了pluto守护进程中基于智能卡的认证，该认证被以下因素破坏了
+  4.3.2版本中引入的ECDSA支持所破坏。
+
+- Heiko Hund 贡献的一个补丁修复了IPv4中的混合IPv6，反之亦然
+  用IKEv1 pluto守护进程建立的隧道。
+
+- pluto 守护进程现在使用 libstrongswan x509 插件进行证书和
+  CRls，结构id类型被charon使用的identification_t取代。
+  和 libstrongswan 库使用的 identification_t。
+
+
+strongswan-4.3.4
+----------------
+
+- IKEv2 charon守护程序被移植到FreeBSD和Mac OS X。
+  可以在文档中找到。
+
+- ipsec statusall显示在IKEv2配置的ESP连接上传输和接收的字节数。
+  IKEv2 charon守护进程所配置的ESP连接的字节数。
+
+- IKEv2 charon守护进程支持ipsec.secrets中的包含文件。
+
+
+strongswan-4.3.3
+----------------
+
+- 配置选项--enable-integrity-test加上strongswan.conf的
+  选项 libstrongswan.integrity_test = yes 激活完整性测试
+  激活了对 IKE 守护程序 charon 和 pluto、libstrongswan 和所有加载的
+  插件。因此，动态库的错误配置和非恶意的文件
+  可以被可靠地检测出来。
+
+- 新的默认设置libstrongswan.ecp_x_coordinate_only=yes允许
+  IKEv1与MS Windows使用ECP DH组19和20的互操作性。
+
+- IKEv1 pluto守护进程现在支持AES-CCM和AES-GCM ESP
+  认证的加密算法。
+
+- IKEv1 pluto守护进程现在支持V4 OpenPGP密钥。
+
+- 由Orange实验室研究团队发现的RDN解析器漏洞
+  在4.3.2版本中没有完全修复。一些更多的修改
+  必须对asn1_length()函数进行更多的修改，以使其更加强大。
+
+
+strongswan-4.3.2
+----------------
+
+- 新的gcrypt插件提供了对称密码、哈希尔、RNG、Diffie-Hellman
+  和RSA加密基元，使用LGPL授权的GNU gcrypt库。
+
+- libstrongswan具有一个集成的加密自我测试框架，用于注册的
+  算法。测试向量插件提供了第一套测试向量，并且
+  允许 pluto 和 charon 依靠经过测试的加密算法。
+
+- pluto现在可以使用除x509和xcbc以外的所有libstrongswan插件。
+  由于有了openssl插件，ECP Diffie-Hellman组19、20、21、25和
+  26以及ECDSA-256、ECDSA-384和ECDSA-521认证可用于IKEv1。
+  IKEv1中使用。
+
+- 应用他们的模糊工具，Orange实验室的漏洞研究团队发现了
+  另外两个DoS漏洞，一个是在相当老的ASN.1解析器中的相对区别名（RDN）。
+  区分名称（RDN）的ASN.1解析器中，另一个是在转换ASN.1 UTCTIME
+  和GENERALIZEDTIME字符串转换为time_t值时存在漏洞。
+
+
+strongswan-4.3.1
+----------------
+
+- nm插件现在将DNS/NBNS服务器信息传递给NetworkManager。
+  允许网关管理员在客户机上动态设置DNS/NBNS配置
+  动态设置。
+
+- nm插件还接受用于网关认证的CA证书。如果
+  如果配置了CA证书，strongSwan将使用输入的网关地址作为其身份。
+  作为其身份，要求网关证书包含相同的
+  subjectAltName。这允许网关管理员将相同的
+  证书部署到 Windows 7 和 NetworkManager 客户端。
+
+- 命令ipsec purgeike删除了没有CHILD SA的IKEv2 SA。
+  命令ipsec down <conn>{n}删除连接的CHILD SA实例n。
+  <conn>，而ipsec down <conn>{*}则是删除所有CHILD SA实例。
+  命令ipsec down <conn>[n] 删除连接的IKE SA实例n
+  <conn>和附属的CHILD SA，而ipsec down <conn>[*] 则删除所有
+  连接<conn>的所有 IKE SA 实例。
+
+- 修正了4.3.0中引入的一个回归问题，即EAP认证计算的AUTH有效载荷不正确。
+  AUTH有效载荷计算不正确的问题。此外，EAP-MSCHAPv2 MSK密钥推导
+  已被更新，以便与Windows 7候选版本兼容。
+
+- 重构了触发策略的安装。路由策略被处理为
+  在IKE_SAs之外处理，以保持它们在任何情况下的安装。一个隧道
+  只建立一次，即使由于网络中断而延迟启动。
+
+- 改进了对内核触发的多个获取信号的处理。
+
+- 修复了 charon 守护进程中的两个 DoS 漏洞，这些漏洞是由
+  摸索技术发现的。1) 发送一个畸形的IKE_SA_INIT请求会留下一个
+  不完整的状态，如果随后的CREATE_CHILD_SA请求会导致一个空指针解除引用。
+  CREATE_CHILD_SA请求的时候，会留下一个不完整的状态，导致一个空指针的解构。2) 在发送IKE_AUTH请求时，如果缺少TSi或TSr支付，则会造成空指针脱域。
+  2. 在发送IKE_AUTH请求时，如果缺少TSi或TSr有效载荷，就会造成空指针的解除引用，因为
+  因为TSi和TSr的检查是互换的。所用的IKEv2模糊器是
+  由Orange实验室的漏洞研究团队开发。该工具是
+  最初由 Gabriel Campana 编写，现在由 Laurent Butti 维护。
+
+- 在IKEv2中增加了对ESP中AES计数器模式的支持，使用的建议是
+  关键字 aes128ctr, aes192ctr 和 aes256ctr。
+
+- 重构pluto的进一步进展：使用curl和ldap插件
+  来获取crls和OCSP。使用随机插件来获取密钥材料
+  从/dev/random或/dev/urandom获取密钥材料。使用openssl插件作为替代
+  aes, des, sha1, sha2, and md5插件。blowfish, twofish, 和
+  蛇形加密插件现在是可选的，默认情况下不启用。
+
+
+strongswan-4.3.0
+----------------
+
+- 支持IKEv2多重认证交换扩展（RFC4739）。
+  发起者和响应者可以使用多轮认证（例如RSA
+  然后是EAP）来进行认证。新的ipsec.conf leftauth/rightauth和
+  leftauth2/rightauth2参数定义自己的认证轮次或设置
+  的约束。更多细节请参见ipsec.conf man页。
+
+- 如果 glibc printf 钩子（register_printf_function）不可用。
+  strongSwan可以使用vstr字符串库在非glibc系统上运行。
+
+- IKEv2 charon 守护程序现在可以配置 ESP CAMELLIA-CBC 密码了
+  (esp=camellia128|192|256).
+
+- 重构了 pluto 和 scepclient 的代码，以使用基本功能（内存
+  分配、泄漏检测、块处理、printf_hooks、strongswan.conf
+  属性、ASN.1解析器等）来自libstrongswan库。
+
+- 通过IKEv1 ModeConfig最多可以发送两个DNS和WINS服务器。
+  可以在strongswan.conf的pluto部分进行配置。
+
+
+strongswan-4.2.14
+-----------------
+
+- 新的服务器端EAP RADIUS插件(--enable-eap-radius)
+  转发EAP信息到RADIUS服务器，或从RADIUS服务器转发。成功地
+  使用EAP-MD5和EAP-SIM与freeradius服务器进行了测试。
+
+- 死对头检测（RFC 3706）代码中的一个漏洞被以下人员发现
+  Gerd v. Egidy <gerd.von.egidy@intra2net.com>发现的，影响到所有Openswan和StrongSwan。
+  所有 Openswan 和 strongSwan 版本。一个恶意的（或过期的ISAKMP）
+  R_U_THERE 或 R_U_THERE_ACK 死对头检测数据包可以导致
+  pluto IKE 守护程序崩溃并重新启动。不需要认证或加密
+  需要触发这个错误。一个欺骗性的UDP数据包可以导致
+  pluto IKE守护进程重启，并且在重启的几秒钟内没有反应。
+  重启时没有反应。这个DPD空状态漏洞已被正式
+  注册为CVE-2009-0790，并由该版本修复。
+
+- ASN.1到time_t的转换导致时间绕过了
+  在32位平台上，1月18日03:14:07 UTC 2038之后的日期会出现时间缠绕。
+  作为一种解决方法，这些日期被设置为最大的可表示的
+  时间，即1月19日03:14:07 UTC 2038。
+
+- 含有通配符（*）的识别名称不再在
+  IDr有效载荷中。
+
+
+strongswan-4.2.13
+-----------------
+
+- 修正了IKEv1 pluto守护进程中DPD超时部分的一个 "使用后 "错误。
+  IKEv1 pluto 守护进程的 DPD 超时部分中的一个免费使用错误，该错误会偶尔导致 segfault。
+
+- 修正了 IKEv2 charon 守护进程中的一个崩溃问题，该问题发生在
+  基于RAM和基于SQL的混合虚拟IP地址池时发生崩溃。
+
+- 修正了ASN.1解析算法标识符对象的问题，其中的
+  参数字段是可选的。
+
+- 将 nm 插件移植到 NetworkManager 7.1。
+
+
+strongswan-4.2.12
+-----------------
+
+- 支持EAP-MSCHAPv2协议，通过选项
+  --enable-eap-mschapv2。需要启用MD4哈希算法
+  或--enable-md4或--enable-openssl。
+
+- 通过IKEv2配置载荷为对等体指定最多两个DNS和最多两个WINS服务器。
+  IKEv2配置有效载荷（CP）。IPv4或IPv6名称服务器
+  地址在strongswan.conf中定义。
+
+- 用于 Gnome NetworkManager 的 strongSwan 小程序现在已经建立并作为单独的 tarball 分发到
+  以 NetworkManager-strongswan 为名，作为单独的 tarball 发布。
+
+
+strongswan-4.2.11
+-----------------
+
+- 修正了因重构 keymat.c 而破坏的 ESP NULL 加密。
+  还引入了正确的初始化和密钥材料的处理。
+
+- 修正了ipsec statusall中连接定义列表的缺失。
+  中缺少的连接定义列表，这是由一个不幸的局部变量重载造成的。
+
+
+strongswan-4.2.10
+-----------------
+
+- 几项性能改进，以处理数以千计的隧道，几乎是线性放大。
+  线性升级。所有相关的数据结构都被更快的
+  替换为具有更好的查询时间的更快的对应结构。
+
+- 更好的并行化，可以在多个核心上运行charon。由于改进了
+  资源锁定和其他优化，守护程序可以充分利用
+  16个甚至更多核心的优势。
+
+- 负载测试插件可以使用NULL Diffie-Hellman组并模拟
+  通过使用CA签署同行证书来模拟独特的身份和证书。
+  来模拟独特的身份和证书。
+
+- 重新设计的行程在内存中的IP池处理租约。"ipsec leases"
+  命令查询分配的租约。
+
+- 通过使用ENGINE API，增加了对charon中智能卡的支持。
+  OpenSSL提供的ENGINE API，基于Michael Roßberg的补丁。
+
+- Padlock插件支持威盛CPU上的硬件RNG，以提供一个
+  可靠的随机性来源。
+
+  
+strongswan-4.2.9
+----------------
+
+- 灵活配置日志子系统，允许记录到多个
+  syslog设施，或对每个目标使用细粒度的日志级别记录到文件。
+
+- 负载测试插件可以对自己或其他主机的IKEv2守护程序进行压力测试。
+  或其他主机进行压力测试。在测试中发现并修复了多线程使用OpenSSL插件的问题。
+  使用OpenSSL插件时发现并修复了问题。
+
+- 为同步原语添加了剖析代码，以便在多核运行时找到瓶颈。
+  在多核上运行时的瓶颈。发现并修复了一个问题，即部分
+  Diffie-Hellman计算的部分内容获得了独占锁。这大大提高了
+  多核心的并行化。
+
+- updown 脚本的调用已被分离成一个独立的插件，以
+  进一步缩小了守护进程的核心。
+
+- 将IKE_SA/CHILD_SA的密钥推导过程分离到一个封闭系统中。
+  允许未来的实现使用一个安全的环境，例如内核内存或硬件。
+  内存或硬件的安全环境。
+
+- charon的内核接口已被模块化。XFRM NETLINK (默认)
+  和 PFKEY (--enable-kernel-pfkey) 接口插件，用于 Linux 2.6 kernel 的本地 IPsec
+  栈的XFRM NETLINK（默认）和PFKEY（-enable-kernel-pfkey）接口插件，以及KLIPS的PFKEY接口。
+  IPsec 堆栈的 PFKEY 接口(--enable-kernel-klips) 被提供。
+
+- 基本的移动IPv6支持已经被引入，以确保绑定更新信息和隧道流量的安全。
+  消息以及移动节点和主代理之间的隧道通信。
+  installpolicy=no选项允许与一个主导的
+  mip6d 守护进程，新的 type=transport_proxy 实现了特殊的 MIPv6
+  IPsec传输代理模式，其中IKEv2守护进程使用地址保护（Care-of-Address）。
+  但IPsec SA是为主地址设置的。
+
+- 实现了移动IPv6连接的迁移，使用XFRM_MSM中的KMADDRESS
+  字段实现了移动IPv6连接的迁移，该字段包含在由mip6d守护进程发送的XFRM_MSG_MIGRATE消息中。
+  通过 Linux 2.6.28（或适当的补丁）内核。
+
+
+strongswan-4.2.8
+----------------
+
+- IKEv2 charon守护进程支持基于原始公钥的认证
+  存储在SQL数据库后端的原始公钥进行认证。ipsec listpubkeys命令
+  通过stroke接口列出可用的原始公钥。
+
+- 几个MOBIKE的改进。在DPD交换中检测NAT映射的变化。
+  如果内核检测到UDP封装的ESP数据包中的NAT映射变化，处理事件。
+  ESP 数据包（需要内核补丁），在 MOBIKE 更新中尽可能长时间地重复使用旧地址，以及其他修正。
+  尽可能长时间地重用旧地址，以及其他一些修正。
+
+- 修正了 addr_in_subnet() 中的一个 Bug，该 Bug 可导致在目标子网的网络中插入错误的源路由。
+  中的一个错误，该错误导致在网络掩码不是 8 位数的情况下，为目标子网插入错误的源路由。
+  感谢伊尔梅瑙大学的 Wolfgang Steudel 报告了这个错误。
+
+
+strongswan-4.2.7
+----------------
+
+- 修正了一个拒绝服务的漏洞，在这个漏洞中，如果IKE_SA_INIT消息中的KE有效载荷只包含0，就会导致服务中断。
+  拒绝服务的漏洞，即一个KE有效载荷只包含0的信息可以导致IKEv2 charon
+  的mpz_export()函数返回一个NULL指针，从而导致IKEv2 charon的崩溃。
+  GNU多精度库（GMP）的mpz_export()函数返回的NULL指针。感谢Mu Dynamics研究实验室
+  让我们意识到了这个问题。
+
+- 新的代理插件在SSH-代理的基础上提供了一个私钥实现。
+  ssh-agent。
+
+- NetworkManager插件已经被扩展到支持证书客户端
+  使用从文件中加载的 RSA 密钥或使用 ssh-agent 进行认证。
+
+- 丢弃守护者的能力已被移植到 libcap，必须启用
+  明确地 --with-capabilities=libcap。未来的版本将支持
+  较新的 libcap2 库。
+
+- ipsec listalgs 列出了在 charon keying daemon 注册的 IKEv2 加密算法。
+  charon keying daemon注册的算法。
+
+
+strongswan-4.2.6
+----------------
+
+- 一个 NetworkManager 插件允许基于 GUI 的 road-warrior
+  客户端的简单配置。它具有基于X509的网关认证
+  和 EAP 客户端认证、隧道设置/关闭以及将密码存储在
+  在Gnome钥匙圈中。
+
+- 一个新的EAP-GTC插件实现了 draft-sheffer-ikev2-gtc-00.txt，并允许
+  用户名/密码对网关上的任何PAM服务进行认证。
+  新的EAP方法与NetworkManager插件很好地互动，并允许
+  客户端认证，如LDAP。
+
+- 改进了对EAP-Identity方法的支持。新的ipsec.conf eap_identity
+  参数定义了一个额外的身份，在EAP认证中传递给服务器
+  认证中传递给服务器的额外身份。
+
+- ipsec statusall" 命令现在列出了 CA 限制、EAP
+  认证类型和 EAP 身份。
+
+- 修正了两个多线程死锁，在启动几百个隧道时发生的
+  几百个隧道时发生的两个多线程死锁。
+
+- 修正了 --enable-integrity-test 配置选项，该选项可以
+  在libstrongswan库上计算SHA-1校验和。
+
+
+strongswan-4.2.5
+----------------
+
+- 在审计(AUD)层面对IKE和CHILD SAs进行一致的记录。
+
+- 提高了基于SQL的虚拟IP地址池的性能
+  的性能，引入了一个额外的地址表。租约表
+  变得可有可无，可以通过设置 charon.plugins 来禁用。
+  中设置 charon.plugins.sql.lease_history = no 来禁用。
+  strongswan.conf 中设置 charon.plugins.sql.lease_history = no 来禁用。
+
+- 添加到 xfrm.h 中的 XFRM_STATE_AF_UNSPEC 标志允许 IPv4-over-IPv6
+  和 IPv6-over-IPv4 隧道，并使用 2.6.26 及以后的 Linux 内核。
+
+- 为不同的网络接口管理不同的虚拟 IP 池成为可能。
+  网络接口管理不同的虚拟 IP 池成为可能。
+
+- 修正了一个错误，该错误导致无法从一个由Linux内核管理的池中分配超过256个虚拟IP地址。
+  的虚拟 IP 地址。
+
+- 修正了一个不能在内核中删除自己的IPCOMP SA的错误。
+
+
+strongswan-4.2.4
+----------------
+
+- 为ipsec pool --status和ipsec pool --leases增加了统计功能。
+  以及对各种ipsec pool命令的输入验证检查。
+
+- ipsec statusall 现在列出了所有加载的 charon 插件并显示了
+  协商的 IKEv2 密码套件建议。
+
+- openssl插件支持椭圆曲线Diffie-Hellman组
+  19, 20, 21, 25, and 26.
+
+- openssl插件支持使用椭圆曲线的ECDSA验证
+  X.509证书。
+
+- 修正了stroke中的一个bug，该bug导致多个charon线程在数据包中关闭
+  文件描述符。
+
+- ESP 序列号现在可以在 IPsec SA 更新中被迁移，由
+  MOBIKE 处理的 IPsec SA 更新中迁移 ESP 序列号。仅适用于 Linux 内核 >= 2.6.17。
+
+
+strongswan-4.2.3
+----------------
+
+- 修正了 strongswan.conf 路径配置问题，该问题在以下情况下发生
+  --sysconfig 未在 ./configure 中明确设置。
+
+- 修正了第四届 IKEv2 互操作性研讨会上发现的一些小错误。
+  IKEv2互操作性研讨会上发现的一些小错误。
+
+
+strongswan-4.2.2
+----------------
+
+- libstrongswan 和 charon 的插件可以根据 strongswan.com 中的配置选择性地加载。
+  的插件可以根据strongswan.conf中的配置选择加载。大多数组件提供了一个
+  "load = " 选项，后面是一个空格分隔的插件列表。
+  这允许例如从硬件加密加速器回落到
+  到基于软件的加密插件。
+
+- Charons SQL插件已经通过一个虚拟IP地址池进行了扩展。
+  设置了rightsourceip=%poolname的配置可以查询SQLite或
+  MySQL数据库的租约。ipsec pool "命令有助于管理
+  池数据库。参见ipsec pool --help了解可用的选项。
+
+- 用于ESP的认证加密算法AES-CCM-8/12/16和AES-GCM-8/12/16
+  现在从Linux 2.6.25内核开始支持ESP。其语法为
+  语法是，例如，esp=aes128ccm12 或 esp=aes256gcm16。
+
+
+strongswan-4.2.1
+----------------
+
+- 对 "哈希和URL "编码的证书有效载荷的支持已在IKEv2守护进程中实现
+  IKEv2守护进程charon中。使用CA部分的 "certuribase "选项
+  允许为指定CA颁发的所有证书分配一个基本URL。
+  最后的URL是通过连接该基础和DER的十六进制编码的
+  DER编码的证书的SHA1哈希值。请注意，该功能默认是禁用的
+  必须使用 "charon.hash_and_url "选项来启用。
+
+- IKEv2守护进程charon现在支持 "uniqueids "选项来关闭多个
+  IKE_SAs。选项值 "keep "更倾向于现有的
+  连接的设置，而不是新的连接，选项值 "replace "会替换现有的
+  连接。
+
+- libstrongswan中的加密工厂额外支持随机数
+  产生器，插件可以提供其他的随机性来源。默认的
+  插件从/dev/(u)random读取原始随机数据。
+
+- 通过一个缓存选项扩展了证书框架，允许插件
+  对获取的凭证进行持久的缓存。"cachecrl "选项已被
+  重新实现了。
+
+- 4.2.0中引入的新的信任链验证已被并行化。
+  获取CRL或OCSP信息的线程不再阻塞其他线程。
+
+- 新的IKEv2配置属性框架已经被引入，允许
+  插件提供虚拟IP地址，并在未来提供其他的
+  配置属性服务（例如：DNS/WINS服务器）。
+
+- 描边插件已被扩展到提供虚拟IP地址，这些地址来自于
+  ipsec.conf中定义的池中提供虚拟IP地址。参数 "rightsourceip "现在可以接受
+  地址池的CIDR符号（例如：10.1.1.0/24）。该参数还接受
+  值"%poolname"，其中 "poolname "标识由单独的插件提供的池。
+  独立的插件提供的池。
+
+- 修正了uClibc上的编译和其他一些小错误。
+
+- 在ipsec starter中设置DPD默认值为dpd_delay=30s和dpd_timeout=150s。
+
+- IKEv1 pluto守护进程现在支持ESP加密算法CAMELLIA
+  密钥长度为128、192和256比特，以及认证
+  算法AES_XCBC_MAC。配置示例：esp=camellia192-aesxcbc。
+
+
+strongswan-4.2.0
+----------------
+
+- libstrongswan已被模块化，以附加加密算法。
+  的实现（密钥、证书）和取数器。
+  通过插件动态附加加密算法（钥匙、证书）和取数器。现有的代码已被移植到插件中。
+    - 使用GNU多精度库的RSA/Diffie-Hellman实现
+    - 支持CRLs、OCSP和属性证书的X509证书系统
+    - 多个插件在软件中提供加密算法
+    - CURL和OpenLDAP取证器
+
+- libstrongswan获得了一个关系型数据库API，它使用可插拔的数据库
+  供应商。提供了MySQL和SQLite的插件。
+
+- IKEv2密钥守护程序charon更具有扩展性。通用的插件可以提供
+  连接配置、凭证和EAP方法，或者控制守护进程。
+  现有的代码已经被移植到插件中。
+    - EAP-AKA、EAP-SIM、EAP-MD5和EAP-Identity
+    - 描边配置、凭证和控制（与pluto兼容）
+    - 以XML为基础的管理协议来控制和查询守护程序
+  有以下新的插件。
+    - 一个实验性的SQL配置、凭证和日志插件。
+      在MySQL或SQLite之上的实验性SQL配置、认证和日志插件
+    - 一个单元测试插件，在守护程序启动时运行测试
+
+- charon中的认证和凭证框架已被大量重构，以支持模块化凭证。
+  重构，以支持模块化的凭证提供者、适当的
+  CERTREQ/CERT有效载荷交换和可扩展的授权规则。
+
+- strongSwan管理器的框架已经发展为网络应用程序的
+  框架 libfast (FastCGI Application Server w/ Templates)，并可用于
+  被其他应用程序使用。
+
+
+strongswan-4.1.11
+-----------------
+
+- 在NAT情况下的IKE重匙没有继承NAT条件
+  到重启后的IKE_SA，这样UDP封装就会随着下一次CHILD_SA重启而丢失。
+  下一个CHILD_SA重启时失去UDP封装。
+
+- id_payload.c中next_payload变量的错误类型定义
+  导致PowerPC平台上出现INVALID_SYNTAX错误。
+
+- 实现了IKEv2 EAP-SIM服务器和客户端测试模块，使用了存储在文件中的
+  存储在文件中的三联体。关于配置的细节，请看
+  场景'ikev2/rw-eap-sim-rsa'。
+
+
+strongswan-4.1.10
+-----------------
+
+- 修正了 ocsp 缓存中 certinfo_t 记录的排序错误。
+  导致同一序列号的多个条目被创建。
+
+- 实现了一个简单的 EAP-MD5 模块，提供 CHAP
+  认证。这可能与基于证书的
+  的服务器认证，因为弱口令不能被暴力破解。
+  (与传统的IKEv2 PSK相矛盾）。
+
+- 一个完整的基于软件的EAP-AKA实现，使用的算法
+  3GPP2（S.S0055）中规定的算法。该实现不使用USIM。
+  但从ipsec.secrets中读取秘密。在使用之前，请确保阅读eap_aka.h
+  之后再使用它。
+
+- 支持使用扩展EAP类型的供应商特定EAP方法。EAP模块的接口
+  EAP模块的接口已经有了些许变化，所以如果你已经在使用EAP模块的话，请确保
+  如果你已经在开发自己的模块，请检查这些变化。
+
+
+strongswan-4.1.9
+----------------
+
+- 默认的 _updown 脚本现在可以动态地插入和删除 ip6tables
+  防火墙规则，如果在 IPv6 连接中设置了 leftfirewall=yes。新的 IPv6
+  net-net 和 roadwarrior (PSK/RSA) 方案，用于 IKEv1 和 IKEV2
+  增加了。
+
+- 实施了RFC4478重复认证，强制EAP/Virtual-IP客户端
+  在给定的时间范围内重新建立 IKE_SA。
+
+- strongSwan Manager支持配置列表、启动和终止
+  IKE 和 CHILD_SAs。
+
+- 对多线程代码进行了修复和改进。
+
+- IKEv2 插件已被重新命名为 libcharon-* 以避免命名冲突。
+  请确保删除$libexecdir/ipsec中的旧插件，否则它们会被加载两次。
+  加载两次。
+
+
+strongswan-4.1.8
+----------------
+
+- 删除了递归的 pthread mutexes，因为 uClibc 不支持它们。
+
+
+strongswan-4.1.7
+----------------
+
+- 在NAT穿越的情况下和多个排队的快速模式下。
+  在端口从500浮动到4500之后，那些由auto=start插入的未决连接
+  端口从500浮动到4500后插入的那些待定连接被错误地删除了。
+
+- 增加了一个 "forceencaps "连接参数，以强制执行UDP封装。
+  以克服限制性防火墙。NAT检测有效载荷是伪造的，以
+  模拟NAT情况并欺骗另一个对等体进入NAT模式（仅限IKEv2）。
+
+- strongSwan Manager的预览，这是一个基于网络的配置和监控
+  应用程序。它使用一个新的XML控制接口来查询IKEv2守护程序。
+
+- 实验性的 SQLite 配置后端，它将在未来为 strongSwan Manager 提供配置接口。
+  在未来的版本中为 strongSwan Manager 提供配置接口。
+
+- 进一步改进对 MOBIKE 的支持。
+
+
+strongswan-4.1.6
+----------------
+
+- 由于一些第三方 IKEv2 实现遇到了
+  由于一些第三方 IKEv2 实现遇到了 strongSwan 默认宣布 MOBIKE 功能的问题。
+  的问题，因此可以使用 mobike=no 选项在每个连接的基础上禁用 MOBIKE
+  使用 mobike=no 选项。而mobike=no则禁用了
+  发送MOBIKE_SUPPORTED通知和浮动的
+  到 UDP 端口 4500 的请求，即使没有检测到 NAT
+  情况下，strongSwan 仍将支持
+  MOBIKE 作为响应者。
+
+- 默认的ipsec路由表加上其相应的优先级
+  用于插入源路由的默认ipsec路由表及其相应的优先级已从100改为220。
+  它可以使用 --with-ipsec-routing-table 和
+  --with-ipsec-routing-table-prio选项配置。
+
+--enable-integrity-test配置选项可以测试
+  配置选项测试libstrongswan加密代码的完整性，在charon
+  启动时测试libstrongswan加密代码的完整性。
+
+- 配置选项 --disable-xauth-vid 禁用发送
+  XAUTH供应商ID的发送。这可以作为一种变通方法，当
+  这可以作为与某些Windows VPN客户端互通的解决方法。
+  遇到问题时，这可以作为一种解决办法。
+  AUTHENTATION时出现问题。
+
+- ipsec stroke现在支持rereadsecrets, rereadaacerts,
+  rereadacerts 和 listacerts 选项。
+
+
+strongswan-4.1.5
+----------------
+
+- 如果在解析right=%<FQDN>时发生DNS查询失败
+  或 right=<FQDN> 与 rightallowany=yes 组合时，发生 DNS 查询失败，那么
+  连接不会被ipsec启动器更新，从而防止
+  破坏活动的 IPsec 连接。只有当DNS
+  查询成功返回一个改变了的 IP 地址时，相应的连接定义才会被更新。
+  相应的连接定义被更新。
+
+- 钥匙程序安装的路由现在在一个单独的
+  路由表，ID为100，以避免与主表冲突。
+  表发生冲突。IKEv2流量的路由查询是在用户空间进行的，以忽略
+  路由，因为 IKE 流量不应该被封装起来。
+
+
+strongswan-4.1.4
+----------------
+
+- pluto IKEv1守护进程现在表现出与它的
+  IKEv2的伙伴charon一样，通过_updown脚本插入一个显式路由。
+  _updown 脚本插入一个明确的路由，只有当一个 sourceip 存在时。这是可接受的
+  因为通过IPsec隧道的路由是由NETKEY的IPsec自动处理的。
+  NETKEY的IPsec策略。因此，左侧或右侧的nexthop
+  参数不再需要了。
+
+- 新的IKEv1参数right|leftallowany参数有助于处理以下情况
+  新的IKEv1参数right|leftallowany参数有助于处理两个对等体都拥有动态IP地址的情况。
+  通常使用DynDNS或类似服务来解决。该配置
+
+    right=peer.foo.bar
+    右边allowany=yes
+
+  可以被发起者用来启动与一个对等体的连接
+  通过将peer.foo.bar解析为当前分配的IP地址。
+  由于rightallowany标志的存在，该连接以后会表现为
+  为
+
+    right=%any
+
+  这样，当对等体的IP地址发生变化时，对等体可以作为发起者重新键入连接。
+  IP地址发生变化时，对等人可以作为发起人重新键入连接。另一种记号是
+
+    right=%peer.foo.bar
+
+  这将隐含地设置 rightallowany=yes。
+
+- ipsec starter 现在在解析错误的情况下会更优雅地失败。
+  错误。有缺陷的ca和conn部分被丢弃，pluto被启动
+  如果只遇到了非致命的错误，则会放弃ca和conn部分，并启动pluto。如果right=%peer.foo.bar
+  不能被DNS解析，那么将使用right=%any，这样作为响应者的被动连接仍然是可能的。
+  作为一个响应者的被动连接仍然是可能的。
+
+- 新的 pkcs11initargs 参数可以放置在
+  新的 pkcs11initargs 参数可以放在 /etc/ipsec.conf 的设置配置部分，允许定义
+  的参数字符串，用于PKCS#11 C_Initialize()
+  函数中使用。这个非标准的功能是NSS softoken
+  库所需要的。此补丁由 Robert Varga 贡献。
+
+- 修正了 strongswan-2.8.5 引入的ipsec starter中的一个 bug。
+  引入的ipsec starter中的一个bug，该bug导致在出现未知的
+  或拼写错误的关键词时，会导致分段错误。这个 bug 的修正由
+  Robert Varga 贡献的。
+
+- IKEv2中对MOBIKE的部分支持。发起者对接口/地址配置的变化采取行动，并更新IKE和
+  地址配置变化，动态更新IKE和IPsec SA。
+
+
+strongswan-4.1.3
+----------------
+
+- IKEv2对等体的配置选择现在可以基于一个给定的
+  使用rightca=语句来选择认证机构。
+
+- 基于RSA签名的IKEv2认证现在可以处理多个
+  签发的多个证书的对等体ID。这允许平稳过渡
+  在对等体证书更新的情况下顺利过渡。
+
+- IKEv2: 支持在客户端使用leftsourceip请求一个特定的虚拟IP，并使用请求的虚拟IP返回到客户端。
+  客户端使用leftsourceip请求特定的虚拟IP，并在服务器上使用rightsourceip=%config返回请求的虚拟IP。
+  返回请求的虚拟IP。如果服务器不支持配置有效载荷，那么
+  客户端强制执行其leftsourceip参数。
+
+- ./configure选项--with-uid/-with-gid允许pluto和charon
+  将他们的权限降到最低，并改变为其他UID/GID。这
+  提高了系统的安全性，因为一个可能的入侵者可能只得到
+  CAP_NET_ADMIN的能力。
+
+- charon的进一步模块化：可插拔的控制接口和配置后台模块提供了可扩展性。
+  配置后端模块提供了可扩展性。控制接口
+  控制接口，以及使用DBUS（NetworkManager）或XML的进一步接口。
+  或XML的进一步接口正在进行中。一个用于在守护程序中存储配置的后端
+  提供了一个用于在守护进程中存储配置的后端，而更高级的后端（例如使用数据库）是很容易实现的。
+  来实现。
+
+- 修正了libfreeswan在Linux内核下发生的编译失败。
+  headers > 2.6.17。
+
+
+strongswan-4.1.2
+----------------
+
+- 支持在 IKEv2 中创建/重启 CHILD_SA 时进行额外的 Diffie-Hellman 交换。
+  IKEv2中的CHILD_SA（PFS）。当提案中包含一个
+  DH组（例如 "esp=aes128-sha1-modp1536"）。此外，DH组协商
+  被正确地用于重匙。
+
+- 在使用IKEv2时，支持IPsec SA的AES-XCBC-96 MAC算法。
+  (要求 linux >= 2.6.20)。可以使用 "esp=aes256-aesxcbc "来启用它。
+
+- 为 linux >= 2.6.21 的 IPv4-in-IPv6 和 IPv6-in-IPv4 隧道工作。
+
+- 增加了对不建立MSK的EAP模块的支持。
+
+- 删除了对/usr/include/linux/头文件的依赖。
+  包括 xfrm.h, ipsec.h, 和 pfkeyv2.h 在内。
+
+- crlNumber现在被ipsec listcrls列出。
+
+- xauth_modules.verify_secret() 函数现在可以传递
+  连接名称。
+
+
+strongswan-4.1.1
+----------------
+
+- 服务器端cookie支持。如果到可能IKE_SAs处于CONNECTING状态。
+  启用cookie，可以防止伪造源地址的DoS攻击。
+  地址。在CONNECTING状态下，每个IKE_SA的数量也是有限的。
+  对等地址的IKE_SA数量也是有限制的，以避免资源耗尽。IKE_SA_INIT消息被
+  对比，以正确检测重传和传入的重传
+  即使IKE_SA被阻断（例如进行OCSP检索），也能检测到传入的重传。
+
+- IKEv2守护进程charon现在支持基于http和ldap的动态CRL
+  获取，并通过crlcheckinterval > 0来缓存获取的CRLs
+  cachecrls=yes来启用。
+
+- 增加了配置选项 --enable-nat-transport，它可以启用
+  为IPsec传输模式启用潜在的不安全的NAT穿越，以及
+  --disable-vendor-id，禁止发送 strongSwan
+  供应商 ID 的发送。
+
+- 修正了 pluto IKEv1 守护进程中的一个长期存在的错误，该错误会导致
+  如果在 IKE MR2 消息中检测到畸形的有效载荷，并在 pluto 中检测到一个分段故障。
+  IKE MR2 消息中检测到畸形的有效载荷，并且 pluto 试图发送加密的通知
+  消息。
+
+- 添加了NATT_IETF_02_N供应商ID，以支持IKEv1与Windows 2003服务器的连接。
+  与Windows 2003服务器的连接，该服务器使用了一个错误的VID哈希。
+
+
+strongswan-4.1.0
+----------------
+
+- 支持SHA2_384哈希函数以保护IKEv1
+  谈判，并支持 X.509 证书中的 SHA2 签名。
+
+- 修正了 SHA2-512 HMAC 计算中的一个严重错误。
+  函数计算中的一个严重错误。引入了对所有IKEv1哈希和HMAC函数的自动自检。
+  和 hmac 函数的自动自检。自我测试的失败
+  目前只发出一个警告，但不会退出pluto[尚]。
+
+- 支持IKEv2的SHA2-256/384/512 PRF和HMAC函数。
+
+- 完全支持CA信息部分。 ipsec listcainfos
+  现在显示所有收集的crlDistributionPoints和OCSP
+  accessLocations。
+
+- 支持IKEv2的在线证书状态协议（OCSP）。
+  这个功能需要libcurl库的HTTP获取能力，必须通过设置启用。
+  库的HTTP获取能力，必须通过设置--enable-http configure
+  选项启用。
+
+- 重构了IKEv2消息处理代码的核心，允许更好的
+  代码重用和分离。
+
+- IKEv2中使用INTERNAL_IP4/6_ADDRESS配置的虚拟IP支持
+  有效载荷。此外，INTERNAL_IP4/6_DNS属性被请求者解释为
+  由请求者解释并安装在resolv.conf文件中。
+
+- IKEv2守护进程charon为每个IPsec策略安装一个路由，以使用
+  正确的源地址，即使应用程序没有明确的
+  指定它。
+
+- 将EAP框架集成到charon中，加载可插入的EAP库
+  模块。ipsec.conf参数authby=eap在客户端启动EAP认证。
+  而服务器端的 "eap "参数则定义了客户端使用的EAP方法。
+  EAP方法用于客户端认证。
+  一个通用的客户端EAP-Identity模块和一个EAP-SIM认证模块使用第三方读卡器实现。
+  模块，包括使用第三方读卡器的实现。
+
+- 增加了客户端对cookies的支持。
+
+- 集成了IKEv2互操作性测试中的修正，包括
+  严格的有效载荷顺序，正确的INVALID_KE_PAYLOAD拒绝和其他小的
+  修复，以增强与其他实现的互操作性。
+
+
+strongswan-4.0.7
+----------------
+
+- strongSwan 现在可以与 NCP 安全进入客户端进行互操作。
+  Shrew Soft VPN 客户端和 Cisco VPN 客户端的互操作，同时执行
+  XAUTH 和模式配置。
+
+- UNITY 属性现在可以被识别，UNITY_BANNER 被设置为
+  为一个默认的字符串。
+
+
+strongswan-4.0.6
+----------------
+
+- IKEv1：支持扩展认证（XAUTH）与ISAKMP主模式RSA或PSK认证的结合。
+  与ISAKMP主模式RSA或PSK认证相结合。客户端和
+  服务器端都实现了。对用户证书的处理可以
+  可以通过运行时可加载的XAUTH模块完成。默认情况下，用户
+  用户凭证被存储在ipsec.secrets中。
+
+- IKEv2: 支持重新密钥时的重新认证
+
+- IKEv2: 支持传输模式
+
+- 修正了很多与字节顺序有关的错误
+
+- 其他各种错误的修正
+
+
+strongswan-4.0.5
+----------------
+
+- IKEv1：通过新的连接实现ModeConfig推送模式
+  关键字modeconfig=push实现了与Cisco VPN网关的互操作性。
+
+- IKEv1: ipsec statusall命令现在可以显示所有的 "DPD活动"。
+  的ISAKMP SA。
+
+- IKEv2: Charon的日志和调试框架已被完全重写。
+  用特殊的printf()函数代替了logger，来直接
+  打印对象，如主机（%H）标识（%D），证书（%Q）。
+  等。调试级别的数量已经减少到。
+
+    0（审计），1（控制），2（控制更多），3（原始），4（私人）。
+
+  调试级别可以在ipsec.conf中静态指定为
+
+    配置设置
+        charondebug="lib 1, cfg 3, net 2"
+
+  或者在运行时通过stroke改变，如
+
+    ipsec stroke loglevel cfg 2
+
+
+strongswan-4.0.4
+----------------
+
+- 实现了对 IPv6-in-IPv6 隧道的全面支持。
+
+- 增加了 IKEv2 中死对头检测的配置选项。
+  类型的 "清除"、"保持 "和 "重启 "得到了支持。dpd_timeout
+  值不被使用，因为正常的重传策略适用于
+  检测死亡对等体。dpd_delay参数允许发送空的
+  信息，以便在不活动的情况下检测死亡的对等体。
+
+- 增加了对IKEv2中预共享密钥的支持。PSK密钥配置在
+  ipsec.secrets中配置的PSK密钥被加载。authby参数指定了认证方法
+  来验证我们自己，另一个对等体可以使用PSK或RSA。
+
+- 改变了重传策略，以尊重keyingtries参数。
+
+- 增加了私钥解密。支持用AES-128/192/256或3DES加密的PEM密钥。
+  或 3DES 加密的 PEM 密钥提供支持。
+
+- 在 libstrongswan 中实现了 DES/3DES 算法。3DES可用于
+  加密 IKE 流量。
+
+- 在libstrongswan中实现了SHA-256/384/512，允许使用以这种哈希算法签名的证书
+  签署的证书。
+
+- 增加了对updown脚本的初步支持。执行 up-host/client 和
+  down-host/client 被执行。leftfirewall=yes参数
+  使用默认的升级脚本来插入动态防火墙规则。
+  可以用leftupdown参数指定自定义的升级脚本。
+
+
+strongswan-4.0.3
+----------------
+
+- 增加了对 auto=route ipsec.conf 参数和
+  ipsec route/unroute命令的支持。这允许设置IKE_SAs和
+  和 CHILD_SAs，当流量被内核检测到时，动态地设置
+  内核。
+
+- 增加了对IKEv2中使用ikelifetime参数重新加密IKE_SAs的支持。
+  按照IKEv2的规定，不进行重新认证（与IKEv1不同），只使用完美前向保密法生成新的密钥。
+  新的密钥是使用完全前向保密法生成的。一个可选的标志
+  将在以后实现，它可以强制进行重新认证。
+
+- "sha "和 "sha1 "现在被当作ike=和esp=算法配置语句中的同义词。
+  算法配置语句中，"sha "和 "sha1 "现在被视为同义词。
+
+
+strongswan-4.0.2
+----------------
+
+- 完整的 X.509 证书信任链验证已经实现。
+  终端实体证书可以通过CERT有效载荷进行交换。目前的
+  目前的默认值是leftsendcert=always，因为CERTREQ有效载荷还不支持
+  还不支持。可选的 CRL 必须在本地导入到 /etc/ipsec.d/crls。
+
+- 增加了对IKEv2中leftprotoport/rightprotoport参数的支持。IKEv2
+  将为流量选择提供更多可能性，但Linux内核
+  目前并不支持它。这就是为什么我们现在坚持使用这些简单的
+  ipsec.conf规则。
+
+- 增加了死亡对等体检测（DPD），在没有收到IKE或ESP流量的情况下检查远程对等体的活力。
+  IKE或ESP流量。目前DPD是硬编码的（dpdaction=clear,
+  dpddelay=60s）。
+
+- IKEv2中的初始NAT穿越支持。Charon包括NAT检测
+  通知有效载荷来检测对等体之间的NAT路由器。它切换到
+  到4500端口，使用UDP封装的ESP数据包，处理对等体地址
+  变化，并定期发送keep alive消息。
+
+- 为charon重新实现了IKE_SA状态机，它允许同时进行
+  重新实现了IKE_SA状态机，允许同时进行重启，更多的共享代码，更简洁的设计，适当的重传
+  和一个更可扩展的代码库。
+
+- 所引入的混合PSK/RSA路人检测能力。
+  strongswan-2.7.0版本引入的混合PSK/RSA路霸检测功能，使得响应者必须预先解析IKE建议的
+  响应者在任何定义的IKE主模式状态建立之前就必须预先解析IKE提议的有效载荷。
+  被建立起来。尽管任何形式的不良提议语法都能被有效载荷解析器正确检测到
+  尽管有效载荷解析器正确地检测到了任何形式的不良提议语法，但随后的错误处理程序在记录状态指针之前并没有检查
+  在记录当前状态信息之前没有检查状态指针，导致了
+  导致pluto keying daemon因指针为NULL而立即崩溃。
+
+
+strongswan-4.0.1
+----------------
+
+- 为charon增加了算法选择：新的默认算法为
+  ike=aes128-sha-modp2048，因为两个守护进程都支持它。默认的
+  现在IPsec SAs的默认算法是esp=aes128-sha,3des-md5。
+  ike/esp参数的方式与pluto相同。由于这种语法不
+  由于这种语法不允许指定一个伪随机函数，所以使用与完整性相同的
+  使用与完整性相同的算法（目前是sha/md5）。支持的
+  IKE的算法。
+    加密：AES128、AES192、AES256
+    完整性/PRF: md5, sha (使用hmac)
+    DH-组：modp768, 1024, 1536, 2048, 4096, 8192
+  而对于ESP
+    加密：AES128, AES192, AES256, 3des, blowfish128,
+                blowfish192, blowfish256
+    完整性：md5，sha1
+  更多的 IKE 加密算法将在 libcrypto 移植到
+  libstrongswan之后。
+
+- 初步支持使用IKEv2对CHILD_SAs进行重新加密。目前没有
+  使用完美前向保密性。重启参数rekey,
+  rekeymargin, rekeyfuzz 和 keylife。
+  当使用 IKEv2 时。警告: charon 目前无法处理
+  同时重匙。为了避免这种情况，请使用一个大的
+  rekeyfuzz，或者最好在一个对等体上设置rekey=no。
+
+- 支持host2host、net2net、host2net（roadwarrior）隧道
+  使用预定义的RSA证书（见uml方案的配置例子）。
+  配置示例）。
+
+- 以自动工具为特色的新构建环境。功能，如
+  诸如HTTP、LDAP和智能卡支持等功能可以使用
+  ./configure脚本启用。改变安装目录
+  也是可能的。更多细节见./configure --help。
+
+- 更好地整合了charon和ipsec starter，它允许
+  (几乎)透明地操作这两个守护程序。
+  处理ipsec命令up, down, status, statusall, listall,
+  listcerts，并允许通过ipsec starter正确地加载、重新加载和删除连接
+  通过ipsec starter。
+
+
+strongswan-4.0.0
+----------------
+
+- 对IKEv2协议的初始支持。连接在
+  ipsec.conf中由keyexchange=ikev2指定的连接是由新的IKEv2 charon keying daemon协商的。
+  的连接由新的 IKEv2 charon 密钥守护程序进行协商，而那些标有
+  标注为keyexchange=ikev1或默认keyexchange=ike的连接则由
+  则由IKEv1的pluto密钥守护程序处理。目前只有
+  IKEv2的有限功能子集。
+  (默认AES加密，基于本地导入的X.509证书的认证
+  许可证，未加密的私人RSA密钥（PKCS#1文件格式），基于本地导入的X.509证书的认证
+  PKCS#1文件格式的未加密私人RSA密钥，ipsec的有限功能
+  状态命令的有限功能）。
+
+
+strongswan-2.7.0
+----------------
+
+- 来自_updown_x509模板的动态iptables规则
+  和 NETKEY 的 _updown_policy 模板中的动态 iptables 规则已被合并到默认的 _updown_x509 中。
+  合并到了默认的 _updown 脚本中。现有的
+  left|rightfirewall 关键字会导致自动插入和删除
+  导致自动插入和删除隧道流量的 ACCEPT 规则。
+  在成功设置和拆除IPsec SA时，分别自动插入和删除隧道流量的ACCEPT规则。
+  left|rightfirewall可以在任何Linux 2.4内核下与KLIPS一起使用。
+  内核下与KLIPS一起使用，或者在Linux内核版本>=2.6.16下与NETKEY一起使用。
+  与iptables >= 1.3.5结合使用。对于Linux下的NETKEY
+  内核版本<2.6.16，不支持IPsec策略匹配。
+  匹配，请继续使用_updown_espmark的副本。
+  模板的副本，通过左|右updown关键字加载。
+
+- 引入了一个新的 left|righthostaccess 关键字，可以与 left|rightupdown 关键字一起使用。
+  可以和 left|rightfirewall 以及默认的 _updown 脚本一起使用。
+  默认的_updown脚本一起使用。默认情况下，leftfirewall=yes会插入
+  为本地客户网络插入一个双向的iptables FORWARD规则
+  网掩码不同于255.255.255.255（单一主机）。
+  这不允许通过VPN网关主机的
+  属于客户子网的内部网络接口访问VPN网关。
+  因为需要一个iptables INPUT和OUTPUT规则。
+  lefthostaccess=yes将导致这个额外的ACCEPT规则插入
+  插入。
+
+- 现在支持混合PSK|RSA的路人甲。ISAKMP提议
+  有效载荷进行预处理，以找出公路勇士要求的是
+  要求PSK还是RSA，以便找到一个匹配的候选连接。
+  以找到匹配的连接候选者。
+
+
+strongswan-2.6.4
+----------------
+
+- 新的_updown_policy模板允许基于ipsec策略的
+  iptables 防火墙规则。需要的是iptables版本
+  >= 1.3.5 和 linux kernel >= 2.6.16。这个脚本淘汰了
+  模板，因此不再需要INPUT mangle规则。
+  需要了。
+
+- 增加了对DPD重启模式的支持
+
+- ipsec starter 现在允许在 include 语句中使用通配符。
+  语句中使用通配符，例如 "include /etc/my_ipsec/*.conf"。
+  补丁由 Matthias Haas 提供。
+
+- Netscape的OID "employeeNumber "现在可以被识别，并且可以被用作
+  作为证书中的相对区分名称。
+
+
+strongswan-2.6.3
+----------------
+
+- /etc/init.d/ipsec 或 /etc/rc.d/ipsec 现在是ipsec
+  命令的副本，而不再是ipsec setup的副本。
+
+- ipsec starter 现在支持AH认证与
+  ESP 加密。AH认证在ipsec.conf中通过auth=ah参数配置。
+  中通过 auth=ah 参数配置。
+
+- ipsec scencrypt|scdecrypt <args> 命令现在是以下命令的别名
+  ipsec whack --scencrypt|scdecrypt <args>。
+
+- get_sa_info() 现在能够确定本地网匙 IPsec 堆栈的
+  最后一次使用活动路由的确切时间。这一信息
+  被死亡对等体检测算法所使用，并且也会被
+  ipsec 状态命令所显示。
+
+
+strongswan-2.6.2
+----------------
+
+- 在本地Linux 2.6 IPsec协议栈下运行，函数
+  get_sa_info()被ipsec auto --status调用，以显示当前每个IPsec传输的字节数。
+  显示当前每个IPsec SA的传输字节数。
+
+- get_sa_info()也被Dead Peer Detection进程用来检测
+  最近的ESP活动。如果在最近的dpd_delay期间收到了来自对等体的ESP流量
+  的时间间隔内收到 ESP 流量，则必须不发送 R_Y_THERE 通知。
+
+- strongSwan 现在支持相对区分名称 "非结构化名称"
+  在 ID_DER_ASN1_DN 身份中。可以使用以下符号。
+
+    rightid="unstructuredName=John Doe"
+    rightid="UN=John Doe"
+
+- 修正了一个长期存在的问题，该问题导致基于PSK的公路勇士连接
+  在keys.c:get_secret()调用的id.c:same_id()函数中发生故障。
+  如果定义了FQDN、USER_FQDN或密钥ID，如下面的例子。
+
+  conn rw
+      right=%any
+      rightid=@foo.bar
+      authby=secret
+
+- ipsec命令现在支持大多数ipsec自动命令（例如ipsec listall）。
+
+- ipsec starter 没有在 whack msg 中设置 host_addr 和 client.addr 端口。
+
+- 以保证向后兼容基于脚本的
+  为了保证与基于脚本的自动功能（如 auto --replace）向后兼容，ipsec starter 脚本将 defaultroute 信息存储在
+  在临时文件 /var/run/ipsec.info 中保存 defaultroute 的信息。
+
+- 编译时的选项 USE_XAUTH_VID 使得发送 XAUTH
+  供应商 ID，这是作为 IKE 模式配置的 Cisco PIX 7 盒子所期望的。
+  服务器。
+
+- ipsec启动器现在也能识别参数 authby=never 和
+  type=passthrough|pass|drop|reject。
+
+
+strongswan-2.6.1
+----------------
+
+- ipsec starter 现在支持 also 参数，它允许
+  连接定义的模块化结构。因此
+  "ipsec start "现在可以取代 "ipsec setup "了。
+
+
+strongswan-2.6.0
+----------------
+
+- Mathieu Lafon 的流行的 ipsec 启动工具 已被添加到
+  strongSwan 发行版中。非常感谢来自 astaro 的 Stephan Scholz 的集成工作。
+  他的整合工作。ipsec starter 是一个 C 语言程序，它将会
+  来取代各种 shell 和 awk 启动脚本（setup, _plutoload,
+  _plutostart, _realsetup, _startklips, _confread, and auto）。由于
+  ipsec.conf现在只被解析一次，多个隧道的启动被大大加快。
+  大大加快了速度。
+
+- 在ipsec启动器中增加了对%defaultroute的支持。如果 IP 地址
+  变化，ipsec启动器的HUP信号将自动
+  重新加载pluto的连接。
+
+- 将大部分编译时的配置从pluto/Makefile移到了
+  Makefile.inc 中定义选项 USE_LBCURL, USE_LDAP,
+  USE_LBCURL, USE_LDAP, USE_SMARTCARD, 和 USE_NAT_TRAVERSAL_TRANSPORT_MODE。
+
+- 删除了ipsec verify 和ipsec newhostkey 命令。
+
+- 修复了格式化打印语句中的一些64位问题
+
+- 实现简单证书注册协议（SCEP）的scepclient功能。
+  实现简单证书注册协议（SCEP）的scepclient功能已接近完成，但还没有被
+  文档。
+
+
+strongswan-2.5.7
+----------------
+
+- CA证书现在可以自动从智能卡或USB加密令牌中加载
+  或USB加密令牌，并出现在ipsec auto --listcacerts
+  列出。
+
+
+strongswan-2.5.6
+----------------
+
+- 当使用 "ipsec whack --scencrypt <data>"时，如果PKCS#11
+  库不支持C_Encrypt() Cryptoki
+  函数（如OpenSC）时，RSA加密是在软件中完成的。
+  使用从智能卡获取的公钥在软件中完成RSA加密。
+
+- scepclient函数现在允许定义
+  scepclient函数现在允许使用--天数定义自签名证书的有效性。
+  --starttdate, 和 --enddate选项来定义自签名证书的有效期。默认的有效期
+  已经从一年改为五年。
+
+
+strongswan-2.5.5
+----------------
+
+- 配置设置参数pkcs11proxy=yes打开了pluto的PKCS#11
+  接口给其他应用程序进行RSA加密和解密
+  通过whack接口。符号。
+
+  ipsec whack --scencrypt <data> [-inbase 16|hex|x].
+             [--inbase 16|hex|64|base64|256|text|ascii]
+             [--outbase 16|hex|64|base64|256|text|ascii]
+             [--keyid <keyid>]
+
+  ipsec whack --scdecrypt <data> [-inbase 16|hex|64|base64|text|ascii
+             [--inbase 16|hex|64|base64|256|text|ascii]
+             [--outbase 16|hex|64|base64|256|text|ascii]
+             [--keyid <keyid>]
+
+  inbase和outbase的默认设置是十六进制。
+
+  新的代理接口可用于保护密码系统所需的对称性
+  加密方案所需的对称加密密钥。
+  磁盘加密方案所需的对称加密密钥，特别是在以下情况下
+  pkcs11keepstate=yes导致pluto锁定pkcs11插槽
+  永久锁定。
+
+- 如果文件/etc/ipsec.secrets在pluto的启动过程中缺少
+  则根可读文件/etc/ipsec.d/private/myKey.der
+  包含一个2048位的RSA私钥和一个匹配的自签名的
+  文件/etc/ipsec.d/certs/selfCert.der中存储的自签名证书。
+  是通过调用函数自动生成的
+
+  ipsec scepclient --out pkcs1 --out cert-self
+
+  scepclient是由Jan Hutter和Martin Willi编写的，他们是拉普应用科技大学的学生。
+  瑞士拉珀斯维尔应用科学大学的学生编写的。
+
+
+strongswan-2.5.4
+----------------
+
+- 目前对PKCS#7框架的扩展引入了
+  在PKCS#7包装的X.509证书中出现了解析错误，这些证书是由Windows XP传输的。
+  例如，当使用多级CA时，由Windows XP传输。
+  解析的语法已被修复。
+
+- 增加了一个由 Gerald Richter 打的补丁，该补丁允许在使用ipsec0接口时出现多个
+  ipsec0 接口的多次出现。
+
+
+strongswan-2.5.3
+----------------
+
+- 在 gawk-3.1.4 中，"default2 "这个词已经成为一个受保护的
+  语句中使用的关键字，不能再在 strongSwan 脚本中使用
+  在 strongSwan 脚本中不能再使用。这个问题已被
+  脚本 _confread 和 setdefault 中的 "default "更名为 "defaults "和 "setdefault"，从而解决了这个问题。
+  和 auto。
+
+- 引入了参数 leftsendcert，其值为
+
+  always|yes（默认值，总是发送一个证书）
+  ifasked (仅在有证书请求时发送证书)
+  never|no（从不发送证书，用于原始RSA密钥和
+              自签的证书)
+
+- 修复了ESP密钥长度的初始化，默认为
+  在对等体不发送AES加密的密钥长度属性的情况下，将ESP密钥长度初始化为默认的128位。
+  属性。
+
+- 应用了Herbert Xu的uniqueIDs补丁
+
+- 应用了Herbert Xu的CLOEXEC补丁
+
+
+strongswan-2.5.2
+----------------
+
+- 在发行人的证书不包含subjectKeyIdentifier字段的情况下，CRL现在也可以被缓存。
+  证书不包含subjectKeyIdentifier字段的情况下，也可以缓存CRL。
+  在这种情况下，subjectKeyIdentifier由pluto计算为
+  符合第4.2.1.1节的规定，发行人的公钥的160位SHA-1哈希值。
+  符合RFC3280第4.2.1.2节的规定。
+
+- 修正了strongswan-2.5.1引入的一个错误，该错误消除了
+  不仅消除了一个特定连接的多个快速模式，而且还消除了
+  两个安全网关之间的多个连接。
+
+
+strongswan-2.5.1
+----------------
+
+- 在Linux 2.6内核的原生IPsec下，一个%trap eroute
+  的情况下，通过在ipsec.conf中设置auto=route或由
+  安装的%trap eroute，会对每个想使用的数据包产生一个XFRM_ACQUIRE事件。
+  为每个想使用尚未存在的
+  隧道。到现在为止，每个XFRM_ACQUIRE事件都会导致一个条目进入到
+  快速模式队列，导致多个IPsec SA被快速建立。
+  迅速建立。从strongswan-2.5.1开始
+  每个主机对连接只建立一个IPsec SA。
+
+- 在加载PKCS#11模块后，所有的智能卡插槽都被搜索到了。
+  搜索证书。结果可以用
+  命令查看结果
+
+    ipsec auto --listcards
+
+  在插槽中发现的证书对象被编号为
+  从#1、#2开始，等等。这个位置编号可以用来解决
+  证书(leftcert=%smartcard)和钥匙(: PIN %smartcard)
+  分别在ipsec.conf和ipsec.secrets中使用。
+
+    %smartcard (选择对象#1)
+    %smartcard#1 (选择对象#1)
+    %smartcard#3 (选择对象#3)
+
+  作为一个替代方案，可以使用现有的检索方案。
+
+    %smartcard:45 (选择id=45的对象)
+    %smartcard0 (选择槽0中的第一个对象)
+    %smartcard4:45 (选择槽4中id=45的对象)
+
+- 根据CKA_SIGN和CKA_DECRYPT的设置
+  私钥标志的设置，C_Sign()或C_Decrypt()被用来生成签名。
+  来生成一个签名。
+
+- C_Sign()中的输出缓冲区长度参数siglen
+  中的输出缓冲区长度参数siglen现在被初始化为函数调用前输出缓冲区的实际大小。
+  中的输出缓冲区长度参数siglen现在被初始化为函数调用前输出缓冲区的实际大小。这修复了
+  CKR_BUFFER_TOO_SMALL 错误，该错误在使用
+  时可能出现的CKR_BUFFER_TOO_SMALL错误。
+
+- 改变了PKCS#11 CK_MECHANISM在
+  C_SignInit()的初始化改为mech = { CKM_RSA_PKCS, NULL_PTR, 0 }。
+
+- 重构了RSA公钥/私钥的代码，并将其从keys.c转移到新的p.p.c中。
+  作为 SCEP 客户端发布的一个准备步骤，将其从 keys.c 文件转移到新的 pkcs1.c 文件中。
+  为 SCEP 客户端的发布做准备。
+
+
+strongswan-2.5.0
+----------------
+
+- 在运行时加载PKCS#11智能卡库模块不需要OpenSC库的支持。
+  运行时加载PKCS#11智能卡库模块不再需要OpenSC库函数了
+  因为相应的代码已经被整合到
+  另外，RSAREF pkcs11的头文件也被包含在新创建的pluto/c中。
+  包括在一个新创建的pluto/rsaref目录中，所以
+  这样就不需要再定义外部包含路径了。
+
+- 一个期待已久的功能终于被实现了。
+  对通过HTTP或LDAP获取的CRL进行本地缓存，通过参数cachecrls==激活。
+  参数cachecrls=yes来激活。
+  中的参数cachecrls=yes激活。动态获取的CRL被存储在
+  一个独特的文件名，其中包含签发者的subjectKeyID
+  的唯一文件名下。
+
+- 应用了Michael Richardson提供的一个单行补丁
+  提供的单行补丁，该补丁修复了KLIPS中的内核错误（kernel-oops）。
+  当snmp守护进程在同一盒子上运行时，KLIPS的内核错误。
+
+
+strongswan-2.4.4
+----------------
+
+- 消除了空长的CRL分发点字符串。
+
+- 修正了2.4.3中引入的一个信任路径评估错误。
+
+
+strongswan-2.4.3
+----------------
+
+- 改进了OCSP/CRL联合撤销策略。
+  OCSP响应优先于CRL条目。
+
+- 引入了对CRLv2原因代码的支持。
+
+- 修正了配备键盘的阅读器的一个错误，该错误导致
+  导致pluto在第一次通过键盘输入密码时，会通过控制台提示输入密码。
+  错过了通过键盘输入密码的机会。
+
+- 当pluto是在启用LDAP_V3的情况下构建的，库
+  新版本的openldap所需要的liblber。
+  包括在内。
+
+
+strongswan-2.4.2
+----------------
+
+- 增加了 _updown_espmark 模板，它要求所有进入的
+  传入的 ESP 流量都被标记为默认标记
+  值为 50。
+
+- 引入了 pkcs11keepstate 参数，在ipsec.conf 的 config setup
+  部分引入了 pkcs11keepstate 参数。pkcs11keepstate=yes时，PKCS#11
+  会话和登录状态会尽可能地在
+  在pluto的生命周期内尽可能地保持PKCS#11会话和登录状态。这意味着，通过键盘输入PIN
+  键盘输入PIN码只需要做一次。
+
+- 在ipsec.conf的配置设置部分引入了pkcs11module参数。
+  部分中引入了pkcs11module参数，它指定了PKCS#11模块。
+  来使用智能卡。例如。
+
+    pkcs11module=/usr/lib/pkcs11/opensc-pkcs11.lo
+
+- 增加了对装有PIN码的智能卡阅读器的支持。
+
+- 添加了 Jay Pfeifer 的补丁，可以检测网键
+  模块已被静态构建到 Linux 2.6 内核中。
+
+- 添加了 Herbert Xu 的两个补丁。第一个补丁使用 ip xfrm
+  而不是 setkey 来刷新 IPsec 策略数据库。第二个补丁
+  第二个补丁只在入站的 IPComp SA 中设置了可选标志。
+
+- 使用 Ulrich Weber 的补丁，修复了本地 IPsec 和 KLIPS 之间的互操作性问题。
+  的补丁，该补丁修正了本地 IPsec 和 KLIPS 系统之间的互操作性问题，该问题由以下原因引起
+  将 ipcomp 的重放窗口设置为 32 而不是 0。
+
+
+strongswan-2.4.1
+----------------
+
+- 修正了一个bug，该bug在 "Mode Config "的情况下会导致不需要的Mode Config请求。
+  在ipsec.com中使用 "right "来表示本机的情况下，会导致不需要的模式配置请求被启动。
+  ipsec.conf 中用 "右 "表示本地端，用 "左 "表示远程端。
+  违背了 "右 "是远程，"左 "是本地的建议。
+  "左 "是 "本地"。
+
+
+strongswan-2.4.0a
+-----------------
+
+- 将供应商 ID 更新为 strongSwan-2.4.0
+
+- 更新了版权声明，包括David Buechi和
+  Michael Meier
+
+
+strongswan-2.4.0
+----------------
+
+- strongSwan 现在可通过标准化的 PKCS #11 与附加智能卡和 USB 密码令牌进行通信。
+  通过标准化的 PKCS #11 接口与附加智能卡和 USB 密码令牌进行通信。
+  默认情况下，使用来自www.opensc.org 的OpenSC库。
+  但任何其他 PKCS#11 库都可以动态链接。
+  strongSwan的PKCS#11 API是由David Buechi和Michael Meier实现的。
+  和Michael Meier实现的，他们都毕业于瑞士温特图尔的苏黎世应用科学大学。
+  他们都是瑞士温特图尔应用科学大学的毕业生。
+
+- 当%trap eroute被一个出站的IP数据包触发时
+  那么Linux 2.6内核的本地IPsec栈[经常/总是？
+  总是这样？]返回一个XFRM_ACQUIRE消息，其中有一个未定义的
+  协议族字段，连接设置失败。
+  作为一种变通方法，现在假定IPv4（AF_INET）。
+
+- UML测试场景的结果现在得到了增强
+  在特定的测试中使用的虚拟网络拓扑结构的框图。
+  在一个特定的测试中使用的虚拟网络拓扑结构框图。
+
+
+strongswan-2.3.2
+----------------
+
+- 修复了用于解密信息消息的IV。
+  这个错误是由模式配置功能引入的。
+
+- 修复了 NCP 供应商 ID。
+
+- 撤销了 Ulrich Weber 的一个最大 udp 大小补丁
+  因为它在NAT化的情况下会导致分段故障。
+  删除 SA 消息。
+
+- 增加了 UML 情景通配符和 attr-cert
+  展示了基于Distinguinguard中的通配符参数的IPsec策略的实施。
+  的通配符参数和 X.509 属性证书。
+  的通配符参数和 X.509 属性证书上的 IPsec 策略。
+
+
+strongswan-2.3.1
+----------------
+
+- 增加了基本模式配置功能
+
+- 添加了 Mathieu Lafon 的补丁，该补丁将 NAT-Traversal 的状态升级到 RFC 3947。
+  NAT-Traversal 实现升级到 RFC 3947。
+
+- 现在 _startklips 脚本也会加载 xfrm4_tunnel
+  模块。
+
+- 添加了 Ulrich Weber 的 netlink replay window size 和
+  最大udp大小的补丁。
+
+- UML 测试现在默认使用 Linux 2.6.10 UML 内核。
+
+
+strongswan-2.3.0
+----------------
+
+- Eric Marchionni 和 Patrik Rayo，都是最近从 Zuercher Hochschule 的毕业生。
+  两人都是瑞士温特图尔大学的应届毕业生，他们创建了一个
+  用户模式的Linux测试设置，用于strongSwan。关于更多细节
+  请阅读测试子目录中的 INSTALL 和 README 文档。
+  子目录中的 INSTALL 和 README 文档。
+
+- 完全支持基于 X.509 属性的组属性
+  证书。属性证书可以使用openac工具生成
+  使用openac工具生成。更多细节见
+
+  man ipsec_openac.
+
+  组属性可以在连接定义中使用
+  以让 IPsec 访问特定的用户组。
+  这可以通过新的参数left|rightgroups来实现，如
+
+  rightgroups="研究，销售"
+
+  让拥有组属性的用户访问
+  研究或销售的用户。
+
+- 在快速模式下，子网掩码为/32的客户现在被编码为
+  编码为IP_V4_ADDRESS或IP_V6_ADDRESS。这应该
+  解决了SafeNet/SoftRemote和NCP的重键问题。
+  安全进入客户端。
+
+- 改变了ikelifetime和keylife参数的默认值
+  分别为3小时和1小时。最大的允许值是
+  现在都设置为 24 小时。
+
+- 抑制了两个 IPsec 对等体之间的通知战争，例如可能被触发的
+  例如，可能由不正确的ISAKMP加密引发的通知战争。
+
+- 如果发行CA或序列号是相同的，公共RSA密钥现在可以有相同的ID。
+  发放的 CA 或序列号不同，公共 RSA 密钥现在可以有相同的 ID。证书的序列号
+  现在，证书的序列号可以通过以下命令显示
+
+  ipsec auto --listpubkeys
+
+
+strongswan-2.2.2
+----------------
+
+- 添加了 Tuomo Soini 的 sourceip 功能，它允许 strongSwan
+  roadwarrior 使用一个固定的虚拟 IP（见 README 第 2.6 节）。
+  并将众所周知的 VPN 网关上的四个隧道情况减少到
+  单一隧道定义（见 README 第 2.4 节）。
+
+- 修正了一个错误，在启用NAT-Traversal的情况下，当响应者突然变成发起者时
+  突然变成发起者，而发起者无法找到一个匹配的
+  连接的错误。
+
+- 删除了barf中误导性的ipsec验证命令。
+
+- 在本地IP堆栈下运行时，ipsec --version现在会显示
+  Linux 内核版本（由 Openswan 项目提供）。
+
+
+strongswan-2.2.1
+----------------
+
+- 引入了ipsec auto --listalgs监控命令，它列出了
+  所有当前注册的 IKE 和 ESP 算法。
+
+- 修正了ESP算法选择中的一个错误，即当设置了strict标志
+  时，ESP 算法选择中出现的一个错误，该错误发生在设置了 strict 标志且第一个提议的转换不匹配的情况下。
+
+- 修正了在使用lock_certs_and_keys()互斥时的另一个死锁。
+  发生在有智能卡的情况下。
+
+- 防止了被取代的Phase1状态可以触发DPD_TIMEOUT事件。
+
+- 修正了通知名称的打印问题（null）。
+
+- 应用了Herbert Xu的另一个Netlink补丁。
+
+
+strongswan-2.2.0
+----------------
+
+- 支持死对头检测。连接参数
+
+    dpdaction=clear|hold
+
+  激活了给定连接的DPD。
+
+- 默认的机会主义加密(OE)策略组不再是
+  不再自动包含。希望激活OE的用户可以在
+  政策组，在ipsec.conf中使用以下语句。
+
+    include /etc/ipsec.d/examples/oe.conf
+
+  Right|left]rsasigkey 的默认值现在被设置为 %cert。
+
+- strongSwan 现在有了自己的供应商 ID，可以通过以下方式激活
+  使用编译选项 VENDORID
+
+- 应用了 Herbert Xu 的补丁，它正确地设置了压缩算法。
+
+- 应用了 Herbert Xu 的补丁，修复了 ESPINUDP 的问题。
+
+- 使用了Herbert Xu的补丁，设置了源/目的端口号。
+
+- 重新应用了 Herbert Xu 的一个 NAT 穿越补丁，这个补丁在从 SuperFree 迁移时丢失了。
+  在从 SuperFreeS/WAN 迁移的过程中丢失了。
+
+- 修正了使用 lock_certs_and_keys() 突变体时的一个死锁。
+
+- 修正了在实例化组连接时不共享alg参数的问题。
+  连接。
+
+
+strongswan-2.1.5
+----------------
+
+- Thomas Walpuski让我知道了一个潜在的DoS攻击，通过
+  一个PKCS#7包装的证书包，它可以覆盖Pluto权威证书库中的有效CA
+  覆盖Pluto的权威证书库中的有效CA证书。这个漏洞
+  这个漏洞是通过建立对CA候选证书的信任，直到一个受信任的根CA来修复的。
+  在插入到Pluto的链式列表之前，建立对CA候选证书的信任，直到受信任的根CA。
+
+- 将自动awk脚本中的--assign选项改为-v选项
+  以使其与mawk一起在debian/woody下运行。
+
+
+strongswan-2.1.4
+----------------
+
+- ipsec auto --status（简洁）和ipsec auto --status（简洁）之间的状态信息分割
+  和ipsec auto --statusall (verbose)。这两个命令都可以与
+  可选的连接选择器。
+
+    ipsec auto --status[all] <connection_name>.
+
+- 在 ipsec_auto(8) 的 man page 中增加了对 X.509 相关功能的描述。
+  man 页中增加了对 X.509 相关特性的描述。
+
+- 强化了调试模式下的 ASN.1 解析器， 特别是打印
+  畸形的区分名称。
+
+- 证书中收到的 RSA 公钥的大小现在被限制为
+
+    512 位 <= 模数长度 <= 8192 位。
+
+- 修正了调试模式的枚举。
+
+
+strongswan-2.1.3
+----------------
+
+- 修正了另一个 PKCS#7 漏洞，该漏洞可能会导致
+  在跟踪X.509信任链时，可能导致无休止的循环。
+
+
+strongswan-2.1.2
+----------------
+
+- 修正了由Thomas Walpuski发现的PKCS#7漏洞
+  发现的漏洞，即在多层X.509信任链中，接受具有相同发行人和主体的终端证书
+  在多层X.509信任链中具有相同的签发者和主体的终端证书。
+
+
+strongswan-2.1.1
+----------------
+
+- 删除了 KLIPS 中对 ipsec_netlink.h 的所有剩余引用。
+
+
+strongswan-2.1.0
+----------------
+
+- 新增的 "ca "部分允许定义以下参数。
+
+  ca kool
+      cacert=koolCA.pem # kool CA的cacert
+      ocspurihttp://ocsp.kool.net:8001 # ocsp 服务器
+      ldapserver=ldap.kool.net # 默认 ldap 服务器
+      crlurihttp://www.kool.net/kool.crl # crl分布点
+      crluri2="ldap://O=Kool, C= ..."     # Crl distribution point #2
+      auto=add # add, ignore
+
+  ca的定义可以通过以下命令进行监控
+
+    ipsec auto --listcainfos
+
+- 通过整合/proc文件系统修复了外观上的损坏
+  D. Hugh Redelmeier 的 freeswan-2.06 内核修复。
+
+
+strongswan-2.0.2
+----------------
+
+- 增加了对微软的 818043 NAT-Traversal 更新的支持。
+  Windows 2000/XP IPsec 客户端的 818043 NAT-Traversal 更新的支持，该客户端在快速模式下会发送 ID_FQDN。
+
+- 现在在内核源代码中加入了 libcrypto 的符号链接
+  内核编译时，在内核源中添加了libcrypto的符号链接。
+
+- 修正了几个64位的问题（主要是转换为int）。
+  感谢 Ken Bantoft，他在 64 位平台上检查了我的源代码。
+
+- 用ipsec_snprintf()替换了内核中的s[n]printf()语句。
+  归功于D.Hugh Redelmeier, Michael Richardson, 和Sam Sgro
+  他们在2.4.25版本的内核中解决了这个问题。
+
+
+strongswan-2.0.1
+----------------
+
+- 一个空的ASN.1 SEQUENCE OF或SET OF对象（例如，一个subjectAltName
+  证书扩展不包含 generalName 项目）会导致
+  pluto崩溃。这个错误已经被修复。此外，ASN.1解析器已被加强，以使其更加强大。
+  以使其对畸形的ASN.1对象更加强大。
+
+- 应用了Herbert Xu的NAT-T补丁，修复了NAT-T在本地
+  Linux 2.6 IPsec 堆栈下的 NAT-T。
+
+
+strongswan-2.0.0
+----------------
+
+- 基于 freeswan-2.04, x509-1.5.3, nat-0.6c, alg-0.8.1rc12

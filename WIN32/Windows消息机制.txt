@@ -1,0 +1,198 @@
+http://bbs.51cto.com/viewthread.php?tid=487054
+摘要：Windows编程和Dos编程，一个很大的区别就是，Windows编程是事件驱动，消息传递的。所以，要学好Windows编程，必须对消息机制有一个清楚的认识，本文希望能够对消息的传递做一个全面的分析。 
+　　什么是消息？
+　　消息系统对于一个win32程序来说十分重要，它是一个程序运行的动力源泉。一个消息，是系统定义的一个32位的值，他唯一的定义了一个事件，向Windows发出一个通知，告诉应用程序某个事情发生了。例如，单击鼠标、改变窗口尺寸、按下键盘上的一个键都会使Windows发送一个消息给应用程序。
+　　消息本身是作为一个记录传递给应用程序的，这个记录中包含了消息的类型以及其他信息。例如，对于单击鼠标所产生的消息来说，这个记录中包含了单击鼠标时的坐标。这个记录类型叫做MSG，MSG含有来自windows应用程序消息队列的消息信息，它在Windows中声明如下：
+typedef struct tagMsg
+{
+HWND hwnd; 接受该消息的窗口句柄
+UINT message; 消息常量标识符，也就是我们通常所说的消息号
+WPARAM wParam; 32位消息的特定附加信息，确切含义依赖于消息值
+LPARAM lParam; 32位消息的特定附加信息，确切含义依赖于消息值
+DWORD time; 消息创建时的时间
+POINT pt; 消息创建时的鼠标/光标在屏幕坐标系中的位置
+}MSG;
+　　消息可以由系统或者应用程序产生。系统在发生输入事件时产生消息。举个例子, 当用户敲键, 移动鼠标或者单击控件。系统也产生消息以响应由应用程序带来的变化, 比如应用程序改变系统字体改变窗体大小。应用程序可以产生消息使窗体执行任务，或者与其他应用程序中的窗口通讯。 
+　　消息中有什么？
+　　我们给出了上面的注释，是不是会对消息结构有了一个比较清楚的认识？如果还没有，那么我们再试着给出下面的解释：
+　　hwnd 32位的窗口句柄。窗口可以是任何类型的屏幕对象，因为Win32能够维护大多数可视对象的句柄(窗口、对话框、按钮、编辑框等)。
+　　message用于区别其他消息的常量值，这些常量可以是Windows单元中预定义的常量，也可以是自定义的常量。消息标识符以常量命名的方式指出消息的含义。当窗口过程接收到消息之后，他就会使用消息标识符来决定如何处理消息。例如、WM_PAINT告诉窗口过程窗体客户区被改变了需要重绘。符号常量指定系统消息属于的类别，其前缀指明了处理解释消息的窗体的类型。
+　　wParam 通常是一个与消息有关的常量值，也可能是窗口或控件的句柄。
+　　lParam 通常是一个指向内存中数据的指针。由于WParam、lParam和Pointer都是32位的，因此，它们之间可以相互转换。
+摘要：Windows编程和Dos编程，一个很大的区别就是，Windows编程是事件驱动，消息传递的。所以，要学好Windows编程，必须对消息机制有一个清楚的认识，本文希望能够对消息的传递做一个全面的分析。 
+　　什么是消息？
+　　消息系统对于一个win32程序来说十分重要，它是一个程序运行的动力源泉。一个消息，是系统定义的一个32位的值，他唯一的定义了一个事件，向Windows发出一个通知，告诉应用程序某个事情发生了。例如，单击鼠标、改变窗口尺寸、按下键盘上的一个键都会使Windows发送一个消息给应用程序。
+　　消息本身是作为一个记录传递给应用程序的，这个记录中包含了消息的类型以及其他信息。例如，对于单击鼠标所产生的消息来说，这个记录中包含了单击鼠标时的坐标。这个记录类型叫做MSG，MSG含有来自windows应用程序消息队列的消息信息，它在Windows中声明如下：
+typedef struct tagMsg
+{
+HWND hwnd; 接受该消息的窗口句柄
+UINT message; 消息常量标识符，也就是我们通常所说的消息号
+WPARAM wParam; 32位消息的特定附加信息，确切含义依赖于消息值
+LPARAM lParam; 32位消息的特定附加信息，确切含义依赖于消息值
+DWORD time; 消息创建时的时间
+POINT pt; 消息创建时的鼠标/光标在屏幕坐标系中的位置
+}MSG;
+　　消息可以由系统或者应用程序产生。系统在发生输入事件时产生消息。举个例子, 当用户敲键, 移动鼠标或者单击控件。系统也产生消息以响应由应用程序带来的变化, 比如应用程序改变系统字体改变窗体大小。应用程序可以产生消息使窗体执行任务，或者与其他应用程序中的窗口通讯。 
+　　消息中有什么？
+　　我们给出了上面的注释，是不是会对消息结构有了一个比较清楚的认识？如果还没有，那么我们再试着给出下面的解释：
+　　hwnd 32位的窗口句柄。窗口可以是任何类型的屏幕对象，因为Win32能够维护大多数可视对象的句柄(窗口、对话框、按钮、编辑框等)。
+　　message用于区别其他消息的常量值，这些常量可以是Windows单元中预定义的常量，也可以是自定义的常量。消息标识符以常量命名的方式指出消息的含义。当窗口过程接收到消息之后，他就会使用消息标识符来决定如何处理消息。例如、WM_PAINT告诉窗口过程窗体客户区被改变了需要重绘。符号常量指定系统消息属于的类别，其前缀指明了处理解释消息的窗体的类型。
+　　wParam 通常是一个与消息有关的常量值，也可能是窗口或控件的句柄。
+　　lParam 通常是一个指向内存中数据的指针。由于WParam、lParam和Pointer都是32位的，因此，它们之间可以相互转换。
+队列消息和非队列消息
+　　从消息的发送途径来看，消息可以分成2种：队列消息和非队列消息。消息队列由可以分成系统消息队列和线程消息队列。系统消息队列由Windows维护，线程消息队列则由每个GUI线程自己进行维护，为避免给non-GUI现成创建消息队列，所有线程产生时并没有消息队列，仅当线程第一次调用GDI函数数系统给线程创建一个消息队列。队列消息送到系统消息队列，然后到线程消息队列；非队列消息直接送给目的窗口过程。
+　　对于队列消息，最常见的是鼠标和键盘触发的消息，例如WM_MOUSERMOVE,WM_CHAR等消息，还有一些其它的消息，例如：WM_PAINT、WM_TIMER和WM_QUIT。当鼠标、键盘事件被触发后，相应的鼠标或键盘驱动程序就会把这些事件转换成相应的消息，然后输送到系统消息队列，由Windows系统去进行处理。Windows系统则在适当的时机，从系统消息队列中取出一个消息，根据前面我们所说的MSG消息结构确定消息是要被送往那个窗口，然后把取出的消息送往创建窗口的线程的相应队列，下面的事情就该由线程消息队列操心了，Windows开始忙自己的事情去了。线程看到自己的消息队列中有消息，就从队列中取出来，通过操作系统发送到合适的窗口过程去处理。
+　　一般来讲，系统总是将消息Post在消息队列的末尾。这样保证窗口以先进先出的顺序接受消息。然而,WM_PAINT是一个例外，同一个窗口的多个 WM_PAINT被合并成一个 WM_PAINT 消息, 合并所有的无效区域到一个无效区域。合并WM_PAIN的目的是为了减少刷新窗口的次数。
+　　非队列消息将会绕过系统队列和消息队列，直接将消息发送到窗口过程，。系统发送非队列消息通知窗口，系统发送消息通知窗口。 例如,当用户激活一个窗口系统发送WM_ACTIVATE, WM_SETFOCUS, and WM_SETCURSOR。这些消息通知窗口它被激活了。非队列消息也可以由当应用程序调用系统函数产生。例如,当程序调用SetWindowPos系统发送WM_WINDOWPOSCHANGED消息。一些函数也发送非队列消息，例如下面我们要谈到的函数。
+　　消息的发送
+　　了解了上面的这些基础理论之后，我们就可以进行一下简单的消息发送与接收。
+　　把一个消息发送到窗口有3种方式：发送、寄送和广播。
+　　发送消息的函数有SendMessage、SendMessageCallback、SendNotifyMessage、SendMessageTimeout；寄送消息的函数主要有PostMessage、PostThreadMessage、PostQuitMessage；广播消息的函数我知道的只有BroadcastSystemMessage、BroadcastSystemMessageEx。
+　　SendMessage的原型如下：LRESULT SendMessage(HWND hWnd,UINT Msg,WPARAM wParam,LPARAM lParam)，这个函数主要是向一个或多个窗口发送一条消息，一直等到消息被处理之后才会返回。不过需要注意的是，如果接收消息的窗口是同一个应用程序的一部分，那么这个窗口的窗口函数就被作为一个子程序马上被调用；如果接收消息的窗口是被另外的线程所创建的，那么窗口系统就切换到相应的线程并且调用相应的窗口函数，这条消息不会被放进目标应用程序队列中。函数的返回值是由接收消息的窗口的窗口函数返回，返回的值取决于被发送的消息。
+　　PostMessage的原型如下：BOOL PostMessage(HWND hWnd,UINT Msg,WPARAM wParam,LPARAM lParam)，该函数把一条消息放置到创建hWnd窗口的线程的消息队列中，该函数不等消息被处理就马上将控制返回。需要注意的是，如果hWnd参数为HWND_BROADCAST，那么，消息将被寄送给系统中的所有的重叠窗口和弹出窗口，但是子窗口不会收到该消息；如果hWnd参数为NULL，则该函数类似于将dwThreadID参数设置成当前线程的标志来调用PostThreadMEssage函数。
+　　从上面的这2个具有代表性的函数，我们可以看出消息的发送方式和寄送方式的区别所在：被发送的消息是否会被立即处理，函数是否立即返回。被发送的消息会被立即处理，处理完毕后函数才会返回；被寄送的消息不会被立即处理，他被放到一个先进先出的队列中，一直等到应用程序空线的时候才会被处理，不过函数放置消息后立即返回。
+　　实际上，发送消息到一个窗口处理过程和直接调用窗口处理过程之间并没有太大的区别，他们直接的唯一区别就在于你可以要求操作系统截获所有被发送的消息，但是不能够截获对窗口处理过程的直接调用。
+　　以寄送方式发送的消息通常是与用户输入事件相对应的，因为这些事件不是十分紧迫，可以进行缓慢的缓冲处理，例如鼠标、键盘消息会被寄送，而按钮等消息则会被发送。
+　　广播消息用得比较少，BroadcastSystemMessage函数原型如下：
+long BroadcastSystemMessage(DWORD dwFlags,LPDWORD lpdwRecipients,UINT uiMessage,WPARAM wParam,LPARAM lParam);
+　　该函数可以向指定的接收者发送一条消息，这些接收者可以是应用程序、可安装的驱动程序、网络驱动程序、系统级别的设备驱动消息和他们的任意组合。需要注意的是，如果dwFlags参数是BSF_QUERY并且至少一个接收者返回了BROADCAST_QUERY_DENY，则返回值为０，如果没有指定BSF_QUERY，则函数将消息发送给所有接收者，并且忽略其返回值。 
+队列消息和非队列消息
+　　从消息的发送途径来看，消息可以分成2种：队列消息和非队列消息。消息队列由可以分成系统消息队列和线程消息队列。系统消息队列由Windows维护，线程消息队列则由每个GUI线程自己进行维护，为避免给non-GUI现成创建消息队列，所有线程产生时并没有消息队列，仅当线程第一次调用GDI函数数系统给线程创建一个消息队列。队列消息送到系统消息队列，然后到线程消息队列；非队列消息直接送给目的窗口过程。
+　　对于队列消息，最常见的是鼠标和键盘触发的消息，例如WM_MOUSERMOVE,WM_CHAR等消息，还有一些其它的消息，例如：WM_PAINT、WM_TIMER和WM_QUIT。当鼠标、键盘事件被触发后，相应的鼠标或键盘驱动程序就会把这些事件转换成相应的消息，然后输送到系统消息队列，由Windows系统去进行处理。Windows系统则在适当的时机，从系统消息队列中取出一个消息，根据前面我们所说的MSG消息结构确定消息是要被送往那个窗口，然后把取出的消息送往创建窗口的线程的相应队列，下面的事情就该由线程消息队列操心了，Windows开始忙自己的事情去了。线程看到自己的消息队列中有消息，就从队列中取出来，通过操作系统发送到合适的窗口过程去处理。
+　　一般来讲，系统总是将消息Post在消息队列的末尾。这样保证窗口以先进先出的顺序接受消息。然而,WM_PAINT是一个例外，同一个窗口的多个 WM_PAINT被合并成一个 WM_PAINT 消息, 合并所有的无效区域到一个无效区域。合并WM_PAIN的目的是为了减少刷新窗口的次数。
+　　非队列消息将会绕过系统队列和消息队列，直接将消息发送到窗口过程，。系统发送非队列消息通知窗口，系统发送消息通知窗口。 例如,当用户激活一个窗口系统发送WM_ACTIVATE, WM_SETFOCUS, and WM_SETCURSOR。这些消息通知窗口它被激活了。非队列消息也可以由当应用程序调用系统函数产生。例如,当程序调用SetWindowPos系统发送WM_WINDOWPOSCHANGED消息。一些函数也发送非队列消息，例如下面我们要谈到的函数。
+　　消息的发送
+　　了解了上面的这些基础理论之后，我们就可以进行一下简单的消息发送与接收。
+　　把一个消息发送到窗口有3种方式：发送、寄送和广播。
+　　发送消息的函数有SendMessage、SendMessageCallback、SendNotifyMessage、SendMessageTimeout；寄送消息的函数主要有PostMessage、PostThreadMessage、PostQuitMessage；广播消息的函数我知道的只有BroadcastSystemMessage、BroadcastSystemMessageEx。
+　　SendMessage的原型如下：LRESULT SendMessage(HWND hWnd,UINT Msg,WPARAM wParam,LPARAM lParam)，这个函数主要是向一个或多个窗口发送一条消息，一直等到消息被处理之后才会返回。不过需要注意的是，如果接收消息的窗口是同一个应用程序的一部分，那么这个窗口的窗口函数就被作为一个子程序马上被调用；如果接收消息的窗口是被另外的线程所创建的，那么窗口系统就切换到相应的线程并且调用相应的窗口函数，这条消息不会被放进目标应用程序队列中。函数的返回值是由接收消息的窗口的窗口函数返回，返回的值取决于被发送的消息。
+　　PostMessage的原型如下：BOOL PostMessage(HWND hWnd,UINT Msg,WPARAM wParam,LPARAM lParam)，该函数把一条消息放置到创建hWnd窗口的线程的消息队列中，该函数不等消息被处理就马上将控制返回。需要注意的是，如果hWnd参数为HWND_BROADCAST，那么，消息将被寄送给系统中的所有的重叠窗口和弹出窗口，但是子窗口不会收到该消息；如果hWnd参数为NULL，则该函数类似于将dwThreadID参数设置成当前线程的标志来调用PostThreadMEssage函数。
+　　从上面的这2个具有代表性的函数，我们可以看出消息的发送方式和寄送方式的区别所在：被发送的消息是否会被立即处理，函数是否立即返回。被发送的消息会被立即处理，处理完毕后函数才会返回；被寄送的消息不会被立即处理，他被放到一个先进先出的队列中，一直等到应用程序空线的时候才会被处理，不过函数放置消息后立即返回。
+　　实际上，发送消息到一个窗口处理过程和直接调用窗口处理过程之间并没有太大的区别，他们直接的唯一区别就在于你可以要求操作系统截获所有被发送的消息，但是不能够截获对窗口处理过程的直接调用。
+　　以寄送方式发送的消息通常是与用户输入事件相对应的，因为这些事件不是十分紧迫，可以进行缓慢的缓冲处理，例如鼠标、键盘消息会被寄送，而按钮等消息则会被发送。
+　　广播消息用得比较少，BroadcastSystemMessage函数原型如下：
+long BroadcastSystemMessage(DWORD dwFlags,LPDWORD lpdwRecipients,UINT uiMessage,WPARAM wParam,LPARAM lParam);
+　　该函数可以向指定的接收者发送一条消息，这些接收者可以是应用程序、可安装的驱动程序、网络驱动程序、系统级别的设备驱动消息和他们的任意组合。需要注意的是，如果dwFlags参数是BSF_QUERY并且至少一个接收者返回了BROADCAST_QUERY_DENY，则返回值为０，如果没有指定BSF_QUERY，则函数将消息发送给所有接收者，并且忽略其返回值。 
+窗口过程
+　　窗口过程是一个用于处理所有发送到这个窗口的消息的函数。任何一个窗口类都有一个窗口过程。同一个类的窗口使用同样的窗口过程来响应消息。 系统发送消息给窗口过程将消息数据作为参数传递给他，消息到来之后，按照消息类型排序进行处理，其中的参数则用来区分不同的消息，窗口过程使用参数产生合适行为。
+　　一个窗口过程不经常忽略消息，如果他不处理，它会将消息传回到执行默认的处理。窗口过程通过调用DefWindowProc来做这个处理。窗口过程必须return一个值作为它的消息处理结果。大多数窗口只处理小部分消息和将其他的通过DefWindowProc传递给系统做默认的处理。窗口过程被所有属于同一个类的窗口共享，能为不同的窗口处理消息。下面我们来看一下具体的实例：
+　　　LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+　　　{
+int wmId, wmEvent;
+PAINTSTRUCT ps;
+HDC hdc;
+TCHAR szHello[MAX_LOADSTRING];
+LoadString(hInst, IDS_HELLO, szHello, MAX_LOADSTRING); 
+switch (message) 
+{
+case WM_COMMAND:
+wmId = LOWORD(wParam); 
+wmEvent = HIWORD(wParam); 
+// Parse the menu selections:
+switch (wmId)
+{
+case IDM_ABOUT:
+DialogBox(hInst, (LPCTSTR)IDD_ABOUTBOX, hWnd, (DLGPROC)About);
+break;
+case IDM_EXIT:
+DestroyWindow(hWnd);
+break;
+default:
+return DefWindowProc(hWnd, message, wParam, lParam);
+}
+break;
+case WM_PAINT:
+hdc = BeginPaint(hWnd, &ps);
+// TODO: Add any drawing code here...
+RECT rt;
+GetClientRect(hWnd, &rt);
+DrawText(hdc, szHello, strlen(szHello), &rt, DT_CENTER);
+EndPaint(hWnd, &ps);
+break;
+case WM_DESTROY:
+PostQuitMessage(0);
+break;
+default:
+return DefWindowProc(hWnd, message, wParam, lParam);
+　　　 }
+　　 return 0;
+　　　} 
+　　消息分流器
+　　通常的窗口过程是通过一个switch语句来实现的，这个事情很烦，有没有更简便的方法呢？有，那就是消息分流器，利用消息分流器，我们可以把switch语句分成更小的函数，每一个消息都对应一个小函数，这样做的好处就是对消息更容易管理。
+　　之所以被称为消息分流器，就是因为它可以对任何消息进行分流。下面我们做一个函数就很清楚了：
+　　void MsgCracker(HWND hWnd,int id,HWND hWndCtl,UINT codeNotify)
+{
+switch(id)
+{
+case ID_A:
+if(codeNotify==EN_CHANGE)...
+break;
+case ID_B:
+if(codeNotify==BN_CLICKED)...
+break;
+....
+}
+}
+　　然后我们修改一下窗口过程：
+　　LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+switch(message)
+{
+HANDLE_MSG(hWnd,WM_COMMAND,MsgCracker);
+HANDLE_MSG(hWnd,WM_DESTROY,MsgCracker);
+default:
+return DefWindowProc(hWnd, message, wParam, lParam);
+　　　 }
+　　 return 0;
+　　　}
+　　在WindowsX.h中定义了如下的HANDLE_MSG宏：
+　　　#define HANDLE_MSG(hwnd,msg,fn) \
+switch(msg): return HANDLE_##msg((hwnd),(wParam),(lParam),(fn));
+　　实际上，HANDLE_WM_XXXX都是宏，例如：HANDLE_MSG(hWnd,WM_COMMAND,MsgCracker);将被转换成如下定义：
+　　　#define HANDLE_WM_COMMAND(hwnd,wParam,lParam,fn)\ 
+((fn)((hwnd),(int)(LOWORD(wParam)),(HWND)(lParam),(UINT)HIWORD(wParam)),0L);
+　　好了，事情到了这一步，应该一切都明朗了。
+　　不过，我们发现在windowsx.h里面还有一个宏：FORWARD_WM_XXXX，我们还是那WM_COMMAND为例，进行分析：
+　　　#define FORWARD_WM_COMMAND(hwnd, id, hwndCtl, codeNotify, fn) \
+(void)(fn)((hwnd), WM_COMMAND, MAKEWPARAM((UINT)(id),(UINT)(codeNotify)), (LPARAM)(HWND)(hwndCtl))
+　　所以实际上，FORWARD_WM_XXXX将消息参数进行了重新构造，生成了wParam && lParam，然后调用了我们定义的函数。 
+MFC消息的处理实现方式
+　　初看MFC中的各种消息，以及在头脑中根深蒂固的C++的影响，我们可能很自然的就会想到利用C++的三大特性之一：虚拟机制来实现消息的传递，但是经过分析，我们看到事情并不是想我们想象的那样，在MFC中消息是通过一种所谓的消息映射机制来处理的。
+　　为什么呢？在潘爱民老师翻译的《Visual C++技术内幕》（第4版）中给出了详细的原因说明，我再简要的说一遍。在CWnd类中大约有110个消息，还有其它的MFC的类呢，算起来消息太多了，在C++中对程序中用到的每一个派生类都要有一个vtable，每一个虚函数在vtable中都要占用一个4字节大小的入口地址，这样一来，对于每个特定类型的窗口或控件，应用程序都需要一个440KB大小的表来支持虚拟消息控件函数。
+　　如果说上面的窗口或控件可以勉强实现的话，那么对于菜单命令消息及按钮命令消息呢？因为不同的应用程序有不同的菜单和按钮，我们怎么处理呢？在MFC库的这种消息映射系统就避免了使用大的vtable，并且能够在处理常规Windows消息的同时处理各种各样的应用程序的命令消息。
+　　说白了，MFC中的消息机制其实质是一张巨大的消息及其处理函数的一一对应表，然后加上分析处理这张表的应用框架内部的一些程序代码.这样就可以避免在SDK编程中用到的繁琐的CASE语句。 
+　　MFC的消息映射的基类CCmdTarget
+　　如果你想让你的控件能够进行消息映射，就必须从CCmdTarget类中派生。CCmdTarget类是MFC处理命令消息的基础、核心。MFC为该类设计了许多成员函数和一些成员数据，基本上是为了解决消息映射问题的，所有响应消息或事件的类都从它派生，例如：应用程序类、框架类、文档类、视图类和各种各样的控件类等等，还有很多。
+　　不过这个类里面有２个函数对消息映射非常重要，一个是静态成员函数DispatchCmdMsg，另一个是虚函数OnCmdMsg。
+　　DispatchCmdMsg专门供MFC内部使用，用来分发Windows消息。OnCmdMsg用来传递和发送消息、更新用户界面对象的状态。
+　　CCmdTarget对OnCmdMsg的默认实现：在当前命令目标(this所指)的类和基类的消息映射数组里搜索指定命令消息的消息处理函数。
+　　这里使用虚拟函数GetMessageMap得到命令目标类的消息映射入口数组_messageEntries，然后在数组里匹配命令消息ID相同、控制通知代码也相同的消息映射条目。其中GetMessageMap是虚拟函数，所以可以确认当前命令目标的确切类。
+　　如果找到了一个匹配的消息映射条目，则使用DispachCmdMsg调用这个处理函数；
+　　如果没有找到，则使用_GetBaseMessageMap得到基类的消息映射数组，查找，直到找到或搜寻了所有的基类（到CCmdTarget）为止；
+　　如果最后没有找到，则返回FASLE。
+　　每个从CCmdTarget派生的命令目标类都可以覆盖OnCmdMsg，利用它来确定是否可以处理某条命令，如果不能，就通过调用下一命令目标的OnCmdMsg，把该命令送给下一个命令目标处理。通常，派生类覆盖OnCmdMsg时 ，要调用基类的被覆盖的OnCmdMsg。
+　　在MFC框架中，一些MFC命令目标类覆盖了OnCmdMsg，如框架窗口类覆盖了该函数，实现了MFC的标准命令消息发送路径。必要的话，应用程序也可以覆盖OnCmdMsg，改变一个或多个类中的发送规定，实现与标准框架发送规定不同的发送路径。例如，在以下情况可以作这样的处理：在要打断发送顺序的类中把命令传给一个非MFC默认对象；在新的非默认对象中或在可能要传出命令的命令目标中。 
+　　消息映射的内容
+　　通过ClassWizard为我们生成的代码，我们可以看到，消息映射基本上分为2大部分：
+　　在头文件(.h)中有一个宏DECLARE_MESSAGE_MAP()，他被放在了类的末尾，是一个public属性的；与之对应的是在实现部分（.cpp)增加了一章消息映射表，内容如下：
+BEGIN_MESSAGE_MAP(当前类, 当前类的基类)
+file://{{AFX_MSG_MAP(CMainFrame)
+　消息的入口项
+file://}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+　　但是仅是这两项还远不足以完成一条消息，要是一个消息工作，必须有以下3个部分去协作：
+1.在类的定义中加入相应的函数声明；
+　 2.在类的消息映射表中加入相应的消息映射入口项；
+　 3.在类的实现中加入相应的函数体； 
+　　消息的添加
+　　有了上面的这些只是作为基础，我们接下来就做我们最熟悉、最常用的工作：添加消息。MFC消息的添加主要有2种方法：自动/手动，我们就以这2种方法为例，说一下如何添加消息。
+　　1、利用Class Wizard实现自动添加
+　　在菜单中选择View-->Class Wizard，也可以用单击鼠标右键，选择Class Wizard，同样可以激活Class Wizard。选择Message Map标签，从Class name组合框中选取我们想要添加消息的类。在Object IDs列表框中，选取类的名称。此时， Messages列表框显示该类的大多数(若不是全部的话)可重载成员函数和窗口消息。类重载显示在列表的上部，以实际虚构成员函数的大小写字母来表示。其他为窗口消息，以大写字母出现，描述了实际窗口所能响应的消息ID。选中我们向添加的消息，单击Add Function按钮，Class Wizard自动将该消息添加进来。
+　　有时候，我们想要添加的消息本应该出现在Message列表中，可是就是找不到，怎么办？不要着急，我们可以利用Class Wizard上Class Info标签以扩展消息列表。在该页中，找到Message Filter组合框，通过它可以改变首页中Messages列表框中的选项。这里，我们选择Window，从而显示所有的窗口消息，一把情况下，你想要添加的消息就可以在Message列表框中出现了，如果还没有，那就接着往下看：）
+　　2、手动地添加消息处理函数
+　　如果在Messages列表框中仍然看不到我们想要的消息，那么该消息可能是被系统忽略掉或者是你自己创建的，在这种情况下，就必须自己手工添加。根据我们前面所说的消息工作的3个部件，我们一一进行处理：
+ECHO 处于关闭状态。
+　　1) 在类的. h文件中添加处理函数的声明，紧接在//}}AFX_MSG行之后加入声明，注意：一定要以afx_msg开头。
+　　通常，添加处理函数声明的最好的地方是源代码中Class Wizard维护的表下面，但是在它标记其领域的｛｛｝｝括弧外面。这些括弧中的任何东西都将会被Class Wizard销毁。
+　　2) 接着，在用户类的.cpp文件中找到//}}AFX_MSG_MAP行，紧接在它之后加入消息入口项。同样，也是放在{ {} }的外面
+　　3) 最后，在该文件中添加消息处理函数的实体。

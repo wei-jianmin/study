@@ -1,0 +1,29 @@
+https://www.jianshu.com/p/c89f9e010706
+
+cron 是什么？这是一个 unix 系统内置的定时执行任务的工具，最小精确到一分钟。
+它的实现有很多版本，不同版本间有些许的功能差异。与它相关的有两个工具：crond 和 crontab
+crond 就是 cron 在系统内的宿主程序，crontab 是管理 cron 任务的管理工具。
+
+在给 cron 添加任务记录之前需要先了解它的规矩：
+    ┌───────────── minute (0 - 59)
+    │ ┌───────────── hour (0 - 23)
+    │ │ ┌───────────── day of month (1 - 31)
+    │ │ │ ┌───────────── month (1 - 12)
+    │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday;
+    │ │ │ │ │                                       7 is also Sunday on some systems)
+    │ │ │ │ │
+    * * * * *  command to execute
+
+每条记录一般是：5 个时间点 + 执行的命令。其中 * 是特殊的，它表示任何情况均匹配
+
+我们来理解几条记录
+    # 在每个小时的第一分钟执行 `echo "hello" >> a.txt`。
+    1 * * * * echo "hello" >> a.txt
+    # 每 2 分钟执行一次 `echo "hello world" >> a.txt`。
+    */2 * * * * echo "hello world" >> a.txt
+    # 在每个星期 6 的 23 点 45 分执行这个脚本。
+    45  23 * * 6 /home/oracle/scripts/export_dump.sh
+    
+如何添加任务记录？你可以通过 crontab -e 修改添加。crontab -h 查看帮助。 
+
+更详细介绍见源网址  

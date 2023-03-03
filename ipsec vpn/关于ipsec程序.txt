@@ -1,0 +1,12 @@
+linux中可能自带 ipsec 程序，这里的 ipsec 程序，本质是个脚本
+
+linux中的ipsec程序，可能是libreswan的（centOS7默认），此时脚本内部调用的是libreswan的相关工具集
+也可能是strongswan的（通常是安装strongswan带的），此时掉本内部调用的则是strongswan的相关工具集
+至于为什么这两种脚本都叫ipsec，是因为它们源自同一个项目（freeswan），Ubuntu下则默认没有该工具
+
+看strongswan的ipsec脚本，可以发现，内部主要都是调 /usr/libexec/ipsec/stroke 命令
+
+
+openswan strongswan libreswan FreeSwan 之间的关系：
+    freeswan（FreeS/WAN）项目关闭后，OpenSwan和StrongSwan都是继续开发的分支
+    Libreswan是Openswan的一个分支，这也是红帽系统自带的

@@ -1,0 +1,67 @@
+Sub sadf()
+'对非自动编号的段落，能识别是否为标题格式，以及是几级标题，并对各级标题进行处理
+Dim l1 As Integer
+Dim l2 As Integer
+Dim pa As Paragraph
+Dim str As String
+Dim ch As String
+Dim level As Integer
+Dim j As Integer
+Dim oneline As Boolean
+For Each pa In ActiveDocument.Paragraphs
+    level = 0
+    pa.Range.Select
+    l1 = Selection.Information(wpsFirstCharacterLineNumber)
+    Selection.EndKey
+    l2 = Selection.Information(wpsFirstCharacterLineNumber)
+    oneline = False
+    If l2 - l1 = 0 Then   '如果该段落只有一行
+        oneline = True
+        str = pa.Range.Text '取该段落内容
+        str = Replace(str, Chr(10), "", , , vbBinaryCompare)
+        str = Replace(str, Chr(13), "", , , vbBinaryCompare)    ' 去掉回车换行
+        If str <> "" Then   '如果该行不为空
+            ch = Left(str, 1)
+            If ch Like "[一二三四五六七八九]" Then  '初步判断是一级标题
+                 For i = 2 To 10
+                    ch = Mid(str, i, 1)
+                    If ch Like "[!一二三四五六七八九]" Then
+                        If ch Like "[ 、]" Then
+                            level = 1
+                            Exit For
+                        Else
+                            Exit For
+                        End If
+                    End If
+                Next
+            ElseIf ch Like "[0-9]" Then '第1个字符是数字
+              level = 2
+              For i = 2 To 100
+                ch = Mid(str, i, 1)
+                If ch Like "[!.0-9]" Then
+                    Exit For
+                ElseIf ch = "." Then
+                    ch = Mid(str, i + 1, 1)
+                    If ch Like "[0-9]" Then
+                        level = level + 1
+                    End If
+                End If
+              Next i
+            End If
+        End If
+    End If
+    'MsgBox pa.Range.Text & "::是" & level & "级标题"
+    Select Case level
+    Case 1
+        pa.Range.Font.Color = RGB(255, 0, 0)
+    Case 2
+        pa.Range.Font.Color = RGB(255, 0, 255)
+    Case 3
+        pa.Range.Font.Color = RGB(0, 255, 255)
+    Case 4
+        pa.Range.Font.Color = RGB(155, 0, 155)
+    Case 5
+        pa.Range.Font.Color = RGB(155, 111, 255)
+    End Select
+Next pa
+End Sub

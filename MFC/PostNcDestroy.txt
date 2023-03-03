@@ -1,0 +1,15 @@
+当调用DestroyWindow函数时，
+会触发PostNcDestroy函数的调用
+
+不要在一个线程中Destroy另一个线程创建的窗口
+DestroyWindow时，会同时destroy子窗口
+该方法会发送WM_DESTROY消息到窗口，使其解除激活，同时移除键盘焦点，
+该方法同时会销毁窗口菜单、定时器、自己的剪切板，并打断剪切板视图链。
+
+如果该窗口是个子窗口或父窗口，destroywindow自动销毁关联的父/子窗口，
+且该函数先销毁子窗口（或被拥有窗口），后销毁父窗口（或拥有者窗口）。
+
+窗口类对象的创建或析构与窗口的create和destroy是两码事
+
+连续调用两次dlg的create方法会崩溃，create和destroywindow间隔调用没有崩溃，
+但这样做会有别的问题：程序不能正常退出。

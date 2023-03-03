@@ -1,0 +1,10 @@
+nm 提示 no symbol 的问题
+参：https://blog.csdn.net/cjsycyl/article/details/37929971
+
+动态链接库文件(windows里的dll)在linux里以.so结尾，称为shared object library 。该文件是elf(Executable and Linkable Format)文件的一种，有两个符号表，“.symtab”和“.dynsym”。“.dynsym”只保留“.symtab”中的全局符号(global symbols )。命令strip可以去掉elf文件中“.symtab”，但不会去掉“.dynsym”。/lib里的共享对象库.so文件在使用nm时提示no symbol是因为被strip了。所以需要查看动态符号表“.dynsym”，加上-D：
+
+usr@usrpc:~$nm -Do /lib/*.so.*  
+
+类似的命令还有：
+readelf --symbols  *.so.* 
+objdump -T *.so.*

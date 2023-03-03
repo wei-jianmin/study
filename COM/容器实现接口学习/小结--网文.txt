@@ -1,0 +1,53 @@
+在实现OLE对象的包容时,仅仅需要实现5个接口,如果更加苛刻一些,甚至可以只实现3个,我摘录一段我写的东西如下:
+========================================
+做为OLE包容必须实现的接口有3个，分别是IOleClientSite、IAdviseSink、IOleInPlaceSite，以下分别来介绍。（由于每一个接口都是从IUnknown继承，因此IUnknown的方法实现在介绍时略去）
+
+IOleClientSite接口用来为OLE对象提供一个启动时的“站点”接口，主要用来为OLE对象提供窗口位置、用户界面、资源、名字服务的信息，OLE对象在启动时需要查询和调用这个接口来安排自身事务。每一个OLE对象都需要对应有一个IOleClientSite接口，因此如果在应用程序中同时启动多个OLE对象，他们必须共享或者独立拥有一个IOleClientSite接口。IOleClientSite包含了方法SaveObject、GetMoniker、GetContainer、ShowObject、OnShowWindow、RequestNewObjectLayout（关于具体的说明读者可以参看MSDN，在此不一一讨论，下同）。其中仅仅有SaveObject方法比较重要，需要实现，其他方法均可简单返回（返回S_OK值）或者声明为未实现（返回E_NOTIMPL值）。
+
+IAdviseSink接口用来使得包容可以在OLE对象的数据改变、试图改变、文档改变时有机会响应。需要注意的是，IAdviseSink接口的方法被OLE对象调用时都是同步的，因此如果包容在响应这些调用时耗费过长的时间（例如大规模的计算），会造成用户界面“僵死”现象。IAdviseSink包含了方法OnDataChange、OnViewChange、OnRename、OnSave、OnClose。实现时按照需要实现，甚至全部可以简单返回。另外一点需要注意的是，OLE对象不会主动的获取包容的IAdviseSink接口，因此我们必须通过在创建OLE对象后，调用OLE对象IOleObject接口的Advise方法来向对象“注册”这个接口。
+
+IOleInPlaceSite接口从IOleWindow接口继承而来，用来在OLE包容和OLE对象之间维持一种互相联系，例如OLE对象可以从OLE包容获得上下文窗口位置的信息，OLE包容也可以在OLE对象实地激活时获得通知以做出相应的安排。IOleInPlaceSite包含了方法GetWindow、ContextSensitiveHelp（这两个方法是从IOleWindow继承而来）、IOleInPlaceSite、CanInPlaceActivate、OnInPlaceActivate OnUIActivate、GetWindowContext、Scroll、OnUIDeactivate、OnInPlaceDeactivate、DiscardUndoState、DeactivateAndUndo、OnPosRectChange。一般而言，比较重要的是：GetWindowContext，OLE对象可以在此获得OLE包容的一些设定信息，以作自身响应；GetWindow，OLE对象需要在这里获得母窗口句柄；OnUIActive、OnUIDeactive、OnInPlaceActive、OnInPlaceDeactive、DeactiveAndUndo，这些都是OLE对象在试图变化时的一些通知函数，OLE包容需要在这时为OLE对象安排好诸如菜单等等资源的协调，以及调用OLE对象做复合文档的永久化、回复等等，都是比较简单的实现。其他的接口函数均可按需要实现，否则简单返回即可。
+
+以上就是实现OLE包容必须实现的三个接口，而且不是所有的接口都必须完全实现，依靠现在这些知识我们已经可以自行实现一个简单的包容器了。但是这时还仅仅是最简单的实现，我们还不能安排OLE对象的实地激活，OLE对象的菜单工具条插入，我们还需要讨论两个接口来完善我们的OLE包容器。注意的一点，这并不是必须的，尤其是在实现某些轻量级的OLE包容时。
+
+第一个接口是IOleInPlaceFrame，这个接口是做为OLE包容器最高层框架窗口实现的一个接口，用来在框架窗口中合并OLE对象的菜单、工具条，显示OLE对象状态，并可以向OLE包容传递键盘消息，再由OLE包容向OLE对象传送，以实现某些热键。IOleInPlaceFrame同时继承了IOleInPlaceUIWindow接口，IOleInPlaceUIWindow接口又继承了IOleWindow接口，因此实际上我们在实现这个接口时需要实现4个接口的方法（包含IUnknown）。这些方法是：GetWindow、ContextSensitiveHelp、GetBorder、RequestBorderSpace、SetBorderSpace、 SetActiveObject、InsertMenus、SetMenu、RemoveMenus、SetStatusText、EnableModeless 、TranslateAccelerator（未包含IUnknown的三个方法）。实现时同样不比完全实现，按照需要实现就可以了，不实现的或者简单返回，或者返回未实现。在本文后面的例子中，选择实现了ContextSensitiveHelp（安排OLE对象显示右键菜单）、GetBorder（安排OLE对象获得母窗口的边界）、SetBorderSpace（安排OLE对象的边界）、SetActiveObject（为母窗口记录下激活的OLE对象）、InsertMenus（合并菜单）、SetMenu （设置菜单）、RemoveMenus（消除菜单）、TranslateAccelerator（向OLE对象传递热键）。
+
+第二个接口是IOleDocumentSite，这个接口是的OLE中的复合文档对象可以被实地激活，然后显示工具条，标尺之类的用户界面元素。这个接口仅有一个方法ActivateMe，但是却十分重要。ActiveMe接受一个参数IOleDocumentView *pView，这个参数是欲激活的OLE对象的接口，我们可以借此接口查询到OLE对象的IOleDocument接口，然后调用其方法CreateView建立起OLE对象自身的视图，接下来调用IOleDocumentView的方法SetInPlaceSite向OLE对象“注册”OLE包容的IOleInPlaceSite接口。接下来顺次调用IOleDocumentView的UIAcitve、SetRect、Show三个方法激活用户界面元素、安排好OLE视图位置、最后使之显示出来。
+
+后续：
+duankuanjun又通过留言问了我一个问题,看来有些地方我还是解释不够透彻,那么再来说明一些。duankuanjun的问题是他虽然做到了WORD对象的包容，但是却在怎么控制这个对象上遇到了困难，因为“WORD的实例不知道在哪儿”。我觉得这确实也是我们经常困惑的一个问题，希望以下我的解释能够给有一些启发。
+
+在明明白白的确定到底“WORD的实例”“在哪儿”的问题，恐怕我们还是必须要复习一下COM的运作先！希望大家有点耐心，因为这其实才是整个过程的精髓，千万不要忽视。
+
+首先我们来考察这样一个问题：如果我们创建了一个COM对象，那么它的实体到底在哪里？简单的说，是在套间（apartment）里面，那么套间又是处于何处呢？我想后一个问题正是我们所困惑的。那么不妨看看这样的一个windows下的事实：我们的程序如果调用了dll，那么dll在哪里？如果多个程序调用了一个dll，那么这个dll在哪里？答案是第一个dll在启动他的程序地址空间里面，后来启动的dll并没有真正的载入，仍然是使用原有的dll，至于如何在不同的进程之间（这通常是程序的最大边界）协调这些东西，这时windows的事情，我们不需要管他。事实上，dll已经处于这样一个地位：一方面它是从属于某一个应用程序的，一方面它又能自由的跨越进程（当然有限制，而且只有系统才能做），这种两重性质，与进程非常不同，我们甚至可以假想它生活在一个独立的空间，谁来它就服务谁－－而这正是COM生存的最理想的方式。由此做为类比，我们就不难理解套间的概念了，套间正是这样一个只受系统约束的“独立的空间”，它是COM对象“出生和死亡”的地方，也是应用程序需要COM对象时的访问之所。套间大小可大可小，位置也很随意，大小可以从dll到应用程序，甚至系统全局，位置可以就在dll中（也就是进程中），也可以超乎进程外，甚至跨越系统和网络（DCOM正是如此）。套间因为有了系统的帮助而获得了近乎自由得权利，那么显然应用程序不能按自己的意愿肆意的来访问（不良的操作最多死机，恶意的操作可能就是另外一个CIH了^_^）。怎么访问套间，正是我们需要解决的另一个问题。（此上对于套间其实做了一个简化的概念上的讨论，我觉得对于理解其实应该正好，具体的规范大家参考《COM本质论》吧）
+
+访问套间的方法，就是COM中的接口，也就是说我们只能让用户访问到COM对象的服务功能，而不能让用户访问其私有的数据（通常这就是系统稳定和安全问题的关键所在）。COM的二进制意义上接口已经为我们提供了良好的条件，它能够从一个接口点出发访问到所有，也能从一个传递到另一个，自身（即符合了自反，传递，对称，形成一个闭包）。既然有了一个接口就相当于撬起来了地球，剩下的问题就是，我们需要借助一种什么力量获得这第一个接口呢？谁有这么大的力量呢？我想这个时候，大家都已经知道了，就是windows系统了。系统赋予我们这样的能力，但是也是有限制的：要么在创建COM对象时，通过一个IUnknown接口给我们对象的第一个接口（也就是CoCreateInstance函数里面那最后一个参数了，千万注意哦^_^）；另一个方式就是我们的包容在Advise向OLE对象注册自身之后，OLE对象会通过SetSite函数将自身的IUnknown接口通过参数传递过来（Yehh，bingo！）。除此之外，我想除非你和Bill哥哥关系密切，那么也许windows会考虑网开一面的^_^。
+
+有了阿拉丁神灯“IUnknown”，我们就可以根据COM对象的类型来查询其支持的各种各样的接口了。举例子来说，我们可以根据文档（例如MSHTML就有很好的文档支持）得到接口的IID，然后查询，进而得到更多的接口；或者（例如WORD等等不知道IID的）我们可以完全的就通过其IDispatch接口来invoke所有的功能（DISPID可以通过在MFC工程中添加包装类从包装类的实现中得到）。现在，是不是有一些“给我一个接口，我就能驱动地球”的感觉了^_^
+
+好了，现在我们已经可以回到最开始的问题了，“WORD的实例不知道在哪儿”，答案是：就在SetSite给我们的IUnknown接口里。（实际上它生存在套间）。
+
+那么我们的OLE包容，如果需要很近一步的控制我们包容的OLE对象时的行为就大概的表现成为了这样：
+
+//code.......
+IXXXX* pIXXXX = NULL;
+HRESULT hr = m_pObjUnk->QueryInterface(IID_IXXXX,(void**)pIXXXX);
+if(!hr == S_OK) return;
+pIXXXX->.....//call the function,:)
+......
+pIXXXX->Release();//free it.
+//code........
+
+或者是这样
+
+//code.......
+IDispatch* pDisp = NULL;
+HRESULT hr = m_pObjUnk->QueryInterface(IID_IDispatch,(void**)pIDisp);
+if(!hr == S_OK) return;
+pIDisp->Invoke(.....);//invoke the function,:)
+......
+pIDisp->Release();//free it.
+//code........
+
+btw:
+以上对于OLE对象和COM讨论，错误再所难免，也未必详尽，因此如果有错，请指出。但是我认为基本观念上我已经描述的很清楚了，这对于理解具体的技术而言，应当是最重要的吧。我习惯形象的将之描述为技术之痒，所以我们要最先做到的不是搔痒，而是解决难言之痒的根源所在。

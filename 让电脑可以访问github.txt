@@ -1,0 +1,18 @@
+1. 首先要知道，github.com 没有 www 前缀
+2. 打开 http://ping.chinaz.com/
+3. 输入框中输入 github.com，点击后面的按钮“ping检测”
+4. 在检测结果中找出可以ping通的ip
+5. 这里面有些ip虽然是可以ping通的，但却无法访问页面，因为被防火墙禁了
+5. 打开C:\Windows\System32\drivers\etc\hosts文件
+6. 指定github.com的ip映射
+   格式参考上面的例子，#代表注释行，
+   ip和域名间用一个或多个空格隔开
+   保证最后一行为空行（否则最后一行可能不生效）
+7. 在命令行中 ipconfig /flushdns 刷新dns缓存
+8. 在命令行中 ping github.com，可以看到ping的是新指定的ip
+
+原理：
+   在dns解析的时候，会先查找该文件
+   
+   
+   

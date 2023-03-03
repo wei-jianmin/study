@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="never" />
+<title>贝塞尔曲线原理(简单阐述) - hnfxs - 博客园</title>
+<meta property="og:description" content="原理和简单推导（以三阶为例）：设P0、P02、P2是一条抛物线上顺序三个不同的点。过P0和P2点的两切线交于P1点，在P02点的切线交P0P1和P2P1于P01和P11，则如下比例成立：这是所谓抛物线" />
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=PX31qVjOE47mNaZI9JUSFK-ajuzMnpXA9PeteRNR1Qw1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/green/bundle-green.css?v=Qid9qCta4UsaySZ1Mdv6UfbNzm4iAWziCMIDvaRVZwA1"/>
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/green/bundle-green-mobile.css?v=d9LctKHRIQp9rreugMcQ1-UJuq_j1fo0GZXTXj8Bqrk1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/hnfxs/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/hnfxs/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/hnfxs/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">var currentBlogApp = 'hnfxs', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=M03aVfZ8QFd-WbinG9a-QXWifrkNB2YI5lN9M8cSzzg1" type="text/javascript"></script>
+<style type="text/css">
+[id^="ad_"] {display:none!important;display:none}</style>
+</head>
+<body>
+<a name="top"></a>
+
+<table align="center" width="90%" cellspacing="0" cellpadding="5" border="0" bgcolor="white" style="border-bottom: solid 1px #CCCCCC">
+    <tr>
+        <td colspan="2" class="banner" background="/skins/green/images/bg_banner.jpg">
+            
+<div id="header">
+	<span>
+		<a id="Header2_HeaderTitle" href="https://www.cnblogs.com/hnfxs/">hnfxs</a><br/>
+		<div class=sub></div>
+	</span>
+</div>
+        </td>
+    </tr>
+    
+        <tr>
+            <td style="padding-left: 10px" height="35">
+                
+<div id="menu_mylinks">
+<a id="blog_nav_sitehome" class="listitem" href="https://www.cnblogs.com/">博客园</a>
+<a id="blog_nav_myhome" class="listitem" href="https://www.cnblogs.com/hnfxs/">首页</a> 
+<a id="blog_nav_newpost" class="listitem" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a> 
+<!--<a id="MyLinks2_NewArticleLink" class="listitem" href="/EnterMyBlog.aspx?NewArticle=1">新文章</a>-->
+<a id="blog_nav_contact" accesskey="9" class="listitem" rel="nofollow" href="https://msg.cnblogs.com/send/hnfxs">联系</a>
+
+
+<a id="blog_nav_admin" class="listitem" rel="nofollow" href="https://i.cnblogs.com/">管理</a>
+</div>
+
+            </td>
+            <td align="right" style="padding-right: 20px" width="30%">
+                <div id="blog_stats">
+随笔：114
+文章：0
+评论：6
+引用：0</div>
+            </td>
+        </tr>
+    
+</table>
+<table align="center" width="90%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td valign="top" width="75%">
+            <table align="center" width="100%" height="100%" cellspacing="0" cellpadding="5" border="0" bgcolor="white" class="index">
+                <tr>
+                    <td class="banner" valign="top" id="main">
+                        
+<div id="post_detail">
+<div class="block">
+	<h1 class="block_title"><a id="cb_post_title_url" href="https://www.cnblogs.com/hnfxs/p/3148483.html">贝塞尔曲线原理(简单阐述)</a></h1>
+	<div class="post">
+		<div class="postcontent">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>原理和简单推导（以三阶为例）：</p>
+<p>设<em>P</em><sub>0</sub>、<em>P</em><sub>0</sub><sup>2</sup>、<em>P</em><sub>2</sub>是一条抛物线上顺序三个不同的点。过<em>P</em><sub>0</sub>和<em>P</em><sub>2</sub>点的两切线交于<em>P</em><sub>1</sub>点，在<em>P</em><sub>0</sub><sup>2</sup>点的切线交<em>P</em><sub>0</sub><em>P</em><sub>1</sub>和<em>P</em><sub>2</sub><em>P</em><sub>1</sub>于<em>P</em><sub>0</sub><sup>1</sup>和<em>P</em><sub>1</sub><sup>1</sup>，则如下比例成立：</p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21154457-2b055b21b1fe4426b118bc6382b481aa.jpg" alt="" /></p>
+<p>这是所谓抛物线的三切线定理。</p>
+<p>&nbsp;</p>
+<div><img src="https://images0.cnblogs.com/blog/500577/201306/21154420-e9c48409b7d44b9baedc180352f6eb29.gif" alt="" /></div>
+<p>当<em>P</em><sub>0</sub>，<em>P</em><sub>2</sub>固定，引入参数<em>t</em>，令上述比值为<em>t</em>:(1-<em>t</em>)，即有：</p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21154527-302a2599eb8f474f92a0d86c5b2a9e0c.jpg" alt="" /><br /><em>t</em>从0变到1，第一、二式就分别表示控制二边形的第一、二条边，它们是两条一次Bezier曲线。将一、二式代入第三式得：</p>
+<p>&nbsp;<img src="https://images0.cnblogs.com/blog/500577/201306/21154747-9498ca0ff9d74c96b3b037aaa3b75875.gif" alt="" /></p>
+<p>当<em>t</em>从0变到1时，它表示了<strong>由三顶点P<sub>0</sub>、P<sub>1</sub>、P<sub>2</sub>三点定义的一条二次Bezier曲线。</strong></p>
+<p>并且表明：</p>
+<p>这<strong>二次Bezier曲线<em>P</em><sub>0</sub><sup>2</sup>可以定义为分别由前两个顶点(<em>P</em><sub>0</sub>,<em>P</em><sub>1</sub>)和后两个顶点(<em>P</em><sub>1</sub>,<em>P</em><sub>2</sub>)决定的一次Bezier曲线的线性组合</strong>。</p>
+<p>依次类推，</p>
+<p>由四个控制点定义的三次Bezier曲线<em>P</em><sub>0</sub><sup>3</sup>可被定义为分别由(<em>P</em><sub>0</sub>,<em>P</em><sub>1</sub>,<em>P</em><sub>2</sub>)和(<em>P</em><sub>1</sub>,<em>P</em><sub>2</sub>,<em>P</em><sub>3</sub>)确定的二条二次Bezier曲线的线性组合，由(<em>n+</em>1)个控制点<em>P</em><sub><em>i</em></sub>(<em>i</em>=0,1,...,<em>n</em>)定义的<em>n</em>次Bezier曲线<em>P</em><sub>0</sub><sup><em>n</em></sup>可被定义为分别由前、后<em>n</em>个控制点定义的两条(<em>n</em>-1)次Bezier曲线<em>P</em><sub>0</sub><sup><em>n-</em>1</sup>与<em>P</em><sub>1</sub><sup><em>n-</em>1</sup>的线性组合：<br /><img src="https://images0.cnblogs.com/blog/500577/201306/21154556-1bd9bc71310748c29bbb7f4150ccbb6d.gif" alt="" /><br />由此得到Bezier曲线的递推计算公式</p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21154633-cf5e1027b7e54703b87cf6155a205a46.gif" alt="" /></p>
+<p>这就是这就是de Casteljau算法，可以简单阐述三阶贝塞尔曲线原理。</p>
+<p>&nbsp;</p>
+<p>下面是总结：转自<a href="http://blog.csdn.net/tianhai110/article/details/2203572">http://blog.csdn.net/tianhai110/article/details/2203572</a></p>
+<p>B&eacute;zier curve(贝塞尔曲线)是应用于二维图形应用程序的<a href="http://baike.baidu.com/view/627248.htm">数学曲线</a>。 曲线定义：起始点、终止点（也称锚点）、控制点。通过调整控制点，贝塞尔曲线的形状会发生变化。 1962年，法国数学家Pierre B&eacute;zier第一个研究了这种<a href="http://baike.baidu.com/view/77474.htm">矢量</a>绘制曲线的方法，并给出了详细的计算公式，因此按照这样的公式绘制出来的曲线就用他的姓氏来命名，称为贝塞尔曲线。</p>
+<p>以下公式中：B(t)为t时间下 点的坐标；</p>
+<p>P<sub>0</sub>为起点,P<sub>n</sub>为终点,P<sub>i</sub>为控制点</p>
+<p>一阶贝塞尔曲线(线段)：</p>
+<p><img src="http://hi.csdn.net/attachment/201008/28/0_1282984310y353.gif" alt="" /></p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21151949-bbe8b7e8a0b14409a189dc32e0420423.gif" alt="" /></p>
+<p>意义：由 P0 至 P1 的连续点， 描述的一条线段</p>
+<p>二阶贝塞尔曲线(抛物线)：</p>
+<p><img src="http://hi.csdn.net/attachment/201008/28/0_1282984320awS6.gif" alt="" /></p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21152016-1df7ccd4da8e4e8a86cf72772da8af42.gif" alt="" /></p>
+<p>原理：由 P0 至 P1 的连续点 Q0，描述一条线段。 <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 由 P1 至 P2 的连续点 Q1，描述一条线段。 <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 由 Q0 至 Q1 的连续点 B(t)，描述一条二次贝塞尔曲线。</p>
+<p>经验：P1-P0为曲线在P0处的切线。</p>
+<p>三阶贝塞尔曲线：</p>
+<p><img src="http://hi.csdn.net/attachment/201008/28/0_1282984326C3m1.gif" alt="" /></p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21152048-9b5dee31b19349428c453b8bd5e20a3d.gif" alt="" /></p>
+<p>通用公式：</p>
+<p><img src="http://hi.csdn.net/attachment/201008/28/0_1282984842iZn0.gif" alt="" /></p>
+<p>高阶贝塞尔曲线：</p>
+<p>4阶曲线：</p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21152111-c41a9b4fcb534449a8687d940dcfccbf.gif" alt="" /></p>
+<p>5阶曲线：</p>
+<p><img src="https://images0.cnblogs.com/blog/500577/201306/21152142-50345f346c684ef68c5500e3a8e91cc0.gif" alt="" /></p>
+<div id="blog_post_info_block">
+<div id="blog_post_info">
+<div id="BlogPostCategory">&nbsp;</div>
+</div>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class="itemdesc">
+			发表于 <span id="post-date">2013-06-21 15:19</span> <a href='https://www.cnblogs.com/hnfxs/'>hnfxs</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=3148483" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(3148483);return false;">收藏</a>
+		</div>
+	</div>
+	<div class="seperator">&nbsp;</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=143109,cb_entryId=3148483,cb_blogApp=currentBlogApp,cb_blogUserGuid='59e4fc30-bc83-e211-9984-842b2b196315',cb_entryCreatedDate='2013/6/21 15:19:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='cnblogs_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='cnblogs_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td valign="top" id="sidebar">
+            <table align="center" width="100%" height="1400" cellspacing="0" cellpadding="5" border="0" bgcolor="white">
+                <tr>
+                    <td class="banner" valign="top" style="padding-top: 0px">
+                        
+                            <table width="100%" height="200">
+                                <tr>
+                                    <td>
+                                        <div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+<h1>公告</h1>
+<div align=center style="margin-top:10px"><div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script></div>
+                            <div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+                        
+                        <br>
+                        
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com">博客园</a><br>模板提供：<a href="http://blog.hjenglish.com">沪江博客</a><br>
+	Copyright &copy;2018 hnfxs
+</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<br />
+
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<< c++ >>
+tcp：
+1.  创建socket，指定tcp协议
+2.  绑定bind，指定监听端口，监听范围
+3.  开启监听listen
+4.  受理接入请求accept
+5.  send/recv
+6.  closesocket
+
+客户端：
+1.  创建socket，指定tcp协议
+2.  连接connect，指定要连入的ip和port
+3.  send/recv
+4.  closesocket
+
+udp:
+收的一方: socket()->bind()->recvfrom()->close()
+发的一方: socket()->sendto()->close()
+
+<< Qt >>
+使用QT的网络套接字需要.pro文件中加入一句：
+QT       += network
+
+
+ftp:
+new QFtp(this);
+	int iret = 0;
+  iret = ftp_->connectToHost(_host, _port.toInt());
+  iret = ftp_->login(_username, _passwd);
+	iret = ftp_->get(file_path_name,file_); //file_为一个打开的file文件
+	iret = ftp_->close();
+  connect(ftp_, SIGNAL(commandStarted(int)), this, SLOT(ftpCommandStarted(int)));
+  connect(ftp_, SIGNAL(commandFinished(int, bool)),this, SLOT(ftpCommandFinished(int, bool)));
+  connect(ftp_, SIGNAL(dataTransferProgress(qint64, qint64)),this, SLOT(updateDataTransferProgress(qint64, qint64)));

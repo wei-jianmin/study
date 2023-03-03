@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://www.cnblogs.com/yydcdut/p/3736667.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="same-origin">
+<title>上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/blog-common.css">
+<link type="text/css" rel="stylesheet" href="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/170503.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/bundle-darkgreentrip-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/yydcdut/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/yydcdut/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/yydcdut/wlwmanifest.xml">
+<script async="" src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/encoder.js"></script><script src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'yydcdut', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+<!--PageBeginHtml Block Begin-->
+<script type="text/javascript" src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/stats" charset="UTF-8"></script>
+<a href="https://github.com/yydcdut" class="github-corner"><svg width="80px" height="80px" viewBox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<!--PageBeginHtml Block End-->
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/yydcdut/"><img id="blogLogo" src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/yydcdut/">yydcdut@Android笔记</a></h1>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://yydcdut.com/"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/o_github_color.png" style="border-width:0px;height: 32px;width: 32px;">新博客地址</a></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/yydcdut/">首页</a></li>
+<li></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E6%88%91%E7%88%B1%E7%89%A9%E8%81%94%E7%BD%91">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/yydcdut/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/yydcdut/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园.html">上传文件multipart form-data boundary 说明</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>含义 ENCTYPE="multipart/form-data" 说明：</p>
+<p>通过 http 协议上传文件 rfc1867协议概述，客户端发送内容构造。</p>
+<p><strong><span style="background-color: #666666; color: #ffffff; font-size: large;">概述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong></p>
+<p>在最初的 http 协议中，没有上传文件方面的功能。 rfc1867为 http 协议添加了这个功能。客户端的浏览器，如 Microsoft IE, Mozila, Opera 等，按照此规范将用户指定的文件发送到服务器。服务器端的网页程序，如 php, asp, jsp 等，可以按照此规范，解析出用户发送来的文件。Microsoft IE, Mozila, Opera 已经支持此协议，在网页中使用一个特殊的 form 就可以发送文件。绝大部分 http server ，包括 tomcat ，已经支持此协议，可接受发送来的文件。各种网页程序，如 php, asp, jsp 中，对于上传文件已经做了很好的封装。</p>
+<p><strong><span style="background-color: #666666; color: #ffffff; font-size: large;">实例&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong></p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="upFile.php"</span><span style="color: #ff0000;"> enctype</span><span style="color: #0000ff;">="multipart/form-data"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="myflie"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="file"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>注意 enctype="multipart/form-data", method=post, type="file" 。根据 rfc1867, 这三个属性是必须的。multipart/form-data 是新增的编码类型，以提高二进制文件的传输效率。</p>
+<p><strong><span style="background-color: #666666; color: #ffffff; font-size: large;">数据传输&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong></p>
+<p><img alt=""></p>
+<p>格式 必须一字不差，包括最后的回车。</p>
+<p>注意：Content-Length: 226 这里的226是红色内容的总长度（包括最后的回车）</p>
+<p>注意这一行：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre>Content-Type: multipart/form-data; boundary=-----------------------------264141203718551</pre>
+</div>
+<p><code></code>根据 rfc1867, multipart/form-data是必须的.---------------------------7d33a816d302b6 是分隔符，分隔多个文件、表单项。</p>
+<p>其中7d33a816d302b6 是即时生成的字符串，用以确保整个分隔符不会在文件或表单项的内容中出现。</p>
+<p><strong><span style="background-color: #666666; color: #ffffff; font-size: large;">使用POST发送数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong></p>
+<p>以POST方式发送数据主要是为了向服务器发送较大量的客户端的数据，它不受URL的长度限制。POST请求将数据以URL编码的形式放在HTTP正文中，字段形式为fieldname=value，用&amp;分隔每个字段。注意所有的字段都被作为字符串处理。实际上我们要做的就是模拟浏览器POST 一个表单。以下是IE发送一个登陆表单的POST请求：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">POST http://127.0.0.1/login.do HTTP/1.0
+Accept: image/gif, image/jpeg, image/pjpeg, */*
+Accept-Language: en-us,zh-cn;q=0.5
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Content-Length: 28</span></pre>
+<pre>&nbsp;</pre>
+<pre>username=admin&amp;password=1234</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>要在MIDP应用程序中模拟浏览器发送这个POST请求，首先设置HttpConnection的请求方式为POST（PHP为curl）：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 使用POST方法</span>
+              httpURLConnection.setRequestMethod("POST");</pre>
+</div>
+<p>然后构造出HTTP正文：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre><span style="color: #0000ff;">byte</span>[] data = "username=admin&amp;password=1234".getBytes();</pre>
+</div>
+<p>并计算正文长度，填入Content-Type和Content-Length：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre>httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"<span style="color: #000000;">);
+httpURLConnection.setRequestProperty(</span>"Content-Length", String.valueOf(data.length));</pre>
+</div>
+<p>然后打开OutputStream将正文写入：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre>OutputStream output =<span style="color: #000000;"> hc.openOutputStream();
+output.write(data);</span></pre>
+</div>
+<p>需要注意的是，数据仍需要以URL编码格式编码，由于MIDP库中没有J2SE中与之对应的URLEncoder类，因此，需要自己动手编写这个 encode()方法，可以参考java.net.URLEncoder.java的源码。剩下的便是读取服务器响应，代码与GET一致，这里就不再详述。</p>
+<p><strong><span style="background-color: #666666; color: #ffffff; font-size: large;">使用multipart/form-data发送文件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong></p>
+<p>如果要在MIDP客户端向服务器上传文件，我们就必须模拟一个POST multipart/form-data类型的请求，Content-Type必须是multipart/form-data。</p>
+<p>以multipart/form-data编码的POST请求格式与application/x-www-form-urlencoded完全不同，multipart/form-data需要首先在HTTP请求头设置一个分隔符，例如ABCD：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;">
+<pre>httpURLConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=ABCD");</pre>
+</div>
+<p>然后，将每个字段用“--分隔符”分隔，最后一个“--分隔符--”表示结束。例如，要上传一个title字段"Today"和一个文件C:\1.txt，HTTP正文如下：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">--ABCD
+Content-Disposition: form-data; name="title"
+\r\n
+Today
+--ABCD
+Content-Disposition: form-data; name="1.txt"; filename="C:\1.txt"
+Content-Type: text/plain
+\r\n
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">这里是1</span><span style="color: #ff0000;">.txt文件的内容</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+--ABCD--
+\r\n</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>请注意，每一行都必须以\r\n结束，包括最后一行。如果用Sniffer程序检测IE发送的POST请求，可以发现IE的分隔符类似于 ---------------------------7d4a6d158c9，这是IE产生的一个随机数，目的是防止上传文件中出现分隔符导致服务器无法正确识别文件起始位置。我们可以写一个固定的分隔符，只要足够复杂即可。</p>
+<p>发送文件的POST代码如下：</p>
+<div class="cnblogs_code" style="background-color: #f5f5f5; border: #cccccc 1px solid; padding: 5px;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>String[] props = ... <span style="color: #008000;">//</span><span style="color: #008000;"> 字段名</span>
+String[] values = ... <span style="color: #008000;">//</span><span style="color: #008000;"> 字段值</span>
+<span style="color: #0000ff;">byte</span>[] file = ... <span style="color: #008000;">//</span><span style="color: #008000;"> 文件内容</span>
+String BOUNDARY = "---------------------------7d4a6d158c9"; <span style="color: #008000;">//</span><span style="color: #008000;"> 分隔符</span>
+StringBuffer sb = <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuffer();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 发送每个字段:</span>
+<span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0<span style="color: #000000;">; i
+sb </span>= sb.append("--"<span style="color: #000000;">);
+sb </span>=<span style="color: #000000;"> sb.append(BOUNDARY);
+sb </span>= sb.append("\r\n"<span style="color: #000000;">);
+sb </span>= sb.append("Content-Disposition: form-data; name=\""+ props[i] + "\"\r\n\r\n"<span style="color: #000000;">);
+sb </span>=<span style="color: #000000;"> sb.append(URLEncoder.encode(values[i]));
+sb </span>= sb.append("\r\n"<span style="color: #000000;">);
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 发送文件:</span>
+sb = sb.append("--"<span style="color: #000000;">);
+sb </span>=<span style="color: #000000;"> sb.append(BOUNDARY);
+sb </span>= sb.append("\r\n"<span style="color: #000000;">);
+sb </span>= sb.append("Content-Disposition: form-data; name=\"1\"; filename=\"1.txt\"\r\n"<span style="color: #000000;">);
+sb </span>= sb.append("Content-Type: application/octet-stream\r\n\r\n"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">byte</span>[] data =<span style="color: #000000;"> sb.toString().getBytes();
+</span><span style="color: #0000ff;">byte</span>[] end_data = ("\r\n--" + BOUNDARY + "--\r\n"<span style="color: #000000;">).getBytes();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置HTTP头:</span>
+hc.setRequestProperty("Content-Type", MULTIPART_FORM_DATA + "; boundary=" +<span style="color: #000000;"> BOUNDARY);
+hc.setRequestProperty(</span>"Content-Length", String.valueOf(data.length + file.length +<span style="color: #000000;"> end_data.length));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出:</span>
+output =<span style="color: #000000;"> hc.openOutputStream();
+output.write(data);
+output.write(file);
+output.write(end_data);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取服务器响应：
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO...</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考：<a title="http://hi.baidu.com/ycvwvuykhkbadmd/item/e441cc0e36fcd6dd73e676bd" href="http://hi.baidu.com/ycvwvuykhkbadmd/item/e441cc0e36fcd6dd73e676bd">http://hi.baidu.com/ycvwvuykhkbadmd/item/e441cc0e36fcd6dd73e676bd</a></p>
+<p>转载请注明出处：<a title="http://www.cnblogs.com/yydcdut/p/3736667.html" href="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园.html">http://www.cnblogs.com/yydcdut/p/3736667.html</a></p></div><div id="MySignature" style="display: block;"><div style="padding: 10px 10px 10px 10px; border: 1px dashed rgb(224, 224, 224); font-family: 微软雅黑; font-size: 15px;">作者：<a href="http://www.cnblogs.com/greenteaone/" target="_blank">我爱物联网</a>
+<br>
+     出处：<a href="http://www.cnblogs.com/yydcdut/" target="_blank">http://yydcdut.cnblogs.com/</a>
+<br>
+本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。
+</div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/yydcdut/category/538125.html" target="_blank">Java</a>,<a href="http://www.cnblogs.com/yydcdut/category/538887.html" target="_blank">PHP&amp;Web</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/yydcdut/p/3735243.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/yydcdut/p/3735243.html" title="发布于2014-05-18 15:26">Android -- 短信</a><br><a href="http://www.cnblogs.com/yydcdut/p/3744873.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/yydcdut/p/3744873.html" title="发布于2014-05-22 05:21">Android -- 拷贝assets下的资源文件到SD卡中(可以超过1M)</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2014-05-19 13:51</span> <a href="http://www.cnblogs.com/yydcdut/">我爱物联网</a> 阅读(<span id="post_view_count">8493</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=3736667" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/yydcdut/p/3736667.html#" onclick="AddToWz(3736667);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=170503,cb_entryId=3736667,cb_blogApp=currentBlogApp,cb_blogUserGuid='0d1eae90-f05a-e311-8d02-90b11c0b17d6',cb_entryCreatedDate='2014/5/19 13:51:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/yydcdut/p/3736667.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/yydcdut/p/3736667.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/584448/" target="_blank">Facebook上线“你知道吗”功能：回答趣闻问题并和好友分享</a><br> ·  <a href="https://news.cnblogs.com/n/584444/" target="_blank">微软新旅行应用Outings上线，专供iOS和Android平台</a><br> ·  <a href="https://news.cnblogs.com/n/584447/" target="_blank">SpreadJS表格控件发布V11版本，新增图表及前端PDF导出！</a><br> ·  <a href="https://news.cnblogs.com/n/584446/" target="_blank">京东物流投放10万“青流箱”：5秒打包 循环使用20次以上</a><br> ·  <a href="https://news.cnblogs.com/n/584445/" target="_blank">微软开始The Game Awards新一轮Xbox游戏折扣</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"></div>
+<div id="under_post_kb"></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div style="text-align:center; margin:0px; padding:0px;"><a href="https://github.com/yydcdut/PhotoNoter"><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/o_github_bad.png" style="border-width:0px;height: 72px;width: 72px;"><br>照片笔记&nbsp;&nbsp;开源Android代码</a>
+</div>
+<br>
+<div style="text-align:center; margin:0px; padding:0px; width:200px;"><embed src="http://rd.revolvermaps.com/f/g.swf" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" wmode="window" allowscriptaccess="always" allownetworking="all" width="200" height="200" flashvars="m=8&amp;i=3166t323fjm&amp;r=false&amp;v=true&amp;b=000000&amp;n=false&amp;s=200&amp;c=ff0000"><br><img src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/3166t323fjm.gif" alt="" height="1" width="1"><a href="http://www.revolvermaps.com/?target=enlarge&amp;i=3166t323fjm&amp;color=ff0000&amp;m=8">Large Visitor Globe</a></div><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/yydcdut/">我爱物联网</a><br>园龄：<a href="http://home.cnblogs.com/u/yydcdut/" title="入园时间：2013-12-02">4年</a><br>粉丝：<a href="http://home.cnblogs.com/u/yydcdut/followers/">404</a><br>关注：<a href="http://home.cnblogs.com/u/yydcdut/followees/">11</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;0d1eae90-f05a-e311-8d02-90b11c0b17d6&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar"><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/11/01&#39;);return false;">&lt;</a></td><td align="center">2017年12月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/01/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td align="center">1</td><td class="CalWeekendDay" align="center">2</td></tr><tr><td class="CalWeekendDay" align="center">3</td><td align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td class="CalTodayDay" align="center">8</td><td class="CalWeekendDay" align="center">9</td></tr><tr><td class="CalWeekendDay" align="center">10</td><td align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td class="CalWeekendDay" align="center">16</td></tr><tr><td class="CalWeekendDay" align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td class="CalWeekendDay" align="center">23</td></tr><tr><td class="CalWeekendDay" align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td class="CalWeekendDay" align="center">30</td></tr><tr><td class="CalWeekendDay" align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 我爱物联网
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+<!--PageEndHtml Block Begin-->
+<div align="center"><a href="http://www.amazingcounters.com/"><img border="0" src="./上传文件multipart form-data boundary 说明 - 我爱物联网 - 博客园_files/counter.php" alt="AmazingCounters.com"></a></div>
+<!--PageEndHtml Block End-->
+
+
+</body></html>

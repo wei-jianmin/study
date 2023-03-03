@@ -1,0 +1,1 @@
+IAdviseSink接口用来使得包容可以在OLE对象的数据改变、试图改变、文档改变时有机会响应。需要注意的是，IAdviseSink接口的方法被OLE对象调用时都是同步的，因此如果包容在响应这些调用时耗费过长的时间（例如大规模的计算），会造成用户界面“僵死”现象。IAdviseSink包含了方法OnDataChange、OnViewChange、OnRename、OnSave、OnClose。实现时按照需要实现，甚至全部可以简单返回。另外一点需要注意的是，OLE对象不会主动的获取包容的IAdviseSink接口，因此我们必须通过在创建OLE对象后，调用OLE对象IOleObject接口的Advise方法来向对象“注册”这个接口。

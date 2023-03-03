@@ -1,0 +1,64 @@
+https://blog.csdn.net/maomaovv/article/details/4556783
+
+0.  LFS到目的是从零开始编译一个Linux操作系统，
+主要思想是从一个宿主系统编译出一个独立的Linux操作系统，
+要达到这个目标，需要有如下几个步骤完成：
+
+1. 为新做系统分配磁盘分区并激活，创建一个环境变量几乎为空的编译用户lfs
+
+2. 在lfs用户下首先编译出编译程序必须使用的工具：
+   Binutils
+   GCC
+   Linux API Headers
+   Glibc
+   此时的汇编器和链接程序还都依赖于宿主系统的环境
+
+3. 通过调整工具链来切断Binutils/GCC/Glibc对宿主系统环境的依赖，
+   然后重新编译Binutils、GCC、Glibc，
+   然后利用这三个工具编译出一系列工具构造一个临时系统环境；
+
+4. 利用第3步编译出的工具我们就可以编译出最新的系统
+
+======================
+
+https://www.cnblogs.com/tocy/p/gnu-binutils-simple-usage.html
+GNU Binutils简介
+wiki:
+    GNU Binary Utilities或binutils是一整套的编程语言工具程序，用来处理许多格式的目标文件
+    这个工具程序通常搭配GCC、make、和GDB这些程序来使用
+    GNU Binutils是一系列二进制工具的集合。主要包括：
+    刚开始时，这个包内只有几个程序，但后来，由于功能需求近似，
+    陆续加入了GNU汇编器（GAS）和GNU链接器（GLD）
+GNU Binutils是一系列二进制工具的集合。主要包括：
+    ld —— GNU链接器
+    as —— GNU汇编器
+但也包括以下二进制工具：
+    addr2line：从目标文件的虚拟地址获取文件的行号或符号。
+    ar：可以对静态库做创建、修改和提取的操作。
+    c++filt：反编译（反混淆，demangle）C++符号的工具。
+    dlltool：创建创建Windows动态库。
+    gold：另一种新的、更快的仅支持ELF的链接器。
+    gprof：性能分析（profiling）工具程序。
+    nlmconv：可以转换成NetWare Loadable Module(NLM)目标文件格式。
+    nm：显示目标文件内的符号信息。
+    objcopy：复制和转译目标文件。
+    objdump：显示目标文件的相关信息，亦可反汇编。
+    ranlib：产生静态库的索引。（和nm -s功能类似）
+    readelf： 显示ELF文件的内容。
+    size：列出目标文件或库文件的section大小。
+    strings：列出文件中可打印的字符串信息。
+    strip：从目标文件中移除符号信息。
+    windmc：Windows消息资源编译器。
+    windres：Windows资源文件编译器。
+
+
+===================
+
+其他参考资料：
+https://blog.csdn.net/weixin_34191734/article/details/85103935
+这边文章比较详细的讲解了lfs的搭建原理
+
+
+
+
+

@@ -1,0 +1,15 @@
+1.简单来说，end-user证书上面几级证书都是为了保证end-user证书未被篡改，
+保证是CA签发的合法证书，进而保证end-user证书中的公钥未被篡改。
+
+2.除了end-user之外，证书被分为root Certificates和intermediates Certificates。
+相应地，CA也分了两种类型：root CAs 和intermediates CAs。
+  首先，CA的组织结构是一个树结构，一个root CAs下面包含多个intermediates CAs，
+而intermediates又可以包含多个intermediates CAs。root CAs 和 intermediates CAs
+都可以颁发证书给用户，颁发的证书分别是rootCertificates和intermediates Certificates，
+最终用户用来认证公钥的证书则被称为end-user Certificates。
+
+3. 我们使用end-user certificates来确保加密传输数据的公钥(public key)不被篡改，
+而又如何确保end-user certificates的合法性呢？这个认证过程跟公钥的认证过程类似，
+首先获取颁布end-user certificates的CA的证书，然后验证end-user certificates的signature。
+一般来说，root CAs不会直接颁布end-user certificates的，而是授权给多个二级CA，而二级CA
+又可以授权给多个三级CA，这些中间的CA就是intermediates CAs，它们才会颁布end-user certificates。

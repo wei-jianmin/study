@@ -1,0 +1,329 @@
+Action动作，除了跳转到文档中的某个页面之外，还可以指定其他类型的动作，例如启动应用程序，播放声音，改变注释的外观状态。
+这些动作可以通过鼠标点击来触发，还可以通过其他的触发事件进行触发，如：OpenAction，可以指定在打开文档时应执行Action动作。
+
+==================================================
+
+动作的使用情形举例：
+93 0 obj
+<< 
+    /Type /Annot
+    /Subtype /Link
+    /Rect [71 717 190 734]
+    /Border [16 16 1]
+    /A 16 0 R     %% 使用动作
+>>
+endobj
+
+==================================================
+
+按动作类型分（18个）：
+
+-------------- 1 ---------------
+Goto动作  转到当前文档中的目标位置
+63 0 obj
+<< 
+    /Type /Action
+    /S /GoTo                
+    /D [3 0 R /FitR –4 399 199 533]
+>>
+endobj
+定位操作将视图更改为指定的目标（页面，位置和放大系数）。
+该action包含的键有：
+S：固定为GoTo
+D：跳转页Destinations（其他章节会说明）
+
+-------------- 2 ---------------
+GotoR动作  转到另一个文档中的目标位置。
+83 0 obj
+<<
+    /D[968/FitR -14 126 545 540]
+    /F 84 0 R
+    /S/GoToR
+>>
+endobj
+GoToR操作类似于GoTo的操作，但跳转到另一个PDF文件中的目标而不是当前文件。
+该action包含的键有：
+S：固定为GoToR
+D：跳转页Destinations（其他章节会说明）
+F：要打开的文件file specification（其他章节会说明）
+NewWindow：一个标志，指定是否在新窗口中打开目标文档。 
+           如果此标志为false，则目标文档将替换同一窗口中的当前文档。 
+           如果此条目不存在，则符合本标准的阅读器应根据其偏好进行操作。
+
+-------------- 3 ---------------
+GotoE动作  转到某个嵌入文件。
+1 0 obj     % Link to a child
+<< 
+    /Type /Action
+    /S /GoToE
+    /D (Chapter 1)
+    /T << /R /C /N (Embedded document) >>
+>>
+endobj
+GoToE操作（PDF 1.6）类似于GoToR操作，它允许跳转到嵌入另一个PDF文件的PDF文件。
+该action包含的键有：
+S：固定为GoToE
+D：跳转页Destinations（其他章节会说明）
+F：要打开的文件file specification（其他章节会说明）
+NewWindow：一个标志，指定是否在新窗口中打开目标文档。 
+           如果此标志为false，则目标文档将替换同一窗口中的当前文档。 
+           如果此条目不存在，则符合本标准的阅读器应根据其偏好进行操作。
+T：指定目标文档的路径信息的target字典。 可以嵌套。
+    target字典包含的键有：
+    R：指定当前文档与目标（可能是中间目标）之间的关系。 有效值为P（目标是当前文档的父级）和C（目标是当前文档的子级）。
+    N：EmbeddedFiles名称树中文件的名称。只有R的值为“C”，且目标位于EmbeddedFiles名称树中，该值有效; 否则，该键无效
+    P：（R的值是“C”，并且目标与文件附件注释相关联;否则，它将不存在）
+        如果该值是整数，则它指定包含文件附件注释的当前文档的页码（从零开始） 。 
+        如果值是字符串，则它需要从name tree中查找到对应的对象，该对象保存附件批注坐在页面的页码。
+    A：（R的值是“C”，并且目标与文件附件注释相关联;否则，它将不存在）
+        如果值是整数，则它指定Annots（Annots所在的页面由“P”指定）数组中注释的索引（从零开始）。
+        如果值是文本字符串，则它指定注释字典中的NM值。
+    T：target字典，指定目标文档的附加路径信息。 如果此条目不存在，则当前文档是包含目标的目标文件。
+
+-------------- 4 ---------------
+Launch动作  启动应用程序，通常是打开文件
+90 0 obj
+<<
+  /F 91 0 
+  R/NewWindow true
+  /S/Launch
+>>
+endobj
+Launch操作会启动应用程序或打开或打印文档。
+该action包含的键有：
+S：固定为Launch
+F：要打开的文件file specification（其他章节会说明）
+NewWindow：一个标志，指定是否在新窗口中打开目标文档。 
+           如果此标志为false，则目标文档将替换同一窗口中的当前文档。 
+           如果此条目不存在，则符合本标准的阅读器应根据其偏好进行操作。
+Win：包含Windows特定启动参数的字典
+      Windows启动参数字典：
+      F：应以标准Windows路径名格式，作为启动的应用程序的文件名，也可以是需要打开/打印的文档。 
+         如果名称字符串包含反斜杠字符（\），则反斜杠本身应以反斜杠开头。该值应为简单字符串;
+      D：一个bye字符串，用于指定标准DOS语法中的默认目录。
+      O：指定要执行的操作的ASCII字符串：open：打开文档；print：打印文档。
+         如果F条目指定应用程序而不是文档，则应忽略此条目并启动应用程序。 默认值：open。
+      P：应传递给F条目指定的应用程序的参数字符串。 如果F指定的是文档，则省略该条目。
+Mac：Mac OS特定的启动参数; 还没有定义
+Unix：特定于UNIX的启动参数; 还没有定义
+
+-------------- 5 ---------------
+Thread动作  开始阅读文章线索
+544 0 obj       % Thread action
+<</D 493 0 R/S/Thread>>
+endobj
+Thread Action跳转到当前文档或其他文档的Thread上的指定bead。
+该action包含的键有：
+S：固定为Thread
+D：指向目标Thread，可以以下列形式之一指定：
+   ● 值的类型是间接引用，则表示Thread字典的间接引用，且该Thread在当前文件中，
+   ● 值的类型是整数，则表示catalog字典中Threads数组中index，数组中的第一个线程的索引为0；
+   ● 值的类型是字符串，则表示Thread信息字典中指定的线程标题，
+     如果两个或多个线程具有相同的标题，则应使用文档Catalog的Threads数组中首先出现的那个。
+F：包含Thread的文档，如果该键不存在，则表示Thread在当前文档内，该对象是file specification（其他章节会说明）
+B：目标Thread中的bead，可以以下列形式之一指定：
+   ● 值的类型是间接引用，则表示bead词典的间接引用。 在这种情况下，Thread应在当前文件中。
+   ● 值的类型是整数，则表示bead所在thread的index。Thread中的第一个bead的索引为0。
+
+-------------- 6 ---------------
+URI动作  跳转到一个URI
+546 0 obj
+<</S/URI/URI(www.baidu.com)>>
+endobj
+该action包含的键有：
+S：固定为URI
+URI：网址路径，以7位ASCII编码。
+IsMap：布尔值，用来标记指定在解析URI时是否跟踪鼠标位置。 默认值：false。
+       此键仅适用于用户单击注释触发的操作; 对于outline或文档的OpenAction条目相关的操作，应忽略它。
+
+-------------- 7 ---------------
+Sound动作  播放音频
+546 0 obj
+<</S/Sound/Sound 547 0 R>>
+endobj
+Sound Action 播放音频。
+该action包含的键有：
+S：固定为Sound
+Sound：指定音频对象（后面章节会讲到）
+Volume：播放声音的音量，范围为-1.0到1.0。 默认值：1.0。
+Synchronous：布尔值，指定是同步还是异步播放声音。如果该标志为true，则符合标准的阅读器保持控制，
+             除了取消声音之外不允许进一步的用户交互，直到完全播放声音。 默认值：false。
+Repeat：布尔值，指定是否无限重复播放声音。 如果此键存在，则应忽略同步键。 默认值：false。
+Mix：布尔值，指定是否将此声音与已播放的任何其他声音混合。 如果此标志为false，
+     则在开始此声音之前应停止任何先前播放的声音; 这可用于停止重复声音（Repeat）。 默认值：false
+
+-------------- 8 ---------------
+Movie动作  播放视频
+Movie Action（PDF 1.2）可用于在浮动窗口中或在Movie注释的注释矩形内播放视频。
+Movie注释应与作为包含Movie动作的链接注释或大纲项目的目标的页面相关联，或与动作相关联的页面对象相关联。
+该action包含的键有：
+S：固定为Movie
+Annotation：指向Movie注释的间接引用。
+T：字符串，标识要播放的电影的电影注释的标题。
+Operation：应对电影执行的操作（默认值：PlayStart）：
+    ● PlayStart：播放电影。 如果电影当前为暂停状态，则应在播放之前将其重新定位到开头。
+    ● Stop：停止播放电影。
+    ● Pause：暂停播放的电影。
+    ● Resume：恢复暂停的电影。
+
+-------------- 9 ---------------
+Hide动作  设置注释的显示隐藏
+Hide操作（PDF 1.2）通过设置或清除一个或多个注释的隐藏标志，来隐藏或显示这些注释。
+该action包含的键有：
+S：固定为Hide
+T：指定要隐藏或显示的注释，指定为下列其中一种形式：
+    ● 间接引用：指向annotation字典的间接引用
+    ● 字符串：form field字段名称的文本字符串
+    ● 数组：一系列此类词典或文本字符串
+H：布尔值，表示是否隐藏注释（true）或显示注释（false）。 默认值：true。
+
+-------------- 10 ---------------
+Named动作  执行由符合本标准的阅读器预定义的操作
+对具体操作进行命名，然后指定名称进行操作。（该action主要依赖与阅读器是否支持）
+该action包含的键有：
+S：固定为Named
+N：应执行的操作的名称（名称可以是标准的，也可以是自定义的，完全看阅读器的支持）
+    ● NextPage：跳转下一页
+    ● PrevPage：跳转上一页
+    ● FirstPage：跳转第一页
+    ● LastPage：跳转最后一页
+
+-------------- 11 ---------------
+SubmitForm动作  将数据发送到服务器（类似于网页的form）。
+在调用提交表单操作时，符合标准的阅读器应将所选交互式表单字段的名称和值传送到指定的URL。
+该action包含的键有：
+S：固定为SubmitForm
+F：将处理提交的Web服务器的URL。
+Fields：数组类型，用于标识要在提交中包含哪些字段或要排除哪些字段，
+        具体取决于Flags条目中Include / Exclude标志的设置。
+        数组的每个元素应该是对字典的间接引用，或者（PDF 1.3）表示字段的Title字符串。
+        以上两种类型可以混合在同一个数组中。如果省略此条目，则应忽略Include / Exclude标志，
+        并且应提交文档交互式表单中的所有字段，设置了NoExport标志的字段除外。 
+        也可以排除没有值的字段，这由IncludeNoValueFields标志的值决定。
+Flags：整数（可继承）一组标志，指定操作的各种特征。 默认值：0。每一个bit有各自不同的含义，如下（清除：0，设置：1）：
+      1：Include/Exclude：如果清除，则Fields数组需要指定要在提交中包含的字段
+        （也应提交字段层次结构中指定字段的所有后代）。如果设置，Fields数组将告知要排除的字段。
+         除了在Fields数组中列出的那些字段和那些设置了NoExport标志的字段以及没有值的字段(如果IncludeNoValueFields标志清除)之外，
+         应提交文档交互式表单中的所有字段。
+      2：IncludeNoValueFields：如果设置，则应提交Fields数组和Include / Exclude标志指定的所有字段，
+         而不管它们是否具有值（field字典中的V条目），对于没有值的字段，只应传输字段名称。 如果清除，则不提交没有值的字段。
+      3：ExportFormat：仅当SubmitPDF和XFDF标志清除时才有意义。 如果设置，字段名称和值应以HTML表单格式提交。 
+         如果清除，则应以表格数据格式（FDF）提交。
+      4：GetMethod：如果设置，则应使用HTTP GET请求提交字段名称和值。 如果清除，则应使用POST请求提交。 
+         仅当设置了ExportFormat标志时，此标志才有意义; 如果ExportFormat清除，则该标志也应清除。
+      5：SubmitCoordinates：如果设置，则导致提交表单操作的鼠标单击坐标应作为表单数据的一部分传输。 
+         坐标值相对于field的widget注释矩形的左上角。 它们格式为：name.x = xval＆name.y = yval。
+         其中name是字段的映射名称（field字典中的TM）（如果存在）; 否则，name是field名称。 
+         如果TM条目的值是单个ASCII SPACE（20h）字符，则后面的名称和ASCII PERIOD（2Eh）都将被抑制，
+         从而产生以下格式：x = xval＆y = yval。仅当设置了ExportFormat标志时才应使用此标志。 
+         如果ExportFormat已清除，则此标志也应清除。
+      6：XFDF：只有在SubmitPDF标志清除时才能使用。如果设置，field名称和值应作为XFDF提交。
+      7：IncludeAppendSaves：只有在以表格数据格式提交表格时（即，当XFDF和ExportFormat标志都清除时），才能使用。 
+         如果设置，则提交的FDF文件应包括基础PDF文档的所有增量更新的内容，如FDF字典中的Differences条目中所包含的。 
+         如果清除，则不应包括增量更新。
+      8：IncludeAnnotations：只有在以表格数据格式提交表格时（即，当XFDF和ExportFormat标志都清除时），才能使用。 
+         如果设置，则提交的FDF文件应包括基础PDF文档中的所有markup注释。 如果清除，则不应包括markup注释。
+      9：SubmitPDF：如果设置，则文档应以PDF格式提交，使用MIME内容类型application / pdf（在Internet RFC 2045，
+         多用途Internet邮件扩展（MIME），第一部分：Internet消息体的格式中描述）。 
+         如果设置，除GetMethod外，其他所有标志都将被忽略。
+      10：CanonicalFormat：如果设置，则表示日期字段值应转换为标准格式。
+      11：ExclNonUserAnnots：只有在以表单数据格式提交表单时（即，当XFDF和ExportFormat标志都清除时）
+          并且设置了IncludeAnnotations标志时，才应使用该标志。 
+          如果设置，则它应仅包括那些markup注释（其T条目与当前用户的名称相匹配），由提交表单的远程服务器确定。
+      12：ExclFKey：只有在以表格数据格式提交表格时（即，当XFDF和ExportFormat标志都清除时），才能使用。 
+          如果设置，提交的FDF将排除F条目。
+      14：EmbedForm：只有在以表格数据格式提交表格时（即，当XFDF和ExportFormat标志都清除时），才能使用。 
+          如果设置，则提交的FDF的F条目，应该是包含表示从其提交FDF的PDF文件的嵌入文件流（file specification）。
+
+-------------- 12 ---------------
+ResetForm动作    将字段设置为其默认值。
+在调用ResetForm动作时，符合标准的阅读器，应将选定的交互式表单字段重置为其默认值; 
+也就是说，它应将Field字典中的V条目的值设置为DV条目的值。 如果没有为Field定义默认值，则应删除其V条目。 
+对于没有值的字段（例如按钮），该操作无效。
+该action包含的键有：
+S：固定为ResetForm
+Fields：一个数组，用于标识要重置的字段或要从重置中排除的字段，具体取决于Flags条目中Include / Exclude标志的设置。 
+        数组的每个元素应该是间接引用，或者（PDF 1.3）表示Field的Title的文本字符串。 两种类型可以混合在同一个数组中。 
+        如果省略该条目，则应忽略Include / Exclude标志; 文档交互式表单中的所有字段都将重置。
+Flags：整数（可继承）一组标志，指定操作的各种特征。 默认值：0。每一个bit有各自不同的含义，如下（清除：0，设置：1）：
+      1：Include/Exclude：如果清除，则Fields数组指定要重置的字段。 （Field层次结构中指定Field的所有后代也将重置。）
+         如果设置，则Field数组指定要从重置中排除的字段; 也就是说，除了Fields数组中列出的那些Field外，
+         文档交互式表单中的所有Field都将被重置。
+         
+-------------- 13 ---------------
+ImportData动作  从文件导入字段值。
+在调用ImportData操作时，符合标准的阅读器应将表单数据格式（FDF）数据从指定文件导入到文档的交互式表单中。
+该action包含的键有：
+S：固定为ImportData
+F：作为导入数据的FDF文件
+
+-------------- 14 ---------------
+JavaScript动作  执行JS脚本
+在调用JavaScript动作时，符合标准的阅读器应执行JavaScript编程语言编写的脚本。 
+根据脚本的性质，文档中的各种交互式表单域可以更新其值或更改其视觉外观。
+该action包含的键有：
+S：固定为JavaScript
+JS：包含要执行的JavaScript脚本的文本字符串或文本流（遵循PDFDocEncoding或Unicode编码（后者由Unicode前缀U + FEFF标识））
+
+-------------- 15 ---------------
+SetOCGState动作  设置可选内容组的状态
+<< 
+/S /SetOCGState
+/State [/OFF 2 0 R 3 0 R /Toggle 16 0 R 19 0 R /ON 5 0 R]
+>>
+set-OCG-state操作（PDF 1.5）设置一个或多个可选内容组的状态。
+该action包含的键有：
+S：固定为SetOCGState
+State：一个数组，由任意数量的序列组成，以名称对象（ON，OFF或Toggle）开头，后跟一个或多个OCG字典。 
+       数组元素应从左到右处理;每个名称都应适用于后续组，直到遇到下一个名称：
+    ● ON：将后续group的状态设置为ON
+    ● OFF：将后续group的状态设置为OFF
+    ● Toggle：反转后续group的状态。
+    ● PreserveRB：布尔值，如果为true，则表示应用State数组中的状态时，应保留单选按钮状态关系。 
+                  也就是说，如果在处理状态数组期间将组设置为ON（通过ON或Toggle），
+                  则属于同一单选按钮group的任何其他group应关闭。 如果group设置为OFF，则对其他group没有影响。
+                  如果PreserveRB为false，则应忽略单选按钮状态关系。默认值：true。
+一个group可能在State数组中出现不止一次; 每次遇到它的状态时，应根据最新的名称设置状态。
+ ON，OFF和Toggle序列没有必需的顺序。 数组中的多个序列可能包含相同的名称。
+ 如果数组包含[/ OFF 1 0 R / Toggle 1 0 R]，则在执行操作后组的状态将为ON。
+虽然PDF规范允许group在State数组中出现多次，但这并不是为了实现动画或任何其他顺序绘图操作。 
+PDF处理应用程序可以自由累积所有状态更改，并在重绘之前，仅将所有净更改，同时应用于所有受影响的group。
+
+-------------- 16 ---------------
+Rendition动作  控制多媒体内容的播放。
+Rendition动作（PDF 1.5）控制多媒体内容的播放。
+该action包含的键有：
+S：固定为Rendition
+R：指向一个rendition对象（将在其他章节介绍）
+AN：指向一个screen注释对象（将在其他章节介绍）
+OP：触发操作时执行的操作。有效值应为：
+    0：如果没有与AN指定的注释相关联的rendition，则播放R指定的rendition，将其与注释相关联。
+       如果rendition已经与注释相关联，则应该停止rendition，并且新的rendition应该与注释相关联。
+    1：停止AN指定的注释相关联播放的任何rendition，并删除该关联。如果rendition没有播放，则没有效果。
+    2：暂停AN指定的注释相关联的任何rendition。如果rendition没有播放，则没有效果。
+    3：恢复AN指定的注释相关联的任何rendition。如果rendition没有播放或者没有暂停，则没有效果。
+    4：播放R指定的rendition，将其与AN指定的注释相关联。如果rendition已与注释关联，则在暂停时恢复rendition;否则，什么也不做。
+JS：（如果OP不存在，则为必需;否则为可选）将在触发执行的JavaScript脚本，该脚本为文本字符串或流。
+
+-------------- 17 ---------------
+Trans动作  使用transition字典更新文档的显示。
+transition动作（PDF 1.5）可用于控制一系列动作期间的绘图。 
+Action字典中的Next条目可以指定一系列动作。
+符合条件的浏览器，通常应在此类序列开始时暂停绘图，并在结束时重新开始绘图。 
+如果在序列期间存在transition，则浏览器将在完成前一动作之后呈现页面区域的状态，
+并使用action词典中指定的transition显示它。 一旦完成此transition，将再次暂停绘图。
+该action包含的键有：
+S：固定为Trans
+Trans：用于更新显示的transition对象（将在其他章节介绍）
+
+-------------- 18 ---------------
+GoTo3DView动作  设置3D注释的当前视图
+GoTo3DView操作（PDF 1.6）标识3D注释并指定要使用的注释的视图。
+该action包含的键有：
+S：固定为GoTo3DView
+TA：指定一个注释对象作为其设置视图
+V：要使用的视图。 它可能是以下类型之一：
+   ● 字典：3D视图字典。（将在其他章节介绍，该对象比较复杂）
+   ● 整数：指定3D流中VA数组的索引。
+   ● 字符串：与VA数组中某个视图中的IN条目匹配的文本字符串。
+   ● 名字：第一个（F），最后一个（L），下一个（N），前一个（P）或默认（D）。

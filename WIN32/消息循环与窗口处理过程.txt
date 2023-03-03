@@ -1,0 +1,138 @@
+一个win32应用程序的消息循环是这样的：
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))	//如果是加速键消息，则在这个函数中就完全处理了，它暗含了翻译和派发两种功能
+		{
+			TranslateMessage(&msg);	//翻译消息，把不改变消息，而是能在消息队列中产生新消息
+			DispatchMessage(&msg);	//派发消息，告诉系统，然后系统再调用程序的窗口处理过程
+		}
+	}
+● GetMessage把消息从进程消息队列中检索出来，放到msg结构中；
+● TranslateAccelerator
+功能：
+该函数将WM_KEYDOWN或WM_SYSKEYDOWN消息翻译成WM_COMMAND消息，然后发送WM_COMMAND，直接到窗口处理过程（sendmessage是不进入消息队列的，直接被窗口处理过程处理），直到窗口处理过程返回后，该函数才会返回。
+返回值：
+非零意味着成功，0意味着失败
+说明：
+所有的加速键消息会被translated成WM_COMMAND消息，WIN CE不支持WM_SYSCOMMAND消息。
+用于选择窗口菜单项的组合加速键被translated成WM_SYSCOMMAND消息，
+所有其他的组合加速键被translated成WM_COMMAND消息；
+当加速键与菜单项相关联时，程序会发一个WM_INITMENUPOPUP消息，就好像用户在试图显示菜单一样。
+如果该函数返回一个非0的值（说明消息被translated的了），这时，程序不应再调用TranslateMessage重复处理了。
+用于处理命令消息，当msg中的消息为命令消息时（WM_COMMAND）,该函数的返回值非0，
+如果不是命令消息，则TranslateMessage(&msg);DispatchMessage(&msg);
+● TranslateMessage：
+该函数由虚拟键消息得到字符消息，如由WM_KEYDOWN和WM_KEYUP得到WM_CHAR消息，注意该函数不会修改其穿入的msg参数，
+它相当于在WM_KEYUP后给程序再发一个WM_CHAR消息。如果是按键消息或菜单命令消息，则函数的返回值为非0，如果是其他消息，
+如鼠标消息，则函数的返回值为0；
+ranslateMessage是用来把虚拟键消息转换为字符消息。由于Windows对所有键盘编码都是采用虚拟键的定义，这样当按键按下时，并不得字符消息，需要键盘映射转换为字符的消息。
+TranslateMessage函数用于将虚拟键消息转换为字符消息。字符消息被投递到调用线程的消息队列中，当下一次调用GetMessage函数时被取出。当我们敲击键盘上的某个字符键时，系统将产生WM_KEYDOWN和WM_KEYUP消息。这两个消息的附加参数（wParam和lParam）包含的是虚拟键代码和扫描码等信息，而我们在程序中往往需要得到某个字符的ASCII码，TranslateMessage这个函数就可以将WM_KEYDOWN和WM_ KEYUP消息的组合转换为一条WM_CHAR消息（该消息的wParam附加参数包含了字符的ASCII码），并将转换后的新消息投递到调用线程的消息队列中。注意，TranslateMessage函数并不会修改原有的消息，它只是产生新的消息并投递到消息队列中。
+也就是说TranslateMessage会发现消息里是否有字符键的消息，如果有字符键的消息，就会产生WM_CHAR消息，如果没有就会产生什么消息。
+● DispatchMessage
+windows消息处理机制是这样的: 首先系统(也就是windows)把来自硬件(鼠标,键盘等消息)和来自应用程序的消息 放到一个系统消息队列中去. 
+而应用程序需要有自己的消息队列,也就是线程消息队列。每一个线程有自己的消息队列,对于多线程的应用程序就有和线程数目相等的线程消息队列. 
+winsows消息队列把得到的消息发送到线程消息队列, 线程消息队列每次取出一条消息发送到指定窗口,不断循环直到程序退出.这个循环就是靠消息环(while(GetMessage()) TranslateMessage();DispatchMessage(); 实现的。
+GetMessage()只是从线程消息中取出一条消息,而DispatchMessage 则把取出的消息发送到目的窗口。
+如果收到WM_CLOSE消息则结束循环,发送postqiutmessage(0),处理WM_DESTROY销毁窗口!  
+其实问题的关键在于DispatchMessage到底干了什么 
+如果只是去调用相应的窗口，那自己写个switch不就可以了 
+DispatchMessage与switch不同之处在于DispatchMessage会 
+先调用windows，进入管态（大概是range 0），然后再由windows调用 
+窗口的函数。 
+为什么这么麻烦？ 
+因为这样windows就可以知道你的程序运行到什么情况了， 
+windows来调用你的窗口，这样你的窗口返回的时候windows就知道 
+你已经处理过一个消息了，如果没有新的消息进入消息队列 
+windows就不再会给你的进程分配时间片 
+如果是你自己写switch的话，windows就不可能这样灵活的分配时间 
+资源利用率就会降低 
+那么还要消息循环干什么，windows直接把消息发给窗口不就可以了吗？ 
+因为你要在消息循环里把KEY_DOWN和KEY_UP组合成WM_CHAR， 
+还可以直接屏蔽掉许多对你来说无用的消息，加快速度  
+GetMessage:从线程的消息队列取出一个消息   
+    TranslateMessage:     	将msg结构传给Windows,进行一些转换,比如A键按下,转换成WM_CHAR消息等   
+    DispatchMessage():		再将msg结构传给Windows,Windows将该消息发给窗口过程,由窗口过程处理.
+TranslateMessage是对一些键盘事件做预处理。
+GetMessage是从系统为每个应用程序自动分配的消息对列的头部得到一个消息。   
+TranslateMessage是翻译需要翻译的消息（产生新消息）   
+DispatchMessage()则会把翻译好的消息发送到系统的消息处理函数中，而这个函数又会把这个消息传递到注册窗体时用户指定的消息处理函数中。
+翻译消息不是简单的转换，一个消息被翻译后，可能会产生几个消息。
+
+
+
+http://www.xuebuyuan.com/1829252.html
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TranslateMessage函数将虚拟键消息转换为字符消息。字符消息被寄送到调用线程的消息队列里，当下一次线程调用函数GetMessage或PeekMessage时被读出。
+TranslateMessage是用来把虚拟键消息转换为字符消息。由于Windows对所有键盘编码都是采用虚拟键的定义，这样当按键按下时，并不得字符消息，需要键盘映射转换为字符的消息。
+TranslateMessage函数用于将虚拟键消息转换为字符消息。字符消息被投递到调用线程的消息队列中，当下一次调用GetMessage函数时被取出。当我们敲击键盘上的某个字符键时，系统将产生WM_KEYDOWN和WM_KEYUP消息。这两个消息的附加参数（wParam和lParam）包含的是虚拟键代码和扫描码等信息，而我们在程序中往往需要得到某个字符的ASCII码，TranslateMessage这个函数就可以将WM_KEYDOWN和WM_ KEYUP消息的组合转换为一条WM_CHAR消息（该消息的wParam附加参数包含了字符的ASCII码），并将转换后的新消息投递到调用线程的消息队列中。注意，TranslateMessage函数并不会修改原有的消息，它只是产生新的消息并投递到消息队列中。
+也就是说TranslateMessage会发现消息里是否有字符键的消息，如果有字符键的消息，就会产生WM_CHAR消息，如果没有就会产生什么消息。
+ 
+消息循环中的TranslateMessage函数和DispatchMessage函数
+TranslateMessage函数
+
+函数功能描述:将虚拟键消息转换为字符消息。字符消息被送到调用线程的消息队列中，在下一次线程调用函数GetMessage或PeekMessage时被读出。
+
+.函数原型：
+    BOOL TranslateMessage(  CONST MSG *lpMsg );
+.参数：
+    lpMsg 
+        指向一个含有用GetMessage或PeekMessage函数从调用线程的消息队列中取得消息信息的MSG结构的指针。
+.返回值：
+    如果消息被转换（即，字符消息被送到线程的消息队列中），返回非零值。
+    如果消息是 WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN, 或 WM_SYSKEYUP，返回非零值，不考虑转换。
+    如果消息没有转换（即，字符消息没被送到线程的消息队列中），返回值是零。
+.备注：
+    TranslateMessage函数不修改由参数lpMsg指向的消息。
+    消息WM_KEYDOWN和WM_KEYUP组合产生一个WM_CHAR或WM_DEADCHAR消息。消息WM_SYSKEYDOWN和WM_SYSKEYUP组合产生一个WM_SYSCHAR或 WM_SYSDEADCHAR 消息。
+    TtanslateMessage仅为那些由键盘驱动器映射为ASCII字符的键产生WM_CHAR消息。
+    如果应用程序为其它用途而处理虚拟键消息，不应调用TranslateMessage函数。例如，如果TranslateAccelerator函数返回一个非零值，则应用程序将不调用TranslateMessage函数。
+    Windows CE：Windows CE不支持扫描码或扩展键标志，因此，它不支持由TranslateMessage函数产生的WM_CHAR消息中的lKeyData参数（lParam）16-24的取值。
+    TranslateMessage函数只能用于转换由GetMessage或PeekMessage函数接收到的消息。 
+　
+
+DispatchMessage函数
+
+函数功能：该函数调度一个消息给窗口程序。通常调度从GetMessage取得的消息。消息被调度到的窗口程序即是MainProc()函数。
+
+　　函数原型：LONG DispatchMessage（CONST MSG*lpmsg）；
+
+　　参数：
+
+　　lpmsg：指向含有消息的MSG结构的指针。
+
+　　返回值：返回值是窗口程序返回的值。尽管返回值的含义依赖于被调度的消息，但返回值通常被忽略。
+
+　　备注：MSG结构必须包含有效的消息值。如果参数lpmsg指向一个WM_TIMER消息，并且WM_TIMER消息的参数IParam不为NULL，则调用IPa1ram指向的函数，而不是调用窗口程序。
+
+　　速查：Windows NT：3.1及以上版本；Windows：95及以上版本；Windows CE：1.0及以上版本；头文件：winuser.h；输入库：user32.lib；Unicode：在Windows NT环境下以Unicode和ANSI方式实现。
+
+总结:TranslateMessage函数将键盘消息转化,DispatchMessage函数将消息传给窗体函数去处理.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+PostThreadMessage
+函数功能：该函数将一个消息放入 （寄送）到指定线程的消息队列里，不等待线程处理消息就返回。
+
+函数原型：BOOL PostThreadMessage（DWORD idThread，UINT Msg，WPARAM wParam，LPARAM IParam）；
+
+参数
+
+idThread：其消息将被寄送的线程的 线程标识符。如果线程没有消息队列，此函数将失败。当线程第一次调用一个Win 32 USER或GDI函数时，系统创建线程的消息队列。要得到更多的信息，参见备注。
+
+Msg：指定将被寄送的消息的类型。
+
+wParam：指定附加的消息特定信息。
+
+IParam：指定附加的消息特定信息。
+
+返回值：如果函数调用成功，返回非零值。如 果函数调用失败，返回值是零。若想获得更多的错误信息，请调用GetLastError函数。如果idThread不是一个有效的线程标识符或由 idThread确定的线程没有消息队列，GetLastError返回 ERROR_INVALID_THREAD。
+
+备注：消息将寄送到的线程必须创建消息队 列，否则调用PostThreadMessage会失败。用下列方法之一来处理这种情况：
+
+调用PostThreadMessage。 如果失败，调用Sleep，再调用PostThreadMessage，反复执行，直到PostThreadMessage成功。
+
+创建一个事件对象，再创建线程。在调用 PostThreadMessage之前，用函数WaitForSingleObject来等特事件被设置为被告知状态。消息将寄送到的线程调用 PeekMessage（￡msg，NULL，WM_USER，WM_USER，PM_NOREMOVE）来强制系统创建消息队列。设置事件，表示线程已 准备好接收寄送的消息。
+
+消息将被寄送到的线程通过调用 GetMesssge或PeekMesssge来取得消息。返回的MSG结构中的hwnd成员为NULL。
+
+速查：Windows NT：3.1及以上版本；Windows：95及以上版本；Windows CE：1.0及以上版本：头文件：winuser.h；输入库：user32.lib；Unicode：在Windows NT环境下以Unicode和ANSI方式实现。

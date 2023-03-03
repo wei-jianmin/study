@@ -1,0 +1,22 @@
+https://blog.csdn.net/weixin_30617695/article/details/96035060
+https://blog.csdn.net/wzx19840423/article/details/6535785
+
+在linux下，每个进程只有一个heap，
+在任何一个动态库模块so中通过new或者malloc来分配内存的时候都是从这个唯一的heap中分配的，
+那么自然你在其它随便什么地方都可以释放。
+
+windows允许一个进程中有多个heap，那么这样就需要指明一块内存要在哪个heap上分配，
+win32的HeapAlloc函数就是这样设计的，给出一个heap的句柄，给出一个size，然后返回一个指针。
+每个进程都至少有一个主heap，可以通过GetProcessHeap来获得，其它的堆，可以通过GetProcessHeaps取到。
+DWORD GetProcessHeaps(__in  DWORD NumberOfHeaps,   __out  PHANDLE ProcessHeaps );
+同样，内存释放的时候通过HeapFree来完成，还是需要指定一个堆。
+
+windows下，malloc/free,new/delete都是调用HeapAlloc/HeapFree来实现来实现内存分配是释放的。
+查看Windows的API可以看到，这两个函数都需要一个Heap的HANDLE做为参数。
+CRT库采用了全局变量来保存这个HANDLE。
+如果是CRT静态链接，CRT库的代码会链接到各个DLL中去，也包括这个全局变量。
+也就是说，每个使用CRT静态链接的dll中都有一个自己的全局堆句柄，他们自己都在这个句柄上使用内存。
+当释放dll中分配的内存时由于使用的堆句柄不一致于是出错。
+
+如果在dll内部使用HeapAlloc(GetProcessHeap(), size)来分配的内存是可以在dll以外释放的，
+因为这时内存分配在全局的主heap上，而不是分配在dll自己的__crtheap上

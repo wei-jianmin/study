@@ -1,0 +1,4 @@
+获取当前路径：
+    run_dir=$(dirname "$(readlink -f $0)")
+获取文件行数
+    wc -l  filename

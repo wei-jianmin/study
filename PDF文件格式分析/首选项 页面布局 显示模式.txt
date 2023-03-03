@@ -1,0 +1,57 @@
+文档的首选项通过字典描述，对应的键值是/ViewerPreferences
+例：
+47 0 obj
+<<
+    /Type/Catalog
+    /Pages 43 0 R
+    /MarkInfo << /Marked true >>
+    /Metadata 44 0 R
+    /PageLayout /OneColumn
+    /PageMode /UseOutlines
+    /StructTreeRoot 1 0 R
+    /ViewerPreferences<<
+        /HideMenubar true
+        /HideToolbar true
+    >>
+>>
+endobj
+
+
+首选项字典中的键值对：
+HideToolbar（布尔值）：指定在文档处于活动状态时是否隐藏符合本标准的阅读器工具栏，默认为false；
+HideMenubar（布尔值）：指定在文档处于活动状态时是否隐藏符合本标准的阅读器菜单栏，默认为false；
+HideWindowUI（布尔值）：指定是否隐藏文档窗口中的用户界面元素（例如滚动条和导航控件），只显示文档的内容，默认为false；
+FitWindow（布尔值）：指定是否调整文档窗口的大小以适合第一个显示页面的大小，默认为false；
+CenterWindow（布尔值）：指定是否将文档窗口定位在屏幕中央，默认为false；
+DisplayDocTitle（布尔值）：是否应在窗口标题栏中显示文档的标题或文件名，默认为false；
+NonFullScreenPageMode（名字）：文档的页面模式，指定如何在退出全屏模式下显示文档。可分为：UseNone、UseOutlines、UseThumbs、UseOC，默认为“UseNone”，该模式只有catalog中的PageMode值是“FullScreen”，才有效；
+Direction（名字）：文本的主要阅读顺序（“L2R”，“R2L”，默认为“L2R”）；
+ViewArea（名字）：表示在屏幕上查看文档时应显示的页面区域的页面边界，可以取值为：“MediaBox”, “CropBox”, “BleedBox”, “TrimBox”, “ArtBox”，默认值为“CropBox”；
+ViewClip（名字）：在屏幕上查看文档时要剪切页面内容的页面边界的名称，可以取值为：“MediaBox”, “CropBox”, “BleedBox”, “TrimBox”, “ArtBox”，默认值为“CropBox”；
+PrintArea（名字）：页面边界的名称，该页面边界表示在打印文档时应呈现的页面区域，可以取值为：“MediaBox”, “CropBox”, “BleedBox”, “TrimBox”, “ArtBox”，默认值为“CropBox”；
+PrintClip（名字）：打印文档时要剪切页面内容的页面边界的名称，可以取值为：“MediaBox”, “CropBox”, “BleedBox”, “TrimBox”, “ArtBox”，默认值为“CropBox”；
+PrintScaling（名字）：在为此文档显示打印对话框时，应选择的页面缩放选项，可选值为：“None”（不缩放），“AppDefault”（默认缩放），默认值为“AppDefault”；
+Duplex（名字）：打印对话框打印文件时，应使用的纸张处理选项，可选值为：“Simplex”（单面打印），“DuplexFlipShortEdge”（沿短边双面打印），“DuplexFlipLongEdge”（沿长边双面打印），“none”，默认值为“none”；
+PickTrayByPDFSize（布尔值）：是否应使用PDF页面大小来选择输入纸盘的标记，此设置对不能按大小选择输入纸盘的操作系统没有影响。如果PickTrayByPDFSize为true，则应检查与输入纸盘相关的打印对话框中的复选框；默认值：由符合本标准的读者定义。
+PrintPageRange（数组）：用于在打印文件时初始化打印对话框的页码
+NumCopies（整数）：文件打开打印对话框时，应打印的份数
+
+
+/PageLayout（页面布局）的可选值：
+SinglePage：一次显示一页
+OneColumn：在一列中显示页面
+TwoColumnLeft：显示两列中的页面，奇数页面在左侧
+TwoColumnRight：在两列中显示页面，奇数页面在右侧
+TwoPageLeft（PDF 1.5）：一次显示两个页面，奇数页面在左侧
+TwoPageRight（PDF 1.5）：一次显示两个页面，奇数页面在右边
+默认值：SinglePage。
+
+
+/PageMode：指定打开时文档的显示方式：
+UseNone：文档大纲和缩略图都不可见
+UseOutlines：文档大纲可见
+UseThumbs：缩略图图像可见
+FullScreen：全屏模式，没有菜单栏，窗口控件或任何其他可见窗口
+UseOC（PDF 1.5）：可见的可选内容组面板
+UseAttachments（PDF 1.6）：附件面板可见
+默认值：UseNone。

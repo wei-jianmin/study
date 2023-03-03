@@ -1,0 +1,78 @@
+http://nanjingabcdefg.is-programmer.com/tag/%E9%80%8F%E6%98%8E%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B
+
+一般情况下，在C语言中，函数指针定义会像下面这样：
+void (*func_p)(int a);
+
+没有方法使得函数指针能够指向参数类型不同的函数呢，
+如定义一个函数指针，可以同时指向下面这几种类型的函数
+void func1(int a);
+void func2(char* s);
+void func3(float s);
+
+解决办法是有的，就是借助“透明联合类型”，为此，我们先来看下什么是“透明联合类型”
+如下例：
+typedef union A_u
+{
+    int *a;
+    float b;
+    struct
+    {
+        short c;
+        char d;
+    };
+} A __attribute__((__transparent_union__));
+
+上面就算是定义了一个透明联合类型
+__transparent_union__也可以写为transparent_union
+但为了避免与自定义的宏重复，最好在两边加上双下划线
+另外需要注意一下两点：
+1. 浮点类型可以作为透明联合类型的成员，但不能作为第一个成员
+2. 透明联合类型中的任意一个成员的所占的内存空间的大小
+   必须小于等于该透明联合类型中的第一个成员的所占的内存空间的大小
+
+现在我们就可以用上面定义的透明联合类型，作为函数参数类型
+void (*func_p)(A a);
+
+然后我们就可以：
+func_p pf1 = func1;
+func_p pf2 = func2;
+func_p pf3 = func3;
+pf1(12);
+pf2("asdfasdf");
+pf3(3.14);
+
+??这算不算是C语言实现了函数多态？？
+不算，除了透明联合体参数，其他参数必须相同
+严格来说，透明联合类型只是为了消除C语言的警告机制，其实用强转也能实现
+
+再看一个例子（注：这段例子只在qt中能编译过，在vs中编译报错，且文件后缀必须是.c）：
+#include <stdio.h>
+typedef struct A_
+{
+    int i;
+    int j;
+} A;
+typedef struct B_
+{
+    int i;
+    int j;
+    int k;
+    int f;
+} B;
+
+void func( union{A*pa;B*pb;} __attribute__((transparent_union)),char* s);
+typeof(func)* pf = (typeof(func)*)func;
+void func(A *pa,char* s)
+{
+    //...
+    return;
+}
+
+int main()
+{
+    B b;
+    pf(&b,"asdf");
+    return 0;
+}
+
+    

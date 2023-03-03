@@ -1,0 +1,127 @@
+https://www.cnblogs.com/beanmoon/p/3387652.html
+
+在 /etc/apt/sources.list 中，格式：
+deb    ###   ftp地址                         ###  版本代号   ###   限定词
+deb    ###   http://mirrors.163.com/debian/  ###  wheezy     ###   main non-free contrib
+
+1. 第一部分
+第一部分为deb或者deb-src，其中前者代表软件的位置，后者代表软件的源代码的位置
+
+2. 第二部分
+第二部分为你的ftp镜像的url，以我的为例，我是用的是大陆速度较快的网易镜像。在浏览器中打开此链接以后会发现有如下内容：
+../
+dists/                                             18-Dec-2021 17:41       -
+doc/                                               05-Jan-2022 03:52       -
+indices/                                           05-Jan-2022 04:18       -
+pool/                                              20-Dec-2000 04:10       -
+project/                                           18-Nov-2008 07:05       -
+tools/                                             11-Oct-2012 00:29       -
+zzz-dists/                                         14-Aug-2021 21:55       -
+README                                             18-Dec-2021 17:40    1324
+README.CD-manufacture                              26-Jun-2010 17:52    1290
+README.html                                        18-Dec-2021 17:40    3207
+README.mirrors.html                                05-Mar-2017 04:08     291
+README.mirrors.txt                                 05-Mar-2017 04:08      86
+extrafiles                                         05-Jan-2022 04:25    216K
+ls-lR.gz                                           05-Jan-2022 04:19     15M
+目录介绍：
+/dists/ 目录包含"发行版"(distributions), 此处是获得 Debian 发布版本(releases)和已发布版本(pre-releases)的软件包的正规途径. 
+        有些旧软件包及 packages.gz 文件仍在里面.（注：dists下面存放的是索引文件，真正的包存放在pool下）
+/pool/  目录为软件包的物理地址. 软件包均放进一个巨大的 "池子(pool)", 按照源码包名称分类存放. 
+        为了方便管理, pool 目录下按属性再分类("main", "contrib" 和 "non-free"), 
+        分类下面再按源码包名称的首字母归档. 这些目录包含的文件有: 
+        运行于各种系统架构的二进制软件包, 
+        生成这些二进制软件包的源码包.
+        你可以执行命令 apt-cache showsrc mypackagename, 查看 'Directory:' 行获知每个软件包的存放位置. 
+        例如: apache 软件包存放在 pool/main/a/apache/ 目录中.
+        另外, 由于lib*软件包数量巨大, 它们以特殊的方式归档: 
+        例如, libpaper 软件包存放在 pool/main/libp/libpaper/.
+还有一些目录:
+/tools/:用于创建启动盘, 磁盘分区, 压缩/解压文件, 启动 Linux 的 DOS 下的小工.
+/doc/:  基本的 Debian 文档, 如 FAQ, 错误报告系统指导等..
+/indices/:  维护人员文件和重载文件.
+/project/:  大部分为开发人员的资源, 如: project/experimental/ 本目录包含了处于开发中的软件包和工具,
+            它们均处于 alpha 测试阶段. 用户不应使用这些软件, 因为即使是经验丰富的用户也会被搞得一团糟.）
+
+3. 第三部分
+第三部分表示你的debian版本号，
+Debian发行版目录（https://www.debian.org/releases/index.zh-cn.html）
+下一代 Debian 正式发行版的代号为 bookworm — 测试（testing）版 — 发布日期尚未确定
+Debian 11 (bullseye) — 当前的稳定（stable）版
+Debian 10（buster） — 当前的旧的稳定（oldstable）版
+Debian 9（stretch） — 更旧的稳定（oldoldstable）版，现有长期支持
+Debian 8（jessie） — 已存档版本，现有扩展长期支持
+Debian 7（wheezy） — 被淘汰的稳定版
+Debian 6.0（squeeze） — 被淘汰的稳定版
+Debian GNU/Linux 5.0（lenny） — 被淘汰的稳定版
+Debian GNU/Linux 4.0（etch） — 被淘汰的稳定版
+Debian GNU/Linux 3.1（sarge） — 被淘汰的稳定版
+Debian GNU/Linux 3.0（woody） — 被淘汰的稳定版
+Debian GNU/Linux 2.2（potato） — 被淘汰的稳定版
+Debian GNU/Linux 2.1（slink） — 被淘汰的稳定版
+Debian GNU/Linux 2.0（hamm） — 被淘汰的稳定版
+另外按版本的旧-->新程度有这么几大类：oldstable，stable，testing，sid
+● oldstable顾名思义，就是以前的稳定发行版了，在本例中oldstable就是Debian6.0.8目录的一个链接，两者内容完全一致。
+● stable是指现在的稳定发行版，对于每个debian来说，每个稳定发行版都会有一个代号，
+  如debian 6叫做squeeze，debian 7叫做wheezy，由于在笔者写本文的时候稳定版是debian7，所以stable就是wheezy的一个链接。
+● testing指目前还暂时处于测试阶段的debian发行版，
+  如wheezy往下发展就是jessie了，所以testing代指的就是jessie目录，它是jessie的一个链接。
+● unstable那就是不稳定版本了，但在这个目录清单里我们并没有看到unstable目录，其实它还有一个代号：sid，
+  我们知道debian的发行版本名称大都来自玩具总动员中的角色名称，而sid就是那个专门破坏玩具的邻居家坏小孩，
+  所以就把unstable这个不稳定的软件目录起名为sid了，
+  这里面的软件一般都是最新的，稳定性、安全稳定值得商榷，
+  如果你想做试验小白鼠，大可使用这里的软件。
+  经过一段时间的测试，这里面的软件可能会进入下一个阶段testing目录从而出现在下一个debian发行版中，要么就夭折被直接抛弃了。  
+  
+4. 第四部分
+好了，从水平的角度介绍完debian发行版，现在我们进入这些目录大致看一下里面的内容（以stable目录为例）：
+我们会发现每个目录都会包括contrib、main、non-free等几个目录
+因为 Debian 是非营利组织，但是组织架构严谨，有一套完善的软件管理方式。基于其对软件 free 度的一种坚持，对不同版权软件包的录入有一些限定。
+下面是对它们的一些简要介绍：
+main       Debian 里最基本及主要且符合自由软件规范的软件 ( packages )。
+contrib    这里头软件虽然可以在 Debian 里头运作，即使本身属于自由软件但多半却是相依于非自由 ( non-free ) 软件。
+non-free   不属于自由软件范畴的软件。
+non-us     这个分类里头的软件都来自非美国地区，当中可能有牵扯到专利、加密..等等问题。
+marillat   对应 Christian Marillat 的软件仓库，包括mplayer, transcode等。
+rareware   对应 rarewares.org 的软件仓库, 包括很多音效程序，如lame, musepack, beep media player等。
+ustc       对应 debian@ustc 维护的一些软件包，如 mule-gbk, gaim-openq, scim, stardict dicts, patched xpdf, irssi, xmms。
+java       对应 Blackdown java。包括 j2re, j2sdk ,mozilla java plugin。
+firefly    对应打过firefly补丁的包，包括 fontconfig mozilla mozilla-firefox pango1.0 qt-x11-free xft
+misc       对应其它无分类的包，包括 nvidia-kernel, winex3, rox, chmsee等
+
+5. 关于源的混用问题
+一般不建议混用 stable, testing 和 unstable 的源。
+因为很多软件之间都有不同程度的相依性，强行的结果会造成更多软件相依、相斥问题的产生，
+最终可能影响系统稳定与整个软件升级制度的正常运作。
+需要把源从低级升到高级是非常简单的，只要修改 sources.list 里的源就好了。
+但反过来，降级是一种几乎不可能的任务…
+如果你使用的是高版本的debian，而在source.list文件中配置的是低版本，
+那么当你在线安装软件的时候很可能会发现有很多软件依赖问题无法解决，
+当出现这些问题的时候，就要想到是否要修改下source.list文件中的版本问题了
+
+6. 按需修改自己的sources.list 
+Debian 有自己独特的版本系统，整个系统有三个版本，分别为稳定版(stable)，测试版(testing)和不稳定版(unstable/sid)。
+每次发布的版本都是稳定版，而测试版在经过一段时间的测试证明没有问题后会成为新的稳定。
+因为稳定版是会更新的，为了便于区分不同时期的稳定版，每个版本又有自己特有的代号(codename)，现在的稳定版称为 wheezy(debian7)，测试版称为jessie。而不稳定版的代号永远是 sid。
+sources.list的写法
+1)找到包含dists和pool这两个目录的那个目录，把地址记下来，比如http://mirrors.163.com/debian/;
+2)打开dists，里面包含的目录名字，记下来。
+  比如http://mirrors.163.com/debian/，dists/包含wheezy、testing等。把这些目录名字记下来。
+3)打开pool目录，看看里面包含哪些组件目录，比如main、contrib、non-free；
+4)书写格式：deb <1记下来的地址> <2记下来的目录名> <3记下来的名字>， 如：
+  deb http://mirrors.163.com/debian wheezy man contrib non-free
+  
+7. 更新软件包列表信息，升级debian
+修改 /etc/apt/sources.list 之后一般会运行下面两个命令进行更新升级：
+sudo apt-get update
+sudo apt-get dist-upgrade
+其中 ：
+   update - 取回更新的软件包列表信息
+   dist-upgrade - 发布版升级
+第一个命令仅仅更新的软件包列表信息，所以很快就能完成。
+第二个命令是全面更新发布版，一般会下载几百兆的新软件包。
+其实在运行完第一个命令后系统就会提示你进行更新升级。
+因为修改了源，所有这次更新的改动可能会很大，
+比如安装某个包可能会删除太多的其他包，所有系统会提示你运行“sudo apt-get dist-upgrade”进行全面升级
+或使用软件包管理器中的“标记全部软件包以便升级”功能进行升级。两者效果是一样的。  
+

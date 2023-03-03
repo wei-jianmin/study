@@ -1,0 +1,81 @@
+VS2005的ATLMFC/SRC文件夹下本身就默认包含MFC.BSC文件，可以直接使用
+
+######################################################################################
+想要重新生成的话，可参考下面的步骤：
+1.
+注册环境变量，注意：注册完成后，要在cmd窗口中测试一下是否注册成功
+注册方法：C:\Program Files (x86)\Microsoft Visual Studio 8\VC\bin\vcvars32.bat
+
+2.
+http://blog.csdn.net/thinkhy/article/details/5753940
+一直知道MS为我们提供了MFC/ATL的源代码，但没想到重新编译这两个重量级的库，这两天在生成代码的空隙时间里把MFC/ATL给重新编译了。
+
+---------------------------------------------------------------
+
+以Visual Studio 2005为例，假定Visual Studio 2005安装目录为：
+
+ 
+
+              X:/Program Files/Microsoft Visual Studio 8
+
+   
+
+  ATL/MFC的源码放在了： X:/Program Files/Microsoft Visual Studio 8/VC/atlmfc
+
+ 
+
+里面有一个readme.txt，按照readme里的方法，首先在命令行设置编译环境，在VC/BIN目录下有个唯一的批处理文件，运行这个批处理文件就行。
+
+---------------------------------------------------------------
+
+参照readme.txt的提示， 运行 nmake执行编译链接过程(例：nmake /f atlmfc.mak MFC LIBNAME=mfc80)，但不久就出错了：
+
+ 
+
+编译出错：
+
+assemblyInfo.cpp<78>: fatal error C1189: #eeor: Following information required to build private version
+
+ 
+
+ ---------------------------------------------------------------
+
+接下来需要对代码做一些修改：
+
+//假定当前目录为：C:\Program Files (x86)\Microsoft Visual Studio 8\VC\atlmfc\src
+
+./mfcm/interface/AssemblyInfo.cpp
+
+  添加：line20: #define BUILD_PREBUILT
+
+  修改: line 75~77
+
+         [assembly: AssemblyDelaySign(false)];
+
+         [assembly: AssemblyKeyFile("")];
+
+         [assembly: AssemblyKeyName("")];
+
+ 
+
+./mfcm/wfrmcmd.cpp<251>: ...
+
+  
+
+line: 231 #define BUILD_PREBUILT
+
+ 
+
+line 245~247:
+
+         [assembly: AssemblyDelaySign(false)];
+
+         [assembly: AssemblyKeyFile("")];
+
+         assembly: AssemblyKeyName("")];
+
+---------------------------------------------------------------
+
+再次编译，成功！
+
+---------------------------------------------------------------   

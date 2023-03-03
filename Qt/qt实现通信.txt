@@ -1,0 +1,229 @@
+实现tcp服务器：
+struct TcpInfo
+{
+    int index;
+    QTcpSocket *mSocket;
+};
+
+构造函数中：
+    QTcpServer *mServer = new QTcpServer();
+    connect(mServer, SIGNAL(newConnection()), this, SLOT(new_client()));
+    mServer->listen(QHostAddress::Any, PORT);
+
+new_client()
+    TcpInfo tcpInfo;
+    QTcpSocket *mSocket = mServer->nextPendingConnection();//与客户端通信的套接字
+    tcpInfo.mSocket = mSocket;
+    vTcpInfo.append(tcpInfo);
+    //关联接收客户端数据信号readyRead信号（客户端有数据就会发readyRead信号）
+    connect(mSocket,SIGNAL(readyRead()),this,SLOT(read_client_data()));
+    //检测掉线信号
+    connect(mSocket,SIGNAL(disconnected()),this,SLOT(client_dis()));
+    //socket出错 -> 出错处理
+    connect(mSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(show_error(QAbstractSocket::SocketError)));
+
+===============================================================================
+QLocalSocket
+该类继承自QIODevice，提供了一个本地的套接字。
+在windows中，它实现为管道，在Unix中，它实现为本地套接字（a local domain socket）
+如果出错，socketError()返回错误类型，errorString()获取错误描述，
+尽管QLocalSocket被设计为配合实现循环使用，但你也可以不用事件循环，
+此时，你需要调用waitForConnected(), waitForReadyRead(), 
+waitForBytesWritten(), and waitForDisconnected() 等函数，
+这些函数是阻塞的，直到操作完成或超时。
+-------------------------------------------------------------------------------
+QLocalServer
+该类继承自QObject,提供了一个基于本地socket的服务
+该类用以完成接收到来的本地socket连接的功能，
+调用listen()让其开始监听特定的键（a specified key），
+每当有一个客户连到server后，就会发一个newConnection()信号。
+调用nextPendingConnection()以接收一个链接，返回QLocalSocket*。
+serverError()返回出错类型，errorString()返回错误描述。
+当监听连接时，server的名字可通过serverName()获取
+调用close()可以让server停止监听连接。
+尽管QLocalServer被设计为配合实现循环使用，但你也可以不用事件循环，
+此时，你需要调用waitForNewConnection()，
+该函数是阻塞的，直到来了一个连接或超时。
+-------------------------------------------------------------------------------
+QAbstractSocket
+QAbstractSocket继承自QIODevice，同时又被QTcpSocket和QUdpSocket继承。
+该类为所有socket类型提供基础功能。
+如果你使用socket，你有两种选择：
+1. 实例化QTcpSocket 或 QUdpSocket.
+2. 创建一个本地的socket描述符,实例化QAbstractSocket，
+   然后调用setSocketDescriptor()包装本地socket描述符。
+QAbstractSocket的API统一了tcp和udp之间的不同，
+例如，尽管udp不是面向连接的，connectToHost()会建立一个虚拟的连接。
+在内部，QAbstractSocket会记住传递给connectToHost（）的地址和端口，
+并且read（）和write（）之类的函数会使用这些值。
+QAbstractSocket随时都有一个状态（由state（）返回）。初始状态为UnconnectedState。
+调用connectToHost（）之后，套接字首先进入HostLookupState。
+如果找到了主机，则QAbstractSocket进入ConnectingState并发出hostFound（）信号。
+建立连接后，它将进入ConnectedState并发出connected（）。
+如果在任何阶段发生错误，都会发出error（）。
+每当状态更改时，都会发出stateChanged（）。
+为了方便， 如果套接字已准备好进行读写，则isValid（）返回true，
+但是请注意，套接字的状态必须为ConnectedState，然后才能进行读写。
+通过调用read（）或write（）来读取或写入数据，
+或者使用便利函数readLine（）和readAll（）。 
+QAbstractSocket还继承了getChar（），putChar（），和QIODevice的ungetChar（），它们处理单个字节。
+将数据写入套接字后，将发出bytesWritten（）信号。
+注意，Qt不会限制写缓冲区的大小。您可以通过收听此信号来监视其大小。
+每当有新的数据块到达时，都会发出readyRead（）信号。然后，bytesAvailable（）返回可读取的字节数。
+通常，您可以将readyRead（）信号连接到插槽并在其中读取所有可用数据。
+如果您不一次读取所有数据，则其余数据以后仍将可用，
+并且任何新的传入数据都将附加到QAbstractSocket的内部读取缓冲区中。
+要限制读取缓冲区的大小，请调用setReadBufferSize（）。
+要关闭套接字，请调用disconnectFromHost（）。 
+QAbstractSocket进入QAbstractSocket :: ClosingState。
+将所有未决数据写入套接字后，QAbstractSocket实际上关闭套接字，进入QAbstractSocket :: UnconnectedState，并发出断开连接（）。
+如果要立即中止连接，丢弃所有未决数据，请调用abort（）。
+如果远程主机关闭该连接，则QAbstractSocket将发出错误（QAbstractSocket :: RemoteHostClosedError），
+在此期间套接字状态仍为ConnectedState，然后将发出断开连接（）信号。
+通过调用peerPort（）和peerAddress（）来获取已连接对等方的端口和地址。
+peerName（）返回传递给connectToHost（）的对等方的主机名。 
+localPort（）和localAddress（）返回本地套接字的端口和地址。
+QAbstractSocket提供了一组函数，这些函数可以挂起调用线程，直到发出某些信号为止。这些函数可用于实现阻塞套接字：
+waitForConnected（）阻塞，直到建立连接为止。
+waitForReadyRead（）将阻塞，直到可以读取新数据为止。
+waitForBytesWritten（）阻塞，直到将一个有效载荷数据写入套接字为止。
+waitForDisconnected（）阻塞直到连接关闭。
+使用举例：
+      int numRead = 0, numReadTotal = 0;
+      char buffer[50];
+      forever {
+          numRead  = socket.read(buffer, 50);
+          // do whatever with array
+          numReadTotal += numRead;
+          if (numRead == 0 && !socket.waitForReadyRead())
+              break;
+      }
+如果waitForReadyRead（）返回false，则说明连接已关闭或发生了错误。
+使用阻塞套接字进行编程与使用非阻塞套接字进行编程完全不同。 
+阻塞套接字不需要事件循环，通常可以简化代码。 
+但是，在GUI应用程序中，阻塞套接字只能在非GUI线程中使用，以避免冻结用户界面。 
+有关这两种方法的概述，请参见fortuneclient和blockingfortuneclient示例。
+注意：我们不建议将阻塞功能与信号一起使用。 应该使用两种可能性之一。
+QAbstractSocket可以与QTextStream和QDataStream的流运算符（operator <<（）和operator >>（））一起使用。
+但是，有一个问题需要注意：在尝试使用operator >>（）读取数据之前，必须确保有足够的数据可用。
+另请参见QNetworkAccessManager和QTcpServer。
+-------------------------------------------------------------------------------
+QNativeSocketEnginePrivate  QNativeSocketEngine
+封装了WSAStartup()，WSASocket()等系列WSA函数
+QNativeSocketEnginePrivate类把这些SDK封装成：
+createNewSocket()、option()、setOption()、nativeConnect()、nativeBind()、
+nativeListen()、nativeAccept()、nativeWrite()、nativeRead()、nativeSelect()、nativeClose()等
+按照QT的设计，QPrivate类是数据类；Q类应该是主类。
+QNativeSocketEngine继承自QNativeSocketEnginePrivate和QObject
+QNatvieSocketEnginePrivate是OS相关的API封装，
+和QNativeSocketEngine一起构成具体平台SOCKET实现。
+-------------------------------------------------------------------------------
+QAbstractSocketPrivate
+-------------------------------------------------------------------------------
+QTcpSocketPrivate
+-------------------------------------------------------------------------------
+QUdpSocketPrivate
+-------------------------------------------------------------------------------
+QTcpSocket
+该类继承自QAbstractSocket，同时又被QSctpSocket and QSslSocket继承
+该类提供了一个tcp套接字，
+TCP是一个可靠的、面向流的面向连接的传输协议。
+注意：tcp套接字不能以QIODevice::Unbuffered模式打开。
+另可参见QTcpServer, QUdpSocket, QNetworkAccessManager，
+        Fortune Server Example, Fortune Client Example,
+        Threaded Fortune Server Example, 
+        Blocking Fortune Client Example, 
+        Loopback Example, Torrent Example等
+-------------------------------------------------------------------------------
+QTcpServer
+该类继承自QObject，同时又被QSctpServer继承。
+QTcpServer提供了一个基于tcp的服务，允许接受tcp连接。
+你可以指定端口，或者让该类自己选一个。
+你可以监听特定的地址或者所有的。
+调用listen()以让服务开始监听连接，
+每当有一个客户连到server后，就会发一个newConnection()信号。
+调用nextPendingConnection()以接收一个链接，返回QLocalSocket*。
+serverError()返回出错类型，errorString()返回错误描述。
+当监听连接时，监听的地址和端口可通过serverAddress()和serverPort()获取，
+调用close()可以让server停止监听连接。
+尽管QLocalServer被设计为配合实现循环使用，但你也可以不用事件循环，
+此时，你需要调用waitForNewConnection()，
+该函数是阻塞的，直到来了一个连接或超时。
+另可参见：QTcpSocket, Fortune Server Example,
+          Threaded Fortune Server Example, 
+          Loopback Example, Torrent Example.
+-------------------------------------------------------------------------------
+QSctpServer
+The QSctpServer class provides an SCTP-based server.
+SCTP (Stream Control Transmission Protocol)是一种传输协议，
+在TCP/IP协议栈中所处的位置和TCP、UDP类似，兼有TCP/UDP两者特征。
+-------------------------------------------------------------------------------
+QSslSocket 
+QSslSocket提供一个SSL加密的socket(既能用于服务端，又能用于客户端)
+支持新的SSL，包括SSL3和TLS1.2
+默认情况下，QSslSocket仅使用被认为是安全的SSL协议（QSsl :: SecureProtocols），
+但是只要在握手开始之前调用setProtocol（），就可以通过调用setProtocol（）来更改SSL协议。
+套接字进入ConnectedState之后，SSL加密将在现有TCP流之上运行。
+有两种使用QSslSocket建立安全连接的简单方法：
+使用立即SSL握手，或在未加密模式下建立连接之后发生延迟的SSL握手。
+使用QSslSocket的最常见方法是构造一个对象并通过调用connectToHostEncrypted（）启动安全连接。
+建立连接后，此方法立即启动SSL握手。
+  QSslSocket *socket = new QSslSocket(this);
+  connect(socket, SIGNAL(encrypted()), this, SLOT(ready()));
+  socket->connectToHostEncrypted("imap.example.com", 993);  //连接并开始ssl认证
+与普通的QTcpSocket一样，如果连接成功，则QSslSocket会输入HostLookupState，ConnectingState，最后是ConnectedState。
+握手然后自动开始，如果成功，则发出crypto（）信号，指示套接字已进入加密状态并准备使用。
+请注意，可以在connectToHostEncrypted（）返回之后立即将数据写入套接字（即在发出crypto（）信号之前）。
+数据在QSslSocket中排队，直到发出cryptod（）信号之后。
+使用延迟SSL握手来保护现有连接的示例是SSL服务器保护传入连接的情况。
+假设您创建一个SSL服务器类作为QTcpServer的子类。
+您将使用下面的示例重写QTcpServer :: incomingConnection（），
+该示例首先构造QSslSocket的实例，
+然后调用setSocketDescriptor（）来将新套接字的描述符设置为传入的现有描述符。
+然后通过调用来启动SSL握手startServerEncryption（）。
+  void SslServer::incomingConnection(qintptr socketDescriptor)
+  {
+      QSslSocket *serverSocket = new QSslSocket;
+      if (serverSocket->setSocketDescriptor(socketDescriptor)) {
+          addPendingConnection(serverSocket);
+          connect(serverSocket, &QSslSocket::encrypted, this, &SslServer::ready);
+          serverSocket->startServerEncryption();  //开始ssl认证
+      } else {
+          delete serverSocket;
+      }
+  }
+If an error occurs, QSslSocket emits the sslErrors() signal. In this case, if no action is taken to ignore the error(s), the connection is dropped. To continue, despite the occurrence of an error, you can call ignoreSslErrors(), either from within this slot after the error occurs, or any time after construction of the QSslSocket and before the connection is attempted. This will allow QSslSocket to ignore the errors it encounters when establishing the identity of the peer. Ignoring errors during an SSL handshake should be used with caution, since a fundamental characteristic of secure connections is that they should be established with a successful handshake.
+Once encrypted, you use QSslSocket as a regular QTcpSocket. When readyRead() is emitted, you can call read(), canReadLine() and readLine(), or getChar() to read decrypted data from QSslSocket's internal buffer, and you can call write() or putChar() to write data back to the peer. QSslSocket will automatically encrypt the written data for you, and emit encryptedBytesWritten() once the data has been written to the peer.
+As a convenience, QSslSocket supports QTcpSocket's blocking functions waitForConnected(), waitForReadyRead(), waitForBytesWritten(), and waitForDisconnected(). It also provides waitForEncrypted(), which will block the calling thread until an encrypted connection has been established.
+
+  QSslSocket socket;
+  socket.connectToHostEncrypted("http.example.com", 443);
+  if (!socket.waitForEncrypted()) {
+      qDebug() << socket.errorString();
+      return false;
+  }
+
+  socket.write("GET / HTTP/1.0\r\n\r\n");
+  while (socket.waitForReadyRead())
+      qDebug() << socket.readAll().data();
+
+QSslSocket provides an extensive, easy-to-use API for handling cryptographic ciphers, private keys, and local, peer, and Certification Authority (CA) certificates. It also provides an API for handling errors that occur during the handshake phase.
+The following features can also be customized:
+The socket's cryptographic cipher suite can be customized before the handshake phase with setCiphers() and setDefaultCiphers().
+The socket's local certificate and private key can be customized before the handshake phase with setLocalCertificate() and setPrivateKey().
+The CA certificate database can be extended and customized with addCaCertificate(), addCaCertificates(), addDefaultCaCertificate(), addDefaultCaCertificates(), and QSslConfiguration::defaultConfiguration().setCaCertificates().
+Note: If available, root certificates on Unix (excluding macOS) will be loaded on demand from the standard certificate directories. If you do not want to load root certificates on demand, you need to call either QSslConfiguration::defaultConfiguration().setCaCertificates() before the first SSL handshake is made in your application (for example, via passing QSslSocket::systemCaCertificates() to it), or call QSslConfiguration::defaultConfiguration()::setCaCertificates() on your QSslSocket instance prior to the SSL handshake.
+For more information about ciphers and certificates, refer to QSslCipher and QSslCertificate.
+This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/).
+Note: Be aware of the difference between the bytesWritten() signal and the encryptedBytesWritten() signal. For a QTcpSocket, bytesWritten() will get emitted as soon as data has been written to the TCP socket. For a QSslSocket, bytesWritten() will get emitted when the data is being encrypted and encryptedBytesWritten() will get emitted as soon as data has been written to the TCP socket.
+See also QSslCertificate, QSslCipher, and QSslError.
+-------------------------------------------------------------------------------
+QNetworkAccessManager  QNetworkRequest  QSslConfiguration 
+QNetworkAccessManager 提供了对ftp、http的更上层抽象
+在qt5.9中，qftp和qhttp等类都已经被弃用，统一用QNetworkAccessManager实现
+===============================================================================
+QNatvieSocketEnginePrivate是OS相关的API封装，和QNativeSocketEngine一起构成具体平台SOCKET实现；
+QTcpSocket、QUdpSocket、QTcpServer构成底层的应用API；QSslSocket是SSL加密相关API；
+QHttp、QFtp构成高层次应该API；
+QNetworkAccessManager、QNetworkRequest、QNetworkReply是高度抽象的网络层。

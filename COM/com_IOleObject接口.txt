@@ -1,0 +1,21 @@
+SetClientSite(IOleClientSite *pClientSite);    //设置OLE包容器的站点对象
+GetClientSite(IOleClientSite **ppClientSite);  //获取OLE包容器的站点对象
+SetHostNames(LPCOLESTR szContainerApp, LPCOLESTR szContainerObj);  //允许嵌入对象能够在其窗口标题上显示包容器程序名
+Close(DWORD dwSaveOption);  //终止嵌入对象的激活状态
+SetMoniker(DWORD dwWhichMoniker, IMoniker *pmk);
+GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
+InitFromData(IDataObject *pDataObject, BOOL fCreation, DWORD dwReserved);
+GetClipboardData(DWORD dwReserved, IDataObject **ppDataObject);
+DoVerb(LONG iVerb, LPMSG lpmsg, IOleClientSite *pActiveSite, LONG lindex, HWND hwndParent, LPCRECT lprcPosRect);//激活嵌入对象，并可通过使用不同的动词让嵌入对象执行相应的动作
+EnumVerbs(IEnumOLEVERB **ppEnumOleVerb);  //装入上下文菜单
+Update();  //使容器的数据与其链接/嵌入的对象保持同步
+IsUpToDate();
+GetUserClassID(CLSID *pClsid);
+GetUserType(DWORD dwFormOfType, LPOLESTR *pszUserType);
+SetExtent(DWORD dwDrawAspect, SIZEL *psizel);  //设置控件可使用的空间（控件在屏幕上使用的区域范围）
+GetExtent(DWORD dwDrawAspect, SIZEL *psizel);  //获取控件可使用的空间
+Advise(IAdviseSink *pAdvSink, DWORD *pdwConnection);  //容器中有实现了IAdviseSink的接收器，通过该方法传来接收器的接口指针
+Unadvise(DWORD dwConnection);
+EnumAdvise(IEnumSTATDATA **ppenumAdvise);
+GetMiscStatus(DWORD dwAspect, DWORD *pdwStatus);  //返回OLEMISC状态位
+SetColorScheme(LOGPALETTE *pLogpal); 

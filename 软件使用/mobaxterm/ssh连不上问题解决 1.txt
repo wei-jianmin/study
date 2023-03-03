@@ -1,0 +1,19 @@
+netstat -an
+    没有22端口服务，说明sshd服务没启动起来
+service ssh status
+    报错：Failed to start OpenBSD Secure Shell server
+sshd: ssh server deamon
+    daemon（发音为DEE-muhn）是一段连续运行的程序，用于处理计算机系统希望接收到的阶段性的服务需求。
+    daemon程序段将请求提交给其他合适的程序（或者进程）。
+    网络上每个页面的服务器都有一个HTTPD或是超文本传输协议daemon，持续地等待从网络客户端及其用户发送来的请求。
+    据韦伯斯特词典记载，在神话里面，daemon是“一种从事服务的力量或者精灵”：未找到命令
+sshd -T
+    报错：Could not load host key: /etc/ssh/ssh_host_rsa_key
+生成秘钥交换文件    
+  ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+  ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+  ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+  ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+service ssh start
+netstat -an
+  可以看到有22端口了

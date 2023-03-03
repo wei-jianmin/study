@@ -1,0 +1,26 @@
+1. 安装终端共享工具tmate
+   https://linux.cn/article-9096-1.html
+   apt install tmate
+   使用tmate前，需要保证电脑中有ssh密钥
+   ssh密钥生成方法：ssh-keygen -t rsa , 然后全部直接点回车确认就行。
+   遇到的问题：
+       执行tmate报错：sessions should be nested with care, unset $TMUX to force
+           解决： unset TMUX
+           https://zhuanlan.zhihu.com/p/40512306
+           应该说TMATE在功能上类似TMUX, 个人理解是在TMUX的基础上增加共享的功能
+           Tmux ("Terminal Multiplexer"的简称), 是一款优秀的终端复用软件，类似 GNU screen，但比screen更出色
+           使用它最直观的好处就是, 通过一个终端登录远程主机并运行tmux后，
+           在其中可以开启多个控制台而无需再“浪费”多余的终端来连接这台远程主机
+           还有一个好处就是当终端关闭后该shell里面运行的任务进程也会随之中断，通过使用tmux就能很容易的解决这个问题。
+           使用场景： 
+            1. 关闭终端,再次打开时原终端里面的任务进程依然不会中断 ;
+            2. 处于异地的两人可以对同一会话进行操作，一方的操作另一方可以实时看到 ;
+            3. 可以在单个屏幕的灵活布局下开出很多终端，然后就能协作地使用它们 ;
+            
+            
+2. 安装前准备
+   https://blog.csdn.net/kunkliu/article/details/78872077
+   由于Linux系统都可以自行安装 GNU 工具集（对应Windows系统里的MinGW）， 所以Qt在Linux系统里的安装包没有自带g++等编译生成工具以及OpenGL开发库， 需要根据不同的Linux发行版提前装好GNU 工具集和OpenGL开发库。
+   对于Linux系统，Qt官方的安装包总是假定C++编译器compiler、调试器debugger、生成器make以及其他开发工具 由该操作系统自己提供，另外构建Qt图形界面程序还需要OpenGL库文件（扩展名为 .a 和 .so）和头文件（扩展名为 .h）， OpenGL的开发库也是需要操作系统自己提供。  
+   
+2. 编译qt源码   

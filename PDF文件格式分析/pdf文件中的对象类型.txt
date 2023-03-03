@@ -1,0 +1,31 @@
+从PDF1.5开始往后的版本，支持了Object stream，可以把多个对象（stream对象除外）压缩存放在同一个stream对象中，达到减少文件大小的效果。
+
+pdf的压缩算法可分为三类：
+1. ASCII filters（ASCIIHexDecode、ASCII85Decode）
+2. 非加密filters（LZWDecode、FlateDecode、RunLengthDecode、CCITTFaxDecode、JBIG2Decode、DCTDecode，JPXDecode）
+3. 加密filter（Crypt）
+
+下面是对各个Filter算法的简单介绍：
+● ASCIIHexDecode
+  将数据编码成ASCII十六进制字符串形式，一般用于将二进制数据（如图片）编码为十六进制字符串
+● ASCII85Decode
+  作用与ASCIIHexDecode差不多，通常，ASCII85Decode建议优先使用，因为ASCII85Decode拥有更高的压缩比。
+  ASCIIHexDecode的压缩比为4:5，ASCII85Decode的压缩比为1:2。 
+● LZWDecode
+  LZW（Lempel-Ziv-Welch）是一种可变长度的自适应压缩方法，该压缩方式可以压缩二进制数据和ASCII文本，最终生成的数据是二进制的。
+● FlateDecode
+  该方法是基于 zlib/deflate压缩方法，是一种可变长度Lopel-ZIV自适应压缩方法，与自适应霍夫曼编码级联，该压缩方式可以压缩二进制数据和ASCII文本，最终生成的数据是二进制的。
+● RunLengthDecode
+  行程长度压缩法即根据字符串的连续重复字符进行编码的一种方法.  
+● CCITTFaxDecode
+  该压缩方式主要用于对图片数据进行压缩，采用group3或group4。CCITT压缩是为了对单色图（每个像素点用1bit表示）进行有效压缩而设计的。
+● JBIG2Decode  
+  JBIG2是JBIG的改进版本。JBIG(Joint Bi-level Image Experts Group，联合二值图像专家组)是发布二值图像编码标准的专家组。
+  JBIG已经发布了一个二值图像压缩的标准，二值图像是一种只用1bit来表达每个像素的颜色值的图像。这个标准也可用于对灰度图像以及每个像素使用有限个比特的彩色图像进行编码。
+● DCTDecode
+  该压缩方式（JPEG）应用于灰度图和彩色图的压缩。该压缩方式有损压缩。
+● JPXDecode
+  该压缩方式是JPEG2000，JPEG 2000是基于小波变换的图像压缩标准。JPEG2000的压缩比更高，而且不会产生原先的基于离散余弦变换的JPEG标准产生的块状模糊瑕疵。JPEG2000同时支持有损压缩和无损压缩。
+● Crypt
+  该Filter是文档级加密，单独对某个stream进行加密。   
+  

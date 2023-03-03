@@ -1,0 +1,138 @@
+可以使用 QAxWidget 绑定到一个ActiveX对象：
+#define CLSID_InternetExplorer "{8856F961-340A-11D0-A96B-00C04FD705A2}"
+QAxWidget *activeX = new QAxWidget( this );
+activeX->setControl( CLSID_InternetExplorer );
+
+ActiveX的属性、方法、事件，相应的被实现为QAxWidget的属性、槽函数和事件函数。
+connect( activeX, SIGNAL(TitleChange(const QString&)), this, SLOT(setTitle(const QString&)) );
+activeX->dynamicCall( "Navigate(const QString&)", "http://doc.trolltech.com" );             
+
+参：https://doc.qt.io/archives/qq/qq03-activex.html#using.an.activex.control
+
+===============================================================
+
+上面提到了一种可行的，在Qt中使用ActiveX控件的方法，但这种方法使用起来并不方便，
+有一种更方便的方式：
+使用Qt自带的dumpcpp.exe工具，可以根据ActiveX控件的uuid，得到一个调用ActiveX的辅助类
+使用方法：
+D:\Qt\Qt5.9.0\5.9\mingw53_32\bin\dumpcpp.exe {8856F961-340A-11D0-A96B-00C04FD705A2} -o D:\IE
+会在D盘下生成两个文件: IE.h ,  IE.cpp
+观察这里面继承自QAxWidget的类WebBrowser，发现其构造函数内部也是调用setControl方法，
+所以这种方式跟上面提到的用法的本质是一样的，
+不过这种调用方法，在调用ActiveX的成员方法时，更加直观和方便
+
+===============================================================
+
+调用ActiveX的
+
+
+
+
+
+
+
+因为这两个文件太复杂，不利于分析，所以自己创建一个ocx，命名为aaa，
+为ocx添加自定义的方法和事件：void func_slot(BSTR s);  void func_signal(BSTR s, IDispatch* p);
+利用上述dumpcpp.exe命令进行处理，得到a.h，a.cpp两个文件，
+
+a.h内容如下（做过精简）：
+#include <qaxobject.h>
+#include <qaxwidget.h>
+struct IDispatch;
+namespace aaaLib {
+    class AAALIB_EXPORT _Daaa : public QAxObject   //无界面的com对象，这里不使用，不用关注该类
+    {
+        。。。。。。
+    };
+    class AAALIB_EXPORT aaa : public QAxWidget
+    {
+    public:
+        aaa(QWidget *parent = 0, Qt::WindowFlags f = 0) : QAxWidget(parent, f)
+        {
+            setControl("{c8b1ec25-d93c-4ab7-ac69-3d517c2a8a84}");
+        }
+        aaa(_Daaa *iface) : QAxWidget()
+        {
+            initializeFrom(iface);
+            delete iface;
+        }
+        //Q_OBJECT宏展开：
+        static const QMetaObject staticMetaObject;
+        virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
+        virtual void *qt_metacast(const char *);
+    };
+}
+
+a.cpp内容如下（做过精简）：
+#include "D:\aaa.h"
+//
+struct qt_meta_stringdata_all_t {
+    QByteArrayData data[23];
+    char stringdata0[191];
+};
+static const qt_meta_stringdata_all_t qt_meta_stringdata_all = {
+    {
+        QT_MOC_LITERAL(0, 0, 13, 0),  //序号、开始位置、长度、？
+        QT_MOC_LITERAL(1, 14, 9, 0),
+        QT_MOC_LITERAL(2, 24, 0, 0),
+        。。。。。。
+        QT_MOC_LITERAL(20, 165, 11, 0),
+        QT_MOC_LITERAL(21, 177, 10, 0),
+        QT_MOC_LITERAL(22, 188, 1, 0)
+    },
+    "aaaLib::_Daaa\0exception\0\0code\0source\0disc\0help\0propertyChanged\0name\0signal\0"
+    "argc\0argv\0func_slot\0s\0control\0aaaLib::aaa\0Event Interface 1\0_DaaaEvents\0"
+    "Interface 0\0_Daaa\0func_signal\0IDispatch*\0p\0"
+};
+//这里不关注 _Daaa 类
+static const uint qt_meta_data_aaaLib___Daaa[] = { 。。。。。。 };
+const QMetaObject _Daaa::staticMetaObject = { 。。。。。。 };
+void *_Daaa::qt_metacast(const char *_clname) { 。。。。。。 }
+
+//记录aaa类的属性、槽、信号等，构建元对象(QMetaObject)的主要参考数据
+static const uint qt_meta_data_aaaLib__aaa[] = {
+ // content:
+    7, // revision
+    15,  // classname
+    2, 14, // classinfo
+    5, 18, // methods
+    0, 0, // properties
+    0, 0, // enums/sets
+    0, 0, // constructors
+    0, // flags
+    4, // signal count
+ // classinfo: key, value
+    16, 17, 
+    18, 19, 
+// signal: name, argc, parameters, tag, flags
+    1, 4, 43, 2, 5,
+    20, 2, 52, 2, 5,
+    7, 1, 57, 2, 5,
+    9, 3, 60, 2, 5,
+// slot: name, argc, parameters, tag, flags
+    12, 1, 67, 2, 9,
+// signal: parameters
+    QMetaType::Void, QMetaType::Int, QMetaType::QString, QMetaType::QString, QMetaType::QString, 3, 4, 5, 6,
+    QMetaType::Void, QMetaType::QString, 0x80000000 | 21, 13, 22,
+    QMetaType::Void, QMetaType::QString, 8,
+    QMetaType::Void, QMetaType::QString, QMetaType::Int, QMetaType::VoidStar, 8, 10, 11,
+// slot: parameters
+    QMetaType::Void, QMetaType::QString, 13,
+    0 // eod
+};
+
+const QMetaObject aaa::staticMetaObject = {
+    { &QWidget::staticMetaObject,
+    qt_meta_stringdata_all.data,
+    qt_meta_data_aaaLib__aaa, 0, 0, 0 }
+};
+
+void *aaa::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, "aaaLib::aaa"))
+        return static_cast<void*>(const_cast<aaa*>(this));
+    return QAxWidget::qt_metacast(_clname);
+}
+
+

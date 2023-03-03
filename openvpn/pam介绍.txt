@@ -1,0 +1,399 @@
+https://blog.csdn.net/m0_46692956/article/details/111661011
+
+PAM（Pluggable Authentication Modules，插接式认证模块）是由Sun提出的一种认证机制
+它通过提供一些动态链接库和一套统一的API，将系统提供的服务和该服务的认证方式分开
+使得系统管理员可以灵活地根据需要给不同的服务，配置不同的认证方式而无需更改服务程序
+同时也便于向系统中添加新的认证手段。
+
+PAM最初是集成在Solaris中，目前已移植到其它系统中，如Linux、SunOS、HP-UX 9.0等
+
+/etc/pam.d下的文件存放的是各个命令的pam模块的配置文件，比如
+    /etc/pam.d/su
+    /etc/pam.d/login
+    /etc/pam.d/sshd
+    /etc/pam.d/vsftpd
+例如/etc/pam.d/su文件的内容为：
+    auth          sufficient    pam_rootok.so
+    session       required      pam_env.so      readenv=1
+    session       required      pam_env.so      readenv=1   envfile=/etc/default/locale
+    session       optional      pam_mail.so     nopen
+    session       required      pam_limits.so
+    @include      common-auth
+    @include      common-account
+    @include      common-session
+而/etc/security下的文件则是每个特定pam模块的相关配置  
+比如parm_limits.so的配置文件就是/etc/security/limits.  
+其他的pam模块：
+    auth_pam_unix.so    用来验证用户和密码的
+    account_pam_unix.so 验证用户有没有过期 
+    pam_rootok.so       判断当前用户是否为root
+    pam_nologin.so      拒绝非root用户登录 
+    pam_access.so       限制用户访问终端
+    pam_time.so         拒绝某个时间段访问某个服务
+使用方式：
+    1)限制用户访问终端 Vim /etc/pam.d/login
+        添加： auth required pam_access.so
+        Vim /etc/security/addess.conf
+        添加：- : wjx : tty3           # - 代表拒绝  + 代表允许
+    2）拒绝某个人对你sshd Vim /etc/pam.d/sshd
+        添加：auth required pam_access.so
+        Vim /etc/security/access.conf
+        添加：-：All : 192.168.119.120 # – 代表拒绝  + 代表允许
+    3）决绝某个时间段访问某个服务 Vim /etc/pam.d/login
+        在account添加：account required pam_time.so
+        Vim /etc/security/time.cong
+        添加：Login; tty5; wjx; Mo1000-2300
+    4）echo模块 vim/etc/pam.d/login
+        添加：auth required pam_echo.so file=/usr/hell0.txt
+        touch /usr/hello.txt
+        vim hello.txt
+        hello world !!!
+    (5) 用户登录3次以上就在20秒以内拒绝这个用户登录
+        Vim /etc/pam.d/login
+        添加：auth required pam_tally.so deny=3 unlock_time=20
+    （6） 如何要求用户设置的密码必须包含5个数字，3个特殊符号？
+        修改/etc/pam.d/system-auth，在password使用pam_cracklib.so设置的最后附加 dcredit=5,ocredit=3
+        password requisite pam_cracklib.so try_first_pass retry=3 dcredit=5 ocredit=3
+    （7）如何限制student最多同时登陆4个？
+        这需要pam_limits.so模块。由于/etc/pam.d/system-auth中，默认就会通过pam_limits.so 限制用户最多使用多少系统资源，
+        因此只需要在/etc/security/limits.conf 中加入以下内容(RHEL5最后就有，只不过注释掉了)
+        student hard maxlogins 4
+    （8）某用户连续登陆失败3次以上就禁止登陆？
+        修改/etc/pam.d/system-auth
+        auth required pam_deny.so
+        account required pam_tally.so deny=3 #这一行失败三次就禁止登录
+        account required pam_unix.so
+
+===============================================================================================
+
+https://blog.51cto.com/essun/1391133
+linux系统之pam模块
+
+一、pam简介
+    Linux-PAM(linux可插入认证模块)是一套共享库,使本地系统管理员可以随意选择程序的认证方式. 
+    换句话说,不用(重新编写)重新编译一个包含PAM功能的应用程序,就可以改变它使用的认证机制. 
+    这种方式下,就算升级本地认证机制,也不用修改程序.
+    PAM使用配置/etc/pam.d/下的文件,来管理对程序的认证方式.
+    应用程序调用相应的配置文件,从而调用本地的认证模块.
+    模块放置在/lib/security下,以加载动态库的形式进，
+    像我们使用su命令时,系统会提示你输入root用户的密码.这就是su命令通过调用PAM模块实现的
+二、PAM的配置文件介绍
+    PAM配置文件有两种写法:
+    一种是写在/etc/pam.conf文件中，但centos6之后的系统中，这个文件就没有了。
+    另一种写法是,将PAM配置文件放到/etc/pam.d/目录下,
+    其规则内容都是不包含 service 部分的，即不包含服务名称，
+    而/etc/pam.d 目录下文件的名字就是服务名称。
+    如: vsftpd,login等.,只是少了最左边的服务名列.如:/etc/pam.d/sshd
+    如： cat /etc/pam.d/sshd:q
+    @include common-auth
+    account    required     pam_nologin.so
+    @include common-account
+    session    [success=ok ignore=ignore module_unknown=ignore default=bad]    pam_selinux.so close
+    session    required     pam_loginuid.so
+    session    optional     pam_keyinit.so  force revoke
+    @include common-session
+    session    optional     pam_motd.so     motd=/run/motd.dynamic
+    session    optional     pam_motd.so     noupdate
+    session    required     pam_limits.so
+    session    required     pam_env.so      user_readenv=1 envfile=/etc/default/locale
+    session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_selinux.so open
+    @include common-password
+    可将配置文件（的内容）分为四列：
+    模块类型    控制标记    模块路径   模块参数
+    
+    1.PAM的模块类型
+    Linux-PAM有四种模块类型,分别代表四种不同的任务
+        认证管理(auth), 账号管理(account), 会话管理(session), 密码(password)管理,
+    一个类型可能有多行,它们按顺序依次由PAM模块调用.
+    管理方式	说明
+    auth	    用来对用户的身份进行识别.如:提示用户输入密码,或判断用户是否为root等.
+    account	    对帐号的各项属性进行检查.如:是否允许登录,是否达到最大用户数,或是root用户是否允许在这个终端登录等.
+    session	    这个模块用来定义用户登录前的,及用户退出后所要进行的操作.
+                如:登录连接信息,用户数据的打开与关闭,挂载文件系统等.
+    password	使用用户信息来更新.如:修改用户密码.
+    
+    2.PAM的控制标记
+    PAM使用控制标记来处理和判断各个模块的返回值.（在此只说明简单的认证标记）
+    控制标记	说明
+    required	表示即使某个模块对用户的验证失败，也要等所有的模块都执行完毕后,PAM 才返回错误信息。
+                这样做是为了不让用户知道被哪个模块拒绝。如果对用户验证成功，所有的模块都会返回成功信息。
+    requisite	与required相似,但是如果这个模块返回失败,则立刻向应用程序返回失败,表示此类型失败.不再进行同类型后面的操作.
+    sufficient	表示如果一个用户通过这个模块的验证，PAM结构就立刻返回验证成功信息
+                （即使前面有模块fail了，也会把 fail结果忽略掉），把控制权交回应用程序。
+                后面的层叠模块即使使用requisite或者required 控制标志，也不再执行。
+                如果验证失败，sufficient 的作用和 optional 相同
+    optional	表示即使本行指定的模块验证失败，也允许用户接受应用程序提供的服务，一般返回PAM_IGNORE(忽略).
+    3.模块路径
+    模块路径.即要调用模块的位置. 如果是64位系统，一般保存在/lib64/security,如: pam_unix.so
+    同一个模块,可以出现在不同的类型中.它在不同的类型中所执行的操作都不相同.
+    这是由于每个模块针对不同的模块类型,编制了不同的执行函数.
+    4.模块参数
+    模块参数,即传递给模块的参数.参数可以有多个,之间用空格分隔开,如:
+    password   required   pam_unix.so nullok obscure min=4 max=8 md5
+三、常用的PAM模块介绍
+    -------------------------------------------------------------------------------------------------------
+    PAM模块	        结合管理类型	说明
+    -------------------------------------------------------------------------------------------------------
+                    auth            提示用户输入密码,并与/etc/shadow文件相比对.匹配返回0
+    pam_unix.so	    account         检查用户的账号信息(包括是否过期等).帐号可用时,返回0.
+                    password        修改用户的密码. 将用户输入的密码,作为用户的新密码更新shadow文件
+    -------------------------------------------------------------------------------------------------------
+    pam_shells.so   auth            如果用户想登录系统，那么它的shell必须是在/etc/shells文件中之一的shell
+                    account
+    -------------------------------------------------------------------------------------------------------
+                    account
+    pam_deny.so     auth            该模块可用于拒绝访问
+                    password
+                    session
+    -------------------------------------------------------------------------------------------------------
+                    auth
+    pam_permit.so   account         模块任何时候都返回成功.
+                    password
+                    session
+    -------------------------------------------------------------------------------------------------------
+    pam_securety.so auth	        如果用户要以root登录时,则登录的tty必须在/etc/securetty之中.
+    -------------------------------------------------------------------------------------------------------
+                    auth
+                    account
+    pam_listfile.so password        访问应用程的控制开关
+                    session
+    -------------------------------------------------------------------------------------------------------
+    pam_cracklib.so	password	    这个模块可以插入到一个程序的密码栈中,用于检查密码的强度.
+    -------------------------------------------------------------------------------------------------------
+    pam_limits.so	session	        定义使用系统资源的上限，root用户也会受此限制，
+                                    可以通过/etc/security/limits.conf或/etc/security/limits.d/*.conf来设定    
+    -------------------------------------------------------------------------------------------------------           
+    
+===============================================================================================
+    
+https://blog.csdn.net/ljq32/article/details/119271292
+Linux PAM开发示例一:让自己的程序使用PAM认证方式
+
+1.PAM API，即PAM库提供的API函数，用户程序使用这些api完成口令认证。
+           用户程序调用PAM API时，PAM API会查找/etc/pam.d/目录下的配置文件以加pam模块载动态库。
+2.PAM SPI，即PAM调用的接口函数规范，这些函数由用户在PAM 模块动态库中实现，
+           完成认证，账户管理，密码管理，会话管理等功能，被PAM API通过dlopen方式调用。
+3.应用程序，即使用PAM模块进行口令认证的用户程序，例如：su，login，sudo等，应用程序调用PAM API完成口令等相关认证功能。
+4.PAM模块动态库， /lib/x86_64-linux-gnu/security/，自己编写的PAM动态库也放到这个目录下。
+
+编写示例
+1.ubuntu16.04安装pam库
+    sudo apt install libpam0g-dev 
+2.编写pam模块动态库
+    vim pam_test2.c
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <unistd.h>
+    #include <security/pam_appl.h>
+    #include <security/pam_modules.h>
+    #include <security/pam_ext.h>
+    //认证管理,设置用户证书
+    PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv )
+    {   
+        printf("TestPam Setcred\n");
+        return PAM_SUCCESS;
+    }
+    //账号管理
+    PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const char **argv)
+    {
+        printf("TestPam Acct mgmt\n");
+        return PAM_SUCCESS;
+    }
+    //编写PAM SPI接口代码,由PAM API pam_authenticate通过dlopen方式调用
+    PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **argv)
+    {
+        //这里密码写死abc,只有输入abc才能验证成功
+        int ret = 0;
+        char *pass = NULL;
+        char default_pass[] = "abc";
+        char *tip = "输入TestPam密码:"; //输入密码的提示信息,传递到会话函数,在其中显示
+        //存储会话函数的变量
+        struct pam_conv *conv = NULL;
+        ret = pam_get_item(pamh, PAM_CONV, (const void **)&conv);
+        if(ret != PAM_SUCCESS || conv == NULL)
+        {   
+            printf("pam_get_item PAM_CONV failed:%d\n", ret);   
+            return PAM_SYSTEM_ERR;
+        }   
+        //获取密码可以在会话函数中完成,包括与用户程序交互数据的操作都应该在用户实现的
+        //会话函数中完成,也可以直接getpass在模块动态库完成(可能不符合PAM设计规范)
+        //调用会话函数,获取密码方式1,一般交互数据操作都在这个会话函数中完成
+        struct pam_message msg;
+        const struct pam_message *pmsg;   //待发送
+        struct pam_response *presp;       //待接收
+        msg.msg_style = PAM_PROMPT_ECHO_OFF;
+        msg.msg = tip;
+        pmsg = &msg;
+        //conv的第2,3参数为指针数组,即可以传递多个消息
+        //这里只是获取密码一个数据,所以传递的数组仅包含一个元素表示从会话函数中获取密码
+        ret = conv->conv(1, &pmsg, &presp, conv->appdata_ptr);   //发送&接收
+        ret = conv->conv(1, &pmsg, &presp, conv->appdata_ptr);   //发送&接收
+        if(ret != PAM_SUCCESS || presp == NULL)
+        {
+            printf("conv failed:%d\n", ret);
+            return PAM_CONV_ERR;
+        }
+        pass = presp->resp;
+        free(presp);                      //需自己释放
+        //获取密码方式2
+        //pass = getpass(tip);
+        printf("password is:%s\n", pass);
+        //密码不相等,认证失败
+        if(strcmp(default_pass, pass) != 0)
+        {
+            free(pass);
+            printf("password failed\n");
+            return PAM_AUTH_ERR;
+        }
+        free(pass);                       //需自己释放
+        printf("login success\n");
+        return PAM_SUCCESS;
+    }
+3.编写用户程序
+    vim test2.c  
+    #include <stdio.h>
+    #include <security/pam_appl.h>
+    #include <security/pam_misc.h>
+    //释放所有分配的响应数组变量
+    void free_resp(int num, struct pam_response **response)
+    {
+        int i;
+        struct pam_response *tmp;
+        for(i=0; i<num; i++)
+        {   
+            tmp = response[i];
+            if(tmp)
+            {   
+                if(tmp->resp)
+                    free(tmp->resp);
+                free(tmp);
+            }   
+        }   
+    }
+    //会话回调函数,在应用程序中实现,在PAM模块动态库中回调
+    //正常的流程是,获取密码等与用户交互的操作应该在这个函数里完成,这个函数传递到PAM模块
+    //动态库,由动态库调用,这里为了简单演示仅仅实现一个空函数
+    extern int myconv(int num_msg, const struct pam_message **msgm,
+                      struct pam_response **response, void *appdata_ptr)
+    {
+        printf("conv 会话空函数\n");
+        printf("num_msg:%d\n", num_msg);
+        int i;
+        const struct pam_message *pmsg;
+        struct pam_response *presp;
+        if(num_msg <= 0 || num_msg >= PAM_MAX_NUM_MSG)
+        {
+            printf("bad number of messages %d <= 0 || >= %d\n", num_msg, PAM_MAX_NUM_MSG);
+            *response = NULL;
+            return PAM_CONV_ERR;
+        }
+        //分配响应用的数组变量,个数与请求保持一致
+        presp = calloc(num_msg, sizeof(struct pam_response));
+        if(presp == NULL)
+            return PAM_BUF_ERR;
+        //设置response数组的每个元素为指针
+        for(i = 0; i < num_msg; i++)
+            response[i] = presp++;
+        //循环每个消息
+        for(i = 0; i < num_msg; i++)
+        {
+            //第i个消息
+            pmsg = msgm[i];
+            presp = response[i];
+            if(pmsg->msg == NULL)
+            {
+                printf("message[%d]: %d NULL\n", i, pmsg->msg_style);
+                goto err;
+            }
+            //初始化响应变量
+            presp->resp = NULL;
+            presp->resp_retcode = 0;
+            //根据消息类型处理消息
+            switch(pmsg->msg_style)
+            {
+                //从标准输入获取不回显数据,一般是输入密码
+                case PAM_PROMPT_ECHO_OFF:
+                {
+                    //printf("%s\n", pmsg->msg);
+                    char *p = (char *)malloc(100);
+                    p = getpass(pmsg->msg); //获取密码
+                    presp->resp = p;
+                    break;
+                }
+                //回显消息,从标准输入获取数据并显示在屏幕上,一般是交互的名为信息,比如用户名称等
+                case PAM_PROMPT_ECHO_ON:
+                    printf("msg[%d]:%s\n", i, pmsg->msg);
+                    //presp->resp = gets(NULL); //获取输入消息赋值resp
+                    break;
+                //回显PAM模块传递的错误消息
+                case PAM_ERROR_MSG:
+                    printf("%s\n", pmsg->msg);
+                    break;
+                //回显PAM模块传递的错误消息
+                case PAM_TEXT_INFO:
+                    printf("%s\n", pmsg->msg);
+                    break;
+                default:
+                    printf("message[%d] type error %d : %s\n", i, pmsg->msg_style, pmsg->msg);
+                    goto err;
+            }
+        }
+        return PAM_SUCCESS;
+    err:
+        free_resp(num_msg, response);
+        *response = NULL;
+        return PAM_CONV_ERR;
+    }
+    
+    struct pam_conv conv;
+    int main(int argc, char *argv[])
+    {
+        int ret = 0;
+        pam_handle_t *pamh = NULL;
+        const char *user = NULL;
+        //会话函数传递到PAM模块中,在模块中通过pam_get_item获取并调用
+        conv.conv = myconv;
+        conv.appdata_ptr = NULL;
+        //初始化PAM,服务名称设置为test2,所以/etc/pam.d/的配置文件也要是这个名称
+        if((pam_start("test2", user, &conv, &pamh)) != PAM_SUCCESS)
+        {
+            return 0;
+        }
+        //设置数据,用户程序通过这两个函数与模块共享数据,在模块中可以pam_get_item获取
+        //pam_set_item()
+        //认证用户
+        ret = pam_authenticate(pamh, 0);
+        if(ret == PAM_SUCCESS)
+            printf("认证成功\n");
+        else
+            printf("认证失败\n");
+        //结束PAM
+        ret = pam_end(pamh, ret);
+        return ret;
+    }
+    编译：gcc -g test2.c -o test2 -lpam
+    记得放置配置文件/etc/pam.d/test2，
+    内容：auth required pam_test2.so 
+    运行程序：(密码写死的abc)
+        $ ./test2
+        conv 回话空函数
+        num_msg:1
+        输入TestPam密码：
+        password is:abc
+        login sucess
+        认证成功
+        $ ./test2
+        conv 回话空函数
+        num_msg:1
+        输入TestPam密码：
+        password is:aaa
+        password faild
+        认证失败
+    
+示例完成，这样用户程序test2就可以在自己的程序中使用PAM模块的认证功能，
+以后需要修改认证逻辑的时候修改PAM模块pam_test2.so就可以了，用户程序不需要做改动。
+系统的程序比如我们登录linux的时候，login程序使用PAM模块是pam_unix.so，
+我们可以把pam_test2.so在login的配置文件/etc/pam.d/login中配置一行认证条目
+就可以实现命令行登录系统时使用我们自己的认证方式，也可以配置到/etc/pam.d/lightdm中，
+这样图形界面登录时也使用我们自己的认证方式。

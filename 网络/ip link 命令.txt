@@ -1,0 +1,371 @@
+通 ip -l
+
+link表示link layer的意思，即链路层。该命令用于管理和查看网络接口/管理网络设备
+
+1.查看
+  ip link只能看链路层的状态，看不到ip地址
+
+ 2.启用、禁用接口
+  ip link set device down   禁用指定接口
+  ip link set device up    启用指定接口
+  比如禁用eth0就是ip link set eth0 down
+  
+===============================================================================================
+
+ip link set  
+    主要用于启停网络设备
+    ip link set DEVICE  { up | down | arp { on | off } | name NEWNAME | address LLADDR } 
+    选项说明：
+        dev DEVICE：         指定要操作的设备名
+        up and down：        启动或停用该设备
+        arp on or arp off：  启用或禁用该设备的arp协议
+        name NAME：          修改指定设备的名称，建议不要在该接口处于运行状态或已分配IP地址时重命名
+        address LLADDRESS：  设置指定接口的MAC地址
+    举例：
+        停用 eth1网卡：       ~ # ip link set eth1 down
+        启用 eth1网卡：       ~ # ip link set eth1 up
+        等价于:               ~ # ifconfig eth1 down 或 ifconfig eth1 up
+        
+ip link show
+    ip [ -s | -h | -d ] link show [dev DEV] 
+    选项说明：
+        -s[tatistics]：      将显示各网络接口上的流量统计信息；
+        -h[uman-readable]：  以人类可读的方式显式，即单位转换；
+        -d[etails]：         显示详细信息
+        （选项说明可以通过ip help查看）
+    举例：
+        ~ # ip -s -h -d  link show  dev eth0
+        输出：
+        5: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UNKNOWN mode DEFAULT group default qlen 1000
+            link/ether 00:01:02:a4:71:28 brd ff:ff:ff:ff:ff:ff promiscuity 0 numtxqueues 8 numrxqueues 8
+            RX: bytes  packets  errors  dropped overrun mcast
+            160M       2.86M    0       0       0       0
+            TX: bytes  packets  errors  dropped carrier collsns
+            192k       1.43k    0       0       0       0
+        各字段含义说明：
+            BROADCAST：支持广播
+            MULTICAST：支持组播
+            UP：代表网卡开启状态；如果是关闭状态则不显示UP（重要）
+            LOWER_UP：有说法是代表网卡的网线被接上，
+                      自己测试验证发现使用ifconfig eth0 down后，UP和LOWER_UP均不显示；
+                      使用ifconfig eth0 up后，UP和LOWER_UP均显示（重要）
+            mtu 1500：网络接口的最大传输单元(Maximum Transmission Unit )：1500字节。是包或帧的最大长度，一般以字节记。
+            link/ether 00:01:02:a4:71:28 表示物理网卡地址
+            qdisc：排队规则
+        ~ # ip -s -h -d  link show  dev can0
+        输出：
+        3: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
+            link/can  promiscuity 0
+            can state ERROR-ACTIVE restart-ms 100
+                  bitrate 250000 sample-point 0.800
+                  tq 400 prop-seg 3 phase-seg1 4 phase-seg2 2 sjw 1
+                  mcp251x: tseg1 3..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
+                  clock 12500000
+                  re-started bus-errors arbit-lost error-warn error-pass bus-off
+                  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1
+            RX: bytes  packets  errors  dropped overrun mcast
+            21.6M      2.71M    1       0       1       0
+            TX: bytes  packets  errors  dropped carrier collsns
+            0          0        0       0       0       0
+        各字段含义说明：
+            NOARP：没有arp协议
+            ECHO：Echo发送的数据包
+            can state ERROR-ACTIVE restart-ms 100：
+                一般情况，正常的时候，每个节点大多数时间处于CAN_STATE_ERROR_ACTIVE这个状态，也就是错误主动状态。
+                别看这个状态名字叫错误，但是实际上就是对应的普通状态。
+                标示这个节点检测到错误，会发出主动错误标示。
+                随着问题的增多，节点逐渐会升级到CAN_STATE_ERROR_WARNING状态。
+                但是这个状态并没有固定的硬件标示，实际上是一个软件层面的预警。
+                也就是说，对于CAN_STATE_ERROR_ACTIVE和CAN_STATE_ERROR_WARNING而言，
+                这个节点的任何逻辑行为（包括软硬件）都不会有什么区别。
+                随着问题的继续增多，节点会升级到CAN_STATE_ERROR_PASSIVE状态。
+                在这个状态下，节点的硬件行为会改变，收到错误的时候，发送的是被动错误标示。
+                如果此时问题还会继续，则节点会进入CAN_STATE_BUS_OFF状态。
+                这个时候只有检测到128个连续的11个隐性位才能回到CAN_STATE_ERROR_ACTIVE。（参考文献8）
+                如果使用ip link set can0 down关闭can设备，can state显示为： STOPPED 
+            restart-ms 100：自动重启的延时时间。
+                出现太多错误时，设备可能进入总线关闭状态，给canrestart-ms 设置一个非零值，
+                可以开启总线关闭自动恢复功能，设置时需要先关闭can设备，如：
+                ip link set can0 down
+                ip link set can0 type can bitrate 250000 loopback on
+                ip link set can0 type can restart-ms 200
+                ip link set can0 up
+            bitrate 250000 :  波特率
+            sample-point：采样点（参考文献10）
+            tq 400 prop-seg 3 phase-seg1 4 phase-seg2 2 sjw 1
+            mcp251x: tseg1 3..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
+            re-started bus-errors arbit-lost error-warn error-pass bus-off
+                重启次数、总线错误、仲裁丢失错误、错误主动（error-warning）、错误被动（error-passive）、总线关闭。
+                接收的过载错误在统计信息的"overrun"域下面列出。
+            TX :将套接字缓冲区的CAN帧发送到CAN控制器；RX :从CAN控制器的CAN帧读取到套接字缓冲区。
+
+===============================================================================================
+
+https://blog.csdn.net/m0_45406092/article/details/118497597
+ip link add
+    Usage: ip link add [link DEV] [ name ] NAME
+                       [ txqueuelen PACKETS ]
+                       [ address LLADDR ]
+                       [ broadcast LLADDR ]
+                       [ mtu MTU ]
+                       [ numtxqueues QUEUE_COUNT ]
+                       [ numrxqueues QUEUE_COUNT ]
+                       type TYPE [ ARGS ]   'type是必须的参数，ARGS 依赖type'
+    TYPE := { vlan | veth | vcan | dummy | ifb | macvlan | macvtap |
+              bridge | bond | ipoib | ip6tnl | ipip | sit | vxlan |
+              gre | gretap | ip6gre | ip6gretap | vti | nlmon |
+              bond_slave | geneve | bridge_slave | macsec }                   
+    选项：
+        link DEVICE：指定要操作的物理设备 ，如果要指定在某个具体的设备上新增子项，则指定相应的设备，否则为空
+        name NAME：指定新虚拟设备的名称
+        type TYPE：指定新设备的类型，type是必须的参数，ARGS 依赖type
+                    bridge - Ethernet Bridge device
+                    bond - Bonding device
+                    dummy - Dummy network interface
+                    ifb - Intermediate Functional Block device
+                    ipoib - IP over Infiniband device
+                    macvlan - Virtual interface base on link layer address (MAC)
+                    macvtap - Virtual interface based on link layer address (MAC) and TAP.
+                    vcan - Virtual Controller Area Network interface
+                    veth - Virtual ethernet interface
+                    vlan - 802.1q tagged virtual LAN interface
+                    vxlan - Virtual eXtended LAN
+                    ip6tnl - Virtual tunnel interface IPv4|IPv6 over IPv6
+                    ipip - Virtual tunnel interface IPv4 over IPv4
+                    sit - Virtual tunnel interface IPv6 over IPv4
+                    gre - Virtual tunnel interface GRE over IPv4
+                    gretap - Virtual L2 tunnel interface GRE over IPv4
+                    ip6gre - Virtual tunnel interface GRE over IPv6
+                    ip6gretap - Virtual L2 tunnel interface GRE over IPv6
+                    vti - Virtual tunnel interface
+                    nlmon - Netlink monitoring device
+                    geneve - GEneric NEtwork Virtualization Encapsulation
+                    macsec - Interface for IEEE 802.1AE MAC Security (MACsec)
+        numtxqueues QUEUE_COUNT：指定新设备的传输队列数
+        numrxqueues QUEUE_COUNT：指定新设备的接收队列数
+        以添加VLAN设备为例：
+            VLAN类型的链路，支持以下附加参数：
+            ip link add link DEVICE name NAME type vlan [ protocol VLAN_PROTO ] 
+                            id VLANID [ reorder_hdr { on | off } ] [ gvrp { on | off } ] 
+                            [ mvrp { on | off } ] [ loose_binding { on | off } ] 
+                            [ ingress-qos-map QOS-MAP ] [ egress-qos-map QOS-MAP ]
+                protocol VLAN_PROTO ：802.1Q或802.1ad
+                id VLANID：指定要使用的VLAN标识符。请注意，带前导“0”或“0x”的数字分别被解释为八进制或十六进制
+                reorder_hdr { on | off }：指定以太网报头是否重新排序
+                gvrp { on | off } ：指定是否应使用GARP VLAN注册协议注册此VLAN
+                mvrp{on | off}：指定是否应使用多个VLAN注册协议注册此VLAN
+                loose_binding {on | off}：指定VLAN设备状态是否绑定到物理设备状态
+                ingress-qos-map QOS-MAP：定义传入帧上优先级代码点之间的映射。格式为从：到由空格分隔的多个映射
+                egress-qos-map QOS-MAP：与入口qos映射相同，但用于输出帧
+        如果想查看其它的type类型的ARGS参数，可以通过 ip link add type VLAN help 即可：
+    举例：
+        ip link add link eth0 name eth0.10 type vlan id 10 在设备eth0上创建新的vlan设备eth0.10
+        ip link add veth0 type veth peer name veth1 创建虚拟网卡，成对出现 veth0 veth1
+
+ip link set
+    该命令用于更改设备属性。
+    ip link set { DEVICE | group GROUP }
+               [ { up | down } ]
+               [ type ETYPE TYPE_ARGS ]
+               [ arp { on | off } ]
+               [ dynamic { on | off } ]
+               [ multicast { on | off } ]
+               [ allmulticast { on | off } ]
+               [ promisc { on | off } ]
+               [ protodown { on | off } ]
+               [ trailers { on | off } ]
+               [ txqueuelen PACKETS ]
+               [ name NEWNAME ]
+               [ address LLADDR ]
+               [ broadcast LLADDR ]
+               [ mtu MTU ]
+               [ netns { PID | NETNSNAME } ]
+               [ link-netnsid ID ]
+               [ alias NAME ]
+               [ vf NUM [ mac LLADDR ]
+                        [ VFVLAN-LIST ]
+                        [ rate TXRATE ]
+                        [ max_tx_rate TXRATE ]
+                        [ min_tx_rate TXRATE ]
+                        [ spoofchk { on | off } ]
+                        [ query_rss { on | off } ]
+                        [ state { auto | enable | disable } ]
+                        [ trust { on | off } ]
+                        [ node_guid eui64 ]
+                        [ port_guid eui64 ] 
+               ]
+               [ xdp { off | object FILE [ section NAME ] [ verbose ] | pinned FILE } ]
+               [ master DEVICE ]
+               [ nomaster ]
+               [ vrf NAME ]
+               [ addrgenmode { eui64 | none | stable_secret | random } ]
+               [ macaddr { flush | 
+                           { add | del } MACADDR | 
+                           set [ MACADDR [ MACADDR [ ... ] ] ] 
+                         } 
+               ]
+    选项：
+        dev DEVICE ：指定要操作的网络设备。 在配置SR-IOV虚拟功能（VF）设备时，此关键字应指定关联的物理功能（PF）设备
+        group GROUP：GROUP具有双重作用：如果同时存在group和dev，则将设备移至指定的组。 
+                     如果仅指定了一个组，则该命令将在该组中的所有设备上运行
+        up and down：将设备的状态更改为UP或DOWN
+        arp on or arp off：开启或关闭arp
+        multicast on or multicast off：更改设备上的多播标志
+        protodown on or protodown off：更改设备上的PROTODOWN状态。 表示已在端口上检测到协议错误。 
+                                       交换机驱动程序可以通过对交换机端口进行物理检查来对此错误做出反应
+        dynamic on or dynamic off：更改设备上的DYNAMIC标志
+        name NAME：更改设备的名称。 如果设备正在运行或已经配置了某些地址，则不建议执行此操作
+        txqueuelen NUMBER / txqlen NUMBER：更改设备的传输队列长度
+        mtu NUMBER：更改设备的MTU
+        address LLADDRESS：更改接口地址
+        peer LLADDRESS：当接口为点对点时，更改链路层广播地址或对等地址
+        netns NETNSNAME | PID：将设备移至与名称NETNSNAME关联的网络名称空间或处理PID
+        alias NAME：为设备提供一个符号名称，以便于参考
+        vf NUM：vf NUM指定要配置的虚拟功能设备。必须使用dev参数指定关联的PF设备
+        mac LLADDRESS： 更改指定VF的站地址。必须指定vf参数
+        vlan VLANID：更改为指定VF分配的VLAN。 指定后，将从VF发送的所有流量标记为指定的VLAN ID。 
+                     传入的流量将针对指定的VLAN ID进行过滤，并在将所有VLAN标记传递给VF之前将其剥离。 
+                     将此参数设置为0将禁用VLAN标记和过滤。 必须指定vf参数
+        qos VLAN-QOS：为VLAN标记分配VLAN QOS（优先级）位。指定时，VF传输的所有VLAN标记将在VLAN标记中包含指定的优先级位。
+                      如果未指定，则假定该值为0。必须同时指定vf和vlan参数。将vlan和qos都设置为0将禁用VF的vlan标记和筛选
+        rate TXRATE：更改指定VF的允许传输带宽（以Mbps为单位）。 将此参数设置为0将禁用速率限制。 
+                     必须指定vf参数。 请改用新的API max_tx_rate选项
+        max_tx_rate TXRATE：更改指定VF允许的最大传输带宽（以Mbps为单位）。必须指定vf参数
+        min_tx_rate TXRATE：更改指定VF的允许的最小传输带宽（以Mbps为单位）。 
+                            最小TXRATE应始终<=最大TXRATE。 必须指定vf参数
+        spoofchk on|off：打开或关闭指定VF的数据包欺骗检查
+        query_rss on|off：切换查询特定VF的RSS配置的功能。 VF RSS信息（例如RSS哈希键）在某些设备上可能被认为是敏感的，
+                          这些设备在VF和PF之间共享，因此默认情况下可能禁止其查询
+        state auto|enable|disable：将虚拟链接状态设置为指定的VF所看到的状态。
+                                   设置为auto表示PF-link状态的反映，enable允许VF与该主机上的其他VF通信，
+                                   即使PF-link状态为down，disable也会导致HW丢弃VF发送的任何数据包
+        trust on|off：信任指定的VF用户。这使得VF用户可以设置可能影响安全性和/或性能的特定特性。（例如VF多播混杂模式）
+        master DEVICE：设置设备的主设备
+        nomaster：取消设置设备的主设备
+        addrgenmode eui64 or addrgenmode none：设置IPv6地址生成模式
+        link-netnsid：为跨网络接口设置对等网络标识
+        type ETYPE TYPE_ARGS：
+    举例：
+        ip link set eth0 up 或：ifconfig eth0 up 开启eth0网卡
+        ip link set eth0 down 或：ifconfig eth0 down 关闭eth0网卡
+        ip link set eth0 promisc on 开启网卡的混合模式
+        ip link set eth0 promisc offi 关闭网卡的混合模式
+        ip link set eth0 txqueuelen 1200 设置网卡队列长度
+        ip link set eth0 mtu 1400 设置网卡最大传输单元
+
+ip link show
+    ifconfig仅显示up状态的设备，ip link显示全部设备，不管状态如何 ，详情参见ip addr、ip link、ifconfig
+    ip link show [ DEVICE | group GROUP ] [ up ] [ master DEVICE ] [ type ETYPE ] [ vrf NAME ]
+    选项：
+        dev NAME (default)：名称指定要显示的网络设备。如果省略此参数，则会列出默认组中的所有设备
+        group GROUP：指定要显示的设备组
+        up：仅显示正在运行的接口
+        master DEVICE：显示主设备
+        type TYPE：指定要显示的设备类型
+    举例：
+        ip link show 显示网络接口信息，显示全部
+        ip link show eht0 显示eth0网卡的网络接口信息
+        ip link show type vlan 显示vlan类型设备，其实就是对类型进行过滤
+
+ip link delete
+    ip link delete { DEVICE | group GROUP } type TYPE [ ARGS ]
+    选项：
+        dev DEVICE：指定要操作的虚拟设备
+        group GROUP：指定要删除的虚拟链接组。不允许删除组0，因为它是默认组
+        type TYPE：指定设备的类型
+    举例：
+        ip link delete dev eth0.10 删除设备
+        ip link delete veth0 自动成对删除
+    ip link delete veth0 type veth peer veth1 也可以删除，
+    不知道type veth有啥用，加不加没有啥影响，后面的args peer veth1好像也没影响
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

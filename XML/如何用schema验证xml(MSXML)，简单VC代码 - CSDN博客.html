@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/crybird/article/details/4404899"/> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="Normal  0        7.8 磅  0  2    false  false  false    EN-US  ZH-CN  X-NONE" />
+    <meta name="keywords" content="schema,xml" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>如何用schema验证xml(MSXML)，简单VC代码 - CSDN博客</title>
+    
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-d203e77e52.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-8a84d6f79d.min.css">
+
+    <script type="text/javascript">
+        var username = "crybird";
+        var blog_address = "https://blog.csdn.net/crybird";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = ""; 
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/crybird/article/details/4404899"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.0.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.3/css/sandalstrap.min.css"> 
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<body>    
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+<header>
+	<div class="container d-flex clearfix">
+		<div class="title-box">
+			<h1 class="title-blog">
+				<a href="https://blog.csdn.net/crybird">crybird的C/C++</a>
+			</h1>
+			<p class="description">小鸟小鸟，往前冲</p>
+		</div>
+		<div class="opt-box d-flex justify-content-end">
+			<a class="btn btn-sm" href="https://blog.csdn.net/crybird/rss/list">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#csdnc-rss"></use>
+					</svg>RSS订阅</a>
+					</div>
+	</div>
+</header><script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix pt0" id="mainBox">
+    <main>
+        <div class="blog-content-box">
+	<div class="article-title-box">
+			<span class="article-type type-1 float-left">原</span>		<h1 class="title-article">如何用schema验证xml(MSXML)，简单VC代码</h1>
+	</div>
+	<div class="article-info-box">
+		<div class="article-bar-top d-flex">
+												<span class="time">2009年08月03日 17:54:00</span>
+			<div class="float-right">
+				<span class="read-count">阅读数：3485</span>
+											</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css" />
+						<div class="htmledit_views">
+                <p><!-- [if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Normal</w:View>
+  <w:Zoom>0</w:Zoom>
+  <w:TrackMoves/>
+  <w:TrackFormatting/>
+  <w:PunctuationKerning/>
+  <w:DrawingGridVerticalSpacing>7.8 磅</w:DrawingGridVerticalSpacing>
+  <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+  <w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:DoNotPromoteQF/>
+  <w:LidThemeOther>EN-US</w:LidThemeOther>
+  <w:LidThemeAsian>ZH-CN</w:LidThemeAsian>
+  <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+  <w:Compatibility>
+   <w:SpaceForUL/>
+   <w:BalanceSingleByteDoubleByteWidth/>
+   <w:DoNotLeaveBackslashAlone/>
+   <w:ULTrailSpace/>
+   <w:DoNotExpandShiftReturn/>
+   <w:AdjustLineHeightInTable/>
+   <w:BreakWrappedTables/>
+   <w:SnapToGridInCell/>
+   <w:WrapTextWithPunct/>
+   <w:UseAsianBreakRules/>
+   <w:DontGrowAutofit/>
+   <w:SplitPgBreakAndParaMark/>
+   <w:DontVertAlignCellWithSp/>
+   <w:DontBreakConstrainedForcedTables/>
+   <w:DontVertAlignInTxbx/>
+   <w:Word11KerningPairs/>
+   <w:CachedColBalance/>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+  <m:mathPr>
+   <m:mathFont m:val="Cambria Math"/>
+   <m:brkBin m:val="before"/>
+   <m:brkBinSub m:val="&#45;-"/>
+   <m:smallFrac m:val="off"/>
+   <m:dispDef/>
+   <m:lMargin m:val="0"/>
+   <m:rMargin m:val="0"/>
+   <m:defJc m:val="centerGroup"/>
+   <m:wrapIndent m:val="1440"/>
+   <m:intLim m:val="subSup"/>
+   <m:naryLim m:val="undOvr"/>
+  </m:mathPr></w:WordDocument>
+</xml><![endif]--><!-- [if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="true"
+  DefSemiHidden="true" DefQFormat="false" DefPriority="99"
+  LatentStyleCount="267">
+  <w:LsdException Locked="false" Priority="0" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Normal"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="heading 1"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 2"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 3"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 4"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 5"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 6"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 7"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 8"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 9"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 1"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 2"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 3"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 4"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 5"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 6"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 7"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 8"/>
+  <w:LsdException Locked="false" Priority="39" Name="toc 9"/>
+  <w:LsdException Locked="false" Priority="35" QFormat="true" Name="caption"/>
+  <w:LsdException Locked="false" Priority="10" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Title"/>
+  <w:LsdException Locked="false" Priority="1" Name="Default Paragraph Font"/>
+  <w:LsdException Locked="false" Priority="11" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Subtitle"/>
+  <w:LsdException Locked="false" Priority="22" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Strong"/>
+  <w:LsdException Locked="false" Priority="20" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Emphasis"/>
+  <w:LsdException Locked="false" Priority="59" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Table Grid"/>
+  <w:LsdException Locked="false" UnhideWhenUsed="false" Name="Placeholder Text"/>
+  <w:LsdException Locked="false" Priority="1" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="No Spacing"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 1"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 1"/>
+  <w:LsdException Locked="false" UnhideWhenUsed="false" Name="Revision"/>
+  <w:LsdException Locked="false" Priority="34" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="List Paragraph"/>
+  <w:LsdException Locked="false" Priority="29" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Quote"/>
+  <w:LsdException Locked="false" Priority="30" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Intense Quote"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 1"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 1"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 2"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 2"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 2"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 3"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 3"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 3"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 4"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 4"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 4"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 5"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 5"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 5"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light List Accent 6"/>
+  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Light Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium List 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Dark List Accent 6"/>
+  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful List Accent 6"/>
+  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
+   UnhideWhenUsed="false" Name="Colorful Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="19" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Subtle Emphasis"/>
+  <w:LsdException Locked="false" Priority="21" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Intense Emphasis"/>
+  <w:LsdException Locked="false" Priority="31" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Subtle Reference"/>
+  <w:LsdException Locked="false" Priority="32" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Intense Reference"/>
+  <w:LsdException Locked="false" Priority="33" SemiHidden="false"
+   UnhideWhenUsed="false" QFormat="true" Name="Book Title"/>
+  <w:LsdException Locked="false" Priority="37" Name="Bibliography"/>
+  <w:LsdException Locked="false" Priority="39" QFormat="true" Name="TOC Heading"/>
+ </w:LatentStyles>
+</xml><![endif]--><!-- 
+ /* Font Definitions */
+ @font-face
+	{font-family:宋体;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:SimSun;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:1;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:0 0 0 0 0 0;}
+@font-face
+	{font-family:"/@宋体";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	mso-pagination:none;
+	font-size:10.5pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman","serif";
+	mso-fareast-font-family:宋体;
+	mso-font-kerning:1.0pt;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	mso-default-props:yes;
+	font-size:10.0pt;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	mso-ascii-font-family:"Times New Roman";
+	mso-fareast-font-family:宋体;
+	mso-hansi-font-family:"Times New Roman";
+	mso-font-kerning:0pt;}
+ /* Page Definitions */
+ @page
+	{mso-page-border-surround-header:no;
+	mso-page-border-surround-footer:no;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:36.0pt;
+	mso-footer-margin:36.0pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+--><!-- [if gte mso 10]>
+<mce:style><!-
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:普通表格;
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.5pt;
+	mso-bidi-font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	mso-ascii-font-family:Calibri;
+	mso-ascii-theme-font:minor-latin;
+	mso-fareast-font-family:宋体;
+	mso-fareast-theme-font:minor-fareast;
+	mso-hansi-font-family:Calibri;
+	mso-hansi-theme-font:minor-latin;
+	mso-bidi-font-family:"Times New Roman";
+	mso-bidi-theme-font:minor-bidi;
+	mso-font-kerning:1.0pt;}
+-->
+<!-- [endif]-->
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';color:#0000FF;" lang="en-us" xml:lang="en-us">void</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> <span style="color:#020002;">CSchemaXmlDlg</span>
+::<span style="color:#020002;">OnBnClickedButton1</span>
+()</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+<span style="color:#020002;">CString</span>
+ <span style="color:#020002;">strScmFile</span>
+ = <span style="color:#020002;">g_strRootPath</span>
++ <span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"//schema.xsd"</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+<span style="color:#0000FF;">try</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+<span style="color:#008000;">//1.xml</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">内关联了</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">schema</span>
+<span style="font-family:'宋体';color:#008000;">文件，直接判断加载是否成功</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">CString</span>
+<span style="color:#020002;">strXmlFile</span>
+ = <span style="color:#020002;">g_strRootPath</span>
++ <span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"//xml_1.xml"</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">_variant_t</span>
+<span style="color:#020002;">vFile</span>
+((<span style="color:#020002;">LPCTSTR</span>
+)<span style="color:#020002;">strXmlFile</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">创建组件</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMDocumentPtr</span>
+ <span style="color:#020002;">pDoc</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+.<span style="color:#020002;">CreateInstance</span>
+(<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">CLSID_DOMDocument40</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">async</span>
+ = <span style="color:#020002;">VARIANT_FALSE</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">validateOnParse</span>
+ = <span style="color:#020002;">VARIANT_TRUE</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">加载和判断</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">VARIANT_BOOL</span>
+<span style="color:#020002;">bRet</span>
+ = <span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">load</span>
+(<span style="color:#020002;">vFile</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#0000FF;">if</span>
+ (<span style="color:#020002;">bRet</span>
+ == <span style="color:#020002;">VARIANT_TRUE</span>
+)</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span>    </span>
+<span style="color:#020002;">MessageBox</span>
+(<span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"xml_1.xml</span>
+</span>
+<span style="font-family:'宋体';color:#800080;">加载成功</span>
+<span style="font-family:'Courier New';color:#800080;" lang="en-us" xml:lang="en-us">"</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">));</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#0000FF;">else</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">CString</span>
+<span style="color:#020002;">strError</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMParseErrorPtr</span>
+ <span style="color:#020002;">pError</span>
+= <span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">parseError</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">strError</span>
+.<span style="color:#020002;">Format</span>
+(</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span style="color:#020002;">                  _T</span>
+(<span style="color:#800080;">"xml_1.xml</span>
+</span>
+<span style="font-family:'宋体';color:#800080;">加载失败：</span>
+<span style="font-family:'Courier New';color:#800080;" lang="en-us" xml:lang="en-us">code=%d, reson=%s"</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">), </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span style="color:#020002;">                  pError</span>
+-&gt;<span style="color:#020002;">errorCode</span>
+,
+(<span style="color:#020002;">LPCTSTR</span>
+)<span style="color:#020002;">pError</span>
+-&gt;<span style="color:#020002;">reason</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">MessageBox</span>
+(<span style="color:#020002;">strError</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+<span style="color:#008000;">//2.xml</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">内没有关联</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">schema</span>
+<span style="font-family:'宋体';color:#008000;">文件，需要程序关联</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">CString</span>
+<span style="color:#020002;">strXmlFile</span>
+ = <span style="color:#020002;">g_strRootPath</span>
++ <span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"//xml_2.xml"</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">_variant_t</span>
+<span style="color:#020002;">vFile</span>
+((<span style="color:#020002;">LPCTSTR</span>
+)<span style="color:#020002;">strXmlFile</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">创建</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">schema</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMSchemaCollectionPtr</span>
+ <span style="color:#020002;">pSchema</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pSchema</span>
+.<span style="color:#020002;">CreateInstance</span>
+(<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">CLSID_XMLSchemaCache40</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">加载</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">schema</span>
+<span style="font-family:'宋体';color:#008000;">文件，或者以文件名为参数</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//MSXML2::IXMLDOMDocumentPtr
+pSchemaDoc;</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//pSchemaDoc.CreateInstance(MSXML2::CLSID_DOMDocument40);</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//pSchemaDoc-&gt;async
+= VARIANT_FALSE;;</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//pSchemaDoc-&gt;load(_variant_t((LPCTSTR)strScmFile));</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+<span>    </span>
+<span style="color:#008000;">//pSchema-&gt;add(_bstr_t(L""),
+pSchemaDoc.GetInterfacePtr());</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pSchema</span>
+-&gt;<span style="color:#020002;">add</span>
+(<span style="color:#020002;">_bstr_t</span>
+(<span style="color:#020002;">L</span>
+<span style="color:#800080;">""</span>
+), <span style="color:#020002;">_variant_t</span>
+((<span style="color:#020002;">LPCTSTR</span>
+)<span style="color:#020002;">strScmFile</span>
+));</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">创建文件组件</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMDocumentPtr</span>
+ <span style="color:#020002;">pDoc</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+.<span style="color:#020002;">CreateInstance</span>
+(<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">CLSID_DOMDocument40</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">async</span>
+ = <span style="color:#020002;">VARIANT_FALSE</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">validateOnParse</span>
+ = <span style="color:#020002;">VARIANT_TRUE</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">关联</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">xml</span>
+<span style="font-family:'宋体';color:#008000;">和</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us">schema</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMDocument2Ptr</span>
+ <span style="color:#020002;">pDoc2</span>
+= <span style="color:#020002;">pDoc</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//pDoc2-&gt;putref_schemas(_variant_t(pSchema));//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">这句不行</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">pDoc2</span>
+-&gt;<span style="color:#020002;">schemas</span>
+ = <span style="color:#020002;">pSchema</span>
+.<span style="color:#020002;">GetInterfacePtr</span>
+();</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"> </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#008000;">//</span>
+</span>
+<span style="font-family:'宋体';color:#008000;">加载文件和判断</span>
+<span style="font-family:'Courier New';color:#008000;" lang="en-us" xml:lang="en-us"></span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#020002;">VARIANT_BOOL</span>
+<span style="color:#020002;">bRet</span>
+ = <span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">load</span>
+(<span style="color:#020002;">vFile</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#0000FF;">if</span>
+ (<span style="color:#020002;">bRet</span>
+ == <span style="color:#020002;">VARIANT_TRUE</span>
+)</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">MessageBox</span>
+(<span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"xml_2.xml</span>
+</span>
+<span style="font-family:'宋体';color:#800080;">加载成功</span>
+<span style="font-family:'Courier New';color:#800080;" lang="en-us" xml:lang="en-us">"</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">));</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+<span style="color:#0000FF;">else</span>
+</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">CString</span>
+<span style="color:#020002;">strError</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">MSXML2</span>
+::<span style="color:#020002;">IXMLDOMParseErrorPtr</span>
+ <span style="color:#020002;">pError</span>
+= <span style="color:#020002;">pDoc</span>
+-&gt;<span style="color:#020002;">parseError</span>
+;</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">strError</span>
+.<span style="color:#020002;">Format</span>
+(</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span style="color:#020002;">                  _T</span>
+(<span style="color:#800080;">"xml_2.xml</span>
+</span>
+<span style="font-family:'宋体';color:#800080;">加载失败：</span>
+<span style="font-family:'Courier New';color:#800080;" lang="en-us" xml:lang="en-us">code=%d, reson=%s"</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">), </span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span style="color:#020002;">                  pError</span>
+-&gt;<span style="color:#020002;">errorCode</span>
+,
+(<span style="color:#020002;">LPCTSTR</span>
+)<span style="color:#020002;">pError</span>
+-&gt;<span style="color:#020002;">reason</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>              </span>
+<span style="color:#020002;">MessageBox</span>
+(<span style="color:#020002;">strError</span>
+);</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>           </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+<span style="color:#0000FF;">catch</span>
+ (...)</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+{</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>       </span>
+<span style="color:#020002;">MessageBox</span>
+(<span style="color:#020002;">_T</span>
+(<span style="color:#800080;">"</span>
+</span>
+<span style="font-family:'宋体';color:#800080;">程序出现异常！</span>
+<span style="font-family:'Courier New';color:#800080;" lang="en-us" xml:lang="en-us">"</span>
+<span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">));</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us"><span>    </span>
+}</span>
+</p>
+<p class="MsoNormal" style="text-align:left;" align="left"><span style="font-family:'Courier New';" lang="en-us" xml:lang="en-us">}</span>
+</p>
+<p> </p>            </div>
+                </div>
+				<div class="hide-article-box text-center">
+			<a class="btn btn-red-hollow" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/crybird/article/details/4404899,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/crybird/article/details/4404899,"}'>阅读更多</a>
+		</div>
+        	</article>
+	
+		<div class="article-bar-bottom">
+				<div class="article-copyright">
+			版权声明：copy right as zlib			https://blog.csdn.net/crybird/article/details/4404899		</div>
+						<div class="tags-box artic-tag-box">
+			<span class="label">文章标签：</span>
+						<a class="tag-link" href="http://so.csdn.net/so/search/s.do?q=schema&t=blog" target="_blank">schema						<a class="tag-link" href="http://so.csdn.net/so/search/s.do?q=xml&t=blog" target="_blank">xml						</a>
+		</div>
+						<div class="tags-box">
+			<span class="label">个人分类：</span>
+						<a class="tag-link" href="https://blog.csdn.net/crybird/article/category/568717"  target="_blank">XML/HTML						</a>
+		</div>
+							</div>
+	
+	<!-- !empty($pre_next_article[0]) -->
+			<div class="related-article related-article-prev text-truncate">
+		<a href="https://blog.csdn.net/crybird/article/details/4391395">
+			<span>上一篇</span>又掉进陷阱了 引以为戒		</a>
+	</div>
+				<div class="related-article related-article-next text-truncate">
+		<a href="https://blog.csdn.net/crybird/article/details/6004040">
+			<span>下一篇</span>VS2010的MFC的CMFCButton等类的疑惑		</a>
+	</div>
+	</div>
+<script>
+    $(".MathJax").remove();
+</script>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+			"HTML-CSS": {
+					linebreaks: { automatic: true, width: "94%container" },
+					imageFont: null
+			},
+			tex2jax: {
+				preview: "none"
+			},
+			mml2jax: {
+				preview: 'none'
+			}
+	});
+</script>
+<script>
+	(function(){
+		var btnReadmore = $("#btn-readmore");
+		if(btnReadmore.length>0){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*2){
+				articleBox.css({
+					'height':winH*2+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+	})()
+</script>        <div class="t0 clearfix">
+                                                <a href="https://blog.csdn.net/u012335419/article/details/47010047" target="_blank" data-track-view='{"mod":"popu_642","con": ",https://blog.csdn.net/u012335419/article/details/47010047,"}' data-track-click='{"mod":"popu_642","con": ",https://blog.csdn.net/u012335419/article/details/47010047,"}'>
+                                                    <div class="text-content">
+                                                        <h4>一个完整的<em>schema</em><em>验证</em><em>xml</em>的例子</h4>
+                                                        <div class="description">xml文件：
+	陈路瑶
+	信息文档结构信任模式的提取及逻辑描述
+	J
+	计算机应用研究
+	2010
+	27
+	4624-4629
+
+
+
+schema文件：...</div>
+                                                    </div>
+                                                </a>
+                                            </div>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/crybird/article/details/4404899#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lingxiu0613/article/details/49849753,BlogCommendFromQuerySearch_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lingxiu0613/article/details/49849753,BlogCommendFromQuerySearch_1"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/lingxiu0613/article/details/49849753" target="_blank" title="<em>msxml</em>的编码格式">
+				<em>msxml</em>的编码格式			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/lingxiu0613" target="_blank">
+					<img src="https://avatar.csdn.net/0/E/C/3_lingxiu0613.jpg" alt="lingxiu0613" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">lingxiu0613</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">11-15</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					453</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/lingxiu0613/article/details/49849753" target="_blank" >
+				vc用msxml生成xml文件的时候，默认是utf-8的格式
+假如需要 用gb2312或者其他格式，需要在xml的头里面标明。
+
+
+MSXML2::IXMLDOMDocumentPtr XML...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/smstone/article/details/654339,BlogCommendFromQuerySearch_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/smstone/article/details/654339,BlogCommendFromQuerySearch_2"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/smstone/article/details/654339" target="_blank" title="<em>vc</em>6.0 下利用<em>MSXML</em>对<em>xml</em>文件的基本操作">
+				<em>vc</em>6.0 下利用<em>MSXML</em>对<em>xml</em>文件的基本操作			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/smstone" target="_blank">
+					<img src="https://avatar.csdn.net/9/B/7/3_smstone.jpg" alt="smstone" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">smstone</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">04-07</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					4696</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/smstone/article/details/654339" target="_blank" >
+				1：#import &quot;msxml4.dll&quot;          //加入导入库2：AfxOleInit();                           //初始化com组件3：void On...			</a>
+		</p>
+
+	</div>
+									<!-- 第四范式广告开关 -->
+				<script>window.p4sdk_enable_recommendBox=true</script>
+			
+				<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qgs20071987/article/details/9112991,BlogCommendFromQuerySearch_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qgs20071987/article/details/9112991,BlogCommendFromQuerySearch_3"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/qgs20071987/article/details/9112991" target="_blank" title="C++下通过<em>MSXML</em>读取<em>XML</em>文件内容">
+				C++下通过<em>MSXML</em>读取<em>XML</em>文件内容			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/qgs20071987" target="_blank">
+					<img src="https://avatar.csdn.net/E/D/2/3_qgs20071987.jpg" alt="qgs20071987" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">qgs20071987</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">06-17</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					1602</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/qgs20071987/article/details/9112991" target="_blank" >
+				MSXML是微软提供的读写XML内容的开发函数库，随操作系统分发，提供的是COM接口。
+ 
+引用MSXML的方式
+不要采用高版本的，保证在Windows XP等低版本操作系统下运行。
+    ...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/cds27/article/details/5545455,BlogCommendFromQuerySearch_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/cds27/article/details/5545455,BlogCommendFromQuerySearch_4"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/cds27/article/details/5545455" target="_blank" title="C++ 操作<em>XML</em>的完整例子——<em>MSXML</em>篇">
+				C++ 操作<em>XML</em>的完整例子——<em>MSXML</em>篇			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/cds27" target="_blank">
+					<img src="https://avatar.csdn.net/6/5/9/3_cds27.jpg" alt="cds27" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">cds27</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">04-30</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					2.5万</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/cds27/article/details/5545455" target="_blank" >
+				写本文的目的是为了方便大家了解C++ MSXML操作方法。当然，C++中对MSXML的调用有多种，本文采用的方法是完全参照MSXML SDK提供的文档进行操作。如果有什么错误，欢迎指正。 代码框架是基...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq2399431200/article/details/17583171,BlogCommendFromQuerySearch_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq2399431200/article/details/17583171,BlogCommendFromQuerySearch_5"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/qq2399431200/article/details/17583171" target="_blank" title="<em>VC</em> 使用<em>msxml</em>6.dll动态链接库中的函数读写<em>XML</em>文件">
+				<em>VC</em> 使用<em>msxml</em>6.dll动态链接库中的函数读写<em>XML</em>文件			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/qq2399431200" target="_blank">
+					<img src="https://avatar.csdn.net/4/E/F/3_qq2399431200.jpg" alt="qq2399431200" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">qq2399431200</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">12-26</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					5843</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/qq2399431200/article/details/17583171" target="_blank" >
+				VC 使用msxml6.dll动态链接库中的函数读写XML文件			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Crystalbruce/article/details/7389325,BlogCommendFromQuerySearch_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Crystalbruce/article/details/7389325,BlogCommendFromQuerySearch_6"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/Crystalbruce/article/details/7389325" target="_blank" title="学习笔记——<em>XML</em> <em>Schema</em>自定义<em>简单</em>数据类型">
+				学习笔记——<em>XML</em> <em>Schema</em>自定义<em>简单</em>数据类型			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/Crystalbruce" target="_blank">
+					<img src="https://avatar.csdn.net/F/C/E/3_crystalbruce.jpg" alt="Crystalbruce" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">Crystalbruce</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">03-24</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					4186</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/Crystalbruce/article/details/7389325" target="_blank" >
+				XML Schema规范共推荐12种约束。
+
+
+
+
+范围约束
+
+minInclusice、manInclusice、minExclusive、maxExcusive
+
+
+
+长度约...			</a>
+		</p>
+
+	</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'right',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 0,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/wangjian_an/article/details/51770454,BlogCommendFromQuerySearch_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/wangjian_an/article/details/51770454,BlogCommendFromQuerySearch_7"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/wangjian_an/article/details/51770454" target="_blank" title="<em>XML</em>------<em>XML</em>文档类型定义(<em>Schema</em>结构）">
+				<em>XML</em>------<em>XML</em>文档类型定义(<em>Schema</em>结构）			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/wangjian_an" target="_blank">
+					<img src="https://avatar.csdn.net/8/A/B/3_wangjian_an.jpg" alt="wangjian_an" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">wangjian_an</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">06-27</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					4991</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/wangjian_an/article/details/51770454" target="_blank" >
+				XML Schema结构
+                                                                                       ...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/guolimin1118/article/details/4567183,BlogCommendFromQuerySearch_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/guolimin1118/article/details/4567183,BlogCommendFromQuerySearch_8"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/guolimin1118/article/details/4567183" target="_blank" title="如<em>何用</em><em>XML</em> <em>SCHEMA</em> <em>验证</em><em>xml</em>文?">
+				如<em>何用</em><em>XML</em> <em>SCHEMA</em> <em>验证</em><em>xml</em>文?			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/guolimin1118" target="_blank">
+					<img src="https://avatar.csdn.net/B/F/6/3_guolimin1118.jpg" alt="guolimin1118" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">guolimin1118</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">09-18</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					1160</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/guolimin1118/article/details/4567183" target="_blank" >
+				辅导同事让我写一个能够简单验证XML文的程序。由于只要求能xml文里有开始有结束标签就算正确的格式。我在网上找了很长时间也没有找到这样的工具和程序。不过发现一个可以严格限制xml文的 SCHEMA ,...			</a>
+		</p>
+
+	</div>
+					<div class="recommend-item-box" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/yueguanghaidao/article/details/7266462,BlogCommendFromQuerySearch_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/yueguanghaidao/article/details/7266462,BlogCommendFromQuerySearch_9"}'>
+		<h4 class="text-truncate oneline">
+			<a href="https://blog.csdn.net/yueguanghaidao/article/details/7266462" target="_blank" title="python对<em>XML</em>文档的良构性和有效性<em>验证</em>">
+				python对<em>XML</em>文档的良构性和有效性<em>验证</em>			</a>
+		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p>
+				<a class="avatar" src="https://blog.csdn.net/yueguanghaidao" target="_blank">
+					<img src="https://avatar.csdn.net/7/1/C/3_yueguanghaidao.jpg" alt="yueguanghaidao" class="avatar-pic">
+					<span class="namebox">
+						<span class="name">yueguanghaidao</span>
+						<span class="triangle"></span>
+					</span>
+				</a>
+			</p>
+			<p class="date-and-readNum">
+				<span class="date hover-show">02-17</span>
+				<span class="read-num hover-hide">
+					<svg class="icon csdnc-yuedushu" aria-hidden="true">
+						<use xlink:href="#csdnc-yuedushu"></use>
+					</svg>
+					8002</span>
+			</p>
+		</div>
+		<p class="content oneline">
+			<a class="oneline" href="https://blog.csdn.net/yueguanghaidao/article/details/7266462" target="_blank" >
+				### 一 .XML文档的结构良好性验证
+结构良好的xml文档，需要遵守下面这些规则：
+1.所有开始标签必须有对应的结束标签
+2.元素可以嵌套，但是不可以重叠
+3.有且只能有一个根元素
+4....			</a>
+		</p>
+
+	</div>
+			
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/crybird">
+                <img src="https://avatar.csdn.net/7/A/8/3_crybird.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/crybird" target="_blank" class="text-truncate" id="uid">超级管理员9527</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/crybird/article/details/4404899" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="47">
+                        <dt><a href="https://blog.csdn.net/crybird?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/crybird?t=1"><span class="count">47</span></a></dd>
+                    </dl>
+        <dl class="text-center" title="43">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">43</span></dd>
+        </dl>
+        <dl class="text-center" title="0">
+            <dt>喜欢</dt>
+            <dd><span class="count">0</span></dd>
+        </dl>
+        <dl class="text-center" title="63">
+            <dt>评论</dt>
+            <dd><span class="count">63</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="5级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-5"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="142532">
+                14万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="2046">
+                2046            </dd>
+        </dl>
+        <dl title="24876">
+            <dt>排名：</dt>
+            <dd>2万+</dd>
+        </dl>
+    </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+              <script type="text/javascript" src="//cee1.iteye.com/lgyyovfyh.js"></script>
+          </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/crybird/article/details/80907192" target="_blank">关于全局变量内存泄漏的误报和解决方案</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/crybird/article/details/80808960" target="_blank">COM线程模型-套间（新）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/crybird/article/details/78929660" target="_blank">socket的IO模型(仅有分类）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/crybird/article/details/78574941" target="_blank">Oracle ORA-29275:部分多字节字符</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/crybird/article/details/78178711" target="_blank">坑爹的ado+oracle；感谢客户方的技术</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/472236">
+                    C/C++                    <span class="count float-right">34篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/472238">
+                    COM                    <span class="count float-right">12篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/752798">
+                    MFC                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/531610">
+                    Office                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/513539">
+                    VC++ IDE                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/472237">
+                    Win32                    <span class="count float-right">16篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/1321376">
+                    Win8                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/568717">
+                    XML/HTML                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/860344">
+                    c#/wpf                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/852910">
+                    非技术                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/6735389">
+                    GDI+                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/crybird/article/category/6881727">
+                    DB                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2018/07">
+                    2018年7月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2018/06">
+                    2018年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/12">
+                    2017年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/11">
+                    2017年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/10">
+                    2017年10月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/09">
+                    2017年9月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2017/02">
+                    2017年2月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2016/06">
+                    2016年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2016/03">
+                    2016年3月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2015/12">
+                    2015年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2014/08">
+                    2014年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/11">
+                    2013年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/09">
+                    2013年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/06">
+                    2013年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/05">
+                    2013年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/04">
+                    2013年4月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/03">
+                    2013年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2013/01">
+                    2013年1月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/12">
+                    2012年12月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/11">
+                    2012年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/09">
+                    2012年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/08">
+                    2012年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/07">
+                    2012年7月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2012/05">
+                    2012年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2011/12">
+                    2011年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2011/08">
+                    2011年8月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2011/07">
+                    2011年7月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2010/11">
+                    2010年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/08">
+                    2009年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/07">
+                    2009年7月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/05">
+                    2009年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/04">
+                    2009年4月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/02">
+                    2009年2月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2009/01">
+                    2009年1月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/crybird/article/month/2008/10">
+                    2008年10月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/crybird/article/details/7552395">IE中js调用脚本实现打印预览（按钮本身不打印）</a>
+					<p class="read">阅读量：<span>14223</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/crybird/article/details/4055496">Word退出时报错 &quot;此文件正由另一个应用程序或用户使用&quot;</a>
+					<p class="read">阅读量：<span>11528</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/crybird/article/details/4049047">用VS2008+ATL开发Gif的ActiveX控件的步骤</a>
+					<p class="read">阅读量：<span>9641</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/crybird/article/details/9187771">关于SAFEARRAY的，转载了篇文章，比较全</a>
+					<p class="read">阅读量：<span>9627</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/crybird/article/details/4190284">关于Office OCR的几个注意的地方</a>
+					<p class="read">阅读量：<span>7645</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/crybird/article/details/7552395#comments">IE中js调用脚本实现打印预览（按...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/q1322052883" class="user-name" target="_blank">q1322052883</a>：你真棒                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/crybird/article/details/7804748#comments">window窗口闪烁小结</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/H121BABY" class="user-name" target="_blank">H121BABY</a>：总结的很好，解决了我的问题                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/crybird/article/details/4404899#comments">如何用schema验证xml(MS...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/t18070040596" class="user-name" target="_blank">t18070040596</a>：“async”: 不是“MSXML2::IXMLDOMDocument”的成员                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/crybird/article/details/8959084#comments">CEdit 文本垂直居中（单行解决...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/yumulinxiang" class="user-name" target="_blank">yumulinxiang</a>：我用了怎么狂闪啊！？                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/crybird/article/details/3720553#comments">自绘滚动条记录</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/whhitxjl" class="user-name" target="_blank">whhitxjl</a>：讲得挺好，受教了！
+PS：这个文章在IE9里显示不出来。                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//cee1.iteye.com/avneunkwb.js"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+			<script>
+			(function() {
+				var s = "_" + Math.random().toString(36).slice(2);
+				document.write('<div id="baidufooter_0001"></div>');
+				(window.slotbydup=window.slotbydup || []).push({
+					id: '5851901',
+					container: 'baidufooter_0001',
+					size: '520,40',
+					display: 'inlay-fix'
+				});
+			})();
+			</script>
+			<script src="https://dup.baidustatic.com/js/os.js"></script>
+			<style>
+				#baidufooter_0001{
+					display: none !important;
+				}
+			</style>
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li>
+			<button class="btn-like " title="点赞">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<p>0</p>
+			</button>
+		</li>
+		<li>
+			<a class="btn-comments" title="写评论" href="#commentBox">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg><br>写评论			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc" title="目录">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg><br>目录
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark" title="收藏">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg><br>收藏
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_weixin" data-cmd="weixin" title="微信分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg><br>微信
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_tsina" data-cmd="tsina" title="微博分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-weibo"></use>
+				</svg><br>微博
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_qzone" data-cmd="qzone" title="QQ分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-qq"></use>
+				</svg><br>QQ
+			</a>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 9;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "如何用schema验证xml(MSXML)，简单VC代码";
+    var ChannelId = 0;
+    var articleId = "4404899";
+    var commentscount = 6;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/crybird/article/details/4404899";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = '';
+    var highlight = ["\u4f55\u7528","schema","\u9a8c\u8bc1","xml","msxml","\u7b80\u5355","vc","\u4ee3\u7801"];//高亮数组
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.3/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"如何用schema验证xml(MSXML)，简单VC代码");
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-a4f198c74c.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-cdbb97e217.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-46c7bd3d86.min.js"></script>
+</body>
+<div class="box-box-aways">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <div id="adAways">
+        <script>
+            (function() {
+            (window.slotbydup=window.slotbydup || []).push({
+            id: '5868728',
+            container: 'adAways',
+            size: '250,500',
+            display: 'inlay-fix'
+            });
+            })();
+            </script>
+        <script src="http://dup.baidustatic.com/js/os.js"></script>
+    </div>
+</div>
+<div class="box-box-default">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/mhzzjepzz.js"></script>
+</div>
+<div class="box-box-large">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/idvveasfs.js"></script>
+</div>
+<!-- 第四范式SDK -->
+<script charset="utf-8" src="https://nbrecsys.4paradigm.com/resource/js/sdk-csdn-smallflow.prod.0723.js" async defer></script>
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-93244aa03c.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+</html>

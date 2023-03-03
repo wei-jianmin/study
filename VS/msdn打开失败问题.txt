@@ -1,0 +1,24 @@
+表现：
+打开msdn时，弹出窗口，提示：
+“无法显示microsoft文档资源管理器,因为指定的帮助集合“ms-help://ms.msdnqtr.v90.chs”无效”
+搜索时，提示无法打开网页
+
+解决办法：
+法1.regsvr32 "C:\Program Files\Common Files\Microsoft Shared\Help\hxds.dll"
+参照：http://www.cnblogs.com/Nasa-Mitnick/archive/2011/03/27/1997118.html
+
+法2.之前一直被这个问题严重困扰：在安装msdn2008之后，没多久，就一直出现这个错误，msdn无法使用，出现这样的提示：
+“无法显示microsoft文档资源管理器,因为指定的帮助集合“ms-help://ms.msdnqtr.v90.chs”无效”
+网上很多解决方法除了重装系统全试了一遍。最后绝望。今天终于找到了解决方法。
+出现提示
+“无法显示microsoft文档资源管理器,因为指定的帮助集合“ms-help://ms.msdnqtr.v90.chs”无效”
+
+不是因为msdn出现问题，而是因为系统关于帮助文件.chm文件出现错误，windows中打开chm文件的程序是”hh.exe“,但是负责建立帮助文件全文检索的是以下几个组件，只要重新注册这几个组件，就可以使用msdn了。其他的一切关于注册表的说法都不管用。
+解决方法：
+在开始菜单-->运行里运行：
+
+regsvr32 hhctrl.ocx
+regsvr32 itss.dll
+regsvr32 itircl.dll
+三项，解决问题，收兵。
+http://blog.163.com/elite_lcf/blog/static/67839538200952010387623/

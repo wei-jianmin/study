@@ -1,0 +1,45 @@
+PCRE全称为Perl Compatible Regular Expression，意思是Perl兼容正则表达式
+PCRE中，通常将模式表达式（即正则表达式）包含在两个反斜线“/”之间，如“/apple/”。
+
+模式修正符（Pattern Modifiers）
+模式修正符在忽略大小写、匹配多行中使用特别多，掌握了这一个修正符，往往能解决我们遇到的很多问题。
+i     －可同时匹配大小写字母
+M     －将字符串视为多行
+S     －将字符串视为单行，换行符做普通字符看待，使“.”匹配任何字符
+X     －模式中的空白忽略不计
+U     －匹配到最近的字符串
+e     －将替换的字符串作为表达使用
+格式：/apple/i匹配“apple”或“Apple”等，忽略大小写。     /i
+
+教程：http://swoolley.org/man.cgi/3/pcreapi
+
+pcre_exec()的函数定义是
+int pcre_exec(const pcre *code, const pcre_extra *extra,
+const char *subject, int length, int startoffset,
+int options, int *ovector, int ovecsize);
+用法举例 ：
+int rc;
+int ovector[30];
+rc = pcre_exec(
+re,             /* pcre_compile()的结果 */
+NULL,           /* pcre_study()的结果，study可以加速算法，没有则设为NULL */
+"some string",  /* 匹配的字符串subject string，其中可以包含\0 */
+11,             /* 上述字符串长度，因为上面字符串可以包含\0，所以长度在这个地方指出 */
+0,              /* subject string开始匹配的offset，看api，貌似pcre不支持形如/g这样的匹配全部的选项，
+				   需要通过循环+调整这个偏移量，自己来实现这个功能 */
+0,              /* default options */
+ovector,        /* 匹配结果的数组*/
+30);            /* ovector的数组长度 */
+
+返回值rc：
+当rc<0表示匹配发生error，==0，没有匹配上，>0返回匹配到的元素数量
+ovector是一个int型数组，其长度必须设定为3的倍数，若为3n，则最多返回n个元素，显然有rc<=n
+其中ovector[0],[1]为整个匹配上的字符串的首尾偏移；其他[2*i][2*i+1]为对应第i个匹配上的子串的偏移,
+子串意思是正则表达式中被第i个()捕获的字符串，计数貌似是按照(出现的顺序。
+如正则式/abc((.*)cf(exec))test/,在目标字符串11111abcword1cfexectest11111中匹配，将返回4个元素，
+其首尾偏移占用ovector的0~7位
+元素0=abcword1cfexectest,
+元素1=word1cfexec
+元素2=word1
+元素3=exec
+ovector的最后1/3个空间，即[2n~3n-1]，貌似为pcre正则匹配算法预留，不返回结果

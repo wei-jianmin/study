@@ -1,0 +1,7 @@
+1. 安装luascript插件
+
+2. 选择该插件的edit startup script选项
+
+3. 在打开的文件中添加：
+editor1.FoldFlags = 0
+editor2.FoldFlags = 0

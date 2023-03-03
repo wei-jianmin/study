@@ -1,0 +1,68 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+typedef unsigned long ULONG;
+class A
+{
+public:
+	virtual void func1(){cout<<"A::this is virtual func1"<<endl;}
+	virtual void func2(){cout<<"A::this is virtual func2"<<endl;}
+	virtual void func3(){cout<<"A::this is virtual func3"<<endl;}
+};
+
+
+class A2:public A
+{
+public:
+	void func1(){cout<<"A2::this is virtual func1"<<endl;}
+	void func2(){cout<<"A2::this is virtual func2"<<endl;}
+	void func3(){cout<<"A2::this is virtual func3"<<endl;}
+};
+
+
+struct PV
+{
+	ULONG p2;
+};
+
+
+void func(PV *p)
+{
+	//实验一
+	A2 a2;
+	ULONG l;
+	l=*(ULONG*)&a2;
+	//l=0x00417700;	//试验二
+	(*p).p2=l;
+}
+
+int main()
+{
+/*试验二
+	A2 a2;
+	ULONG l;
+	l=*(ULONG*)&a2;
+*/
+/*实验三
+	A a1;
+	ULONG l;
+	l=*(ULONG*)&a1;
+*/
+	PV pv;
+	func(&pv);
+	A* pa=NULL;
+	pa=(A*)&pv;
+	pa->func1();
+	pa->func2();
+	pa->func3();
+	system("pause");
+}
+/*
+试验一、二证明，对类中的（非静态）方法的调用，并不一定需要有类实例的存在，而只要这个实例“曾经存在过”（影响虚表的创建）就行了。
+试验证明，虚函数表是在编译时遇到第一个对象的定义时（A2 a2；）才创建的（仍在编译期），如果整个程序没有类实例，则不会创建虚函数表。
+但如果一个基类没有创建相应实例，而其派生类创建了相应实例，则该基类也会默认生成虚函数表。
+如果一个类中含有数据成员，且其方法涉及对自身数据成员的操作（大多数的类都是这样的），则尽管可以想上面那样“无实例调用类方法”，
+但这样的调用时没有意义的，所以对于这样的类，需要关注类实例的存在性。
+（通过分析汇编代码可知），类指针（接口指针）调用类方法时，如果是调用的非虚函数成员，则实际在编译时，就转化为函数代码地址了；
+而对于虚成员函数的调用，则在编译时，转化为对虚汗表的查表运算。
+*/

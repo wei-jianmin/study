@@ -1,0 +1,20 @@
+Node.js 异步编程的直接体现就是回调
+
+回调函数在完成任务后就会被调用，Node 使用了大量的回调函数，Node 所有 API 都支持回调函数。
+
+回调函数一般作为函数的最后一个参数出现
+
+举例：
+    阻塞式读文件：
+        var fs = require("fs");
+        var data = fs.readFileSync('input.txt');
+        console.log(data.toString());
+    非阻塞式读文件：
+        var fs = require("fs");
+        fs.readFile('input.txt', 
+            function (err, data) {
+                if (err) return console.error(err);
+                console.log(data.toString());
+            }
+        );
+        console.log(“读取的文件内容为：\n”);

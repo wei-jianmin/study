@@ -1,0 +1,614 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>调色板原理 &amp; 编程 - 人间奇迹 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=03KQeESEmpLfzDqUo0NiWUg5Zd5aRam3JHBZTK05Wug1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/Valentine/bundle-Valentine.css?v=epqiVI4j819Wn_JdKlq9jXtMbKvrRSVRodm50ppLwHk1"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/Valentine/bundle-Valentine-mobile.css?v=DRipxhxolKybd8XSb66Ua_qwFS02EoAKXmtCkV5J0Rs1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/yaozhongxiao/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/yaozhongxiao/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/yaozhongxiao/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'yaozhongxiao', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=Wi_UnAyY55yQKWjwwwuDISxc6t0j3z6Pn8OHCG0udOA1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<TABLE cellpadding="0" cellspacing="0" border="0" align="center" width="100%">
+<TR>
+	<TD width=184 background="/skins/Valentine/images/banner1.gif"></TD>
+	<TD background="/skins/Valentine/images/banner.gif">
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/yaozhongxiao/">追逐理想</a><br>
+		<span style="font-size:12px;color:#4371A6;padding-left:20;">如果你了解我，你就会喜欢我</span>
+	</div>
+</div>
+</TD>
+	<TD width=295 background="/skins/Valentine/images/banner2.gif"></TD>
+</TR>
+</TABLE>
+<div id="mylinks">
+<!--done-->
+<a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a>&nbsp;&nbsp;&nbsp;<a id="blog_nav_myhome" class="mainmenu" href="http://www.cnblogs.com/yaozhongxiao/">首页</a>&nbsp;&nbsp;&nbsp;<a id="blog_nav_newpost" class="mainmenu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a>&nbsp;&nbsp;&nbsp;<a id="MyLinks1_NewArticleLink" class="mainmenu" href="/EnterMyBlog.aspx?NewArticle=1">新文章</a>&nbsp;&nbsp;&nbsp;<a id="blog_nav_contact" accesskey="9" class="mainmenu" rel="nofollow" href="https://msg.cnblogs.com/send/%E4%BA%BA%E9%97%B4%E5%A5%87%E8%BF%B9">联系</a>&nbsp;&nbsp;&nbsp;<a id="blog_nav_rss" class="mainmenu" href="http://www.cnblogs.com/yaozhongxiao/rss">订阅</a><a id="blog_nav_rss_image" href="http://www.cnblogs.com/yaozhongxiao/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>&nbsp;&nbsp;&nbsp;<a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a>
+</div>
+<div id="mytopmenu">
+	
+		<DIV id="mystats">
+			<div id="blog_stats">
+<!--done-->
+<div class="blogStats">
+posts - 151,comments - 51,trackbacks - 0
+
+</div></div></DIV>
+	
+</div>
+<div id="leftcontent">
+	
+		<DIV id="leftcontentcontainer">
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script><br>
+			
+<!--done-->
+<div class="newsItem">
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script></DIV>
+	
+</div>
+<div id="centercontent">
+	
+<div id="post_detail">
+<!--done-->
+<div class = "post">
+	<div class = "postTitle">
+		<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/yaozhongxiao/archive/2010/09/19/1831025.html">调色板原理 &amp; 编程</a>
+	</div>
+	<div id="cnblogs_post_body"><dl>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">逻辑调色板结构LOGPALETTE，该结构定义如下：<br /></span><span style="font-size: 12pt">　　typedef struct tagLOGPALETTE<br /></span><span style="font-size: 12pt">　　{<br /></span><span style="font-size: 12pt">　　　　WORD palVersion;　　//调色板的板本号，应该指定该值为0x300;<br /></span><span style="font-size: 12pt">　　　　WORD palNumEntries;//调色板中的表项数，对于灰度图像该值为256；<br /></span><span style="font-size: 12pt">　　　　PALETEENTRY palPalEntry[1];//调色板中的颜色表项，由于该表项的数目不一定，所以这里数组长度定义为1,灰度图像对应的该数组的长度为　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 256;<br /></span><span style="font-size: 12pt">　　}　LOGPALETTE;</span></div><span style="font-size: 12pt">
+<dt>
+<div style="text-indent: 2em"><br /></span><span style="font-size: 12pt">　　颜色表项结构PALETTEENTRY定义了调色板中的每一个颜色表项的颜色和使用方式，定义如下：<br /></span><span style="font-size: 12pt">　　typedef struct tagPALETTEENTRY<br /></span><span style="font-size: 12pt">　　{<br /></span><span style="font-size: 12pt">　　　　BYTE peRed; //R分量值；<br /></span><span style="font-size: 12pt">　　　　BYTE peGreen; //G分量值；<br /></span><span style="font-size: 12pt">　　　　BYTE peBlue; //B分量值；<br /></span><span style="font-size: 12pt">　　　　BYTE peFlags; // 该颜色被使用的方式，一般情况下设为"0"；<br /></span><span style="font-size: 12pt">　　}PALETTEENTRY;<br /><br /></span><span style="font-size: 12pt">　　Windows系统使用</span><span style="font-size: 12pt; background-color: yellow">调色板管理器</span><span style="font-size: 12pt">来管理与调色板有关的操作，<u>通常</u></span><span style="font-size: 12pt; background-color: yellow">活动窗口的调色板即是当前系统调色板</span><span style="font-size: 12pt">，所有的非活动窗口都必须按照此系统调色板来显示自己的颜色，此时调色板管理器将自动的用系统调色板中的最近似颜色来映射相应的显示颜色。</span><span style="font-size: 12pt; background-color: yellow">如果窗口或应用程序按自己的调色板显示颜色，就必须将自己的调色板载入到系统调色板中</span><span style="font-size: 12pt">，</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">这种操作叫作实现调色板，实现调色板包括两个步骤：</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">1.&nbsp; 首先</span><span style="font-size: 12pt; background-color: yellow">将调色板选择到设备上下文中</span><span style="font-size: 12pt">，可以通过CDC::SelectPalette() 选入设备上下文</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">2.&nbsp; 然后在设备上下文中</span><span style="font-size: 12pt; background-color: yellow">实现调色板</span><span style="font-size: 12pt">,&nbsp;&nbsp;&nbsp;&nbsp;可以通过 CDC::RealizePalette()实现设备调色板。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">在实现调色板的过程中，通过在框架类中处理Windows定义的消息WM_QUERYNEWPALETTE 、WM_PALETTECHANGED及视图类中处理自定义消息WM_DOREALIZE（该消息在主框架窗口定义如下：#define WM_REALIZEPAL (WM_USER+101)）来实现调色板的操作。当系统需要处理调色板的变化时，将向程序的主窗口发送WM_QUERYNEWPALETTE 、WM_PALETTECHANGED，例如当某一窗口即将激活时，主框架窗口将收到WM_QUERYNEWPALETTE消息，通知该窗口将要收到输入焦点，给它一次机会实现其自身的逻辑调色板；当系统调色板改变后，主框架窗口将收到WM_PALETTECHANGED消息，通知其它窗口系统调色板已经改变，此时每一窗口都应该实现其逻辑调色板，重画客户区。<br /><br /></span><span style="font-size: 12pt">　　由于上述的调色板变更消息是发往主框架窗口的，所以我们只能在主窗口中响应这两个消息，然后由主框架窗口通知各个视窗，使得程序激活时能自动装载自己的调色板。我们定义的用户消息WM_REALIZEPAL用于主框架窗口通知视窗它已经收到调色板变更消息，视窗应该协调其调色板。下面我们给出了各个消息的响应处理函数的具体实现代码和注释：<br /><br /></span><span style="font-size: 12pt">//////////////////////////////////////////////////////////<br /></span><span style="font-size: 12pt">void CMainFrame::OnPaletteChanged(CWnd* pFocusWnd)<br /></span><span style="font-size: 12pt">{　　//总实现活动视的调色板<br /></span><span style="font-size: 12pt">　　CMDIFrameWnd::OnPaletteChanged(pFocusWnd);<br /></span><span style="font-size: 12pt">　　CMDIChildWnd* pMDIChildWnd = MDIGetActive();//得到活动的子窗口指针；<br /></span><span style="font-size: 12pt">　　if (pMDIChildWnd == NULL)<br /></span><span style="font-size: 12pt">　　　　　　return<br /></span><span style="font-size: 12pt">　　CView* pView = pMDIChildWnd-&gt;GetActiveView();//得到视图的指针；<br /></span><span style="font-size: 12pt">　　ASSERT(pView != NULL);<br /></span><span style="font-size: 12pt">　　SendMessageToDescendants(WM_DOREALIZE, (WPARAM)pView-&gt;m_hWnd);</span><span style="font-size: 12pt">　//通知所有子窗口系统调色板已改变<br /></span><span style="font-size: 12pt">}<br /></span><span style="font-size: 12pt">////////////////////////////////////////////////<br /></span><span style="font-size: 12pt">BOOL CMainFrame::OnQueryNewPalette()//提供实现系统调色板的机会<br /></span><span style="font-size: 12pt">{<br /></span><span style="font-size: 12pt">　　　　// 实现活动视的调色板<br /></span><span style="font-size: 12pt">　　CMDIChildWnd* pMDIChildWnd = MDIGetActive();//得到活动的子窗口指针；<br /></span><span style="font-size: 12pt">　　if (pMDIChildWnd == NULL)<br /></span><span style="font-size: 12pt">　　　　　　　　return FALSE;//no active MDI child frame (no new palette)<br /></span><span style="font-size: 12pt">　　CView* pView = pMDIChildWnd-&gt;GetActiveView();//得到活动子窗口的视图指针；<br /></span><span style="font-size: 12pt">　　　　　　　　ASSERT(pView != NULL);<br /></span><span style="font-size: 12pt"><br /></span><span style="font-size: 12pt">　　pView-&gt;SendMessage(WM_DOREALIZE, (WPARAM)pView-&gt;m_hWnd);<span style="font-size: 12pt">//通知活动视图实现系统调色板</span><br /></span><span style="font-size: 12pt">　　　　return TRUE;<br /></span><span style="font-size: 12pt">}<br /></span><span style="font-size: 12pt">/////////////////////////////////////////////////<br /></span><span style="font-size: 12pt">BOOL CDibView::OnDoRealize(WPARAM wParam, LPARAM)//实现系统调色板<br /></span><span style="font-size: 12pt">{<br /></span><span style="font-size: 12pt">　　ASSERT(wParam != NULL);<br /></span><span style="font-size: 12pt">　　CDibDoc* pDoc = GetDocument();<br /></span><span style="font-size: 12pt">　　if (pDoc-&gt;m_hDIB == NULL)<br /></span><span style="font-size: 12pt">　　　　　　return FALSE; // must be a new document<br /></span><span style="font-size: 12pt">　　CPalette* pPal = pDoc-&gt;m_palDIB;<br /></span><span style="font-size: 12pt">//调色板的颜色表数据在InitDIBData()函数中实现<br /></span><span style="font-size: 12pt">　　if (pPal != NULL)<br /></span><span style="font-size: 12pt">　　{<br /></span><span style="font-size: 12pt">　　　　CMainFrame* pAppFrame = (CMainFrame*) AfxGetApp()-&gt;m_pMainWnd;//得到程序的主框架指针；<br /></span><span style="font-size: 12pt">　　　　ASSERT_KINDOF(CMainFrame, pAppFrame);<br /></span><span style="font-size: 12pt">　　　　CClientDC appDC(pAppFrame);//获取主框架的设备上下文；<br /></span><span style="font-size: 12pt">　　　　CPalette* oldPalette = appDC.SelectPalette(pPal, ((HWND)wParam) != m_hWnd);<br /></span><span style="font-size: 12pt">　　　　</span><span style="font-size: 12pt">if (oldPalette != NULL)<br /></span><span style="font-size: 12pt">　　　　{<br /></span><span style="font-size: 12pt">　　　　　　UINT nColorsChanged = appDC.RealizePalette();//实现系统调色板<br /></span><span style="font-size: 12pt">　　　　　　if (nColorsChanged &gt; 0)<br /></span><span style="font-size: 12pt">　　　　　　　　pDoc-&gt;UpdateAllViews(NULL);//更新视图<br /></span><span style="font-size: 12pt">　　　　　　appDC.SelectPalette(oldPalette, TRUE); <span style="font-size: 12pt">//将原系统调色板置为背景调色板</span></span><span style="font-size: 12pt"><br /></span><span style="font-size: 12pt">　　}<br /></span><span style="font-size: 12pt">　　else<br /></span><span style="font-size: 12pt">　　{<br /></span><span style="font-size: 12pt">　　　　　　TRACE0("\\tSelectPalette failed in");<br /></span><span style="font-size: 12pt">　　}<br /></span><span style="font-size: 12pt">　　return TRUE；<br /></span><span style="font-size: 12pt">}<br /><br /></span><span style="font-size: 12pt">　　注：在调用API函数显示位图时，不要忘记设置逻辑调色板，即"背景"调色板，否则位图将无法正确显示，读者可以从后面的显示部分的实现看出我们在显示时实现了逻辑调色板。上述的处理相对来说比较繁琐复杂，可能对于初学者来说也比较难于理解，所以如果我们的程序仅仅限于处理灰度图象，可以采用另外一种相对简单的办法，即在文档类的初始化阶段定义一个灰度调色板，然后在设备上下文中实现它，这样作的好处是在度取灰度位图时可以不再考虑文件中的颜色表信息，提高了文件读取速度，笔者在开发一个基于机器视觉的项目时采用的就是这种方法，取的了比较满意的效果。首先定义一个指向逻辑颜色表结构 LOGPALETTE的指针pPal，填充该指针，然后将该指针与调色板指针联系起来，该方法的具体实现如下：<br /><br /></span><span style="font-size: 12pt">/////////////////////////////////////////////////////////<br /></span><span style="font-size: 12pt">　　CDibDoc::CDibDoc()<br /></span><span style="font-size: 12pt">　　{<br /></span><span style="font-size: 12pt">　　　　LOGPALETTE *Pal;<br /></span><span style="font-size: 12pt">　　　　Pal=new LOGPALETTE;<br /></span><span style="font-size: 12pt">　　　　m_palDIB=new Cpalette;<br /></span><span style="font-size: 12pt">　　　　pPal-&gt;palVersion=0x300;<br /></span><span style="font-size: 12pt">　　　　pPal-&gt;palNumEntries=256;<br /></span><span style="font-size: 12pt">　　　　for(int i=0;i&lt;256;i++)<br /></span><span style="font-size: 12pt">　　　　{//每个颜色表项的R、G、B值相等，并且各个值从"0"到"255"序列展开；<br /></span><span style="font-size: 12pt">　　　　　　Pal-&gt;palPalentry[i].peRed=i;<br /></span><span style="font-size: 12pt">　　　　　　pPal-&gt;palPalentry[i].peGreen=i;<br /></span><span style="font-size: 12pt">　　　　　　pPal-&gt;palPalentry[i].peBlue=i;<br /></span><span style="font-size: 12pt">　　　　　　pPal-&gt;palPalentry[i].peFlags=0;<br /></span><span style="font-size: 12pt">　　　　}<br /></span><span style="font-size: 12pt">　　　　　　</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　m_palDIB-&gt;CreatePalette(pPal);</span><span style="font-size: 12pt"><br /></span><span style="font-size: 12pt">　　}</span> </div>
+<dt>
+<div style="text-indent: 2em">&nbsp; </div>
+<dt>
+<div style="text-indent: 2em">&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 14pt; color: red; background-color: yellow">2.&nbsp; </strong><span style="font-size: 14pt; color: red; background-color: yellow"><strong>调色板的原理</strong></span><span style="font-size: 12pt; color: red; background-color: yellow"> </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　PC机上显示的图象是由一个个像素组成的，每个像素都有自己的颜色属性。在PC的显示系统中，像素的颜色是基于RGB模型的，每一个像素的颜色由红(B)、绿(G)、蓝(B)三原色组合而成。每种原色用8位表示，这样一个的颜色就是24位的。以此推算，PC的SVGA适配器可以同时显示2</span><sup style="font-size: 12pt">24</sup><span style="font-size: 12pt">约一千六百多万种颜色。24位的颜色通常被称作真彩色，用真彩色显示的图象可达到十分逼真的效果。</span><span style="font-size: 12pt">但是，真彩色的显示需要大量的视频内存，一幅640&#215;480的真彩色图象需要约1MB的视频内存。由于数据量大增，显示真彩色会使系统的整体性能迅速下降。</span></div></dt></dl>
+<p style="text-indent: 2em"><span style="font-size: 12pt">
+<div align="center"><img height="300" alt="" src="http://images.cnblogs.com/cnblogs_com/yaozhongxiao/palette1.PNG" width="550" border="0" /></div>
+<p>&nbsp;</p>
+<dt>
+<div align="center"><span id="imgTitle" style="font-size: 12px"><a class="imgTitle" onclick="BD.IMG.statistic.send(event, 15);" href="http://www.cnblogs.com/mugua/archive/2009/11/19/1606154.html" target="_blank"><font face="Comic Sans MS" size="4"><span style="font-size: 12pt">&nbsp;如图为一个256色显示模式中的调色板的工作原理 </span></font></a></span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em" align="center"><span style="font-size: 12pt"></span>&nbsp;<span style="font-size: 12pt">图11.1 调色板工作原理 </span></div>
+<p style="text-indent: 2em"></span>&nbsp;</p>
+<dl>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span><span style="font-size: 12pt; color: red; background-color: yellow">为了解决这个问题，计算机使用调色板来限制颜色的数目</span><span style="font-size: 12pt">。调色板实际上是一个有256个表项的RGB颜色表，颜色表的每项是一个24位的RGB颜色值。使用调色板时，在视频内存中存储的不是的24位颜色值，而是调色板的4位或8位的索引。这样一来，显示器</span><span style="font-size: 12pt; color: red; background-color: yellow">可同时显示</span><span style="font-size: 12pt">的颜色被限制在256色以内，对系统资源的耗费大大降低了(</span><span style="font-size: 12pt; color: red">不同时刻可以采用不同的调色板，因此可以扩展总共可以显示的颜色</span><span style="font-size: 12pt">)。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　显示器可以被设置成16、256、64K、真彩色等</span><span style="font-size: 12pt; background-color: yellow">显示模式</span><span style="font-size: 12pt">，前两种模式需要调色板。</span><span style="font-size: 12pt; color: red; background-color: yellow">在16或256色模式下</span><span style="font-size: 12pt">，程序必须将想要显示的颜色正确地设置到调色板中，这样才能显示出预期的颜色。图11.1显示了调色板的工作原理。使用调色板的一个好处是不必改变视频内存中的值，只需改变调色板的颜色项就可快速地改变一幅图象的颜色或灰度。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　在DOS中，调色板的使用不会有什么问题。由于DOS是一个单任务操作系统，一次只能运行一个程序，因此程序可以独占调色板。在Windows环境下，情况就不那么简单了。Windows是一个多任务操作系统，可以同时运行多个程序。如果有几个程序都要设置调色板，就有可能产生冲突。为了避免这种冲突，Windows使用逻辑调色板来作为使用颜色的应用程序和系统调色板（物理调色板）之间的缓冲。&nbsp;</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp; 
+<div style="text-indent: 2em" align="center"><span style="font-size: 12pt"><img height="316" alt="" src="http://images.cnblogs.com/cnblogs_com/yaozhongxiao/palette2.PNG" width="573" border="0" /></span></div></div>
+<dt>
+<div style="text-indent: 2em" align="center"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em" align="center"><span style="font-size: 12pt">图11.2 调色板的映射关系 </span></div>
+<dt>
+<div></div>
+<dt>
+<div align="center"><span style="font-size: 12pt"></span>&nbsp; </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">在Windows中，</span><span style="font-size: 12pt; background-color: yellow">应用程序是通过一个或多个逻辑调色板来使用系统调色板（物理调色板）。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt; background-color: yellow"></span><span style="font-size: 12pt">在256色系统调色板中，Windows保留了20种颜色作为静态颜色，这些颜色用作显示Windows界面，应用程序一般不能改变。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">缺省的系统调色板只包含这20种静态颜色，调色板的其它项为空。应用程序要想使用新的颜色，必须将包含有所需颜色的逻辑调色板实现到系统调色板中。在实现过程中</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span><span style="font-size: 12pt">1. Windows首先将逻辑调色板中的项与系统调色板中的项作完全匹配，对于逻辑调色板中不能完全匹配的项，Windows将其加入到系统调色板的空白项中，系统调色板总共有236个空白项可供使用，</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">1. 若系统调色板已满，则Windows将逻辑调色板的剩余项匹配到系统调色板中尽可能接近的颜色上。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt; color: red; background-color: yellow">每个设备上下文都拥有一个逻辑调色板</span><span style="font-size: 12pt">，缺省的逻辑调色板只有20种保留颜色，如果要使用新的颜色，则应该创建一个新的逻辑调色板并将其选入到设备上下文中。但光这样还不能使用新颜色，程序只有把设备上下文中的逻辑调色板实现到系统调色板中，新的颜色才能实现。在逻辑调色板被实现到系统调色板时，Windows会建立一个调色板映射表。当设备上下文用逻辑调色板中的颜色绘图时，GDI绘图函数会查询调色板映射表以把像素值从逻辑调色板的索引转换成系统调色板的索引，这样当像素被输出到视频内存中时就具有了正确的颜色值。图11.2说明了这种映射关系，从图中读者可以体会到逻辑调色板的缓冲作用。在该图中，GDI绘图函数使用逻辑调色板的索引1中的颜色来绘图，通过查询调色板映射表，得知系统调色板中的第23号索引与其完全匹配，这样实际输出到视频内存中的像素值是23。注意图中还演示了颜色的不完全匹配，即逻辑调色板中的索引15和系统调色板中的索引46。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　</span><span style="font-size: 12pt; color: red; background-color: yellow">每个要使用额外颜色的窗口都会实现自己的逻辑调色板</span><span style="font-size: 12pt">，逻辑调色板中的每种颜色在系统调色板中都有相同或相近的匹配。调色板的实现优先权越高，匹配的精度也就越高。Windows规定，</span><span style="font-size: 12pt; color: red; background-color: yellow">活动窗口的逻辑调色板(如果有的话)具有最高的实现优先权。</span><span style="font-size: 12pt">这是因为活动窗口是当前与用户交互的窗口，应该保证其有最佳的颜色显示。非活动窗口的优先权是按Z顺序自上到下确定的(Z顺序就是重叠窗口的重叠顺序)。活动窗口有权将其逻辑调色板作为前景调色板实现，非活动窗口则只能实现背景调色板。 </span></div>
+<dt>
+<div style="text-indent: 2em">
+<table cellspacing="0" cellpadding="0" width="100%" border="1">
+<tbody>
+<tr>
+<td width="100%">
+<p><span style="font-size: 12pt">　　提示：术语活动窗口(Active window)或前台窗口(Foreground window)是指当前与用户交互的窗口，活动窗口的顶端的标题条呈高亮显示，而非活动窗口的标题条则是灰色的。活动窗口肯定是一个顶层窗口(Top-level window)，顶层窗口是指没有父窗口或父窗口是桌面窗口的窗口，这种窗口一般都有标题和边框，主要包括框架窗口和对话框。术语重叠窗口是指作为应用程序主窗口的窗口，我们可以把对话框看成是一种特殊的重叠式窗口。 </span></p></td></tr></tbody></table></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em" align="left">&nbsp;</div>
+<dt>
+<div style="text-indent: 2em" align="left"><span style="font-size: 14pt; color: red; background-color: yellow">3.&nbsp;调色板的创建和实现 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">MFC的CPalette类对逻辑调色板进行了封装。该类的成员函数CreatePalette负责创建逻辑调色板，该函数的声明为： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">BOOL CreatePalette( LPLOGPALETTE lpLogPalette ); //成功则返回TRUE。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">参数lpLogPalette是一个指向LPLOGPALETTE结构的指针，LPLOGPALETTE结构描述了逻辑调色板的内容，该结构的定义为： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">typedef struct tagLOGPALETTE { </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　WORD palVersion; //Windows版本号，一般是0x300 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　WORD palNumEntries; //调色板中颜色表项的数目 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　PALETTEENTRY palPalEntry[1]; //每个表项的颜色和使用方法 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} LOGPALETTE; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　结构中最重要的成员是PALETTEENTRY数组，数组项的数目由palNumEntries成员指定。PALETTEENTRY结构对调色板的某一个颜色表项进行了描述，该结构的定义为： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">typedef struct tagPALETTEENTRY { </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;&nbsp; 　　BYTE peRed; 　　//红色的强度(0~255，下同) </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;&nbsp; 　　BYTE peGreen; 　//绿色的强度 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;&nbsp; 　　BYTE peBlue; 　 //蓝色的强度 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;&nbsp; 　　BYTE peFlags; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} PALETTEENTRY; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">成员peFlags说明了颜色表项的使用方法，在一般应用时为NULL，若读者对peFlags的详细说明感兴趣，可以查看Visual C++的联机帮助。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">可以看出，创建调色板的关键是在PALETTEENTRY数组中指定要使用的颜色。这些颜色可以是程序自己指定的特殊颜色，也可以从DIB位图中载入。逻辑调色板的大小可根据用户使用的颜色数来定，一般不能超过256个颜色表项。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　CreatePalette只是创建了逻辑调色板，此时调色板只是一张孤立的颜色表，还不能对系统产生影响。程序必需调用CDC::SelectPalette把逻辑调色板选入到要使用它的设备上下文中，然后调用CDC::RealizePalette把逻辑调色板实现到系统调色板中。函数的声明为： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">CPalette* SelectPalette( CPalette* pPalette, BOOL bForceBackground );</span><br /><span style="font-size: 12pt">　　该函数把指定的调色板选择到设备上下文中。参数pPalette指向一个CPalette对象。参数bForceBackground如果是TRUE，那么被选择的调色板总是作为背景调色板使用，如果bForceBackground是FALSE并且设备上下文是附属于某个窗口的，那么当窗口是活动窗口或活动窗口的子窗口时，被选择的调色板将作为前景调色板实现，否则作为背景调色板实现。如果使用调色板的是一个内存设备上下文，则该参数被忽略。函数返回设备上下文原来使用的调色板，若出错则返回NULL。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">UINT RealizePalette( );</span><br /><span style="font-size: 12pt">该函数把设备上下文中的逻辑调色板实现到系统调色板中。函数的返回值表明调色板映射表中有多少项被改变了。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">如果某一个窗口要显示特殊的颜色，那么一般应该在处理WM_PAINT消息时实现自己的逻辑调色板。也就是说，在OnPaint或OnDraw函数中重绘以前，要调用SelectPalette和RealizePalette。如果窗口显示的颜色比较重要，则在调用SelectPalette时应该指定bForceBackground参数为FALSE。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt; color: red; background-color: yellow">前景调色板具有使用颜色的最高优先级，它有无条件占用系统调色板(20种保留颜色除外)的权力，也就是说，如果需要，前景调色板将覆盖系统调色板的236个表项，而不管这些表项是否正被别的窗口使用。背景调色板则无权破坏系统调色板中的已使用项。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">请读者注意，</span><span style="font-size: 12pt; background-color: yellow">前景调色板应该是唯一</span><span style="font-size: 12pt">。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">如果一个活动窗口同时要实现几个逻辑调色板，那么只能有一个调色板作为前景调色板实现，也即在调用CDC::SelectPalette时只能有一个bForceBackground被指定为FALSE，其它的bForceBackground必需为TRUE。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">通常是把具有输入焦点的窗口的调色板作为前景调色板实现，其它窗口只能使用背景调色板。</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">如果活动窗口的子窗口全都使用前景调色板，则会导致程序的死循环。 </span></div>
+<dt>
+<div style="text-indent: 2em">
+<table cellspacing="0" cellpadding="0" width="100%" border="1">
+<tbody>
+<tr>
+<td width="100%">
+<p><span style="font-size: 12pt">　　提示:请读者注意区分活动窗口和有输入焦点的窗口。有输入焦点的窗口要么是活动窗口本身，要么是活动窗口的子窗口。也就是说，活动窗口不一定具有输入焦点，当活动窗口的子窗口获得输入焦点时，活动窗口就会失去输入焦点。 </span></p></td></tr></tbody></table></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 14pt; color: red">4. </span><span style="font-size: 14pt; color: red; background-color: yellow">使用颜色的三种方法</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 14pt">&nbsp;</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　在调用GDI函数绘图时，可以用不同的方法来选择颜色。Windows用COLORREF数据类型来表示颜色，COLORREF型值的长度是4字节，其中最高位字节可以取三种不同的值，分别对应三种使用颜色的方法。表11.1列出了这些不同的取值及其含义。 </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em" align="center">&nbsp;COLORREF型值的最高位字节的含义&nbsp;&nbsp;&nbsp;&nbsp; 
+<table cellspacing="1" cellpadding="0" width="579" align="center" border="1">
+<tbody>
+<tr>
+<td width="16%">
+<p><strong style="font-size: 12pt">取值</strong> </p></td>
+<td width="84%">
+<p><strong style="font-size: 12pt">含义</strong> </p></td></tr>
+<tr>
+<td width="16%">
+<p><span style="font-size: 12pt">0x00 </span></p></td>
+<td width="84%">
+<p><span style="font-size: 12pt">指定RGB引用。此时三个低位字节含有红、绿、蓝色的强度，Windows将抖动20种保留的颜色来匹配指定的颜色，而不管程序是否实现了自己的调色板。 </span></p></td></tr>
+<tr>
+<td width="16%">
+<p><span style="font-size: 12pt">0x01 </span></p></td>
+<td width="84%">
+<p><span style="font-size: 12pt">指定调色板索引引用。此时最低位字节含有逻辑调色板的索引，Windows根据该索引在逻辑调色板中找到所需的颜色。 </span></p></td></tr>
+<tr>
+<td width="16%">
+<p><span style="font-size: 12pt">0x02 </span></p></td>
+<td width="84%">
+<p><span style="font-size: 12pt">指定调色板RGB引用。此时三个低位字节含有红、绿、蓝色的强度，Windows会在逻辑调色板中找到最匹配的颜色。 </span></p></td></tr></tbody></table></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">为了方便用户的使用，Windows提供了三个宏来构建三种不同的COLORREF数据，它们是： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">COLORREF RGB(BYTE bRed,BYTE bGreen,BYTE bBlue); //RGB引用 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">COLORREF PALETTEINDEX(WORD wPaletteIndex);&nbsp;&nbsp;&nbsp; //调色板索引引用 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">COLORREF PALETTERGB(BYTE bRed,BYTE bGreen,&nbsp;<span style="font-size: 12pt">BYTE bBlue); </span>&nbsp;&nbsp; //调色板RGB引用</span><br /></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">例如，我们可以用上述三种方法来指定刷子的颜色:</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">(1). 调用系统调色板中的红色建立一个刷子： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　CBrush brush; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　brush.CreateSolidBrush(RGB(255,0,0)); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;SelectObject(&amp;brush); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">(2). 调用逻辑调色板的索引2中的颜色来创建一个刷子： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;SelectPalette(&amp;m_Palette,FALSE); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;RealizePalette( ); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　CBrush brush; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　brush.CreateSolidBrush(PALETTEINDEX(2)); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;SelectObject(&amp;brush); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">(3).调用逻辑调色板中最匹配的深灰色来创建一个刷子： </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;SelectPalette(&amp;m_Palette,FALSE); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;RealizePalette( ); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　CBrush brush; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　brush.CreateSolidBrush(PALETTERGB(20,20,20)); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　pDC-&gt;SelectObject(&amp;brush); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt; background-color: yellow"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 14pt; color: red; background-color: yellow">5.&nbsp;与系统调色板有关的消息 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 14pt; color: red; background-color: yellow"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;为了协调各个窗口对系统调色板的使用，Windows在必要的时侯会向顶层窗口和重叠窗口发送消息WM_QUERYNEWPALETTE和WM_PALETTECHANGED。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;当某一顶层或重叠窗口(如主框架窗口)被激活时，会收到WM_QUERYNEWPALETTE消息，在窗口创建之初也会收到该消息，</span><span style="font-size: 12pt; background-color: yellow">该消息先于WM_PAINT消息到达窗口</span><span style="font-size: 12pt">。如果活动窗口要使用特殊的颜色，则在收到该消息时应该实现自己的逻辑调色板并重绘窗口。如果窗口实现了逻辑调色板，那么WM_QUERYNEWPALETTE消息的处理函数应返回TRUE。通常窗口在收到该消息后应该为有输入焦点的窗口(如视图)实现前景调色板，但如果程序觉得它显示的颜色并不重要，那么在收到该消息后可以把逻辑调色板作为背景调色板实现(指定CDC::SelectPalette函数的bForceBackground参数为TRUE)，这样程序就失去了使用系统调色板的最高优先权。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;</span><span style="font-size: 12pt; color: red">当活动窗口实现其前景调色板并改变了系统调色板时，Windows会向包括活动窗口在内的所有的顶层窗口和重叠窗口发送WM_PALETTECHANGED消息，在该消息的wParam参数中包含了改变系统调色板的窗口的句柄。</span><span style="font-size: 12pt">其它窗口如果使用了自己的逻辑调色板，那么应该重新实现其逻辑调色板，并重绘窗口。这是因为系统调色板已经被改变了，必需重新建立调色板映射表并重绘，否则可能会显示错误的颜色。当然，非活动窗口只能使用背景调色板，所以显示的颜色肯定没有在前台的时侯好。要注意只有在活动窗口实现了前景调色板且改变了系统调色板时，才会产生WM_PALETTECHANGED消息。也就是说，</span><span style="font-size: 12pt; color: red">如果窗口在调用CDC::SelectPalette时指定bForceBackground参数为TRUE，那么是不会产生WM_PALETTECHANGED消息。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">&nbsp;</span><span style="font-size: 12pt; background-color: yellow">总之，WM_QUERYNEWPALETTE消息为活动窗口提供了实现前景调色板的机会，而WM_PALETTECHANGED消息为窗口提供了适应系统调色板变化的机会。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　需要指出的是，子窗口是收不到与调色板有关的消息的。因此，如果子窗口(如视图)要使用自己的逻辑调色板，那么顶层窗口或重叠窗口应该及时通知子窗口与调色板有关的消息。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">6.&nbsp;具体实例 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　现在让我们来看一个使用调色板的演示程序。该程序名为TestPal，如图11.3所示，该程序显示了两组红色方块，每组方块都是16&#215;16共256个。左边的这组方块是用逻辑调色板画的，红色的强度从0到255递增，作为对比，在右边用RGB引用画出了256个递增的红色方块。读者可以对比这两组方块的颜色质量，以体会调色板索引引用和RGB引用的区别。该程序也着重向读者演示了处理调色板消息的方法。 </span></div>
+<dt>
+<div style="text-indent: 2em" align="center">&nbsp; </div>
+<dt>
+<div style="text-indent: 2em" align="center"><span style="font-size: 12pt">&nbsp;</span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　首先，请读者用AppWizard建立一个名为TestPal的MFC单文挡应用程序。然后，用ClassWizard为CMainFrame类加入WM_QUERYNEWPALETTE和WM_PALETTECHANGED消息的处理函数，使用缺省的函数名。接着，在TestPal.h文件中类CTestPalApp的定义前加入下面一行： </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">#define WM_DOREALIZE WM_USER+200</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">当收到调色板消息时，主框架窗口会发送用户定义的WM_DOREALIZE消息通知视图。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">最后，请读者按清单11.1和11.2修改程序。 </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">清单11.1 CMainFrame</strong><strong>类的部分代码</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">BOOL CMainFrame::OnQueryNewPalette() </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">{ </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TODO: Add your message handler code here and/or call default </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">GetActiveView()-&gt;SendMessage(WM_DOREALIZE);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">return TRUE; //</strong><strong>返回TRUE</strong><strong>表明实现了逻辑调色板</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">void CMainFrame::OnPaletteChanged(CWnd* pFocusWnd) </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">{ </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">CFrameWnd::OnPaletteChanged(pFocusWnd); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TODO: Add your message handler code here </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">if(GetActiveView()!=pFocusWnd)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">GetActiveView()-&gt;SendMessage(WM_DOREALIZE);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">清单11.2 CTestPalView</strong><strong>类的部分代码</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TestPalView.h : interface of the CTestPalView class </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">class CTestPalView : public CView </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">{ </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">. . . </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">protected: </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">CPalette m_Palette;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">. . .</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">afx_msg LRESULT OnDoRealize(WPARAM wParam, LPARAM lParam);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">DECLARE_MESSAGE_MAP() </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">}; </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TestPalView.cpp : implementation of the CTestPalView class </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">BEGIN_MESSAGE_MAP(CTestPalView, CView) </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">. . .</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">ON_MESSAGE(WM_DOREALIZE, OnDoRealize)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">END_MESSAGE_MAP() </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">CTestPalView::CTestPalView() </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">{ </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TODO: add construction code here </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">LPLOGPALETTE pLogPal;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal=(LPLOGPALETTE)malloc(sizeof(LOGPALETTE)+</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">sizeof(PALETTEENTRY)*256);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palVersion=0x300;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palNumEntries=256;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">for(int i=0;i&lt;256;i++)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">{</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palPalEntry[i].peRed=i; //</strong><strong>初始化为红色</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palPalEntry[i].peGreen=0;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palPalEntry[i].peBlue=0;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pLogPal-&gt;palPalEntry[i].peFlags=0;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">}</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">if(!m_Palette.CreatePalette(pLogPal))</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">AfxMessageBox("Can't create palette!");</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">void CTestPalView::OnDraw(CDC* pDC) </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">{ </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">CTestPalDoc* pDoc = GetDocument(); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">ASSERT_VALID(pDoc); </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">// TODO: add draw code for native data here </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">CBrush brush,*pOldBrush;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">int x,y,i;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;SelectPalette(&amp;m_Palette,FALSE);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;RealizePalette();</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;SelectStockObject(BLACK_PEN);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">for(i=0;i&lt;256;i++)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">{</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">x=(i%16)*16;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">y=(i/16)*16;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">brush.CreateSolidBrush(PALETTEINDEX(i)); //</strong><strong>调色板索引引用</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pOldBrush=pDC-&gt;SelectObject(&amp;brush);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;Rectangle(x,y,x+16,y+16);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;SelectObject(pOldBrush);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">brush.DeleteObject();</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">}</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">for(i=0;i&lt;256;i++)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">{</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">x=(i%16)*16+300;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">y=(i/16)*16;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">brush.CreateSolidBrush(RGB(i,0,0)); //RGB</strong><strong>引用</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pOldBrush=pDC-&gt;SelectObject(&amp;brush);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;Rectangle(x,y,x+16,y+16);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">pDC-&gt;SelectObject(pOldBrush);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">brush.DeleteObject();</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">}</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">} </span></div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">　</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">LRESULT CTestPalView::OnDoRealize(WPARAM wParam, LPARAM)</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">{</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">CClientDC dc(this);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">dc.SelectPalette(&amp;m_Palette,FALSE);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">if(dc.RealizePalette()) //</strong><strong>若调色板映射被改变则刷新视图</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">GetDocument()-&gt;UpdateAllViews(NULL);</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">return 0L;</strong> </div>
+<dt>
+<div style="text-indent: 2em"><strong style="font-size: 12pt">}</strong> </div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　在CTestPalView的构造函数中创建了一个含有256个递增红色的逻辑调色板。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　当变为活动窗口以及窗口创建时，TestPal程序的主框架窗口都会收到WM_QUERYNEWPALETTE消息，该消息的处理函数OnQueryNewPalette负责发送WM_DOREALIZE消息通知视图, 并返回TRUE以表明活动窗口实现了逻辑调色板。WM_DOREALIZE消息的处理函数CTestPalView::OnDoRealize为视图实现一个前景调色板，该函数中有一个判断语句可提高程序运行的效率：如果CDC::RealizePalette返回值大于零，则说明调色板映射表发生了变化，此时必须刷新视图，否则制图中的颜色将失真。如果RealizePalette返回零则说明调色板映射没有变化，这时就没有必要刷新视图。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　无论是TestPal还是别的应用程序在实现前景调色板并改变了系统调色板时，TestPal程序的主框架窗口都会收到WM_PALETTECHANGED消息。请注意该消息的处理函数CMainFrame::OnPaletteChanged有一个pFocusWnd参数，该参数表明是哪一个窗口改变了系统调色板。函数用pFocusWnd来判断，如果是别的应用程序实现了前景调色板，则通知视图调用OnDoRealize实现其逻辑调色板，注意虽然CDC::SelectPalette的bForceBackground参数是FALSE，但这时视图的逻辑调色板是作为背景调色板实现的。如果是TestPal自己的视图实现了前景调色板，则没有必要调用OnDoRealize。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　请读者将Windows当前的显示模式设置为256色，然后编译并运行TestPal，对比一下RGB引用与调色板索引引用的效果，读者不难发现左边用调色板索引引用输出的颜色比右边好的多。通过该程序我们可以看出，即使在系统调色板中已实现了丰富的红色的情况下，RGB引用得到的红色仍然是20种保留颜色的抖动色。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　读者可以打开Windows的画笔程序，并在该程序中打开一幅256色的位图(如Windows目录下的Forest.bmp)。在画笔和TestPal程序之间来回切换，读者可以看到，由于两个应用程序都正确的处理了调色板消息，在前台的应用程序总是具有最好的颜色显示，而后台程序的颜色虽然有些失真，但还比较令人满意。 </span></div>
+<dt>
+<div style="text-indent: 2em"><span style="font-size: 12pt">　　需要指出的是，TestPal程序只使用了一个逻辑调色板，所以它处理调色板消息的方法比较简单。如果程序要用到多个逻辑调色板，那么就需要采取一些新措施来保证只有一个逻辑调色板作为前景调色板使用。在11.4节读者可以看到使用多个逻辑调色板时的处理方法。 </span></div></dt></dl></dt>
+<p style="text-indent: 2em"><span style="font-size: 12pt"></span>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+	<div class = "postDesc">posted on <span id="post-date">2010-09-19 14:47</span> <a href='http://www.cnblogs.com/yaozhongxiao/'>人间奇迹</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=1831025" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(1831025);return false;">收藏</a></div>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=56651,cb_entryId=1831025,cb_blogApp=currentBlogApp,cb_blogUserGuid='2c676f59-0546-de11-9510-001cf0cd104b',cb_entryCreatedDate='2010/9/19 14:47:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+
+<!--done-->
+<div class="footer">
+	
+	Copyright &copy;2017 人间奇迹 Powered By<a href="/">博客园</a> 模板提供：<a href="http://blog.hjenglish.com">沪江博客</a>
+</div>
+</body>
+</html>

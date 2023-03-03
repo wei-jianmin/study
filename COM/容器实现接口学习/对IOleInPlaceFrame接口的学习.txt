@@ -1,0 +1,53 @@
+IOleInPlaceFrame：容器实现的接口，服务器组件进行调用
+简介：
+该接口控制着容器的顶层框架窗口：这种控制涉及到如下方面：
+允许容器将他的菜单插入到复合菜单中、将复合菜单安装到适当的窗口框架中、
+从复合菜单中移除容器菜单元素。它设置与原地控件相关的状态栏文本。
+它也能使能或禁止使能frame的模态对话框，并能翻译为容器框架设置的加速键。
+这个接口是做为OLE包容器最高层框架窗口实现的一个接口，用来在框架窗口中
+合并OLE对象的菜单、工具条，显示OLE对象状态，并可以向OLE包容传递键盘消息，
+再由OLE包容向OLE对象传送，以实现某些热键。IOleInPlaceFrame同时继承了
+IOleInPlaceUIWindow接口，IOleInPlaceUIWindow接口又继承了IOleWindow接口，
+因此实际上我们在实现这个接口时需要实现4个接口的方法（包含IUnknown）。
+这些方法是：GetWindow、ContextSensitiveHelp、GetBorder、RequestBorderSpace、
+SetBorderSpace、 SetActiveObject、InsertMenus、SetMenu、RemoveMenus、
+SetStatusText、EnableModeless 、TranslateAccelerator（未包含IUnknown的三个方法）。
+实现时同样不比完全实现，按照需要实现就可以了，不实现的或者简单返回，或者返回未实现。
+在本文后面的例子中，选择实现了ContextSensitiveHelp（安排OLE对象显示右键菜单）、
+GetBorder（安排OLE对象获得母窗口的边界）、SetBorderSpace（安排OLE对象的边界）、
+SetActiveObject（为母窗口记录下激活的OLE对象）、InsertMenus（合并菜单）、
+SetMenu （设置菜单）、RemoveMenus（消除菜单）、TranslateAccelerator（向OLE对象传递热键）。
+
+
+接口列表：
+--------------------------------------------------------------------------------------
+IOleWindow父接口：
+GetWindow 		返回一个支持就地激活的窗口的窗口句柄（框架，文档，父对象或就地对象窗口）。
+ContextSensitiveHelp 	在原地激活对话中，决定是否把环境敏感帮助[模型]加入进来
+--------------------------------------------------------------------------------------	
+IOleInPlaceUIWindow父接口：
+GetBorder 		获取一个RECT，该区域指定了当对象并激活时，它可以在哪儿防止工具栏及类似按钮
+RequestBorderSpace  	当对象原地激活时，检查是否有有效空间for将被安放在窗口框架周围的tools
+SetBorderSpace 		为 IOleInPlaceUIWindow::RequestBorderSpace请求分配边框区域
+SetActiveObject 		提供对象与每个框架和文档窗口之间的直接通信通道。
+--------------------------------------------------------------------------------------
+IOleInPlaceFrame 接口：
+InsertMenus 		允许容器将他的菜单插入到将被用于in-place回话的复合菜单中。	
+SetMenu 			添加复合菜单到窗口框架中
+RemoveMenus 		给容器一个从in-place复合菜单中移除其自身菜单元素的机会
+SetStatusText 		在容器的状态栏中设置和显示这个in-place对象相关的状态文本
+EnableModeless 		使能或禁用容器的模态对话框
+TranslateAccelerator 	当对象被激活时，翻译用于容器框架的加速器按键
+
+
+
+
+ 
+
+
+ 
+
+ 
+
+
+

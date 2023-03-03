@@ -1,0 +1,9 @@
+Dim 和public、private是同类的
+区别是public和private指明了变量的作用域，而dim则视变量声明区域而定
+dim一般用来声明过程级变量（static声明过程级静态变量）
+private放在全局时用来声明模块级变量，也可以用dim达到同样的效果
+public放在全局时，声明的是全局变量
+声明变量时，可以不指明变量的数据类型，这样声明的变量为变体类型
+dim i!  等同于 dim i as single，其它的：#:Double , @:Currence , $:String , $:Integer , &:Long，一般不推荐使用这种变量声明方式
+dim i()  声明变体类型动态数组
+dim i(2,3) 声明的是二维数组

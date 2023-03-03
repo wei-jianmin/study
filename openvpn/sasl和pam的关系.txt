@@ -1,0 +1,24 @@
+https://www.cnblogs.com/lpfuture/p/5882349.html
+
+不同的应用通过SASL使用各种方法来进行用户认证
+SASL的作用是为各种协议产生一个认证的抽象层，让用户登录的时候不用理会最终用户认证信息的出处。
+
+centos下，/etc/sysconfig/saslauthd 是 sasl的配置文件 （需装 sasl2-bin ）
+sasl支持pam、plain、digest-md5等等认证机制（通过配置文件指定）
+
+CREATE TABLE IF NOT EXISTS `log` (
+  `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_time` timestamp NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `trusted_ip` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `trusted_port` int(10) DEFAULT NULL,
+  `protocol` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `remote_ip` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `remote_netmask` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bytes_received` bigint(20) DEFAULT '0',
+  `bytes_sent` bigint(20) DEFAULT '0',
+  `status` int(10) NOT NULL DEFAULT '1',
+  KEY `idx_username` (`username`),
+  KEY `idx_start_time` (`start_time`),
+  KEY `idx_end_time` (`end_time`)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

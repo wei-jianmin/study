@@ -1,0 +1,12 @@
+一般原装的codeblocks都没有jump back和jump forward等功能。
+
+经过寻找发现需要安装插件（BrowseTracker plugin），该插件是插件包codeblocks-contrib的一部分，所以只要如下安装就行：
+
+sudo apt-get install codeblocks-contrib
+
+安装完成后就会在菜单view下发现jump选项，直接点击就行。
+
+每次使用都要点击还是很麻烦的，设置快捷键可以在setting-Editor-keyboard shortcuts里设置。
+————————————————
+版权声明：本文为CSDN博主「还差得远呢」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/u011362822/article/details/44781479

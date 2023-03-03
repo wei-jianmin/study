@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="dns-prefetch" href="http://www.zhoulujun.cn/">
+    <link rel="dns-prefetch" href="http://cdn.zhoulujun.cn/">
+    <meta property="qc:admins" content="6701301207545256636">
+    <meta property="qc:admins" content="67013017776207545256636">
+    <meta property="wb:webmaster" content="8baa6e7bb45eab5e">
+    <meta name="chinaz-site-verification" content="0E4F89F8-B10A-32F4-D9C3-9E3CA5C8D47C">
+    <meta name="msvalidate.01" content="1C203FC6D1C5223538CCA9D441142232">
+    <meta name="p:domain_verify" content="c7ac0159c403ba1a0511e67218713854">
+    
+    <meta name="applicable-device" content="pc,mobile">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程  - 周陆军的个人网站</title>
+    <meta name="keywords" content="wireshark,使用教程,过滤语法,总结,filter,抓包,周陆军">
+    <meta name="author" content="周陆军">
+    <meta name="description" content="这篇文章详细讲解了，wireshark抓包的使用，过滤规则的使用，说明，常用规则集合。看了这边文章，网络抓包分析，还不会，我就懒得说你了……">
+    <link rel="stylesheet" type="text/css" href="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/frontend.css">
+    <link href="http://cdn.zhoulujun.cn/zhoulujun/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="http://cdn.zhoulujun.cn/zhoulujun/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="http://cdn.zhoulujun.cn/zhoulujun/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="http://cdn.zhoulujun.cn/zhoulujun/favicon.ico" rel="apple-touch-icon" type="image/x-icon">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="http://cdn.zhoulujun.cn/zhoulujun/statics/js/andy/html5.js"></script>
+    <script type="text/javascript" src="http://cdn.zhoulujun.cn/zhoulujun/statics/js/andy/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" async="" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/rs"></script><script type="text/javascript" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/jquery-1.8.0.min.js"></script>
+<script src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/logger.js"></script><link href="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/bdsstyle.css" rel="stylesheet" type="text/css"></head>
+<body><iframe frameborder="0" style="display: none;"></iframe><div id="bdshare_s" style="display: block;"><iframe id="bdsIfr" style="position:absolute;display:none;z-index:9999;" frameborder="0"></iframe><div id="bdshare_l" style="display: none;"><div id="bdshare_l_c"><h6>分享到</h6><ul><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_mshare mshare">一键分享</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_qzone qqkj">QQ空间</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_tsina xlwb">新浪微博</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_bdysc bdysc">百度云收藏</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_renren rrw">人人网</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_tqq txwb">腾讯微博</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_bdxc bdxc">百度相册</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_kaixin001 kxw">开心网</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_tqf txpy">腾讯朋友</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_tieba bdtb">百度贴吧</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_douban db">豆瓣网</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_tsohu shwb">搜狐微博</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_bdhome bdhome">百度新首页</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_sqq sqq">QQ好友</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_thx thx">和讯微博</a></li><li><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="bds_more">更多...</a></li></ul><p><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#" class="goWebsite">百度分享</a></p></div></div></div>
+<div class="hidden">
+    <script async="async" type="text/javascript" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/hm.js"></script>
+</div>
+<header class="header-s">
+    <section class="block">
+        <div class=" icon-h-sound"><span class="icon-font"></span>&nbsp;</div>
+        <nav id="announ">
+            <div id="slider_header" class="slides-box" jssor-slider="true" style="width: 768px; height: 30px;">
+                <!-- Loading Screen -->
+                <!-- Slides Container -->
+                
+            <div style="position: absolute; top: 0px; left: 0px; width: 768px; height: 30px; transform-origin: 0px 0px 0px; transform: scale(1);"><div class="slides-box" style="display: block; position: relative; top: 0px; left: 0px; overflow: visible;"><div class="slides" u="slides" style="z-index: 0; position: absolute;"><div style="position: absolute; z-index: 0; pointer-events: none; left: 0px; top: 30px;"></div></div><div class="slides" u="slides" style="z-index: 0; position: absolute; overflow: hidden;"><div style="width: 768px; height: 30px; top: 0px; left: 0px; position: absolute; opacity: 0; background-color: rgb(0, 0, 0);"></div>
+                                        
+                    <div style="width: 768px; height: 30px; top: 30px; left: 0px; position: absolute; overflow: hidden;">
+                        <a u="image" href="http://www.zhoulujun.cn/zhoulujun/html/theory/algorithm/2015_0706_3.html" title="原码, 反码, 补码-减法变加法-同余理论：详解">原码, 反码, 补码-减法变加法-同余理论：详解</a>
+                    <div style="width: 768px; height: 30px; top: 0px; left: 0px; z-index: 1000; display: none;"></div></div>
+                    
+                    <div style="width: 768px; height: 30px; top: -30px; left: 0px; position: absolute; overflow: hidden;">
+                        <a u="image" href="http://www.zhoulujun.cn/zhoulujun/html/theory/algorithm/2015_0706_4.html" title="揭开正则表达式的神秘面纱">揭开正则表达式的神秘面纱</a>
+                    <div style="width: 768px; height: 30px; top: 0px; left: 0px; z-index: 1000; display: none;"></div></div>
+                    
+                    <div style="width: 768px; height: 30px; top: -30px; left: 0px; position: absolute; overflow: hidden;">
+                        <a u="image" href="http://www.zhoulujun.cn/zhoulujun/html/res/literature/essay/2016_0302_7663.html" title="程序猿的字体选择">程序猿的字体选择</a>
+                    <div style="width: 768px; height: 30px; top: 0px; left: 0px; z-index: 1000; display: none;"></div></div>
+                    
+                    <div style="width: 768px; height: 30px; top: 0px; left: 0px; position: absolute; overflow: hidden;">
+                        <a u="image" href="http://www.zhoulujun.cn/zhoulujun/html/res/literature/Encyclopaedia/7986.html" title="为什么手机号码都11位?如何正则校验手机号码？区分运营商">为什么手机号码都11位?如何正则校验手机号码？区分运营商</a>
+                    <div style="width: 768px; height: 30px; top: 0px; left: 0px; z-index: 1000; display: none;"></div></div>
+                                                        </div></div></div></div>
+        </nav>
+        
+        <a class="fl rss" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=rss&amp;siteid=1">|&nbsp;RSS</a>
+        <span class="login-box"><iframe src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/index.html" allowtransparency="true" width="100%" height="30" frameborder="0" scrolling="no"></iframe>
+			</span>
+    </section>
+</header>
+<article class="search-box wrap">
+    <a class="logo" href="http://www.zhoulujun.cn/"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/logo_my.png" alt="周陆军的logo"></a>
+    <div class="search">
+        <!--<div class="search-tab" id="search">-->
+        <!---->
+        <!---->
+        <!---->
+        <!---->
+        <!--<a href="javascript:;" onclick="setmodel(1, $(this));" style="outline:medium none;" hidefocus="true"  class="on" >新闻</a><span> | </span>-->
+        <!---->
+        <!---->
+        <!--<a href="javascript:;" onclick="setmodel(3, $(this));" style="outline:medium none;" hidefocus="true" >图片</a><span> | </span>-->
+        <!---->
+        <!---->
+        <!--<a href="javascript:;" onclick="setmodel(2, $(this));" style="outline:medium none;" hidefocus="true" >下载</a><span> | </span>-->
+        <!---->
+        <!---->
+        <!--<a href="javascript:;" onclick="setmodel(52, $(this));" style="outline:medium none;" hidefocus="true" >专题</a>-->
+        <!---->
+        <!---->
+        <!--</div>-->
+        <form class="search-bd" action="http://www.zhoulujun.cn/zhoulujun/index.php" method="get" target="_blank">
+            <input type="hidden" name="m" value="search">
+            <input type="hidden" name="c" value="index">
+            <input type="hidden" name="a" value="init">
+            <input type="hidden" name="typeid" value="1" id="typeid">
+            <input type="hidden" name="siteid" value="1" id="siteid">
+            <div class="search-icon"></div>
+            <input type="text" class="search-text" name="q" id="bdcsMain"><input class="search-button" type="submit" value="搜 索">
+        </form>
+    </div>
+    <section class="banner">
+        <p class="banner-p4" title="Stay Hungry. Stay Foolish">
+            Stay Hungry. Stay Foolish.&nbsp;&nbsp;<i>Steve Paul Jobs,2005</i>
+        </p>
+        <p class="banner-p3" title="What the Hell is Cloud Computing">
+            What the Hell is Cloud Computing?&nbsp;&nbsp;<i>Oracle CEO,2009</i>
+        </p>
+        <p class="banner-p2" title="640K ought to be enough for anyone">
+            640K ought to be enough for anyone.&nbsp;&nbsp;<i>Founder of Microsoft,1981</i>
+        </p>
+        <p class="banner-p1" title="I think there is a world market for maybe five computers">
+            I think there is a world market for maybe five computers.&nbsp;&nbsp;<i>President of IBM,1943</i>
+        </p>
+    </section>
+</article>
+
+<nav class="block">
+        <ul class="nav-site">
+        <li class="nav-item">
+            <a href="http://www.zhoulujun.cn/">Home</a>
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=115">webfront</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=48">SGML</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=49">style</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=50">ECMAS</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=123">browser</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=51">php</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=67">base</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=68">yii</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=69">phpcms</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=70">php2mysql</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=52">java</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=71">jdbc</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=72">jsp</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=73">tomcat</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=74">spring</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=109">base</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=173">Swing</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=54">os</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=53">android</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=116">linux</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=125">ios</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=166">windows</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=55">DB</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=75">slq</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=76">mysql</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=77">mongoDB</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=114">redis</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=56">res</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=78">softwave</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=79">politics</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=80">book</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=83">video</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=105">music</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=130">life</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=153">Religion</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=154">literature</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=155">money</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=167">career</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=193">language</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=199">infanticulture</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item   current">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=89">theory</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=90">algorithm</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=91">网络工程</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=92">计算机基础</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=118">model</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=119">os</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=174">SOA</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=190">计算机组成原理</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=191">math</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=198">PM</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=93">OMD</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=107">推广</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=111">经营</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=113">测试</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=169">软文</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=184">UML</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=94">SEO</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=126">tools</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=127">git</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=129">loadrunner</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=163">nginx</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=164">intelliJ</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=165">VMware</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=168">grunt</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=175">adobe</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=185">vim</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=186">apache</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=187">svn</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=189">webpack</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=195">gulp</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=95">design</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=84">photograph</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=96">UI</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=97">graphic </a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=98">packaging</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=99">3d</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=112">UR</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=139">ID</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=197">cartoon</a></li>
+                                
+            </ul>
+
+        </li>
+                        <li class="nav-item  ">
+            <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=58">about</a>
+            <ul class="nav-sub ">
+                                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=100">以前工作</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=85">resume</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=86">心路历程</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=87">个人足迹</a></li>
+                                <li class="nav-sub-item"><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=88">感慨</a></li>
+                                
+            </ul>
+
+        </li>
+                <li class="clear"></li>
+    </ul>
+        
+</nav>
+<nav class="subnav block ">
+        
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=90">algorithm</a>
+    
+    <a class=" current" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=91">网络工程</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=92">计算机基础</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=118">model</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=119">os</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=174">SOA</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=190">计算机组成原理</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=191">math</a>
+    
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=198">PM</a>
+            <!--<a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=video&c=index&a=album">视频专辑</a>-->
+    <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=search&amp;catid=91">搜索</a></nav>
+
+
+<article class="main-content wrap">
+	<div class="crumbs"><a href="http://www.zhoulujun.cn/">首页</a><span> &gt; </span><a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=89">theory</a> &gt; <a href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=index&amp;a=lists&amp;catid=91">网络工程</a> &gt;  列表</div>
+	<section class="col-left fl">
+		<article id="Article" class="article">
+			<header>
+				<h1 class="main-title txth">wireshark使用教程及过滤语法总结——血泪史的汇聚</h1>
+				<p class="detail-info tc">
+				  <strong>发布人：</strong><span>zhoulujun@live.cn</span>&nbsp;&nbsp;&nbsp; <strong>点击：</strong><span id="hits">2047</span>
+				</p>
+			</header>
+
+						<p class="summary">这篇文章详细讲解了，wireshark抓包的使用，过滤规则的使用，说明，常用规则集合。看了这边文章，网络抓包分析，还不会，我就懒得说你了……</p>
+						<section class="con-box">
+								<h1 id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">wireshark介绍</h1><p style="margin: 10px auto; font-family: " black="" font-size:="" white-space:="" background-color:="">wireshark的官方下载网站：&nbsp;<a href="http://www.wireshark.org/" style="color: rgb(120, 175, 211);">http://www.wireshark.org/</a></p><p style="margin: 10px auto; font-family: " black="" font-size:="" white-space:="" background-color:="">wireshark是非常流行的网络封包分析软件，功能十分强大。可以截取各种网络封包，显示网络封包的详细信息。</p><p style="margin: 10px auto; font-family: " black="" font-size:="" white-space:="" background-color:="">wireshark是开源软件，可以放心使用。</p><p style="line-height: 24px;margin-top: 0px;margin-bottom: 10px;padding: 0px;color: rgb(51, 51, 51);font-family: &#39;Hiragino Sans GB W3&#39;, &#39;Hiragino Sans GB&#39;, Arial, Helvetica, simsun, u5b8bu4f53;white-space: normal;background-color: rgb(204, 206, 208);text-indent: 38px;vertical-align: baseline">Wireshark是一款高效免费的网络抓包分析工具。它可以捕获并描述网线当中的数据，如同使用万用表测量电压一样直观地显示出来。在网络分析软件领域，大多数软件要么晦涩难懂要么价格昂贵，Wireshark改变了这样的局面，它的最大特点就是免费、开源和多平台支持。</p><p style="line-height: 24px;margin-top: 0px;margin-bottom: 10px;padding: 0px;color: rgb(51, 51, 51);font-family: &#39;Hiragino Sans GB W3&#39;, &#39;Hiragino Sans GB&#39;, Arial, Helvetica, simsun, u5b8bu4f53;white-space: normal;background-color: rgb(204, 206, 208);text-indent: 38px;vertical-align: baseline">Wireshark几乎可以运行于所有流行的操作平台，如MS Windows、Mac OS、Linux、FreeBSD、HP-UX、NetBSD、Solaris/i386、Solaris/sparc等等。尽管Wireshark可以在很多操作平台使用，但它支持的传输媒介主要是Ethernet。只有Linux平台下Wireshark支持802.11及Token Ring、FDDI和ATM。</p><p style="line-height: 24px;margin-top: 0px;margin-bottom: 10px;padding: 0px;color: rgb(51, 51, 51);font-family: &#39;Hiragino Sans GB W3&#39;, &#39;Hiragino Sans GB&#39;, Arial, Helvetica, simsun, u5b8bu4f53;white-space: normal;background-color: rgb(204, 206, 208);text-indent: 38px;vertical-align: baseline">Wireshark能够对大部分局域网协议进行解析，具有界面简单、操作方便、实时显示捕获数据的优点。但Wireshark并不具有分析功能，当一个网络发生异常的时候，Wireshark只会记录数据，它仅仅是一个测量工具，并不能操作网络，不发送数据包或者做其它的主动动作。</p><p style="margin: 10px auto; font-family: " black="" font-size:="" white-space:="" background-color:=""><span style="color: rgb(255, 0, 0);">使用wireshark的人必须了解网络协议，否则就看不懂wireshark了。</span></p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">Wireshark不能做的&nbsp;</p><p>为了安全考虑，wireshark只能查看封包，而不能修改封包的内容，或者发送封包。</p><p><br></p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">什么人会用到wireshark</p><p>1. 网络管理员会使用wireshark来检查网络问题</p><p>2. 软件测试工程师使用wireshark抓包，来分析自己测试的软件</p><p>3. 从事socket编程的工程师会用wireshark来调试</p><p>4. 听说，华为，中兴的大部分工程师都会用到wireshark。</p><p>&nbsp;</p><p>总之跟网络相关的东西，都可能会用到wireshark.</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">wireshark 开始抓包</p><p>wireshark是捕获机器上的某一块网卡的网络包，当你的机器上有多块网卡的时候，你需要选择一个网卡。</p><p>点击Caputre-&gt;Interfaces.. 出现下面对话框，选择正确的网卡。然后点击"Start"按钮, 开始抓包</p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130162542188.png" style="width: 1134px; height: 358px;" title="wireshark过滤语法总结" width="1134" height="358" border="0" vspace="0" alt="wireshark过滤语法总结"></p><p><br></p><p><br></p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130162542333.png" style="width: 1052px; height: 638px;" title="wireshark过滤语法总结" width="1052" height="638" border="0" vspace="0" alt="wireshark过滤语法总结"></p><p>&nbsp;</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">Wireshark 窗口介绍</p><p><br></p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130162901334.png" title="Wireshark 窗口介绍" alt="Wireshark 窗口介绍" width="800" height="448" border="0" vspace="0" style="width: 800px; height: 448px;"></p><p>WireShark 主要分为这几个界面</p><p>1. Display Filter(显示过滤器)，&nbsp; 用于过滤</p><p>2. Packet List Pane(封包列表)， 显示捕获到的封包， 有源地址和目标地址，端口号。 颜色不同，代表</p><p>3. Packet Details Pane(封包详细信息), 显示封包中的字段</p><p>4. Dissector Pane(16进制数据)</p><p>5. Miscellanous(地址栏，杂项)</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">Wireshark 显示过滤</p><p><br></p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130163100316.png" title="Wireshark 显示过滤" alt="Wireshark 显示过滤" width="854" height="369" border="0" vspace="0" style="width: 854px; height: 369px;"></p><p>使用过滤是非常重要的， 初学者使用wireshark时，将会得到大量的冗余信息，在几千甚至几万条记录中，以至于很难找到自己需要的部分。搞得晕头转向。</p><p>过滤器会帮助我们在大量的数据中迅速找到我们需要的信息。</p><p>过滤器有两种，</p><p>一种是显示过滤器，就是主界面上那个，用来在捕获的记录中找到所需要的记录</p><p>一种是捕获过滤器，用来过滤捕获的封包，以免捕获太多的记录。 在Capture -&gt; Capture Filters 中设置</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">保存过滤</p><p>在Filter栏上，填好Filter的表达式后，点击Save按钮， 取个名字。比如"Filter 102",</p><p><br></p><p>Filter栏上就多了个"Filter 102" 的按钮。</p><p id="tank_h1" black="" white-space:="" style="white-space: normal; background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5;">过滤器的区别</p><p>捕捉过滤器（CaptureFilters）：用于决定将什么样的信息记录在捕捉结果中。需要在开始捕捉前设置。</p><p>显示过滤器（DisplayFilters）：在捕捉结果中进行详细查找。他们可以在得到捕捉结果后随意修改。</p><p>那么我应该使用哪一种过滤器呢？</p><p>两种过滤器的目的是不同的。</p><p>捕捉过滤器是数据经过的第一层过滤器，它用于控制捕捉数据的数量，以避免产生过大的日志文件。</p><p>显示过滤器是一种更为强大（复杂）的过滤器。它允许您在日志文件中迅速准确地找到所需要的记录。</p><p>两种过滤器使用的语法是完全不同的。</p><p id="tank_h1" black="" white-space:="" style="white-space: normal; background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5;">捕捉过滤器</p><table cellspacing="0" cellpadding="1"><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>语法：</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Protocol</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Direction</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Host(s)</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Value</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Logical Operations</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Other expression</strong></td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">例子：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">tcp</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">dst</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">10.1.1.1</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">80</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">and</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px; word-break: break-all;">tcp dst 10.2.2.2 3128</td></tr></tbody></table><p><strong>Protocol（协议）:</strong></p><p>可能的值: ether, fddi, ip, arp, rarp, decnet, lat, sca, moprc, mopdl, tcp and udp.</p><p>如果没有特别指明是什么协议，则默认使用所有支持的协议。</p><p><strong>Direction（方向）:</strong></p><p>可能的值: src, dst, src and dst, src or dst</p><p>如果没有特别指明来源或目的地，则默认使用 “src or dst” 作为关键字。</p><p>例如，”host 10.2.2.2″与”src or dst host 10.2.2.2″是一样的。</p><p><strong>Host(s):</strong></p><p>可能的值： net, port, host, portrange.</p><p>如果没有指定此值，则默认使用”host”关键字。</p><p>例如，”src 10.1.1.1″与”src host 10.1.1.1″相同。</p><p><strong>Logical Operations（逻辑运算）:</strong></p><p>可能的值：not, and, or.</p><p>否(“not”)具有最高的优先级。或(“or”)和与(“and”)具有相同的优先级，运算时从左至右进行。</p><p>例如，</p><p>“not tcp port 3128 and tcp port 23″与”(not tcp port 3128) and tcp port 23″相同。</p><p>“not tcp port 3128 and tcp port 23″与”not (tcp port 3128 and tcp port 23)”不同。</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">过滤表达式的规则</p><p>表达式规则</p><p>&nbsp;1. 协议过滤</p><p>比如TCP，只显示TCP协议。</p><p>2. IP 过滤</p><p>比如 ip.src ==192.168.1.102 显示源地址为192.168.1.102，</p><p>ip.dst==192.168.1.102, 目标地址为192.168.1.102</p><p>3. 端口过滤</p><p>tcp.port ==80,&nbsp; 端口为80的</p><p>tcp.srcport == 80,&nbsp; 只显示TCP协议的愿端口为80的。</p><p>4. Http模式过滤</p><p>http.request.method=="GET",&nbsp;&nbsp; 只显示HTTP GET方法的。</p><p>5. 逻辑运算符为 AND/ OR</p><p>常用的过滤表达式</p><table><tbody><tr class="firstRow"><td valign="top" style="word-break: break-all; border-color: rgb(221, 221, 221);">过滤表达式</td><td valign="top" style="word-break: break-all; border-color: rgb(221, 221, 221);">用途</td></tr><tr><td valign="top" style="border-color: rgb(221, 221, 221);">http</td><td valign="top" style="border-color: rgb(221, 221, 221); word-break: break-all;">只查看HTTP协议的记录</td></tr><tr><td valign="top" style="word-break: break-all; border-color: rgb(221, 221, 221);">ip.src ==192.168.1.102 or ip.dst==192.168.1.102</td><td valign="top" style="border-color: rgb(221, 221, 221);">源地址或者目标地址是192.168.1.102</td></tr><tr><td valign="top" style="border-color: rgb(221, 221, 221); word-break: break-all;">eth.addr== 00:11:22:33:44:55</td><td valign="top" style="border-color: rgb(221, 221, 221); word-break: break-all;">//过滤目标或源地址是00:11:22:33:44:55的数据包</td></tr><tr><td valign="top" style="border-color: rgb(221, 221, 221); word-break: break-all;">tcp dst port 3128</td><td valign="top" style="border-color: rgb(221, 221, 221); word-break: break-all;">显示目的TCP端口为3128的封包。</td></tr><tr><td valign="top" colspan="1" rowspan="1" style="border-left-color: rgb(221, 221, 221); border-top-color: rgb(221, 221, 221); word-break: break-all;">ip src host 10.1.1.1</td><td valign="top" colspan="1" rowspan="1" style="border-left-color: rgb(221, 221, 221); border-top-color: rgb(221, 221, 221); word-break: break-all;">显示来源IP地址为10.1.1.1的封包。</td></tr><tr><td valign="top" colspan="1" rowspan="1" style="border-left-color: rgb(221, 221, 221); border-top-color: rgb(221, 221, 221); word-break: break-all;"><p><br></p><p>host 10.1.2.</p></td><td valign="top" colspan="1" rowspan="1" style="border-left-color: rgb(221, 221, 221); border-top-color: rgb(221, 221, 221); word-break: break-all;">显示目的或来源IP地址为10.1.2.3的封包。</td></tr><tr><td valign="top" colspan="1" rowspan="1" style="word-break: break-all;">src portrange 2000-2500</td><td valign="top" colspan="1" rowspan="1" style="word-break: break-all;">显示来源为UDP或TCP，并且端口号在2000至2500范围内的封包。</td></tr><tr><td valign="top" style="word-break: break-all;"><p><br></p><p>src host 10.7.2.12 and not dst net 10.200.0.0/16</p></td><td valign="top" style="word-break: break-all;">显示来源IP地址为10.7.2.12，但目的地不是10.200.0.0/16的封包。</td></tr><tr><td valign="top" style="word-break: break-all;">(src host 10.4.1.12 or src net 10.6.0.0/16) and tcp dst portrange 200-10000 and dst net 10.0.0.0/8</td><td valign="top" style="word-break: break-all;">显示来源IP为10.4.1.12或者来源网络为10.6.0.0/16，目的地TCP端口号在200至10000之间，并且目的位于网络 10.0.0.0/8内的所有封包。</td></tr><tr><td valign="top" style="word-break: break-all;"><p>src net 192.168.0.0/24</p><p>src net 192.168.0.0 mask 255.255.255.0</p></td><td valign="top" style="word-break: break-all;">显示来源IP地址为10.1.1.1的封包。</td></tr></tbody></table><p><strong>注意事项：</strong></p><p>当使用关键字作为值时，需使用反斜杠“/”。</p><p>“ether proto /ip” (与关键字”ip”相同).</p><p>这样写将会以IP协议作为目标。</p><p>“ip proto /icmp” (与关键字”icmp”相同).</p><p>这样写将会以ping工具常用的icmp作为目标。</p><p>可以在”ip”或”ether”后面使用”multicast”及”broadcast”关键字。</p><p>当您想排除广播请求时，”no broadcast”就会非常有用。</p><p>Protocol（协议）:</p><p>您可以使用大量位于OSI模型第2至7层的协议。点击”Expression…”按钮后，您可以看到它们。</p><p>比如：IP，TCP，DNS，SSH</p><p>String1, String2 (可选项):</p><p>协议的子类。</p><p>点击相关父类旁的”+”号，然后选择其子类。</p><p>Comparison operators （比较运算符）:</p><p>可以使用6种比较运算符：</p><table cellspacing="0" cellpadding="1"><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">英文写法：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">C语言写法：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">含义：</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">eq</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">==</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">等于</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">ne</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">!=</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">不等于</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">gt</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">&gt;</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">大于</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">lt</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">&lt;</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">小于</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">ge</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">&gt;=</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">大于等于</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">le</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">&lt;=</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">小于等于</td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">Logical expressions（逻辑运算符）:</p><table cellspacing="0" cellpadding="1"><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">英文写法：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">C语言写法：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">含义：</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">and</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">&amp;&amp;</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">逻辑与</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">or</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">||</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">逻辑或</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">xor</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">^^</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">逻辑异或</td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">not</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">!</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px; word-break: break-all;">逻辑非<br><br></td></tr></tbody></table><h3 style="margin: 0px; padding: 0px; white-space: normal; border: 0px; list-style: none; color: rgb(70, 70, 70); font-family: simsun; line-height: 21px; background-color: rgb(248, 236, 216);">显示过滤器</h3><table cellspacing="0" cellpadding="1" width="520"><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">语法：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Protocol</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>.</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>String 1</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>.</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>String 2</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Comparison<br>operator</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Value</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Logical<br>Operations</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>Other<br>expression</strong></td></tr><tr><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">例子：</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">ftp</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><br></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">passive</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><br></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">ip</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">==</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">10.2.3.4</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">xor</td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">icmp.type</td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">例子：</p><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>snmp || dns || icmp</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">显示SNMP或DNS或ICMP封包。</td></tr></tbody></table><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>ip.addr == 10.1.1.1</strong></td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">显示来源或目的IP地址为10.1.1.1的封包。</p><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>ip.src != 10.1.2.3 or ip.dst != 10.4.5.6</strong></td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">显示来源不为10.1.2.3或者目的不为10.4.5.6的封包。<br>换句话说，显示的封包将会为：<br>来源IP：除了10.1.2.3以外任意；目的IP：任意<br>以及<br>来源IP：任意；目的IP：除了10.4.5.6以外任意</p><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>ip.src != 10.1.2.3 and ip.dst != 10.4.5.6</strong></td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">显示来源不为10.1.2.3并且目的IP不为10.4.5.6的封包。<br>换句话说，显示的封包将会为：<br>来源IP：除了10.1.2.3以外任意；同时须满足，目的IP：除了10.4.5.6以外任意</p><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>tcp.port == 25</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">显示来源或目的TCP端口号为25的封包。</td></tr></tbody></table><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>tcp.dstport == 25</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">显示目的TCP端口号为25的封包。</td></tr></tbody></table><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>tcp.flags</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">显示包含TCP标志的封包。</td></tr></tbody></table><table><tbody><tr class="firstRow"><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;"><strong>tcp.flags.syn == 0×02</strong></td><td style="margin: 0px; padding: 0px; font-family: Verdana, 宋体, sans-serif; line-height: 18px;">显示包含TCP SYN标志的封包。</td></tr></tbody></table><p style="font-size: 14px; white-space: normal; margin-top: 0px; padding-top: 0px; padding-bottom: 0px; border: 0px; list-style: none; word-wrap: normal; word-break: normal; line-height: 21px; color: rgb(70, 70, 70); font-family: simsun; background-color: rgb(248, 236, 216);">如果过滤器的语法是正确的，表达式的背景呈绿色。如果呈红色，说明表达式有误。</p><p><br></p><p id="tank_h1" black="" white-space:="" style="white-space: normal; background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5;">&nbsp;wireshark过滤匹配表达式实例</p><p></p><p><br></p><p><strong>匹配过滤HTTP的请求URI中含有".gif"字符串，并且以.gif结尾（4个字节）的http请求数据包（$是正则表达式中的结尾表示符）</strong></p><p>http.request.uri matches ".gif$"&nbsp;</p><p><strong>注意区别：</strong>http.request.uri contains ".gif$" 与此不同，contains是包含字符串".gif$"（5个字节）。匹配过滤HTTP的请求URI中含有".gif$"字符串的http请求数据包（这里$是字符，不是结尾符）</p><p><strong>搜索过滤MAC地址前3个字节是0x001e4f的数据包。</strong></p><p>eth.addr[0:3]==00:1e:4f&nbsp;</p><p>完</p><p><strong>搜索按条件过滤udp的数据段payload（数字8是表示udp头部有8个字节，数据部分从第9个字节开始udp[8:]）</strong></p><p>udp[8]==14 &nbsp; &nbsp; &nbsp; &nbsp;(14是十六进制0x14)匹配payload第一个字节0x14的UDP数据包</p><p>udp[8:2]==14:05 可以udp[8:2]==1405，且只支持2个字节连续，三个以上须使用冒号：分隔表示十六进制。 (相当于 udp[8]==14 and udp[9]==05,1405是0x1405)</p><p>udp[8:3]==22:00:f7 但是不可以udp[8:3]==2200f7</p><p>udp[8:4]==00:04:00:2a，匹配payload的前4个字节0x0004002a</p><p>而udp contains 7c:7c:7d:7d 匹配payload中含有0x7c7c7d7d的UDP数据包，不一定是从第一字节匹配。</p><p>udp[8:4] matches "\\x14\\x05\\x07\\x18"</p><p>udp[8:] matches "^\\x14\\x05\\x07\\x18\\x14"</p><p><br></p><p><strong>搜索按条件过滤tcp的数据段payload（数字20是表示tcp头部有20个字节，数据部分从第21个字节开始tcp[20:]）</strong></p><p>tcp[20:] matches "^GET [ -~]*HTTP/1.1\\x0d\\x0a"</p><p>等同http matches "^GET [ -~]*HTTP/1.1\\x0d\\x0a"</p><p><br></p><p>tcp[20:] matches "^GET (.*?)HTTP/1.1\\x0d\\x0a"</p><p>tcp[20:] matches "^GET (.*?)HTTP/1.1\\x0d\\x0a[\\x00-\\xff]*Host: (.*?)pplive(.*?)\\x0d\\x0a"</p><p>tcp[20:] matches "^GET (.*?)HTTP/1.1\\x0d\\x0a[\\x00-\\xff]*Host: "</p><p>tcp[20:] matches "^POST / HTTP/1.1\\x0d\\x0a[\\x00-\\xff]*\\x0d\\x0aConnection: Keep-Alive\\x0d\\x0a\\x0d\\x0a"</p><p><br></p><p><strong>检测SMB头的smb标记，指明smb标记从tcp头部第24byte的位置开始匹配。</strong></p><p>tcp[24:4] == ff:53:4d:42</p><p><br></p><p><strong>检测SMB头的smb标记，tcp的数据包含十六进制ff:53:4d:42，从tcp头部开始搜索此数据。</strong></p><p>tcp contains ff:53:4d:42</p><p>tcp matches "\\xff\\x53\\x4d\\x42"</p><p><br></p><p><strong>检测tcp含有十六进制01:bd,从tcp头部开始搜索此数据。</strong></p><p>tcp matches "\\x01\\xbd"</p><p><br></p><p><strong>检测MS08067的RPC请求路径</strong></p><p>tcp[179:13] == 00:5c:00:2e:00:2e:00:5c:00:2e:00:2e:00</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; \ &nbsp; &nbsp; &nbsp;. &nbsp; &nbsp; . &nbsp; &nbsp; \ &nbsp; &nbsp; . &nbsp; &nbsp; .</p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">封包列表(Packet List Pane)&nbsp;</p><p>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。 你可以看到不同的协议用了不同的颜色显示。</p><p>你也可以修改这些显示颜色的规则，&nbsp; View -&gt;Coloring Rules.</p><p><br></p><p>&nbsp;<img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130163628165.png" title="封包列表(Packet List Pane) " alt="封包列表(Packet List Pane) " width="933" height="336" border="0" vspace="0" style="width: 933px; height: 336px;"></p><p><br></p><p id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: " black="" white-space:="">封包详细信息 (Packet Details Pane)</p><p>这个面板是我们最重要的，用来查看协议中的每一个字段。</p><p>各行信息分别为</p><p>Frame:&nbsp;&nbsp;&nbsp;物理层的数据帧概况</p><p>Ethernet&nbsp;II:&nbsp;数据链路层以太网帧头部信息</p><p>Internet Protocol Version 4:&nbsp;互联网层IP包头部信息<br></p><p>Transmission Control Protocol:&nbsp;&nbsp;传输层T的数据段头部信息，此处是TCP<br></p><p>Hypertext Transfer Protocol:&nbsp;&nbsp;应用层的信息，此处是HTTP协议</p><p><br></p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164036437.png" title="wireshark与对应的OSI七层模型" alt="wireshark与对应的OSI七层模型" width="885" height="493" border="0" vspace="0" style="width: 885px; height: 493px;"></p><h1 id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; white-space: normal;">TCP包的具体内容</h1><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">&nbsp;从下图可以看到wireshark捕获到的TCP包中的每个字段。</p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164224505.png" title="TCP包的具体内容" alt="TCP包的具体内容" width="1000" height="384" border="0" vspace="0" style="width: 1000px; height: 384px;"></p><h1 id="tank_h1" style="background-color: rgb(165, 165, 165); font-size: 28px; line-height: 1.5; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; white-space: normal;">实例分析TCP三次握手过程</h1><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">看到这， 基本上对wireshak有了初步了解， 现在我们看一个TCP三次握手的实例</p><p><br></p><p><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164358761.png" title="TCP三次握手 wireshark" alt="TCP三次握手 wireshark" width="656" height="450" border="0" vspace="0" style="width: 656px; height: 450px;"></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">这图我都看过很多遍了， 这次我们用wireshark实际分析下三次握手的过程。</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">打开wireshark, 打开浏览器输入&nbsp;<a>http://www.cnblogs.com/tankxiao</a></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">在wireshark中输入http过滤， 然后选中GET /tankxiao HTTP/1.1的那条记录，右键然后点击"Follow TCP Stream",</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">这样做的目的是为了得到与浏览器打开网站相关的数据包，将得到如下图</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164412486.png" alt="TCP三次握手 wireshark" style="border: 0px; max-width: 900px; width: 853px; height: 350px;" width="853" height="350" border="0" vspace="0" title="TCP三次握手 wireshark"></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">图中可以看到wireshark截获到了三次握手的三个数据包。第四个包才是HTTP的， 这说明HTTP的确是使用TCP建立连接的。</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">&nbsp;</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">第一次握手数据包</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">客户端发送一个TCP，标志位为SYN，序列号为0， 代表客户端请求建立连接。 如下图</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164413897.png" alt="TCP三次握手 wireshark" style="border: 0px; max-width: 900px; width: 800px; height: 469px;" width="800" height="469" border="0" vspace="0" title="TCP三次握手 wireshark"></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">第二次握手的数据包</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">服务器发回确认包, 标志位为 SYN,ACK. 将确认序号(Acknowledgement Number)设置为客户的I S N加1以.即0+1=1, 如下图</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164427734.png" alt="TCP三次握手 wireshark" style="border: 0px; max-width: 900px; width: 801px; height: 485px;" width="801" height="485" border="0" vspace="0" title="TCP三次握手 wireshark"></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">第三次握手的数据包</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">客户端再次发送确认包(ACK) SYN标志位为0,ACK标志位为1.并且把服务器发来ACK的序号字段+1,放在确定字段中发送给对方.并且在数据段放写ISN的+1, 如下图:</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/20161130164435887.png" alt="TCP三次握手 wireshark" style="border: 0px; max-width: 900px; width: 801px; height: 484px;" width="801" height="484" border="0" vspace="0" title="TCP三次握手 wireshark"></p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">&nbsp;就这样通过了TCP三次握手，建立了连接</p><p style="margin: 10px auto; font-family: &quot;black Verdana&quot;, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><br></p><strong><br></strong>				<!--内容关联投票-->
+				
+							</section>
+			<div class="ov  box top10  ads-h60" id="LeftBottomTop"></div>
+			<section class="top10">
+				<label class="fl">
+					<strong>相关热词搜索：</strong>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=wireshark">wireshark</a>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=%E8%BF%87%E6%BB%A4%E8%AF%AD%E6%B3%95">过滤语法</a>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=%E6%80%BB%E7%BB%93">总结</a>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=filter">filter</a>
+										<a class="blue" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=content&amp;c=tag&amp;a=lists&amp;tag=%E6%8A%93%E5%8C%85">抓包</a>
+									</label>
+
+				<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+					<a class="bds_qzone" title="分享到QQ空间" href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#"></a>
+					<a class="bds_tsina" title="分享到新浪微博" href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#"></a>
+					<a class="bds_tqq" title="分享到腾讯微博" href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#"></a>
+					<a class="bds_renren" title="分享到人人网" href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#"></a>
+					<span class="bds_more"></span>
+				</div>
+				<span id="favorite" class="fr"><a href="javascript:;" onclick="add_favorite(&#39;wireshark使用教程及过滤语法总结——血泪史的汇聚&#39;);" class="t6">收藏</a></span>
+				<div class="clear"></div>
+			</section>
+
+			<div class="top10 ov">
+				<div class="fl txth half"><strong>上一篇：</strong><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0810_7878.html">HTTP 2.0的那些事</a></div>
+				<div class="fl txth half"><strong>下一篇：</strong><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1201_7909.html">Postman 安装及使用教程——api接口调试神器！</a></div>
+			</div>
+						
+
+												<div class="top10 box ov" id="leftBottom"></div>
+			<iframe id="WBCommentFrame" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/comments.html" style="width:100%;min-height: 320px;overflow: auto;margin-bottom: 15px;border: 1px solid #95bce6;"></iframe>
+
+		</article>
+
+
+	</section>
+	<aside class="col-right fr">
+		<nav class="box">
+			<h5>频道总排行</h5>
+
+			<ul class="tab-item ">
+																<li><label class="rank-list btn-primary" title="点击排名"><strong>1</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0316_7708.html"> IP数据包的传输全过程详解—数据是如何在tcp/ip各层封装？</a></li>
+												<li class="even"><label class="rank-list btn-primary" title="点击排名"><strong>2</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1217_7923.html">页面跳转详解—http之重定向网络跳转301，302，303，304,js</a></li>
+												<li><label class="rank-list btn-primary" title="点击排名"><strong>3</strong> <span class="icon-font"></span></label><a href="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站.html">wireshark使用教程及过滤语法总结——血泪史的汇聚</a></li>
+												<li class="even"><label class="rank-list btn-primary" title="点击排名"><strong>4</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0316_7709.html"> 细说OSI七层协议模型及OSI参考模型中的数据封装过程？</a></li>
+												<li><label class="rank-list btn-primary" title="点击排名"><strong>5</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1226_7927.html">负载均衡的演化史—dns,cdn,nginx, HAProxy在负载均衡中的作用</a></li>
+												<li class="even"><label class="rank-list btn-primary" title="点击排名"><strong>6</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1201_7909.html">Postman 安装及使用教程——api接口调试神器！</a></li>
+												<li><label class="rank-list btn-primary" title="点击排名"><strong>7</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0327_7728.html">小米路由端口映射不成功！花生壳动态域名解释失败</a></li>
+												<li class="even"><label class="rank-list btn-primary" title="点击排名"><strong>8</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2015_0708_65.html">七牛云存储国内免费CDN加速10GB空间10GB月流量多加速节点</a></li>
+												<li><label class="rank-list btn-primary" title="点击排名"><strong>9</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0714_7861.html"> http1.0 与 http1.1的区别</a></li>
+												<li class="even"><label class="rank-list btn-primary" title="点击排名"><strong>10</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2015_1213_360.html">Expires,Cache-Control,Last-Modified,ETag</a></li>
+											</ul>
+
+		</nav>
+		<div class="ov top15 " id="RightTop"></div>
+		<nav class="box top15">
+			<h5>频道本月排行</h5>
+
+			<ul class="tab-item ">
+												<li><label class="rank-label btn-success" title="点击次数"><strong>175</strong> <span class="icon-font"></span></label><a href="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站.html" class="title" title="wireshark使用教程及过滤语法总结——血泪史的汇聚">wireshark使用教程及过滤语法总结—...</a></li>
+								<li class="even"><label class="rank-label btn-success" title="点击次数"><strong>75</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0316_7708.html" class="title" title=" IP数据包的传输全过程详解—数据是如何在tcp/ip各层封装？"> IP数据包的传输全过程详解—数据是...</a></li>
+								<li><label class="rank-label btn-success" title="点击次数"><strong>40</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1217_7923.html" class="title" title="页面跳转详解—http之重定向网络跳转301，302，303，304,js">页面跳转详解—http之重定向网络跳转...</a></li>
+								<li class="even"><label class="rank-label btn-success" title="点击次数"><strong>27</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1226_7927.html" class="title" title="负载均衡的演化史—dns,cdn,nginx, HAProxy在负载均衡中的作用">负载均衡的演化史—dns,cdn,nginx, ...</a></li>
+								<li><label class="rank-label btn-success" title="点击次数"><strong>24</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2015_0708_65.html" class="title" title="七牛云存储国内免费CDN加速10GB空间10GB月流量多加速节点">七牛云存储国内免费CDN加速10GB空间1...</a></li>
+								<li class="even"><label class="rank-label btn-success" title="点击次数"><strong>11</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0316_7709.html" class="title" title=" 细说OSI七层协议模型及OSI参考模型中的数据封装过程？"> 细说OSI七层协议模型及OSI参考模型...</a></li>
+								<li><label class="rank-label btn-success" title="点击次数"><strong>8</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1201_7909.html" class="title" title="Postman 安装及使用教程——api接口调试神器！">Postman 安装及使用教程——api接口...</a></li>
+								<li class="even"><label class="rank-label btn-success" title="点击次数"><strong>7</strong> <span class="icon-font"></span></label><a href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_0327_7728.html" class="title" title="小米路由端口映射不成功！花生壳动态域名解释失败">小米路由端口映射不成功！花生壳动态...</a></li>
+											</ul>
+
+		</nav>
+		<div class="box">
+			<h5>相关推荐</h5>
+			<div>
+				<script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcsFrameBox"%3E%3C/div%3E'));var bdcs = document.createElement("script");bdcs.type = "text/javascript";bdcs.async = true;bdcs.src = "http://znsv.baidu.com/customer_search/api/rs?sid=1004174691343927075" + "&plate_url=" + encodeURIComponent(window.location.href) + "&t=" + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(bdcs, s);})();</script><div id="bdcsFrameBox" style="width: 550px; height: auto; background-color: rgb(255, 255, 255);"><iframe name="bdcsFrame" id="bdcsFrame" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/search.html" frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" hspace="0" vspace="0" allowtransparency="true" scrolling="no"></iframe></div>
+			</div>
+		</div>
+
+	</aside>
+</article>
+<!--main-->
+<footer class="wrap top15" id="lasts">
+	<article class="box ">
+		<h5><a rel="nofollow" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=link&amp;siteid=1" hidefocus="true" class="more blue">更多&gt;&gt;</a>友情链接&nbsp;&nbsp;<a rel="nofollow" href="http://www.zhoulujun.cn/zhoulujun/index.php?m=link&amp;c=index&amp;a=register&amp;siteid=1" class="blue">申请链接</a></h5>
+		<ul class="colli">
+
+									<li><a rel="nofollow" href="http://www.phpcms.cn/" title="PHPCMS" target="_blank"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/phpcms.jpg" width="88" alt="PHPCMS" height="31"></a></li>
+						<li><a rel="nofollow" href="http://webscan.360.cn/index/checkwebsite/url/www.zhoulujun.cn" title="360" target="_blank"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/saved_resource" width="88" alt="360" height="31"></a></li>
+						<li><a rel="nofollow" href="http://c.trustutn.org/show?type=1&amp;sn=201702161003020316" title="trustutn" target="_blank"><img src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/cert_0_1.png" width="88" alt="trustutn" height="31"></a></li>
+								</ul>
+				<div class="linka">
+
+					</div>
+			</article>
+	<section class="tc footer-info">
+		<p>
+			<a rel="nofollow" href="mailto:529892056@qq.com" title="周陆军的email" target="_blank"><strong>邮箱</strong></a>
+			<a rel="nofollow" href="http://weibo.com/zhoulujun/home" title="周陆军的weibo" target="_blank"><strong>微博</strong></a>
+			<a rel="nofollow" href="http://user.qzone.qq.com/634117608" title="周陆军的qZone" target="_blank"><strong>QQ空间</strong></a>
+			<a rel="nofollow" href="https://github.com/zhoulujun" title="周陆军的git" target="_blank"><strong>github</strong></a>
+			<a rel="nofollow" href="https://www.youtube.com/user/englishforandzhou" title="周陆军的youtube" target="_blank"><strong>youtube</strong></a>
+			<a rel="nofollow" href="https://plus.google.com/+ZhoulujunCnandy/posts" title="周陆军的google+" target="_blank"><strong>google+</strong></a>
+			<a rel="nofollow" href="https://www.facebook.com/zhoulujun" title="周陆军的facebook" target="_blank"><strong>facebook</strong></a>
+		</p>
+		<p>
+			<span class="">CopyRight © 2009-2025</span>
+			<a href="http://www.zhoulujun.cn/">http://www.zhoulujun.cn</a>
+			<span>All Rights Reserved&nbsp;&nbsp;<a rel="nofollow" href="http://icp.chinaz.com/info?q=zhoulujun.cn">粤ICP备14085374号</a></span>
+		</p>
+			</section>
+	<a rel="nofollow" id="top" href="http://www.zhoulujun.cn/zhoulujun/html/theory/network/2016_1130_7908.html#announ">TOP</a>
+</footer>
+
+<script type="text/javascript" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/jssor.slider.mini.js"></script>
+
+
+<script type="text/javascript">
+	function getID(id){
+		return document.getElementById(id);
+	}
+
+	jQuery(document).ready(function ($) {
+		var loadT=setTimeout(function () {
+            $('.img-load-bg').each(function () {
+                $(this).attr('src',$(this).attr('data-src'));
+            });
+            clearTimeout(loadT);
+            loadT=null;
+        },1000);
+
+
+		var _SlideshowTransitions = [
+			//Fade Twins
+			{ $Duration: 700, $Opacity: 2, $Brother: { $Duration: 1000, $Opacity: 2 } },
+			//Rotate Overlap
+			{ $Duration: 1200, $Zoom: 11, $Rotate: -1, $Easing: { $Zoom: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Round: { $Rotate: 0.5 }, $Brother: { $Duration: 1200, $Zoom: 1, $Rotate: 1, $Easing: $JssorEasing$.$EaseSwing, $Opacity: 2, $Round: { $Rotate: 0.5 }, $Shift: 90 } },
+			//Switch
+			{ $Duration: 1400, x: 0.25, $Zoom: 1.5, $Easing: { $Left: $JssorEasing$.$EaseInWave, $Zoom: $JssorEasing$.$EaseInSine }, $Opacity: 2, $ZIndex: -10, $Brother: { $Duration: 1400, x: -0.25, $Zoom: 1.5, $Easing: { $Left: $JssorEasing$.$EaseInWave, $Zoom: $JssorEasing$.$EaseInSine }, $Opacity: 2, $ZIndex: -10 } },
+			//Rotate Relay
+			{ $Duration: 1200, $Zoom: 11, $Rotate: 1, $Easing: { $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Round: { $Rotate: 1 }, $ZIndex: -10, $Brother: { $Duration: 1200, $Zoom: 11, $Rotate: -1, $Easing: { $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Round: { $Rotate: 1 }, $ZIndex: -10, $Shift: 600 } },
+			//Doors
+			{ $Duration: 1500, x: 0.5, $Cols: 2, $ChessMode: { $Column: 3 }, $Easing: { $Left: $JssorEasing$.$EaseInOutCubic }, $Opacity: 2, $Brother: { $Duration: 1500, $Opacity: 2 } },
+			//Rotate in+ out-
+			{ $Duration: 1500, x: -0.3, y: 0.5, $Zoom: 1, $Rotate: 0.1, $During: { $Left: [0.6, 0.4], $Top: [0.6, 0.4], $Rotate: [0.6, 0.4], $Zoom: [0.6, 0.4] }, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Top: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Brother: { $Duration: 1000, $Zoom: 11, $Rotate: -0.5, $Easing: { $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Shift: 200 } },
+			//Fly Twins
+			{ $Duration: 1500, x: 0.3, $During: { $Left: [0.6, 0.4] }, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $Outside: true, $Brother: { $Duration: 1000, x: -0.3, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 } },
+			//Rotate in- out+
+			{ $Duration: 1500, $Zoom: 11, $Rotate: 0.5, $During: { $Left: [0.4, 0.6], $Top: [0.4, 0.6], $Rotate: [0.4, 0.6], $Zoom: [0.4, 0.6] }, $Easing: { $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Brother: { $Duration: 1000, $Zoom: 1, $Rotate: -0.5, $Easing: { $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Shift: 200 } },
+			//Rotate Axis up overlap
+			{ $Duration: 1200, x: 0.25, y: 0.5, $Rotate: -0.1, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Top: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Brother: { $Duration: 1200, x: -0.1, y: -0.7, $Rotate: 0.1, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Top: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2 } },
+			//Chess Replace TB
+			{ $Duration: 1600, x: 1, $Rows: 2, $ChessMode: { $Row: 3 }, $Easing: { $Left: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $Brother: { $Duration: 1600, x: -1, $Rows: 2, $ChessMode: { $Row: 3 }, $Easing: { $Left: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 } },
+			//Chess Replace LR
+			{ $Duration: 1600, y: -1, $Cols: 2, $ChessMode: { $Column: 12 }, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $Brother: { $Duration: 1600, y: 1, $Cols: 2, $ChessMode: { $Column: 12 }, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 } },
+			//Shift TB
+			{ $Duration: 1200, y: 1, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $Brother: { $Duration: 1200, y: -1, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 } },
+			//Shift LR
+			{ $Duration: 1200, x: 1, $Easing: { $Left: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $Brother: { $Duration: 1200, x: -1, $Easing: { $Left: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2 } },
+			//Return TB
+			{ $Duration: 1200, y: -1, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $ZIndex: -10, $Brother: { $Duration: 1200, y: -1, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $ZIndex: -10, $Shift: -100 } },
+			//Return LR
+			{ $Duration: 1200, x: 1, $Delay: 40, $Cols: 6, $Formation: $JssorSlideshowFormations$.$FormationStraight, $Easing: { $Left: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $ZIndex: -10, $Brother: { $Duration: 1200, x: 1, $Delay: 40, $Cols: 6, $Formation: $JssorSlideshowFormations$.$FormationStraight, $Easing: { $Top: $JssorEasing$.$EaseInOutQuart, $Opacity: $JssorEasing$.$EaseLinear }, $Opacity: 2, $ZIndex: -10, $Shift: -100 } },
+			//Rotate Axis down
+			{ $Duration: 1500, x: -0.1, y: -0.7, $Rotate: 0.1, $During: { $Left: [0.6, 0.4], $Top: [0.6, 0.4], $Rotate: [0.6, 0.4] }, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Top: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2, $Brother: { $Duration: 1000, x: 0.2, y: 0.5, $Rotate: -0.1, $Easing: { $Left: $JssorEasing$.$EaseInQuad, $Top: $JssorEasing$.$EaseInQuad, $Opacity: $JssorEasing$.$EaseLinear, $Rotate: $JssorEasing$.$EaseInQuad }, $Opacity: 2 } },
+			//Extrude Replace
+			{ $Duration: 1600, x: -0.2, $Delay: 40, $Cols: 12, $During: { $Left: [0.4, 0.6] }, $SlideOut: true, $Formation: $JssorSlideshowFormations$.$FormationStraight, $Assembly: 260, $Easing: { $Left: $JssorEasing$.$EaseInOutExpo, $Opacity: $JssorEasing$.$EaseInOutQuad }, $Opacity: 2, $Outside: true, $Round: { $Top: 0.5 }, $Brother: { $Duration: 1000, x: 0.2, $Delay: 40, $Cols: 12, $Formation: $JssorSlideshowFormations$.$FormationStraight, $Assembly: 1028, $Easing: { $Left: $JssorEasing$.$EaseInOutExpo, $Opacity: $JssorEasing$.$EaseInOutQuad }, $Opacity: 2, $Round: { $Top: 0.5 } } }
+		];
+		
+
+
+		var options_slider_header = {
+			$AutoPlay: true,
+			$AutoPlaySteps: 1,
+			$AutoPlayInterval: 1500,
+			$PauseOnHover: 4,
+
+			$ArrowKeyNavigation: true,
+			$SlideEasing: $JssorEasing$.$EaseLinear,
+			$SlideDuration: 600,
+			$MinDragOffsetToSlide: 20,
+			$SlideWidth: $("#slider_header").outerWidth(),
+			$SlideSpacing: 0,
+			$DisplayPieces: 1,
+			$ParkingPosition: 0,
+			$UISearchMode: 1,
+			$PlayOrientation: 2,
+			$DragOrientation: 2
+		};
+		var slider_header = new $JssorSlider$("slider_header", options_slider_header);
+
+	});
+</script>
+<!--//百度广告-->
+<script type="text/javascript" src="http://cbjs.baidu.com/js/m.js"></script>
+<script type="text/javascript">
+    var last = document.getElementById('lasts');
+    (function () {
+        //百度广告
+        if (window.isMobile) {
+            //限制高度300 移动
+            BAIDU_CLB_fillSlotAsync('u2864935','RightTop');
+            BAIDU_CLB_fillSlotAsync('u2856155','RightBottom');
+            BAIDU_CLB_fillSlotAsync('u2952834','LeftBottomTop');
+            BAIDU_CLB_fillSlotAsync('u2501784','leftBottom');
+
+
+        }else {
+            //300*300 创建于 1/3/2017
+            BAIDU_CLB_fillSlotAsync('u2864931','RightTop');
+            //300*310 创建于 2016-01-20
+            BAIDU_CLB_fillSlotAsync('u2500157','RightBottom');
+            BAIDU_CLB_fillSlotAsync('u2952832','LeftBottomTop');
+            BAIDU_CLB_fillSlotAsync('u2862737','leftBottom');
+        }
+                //站内搜索
+        document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));
+        var bdcs = document.createElement('script');
+        bdcs.type = 'text/javascript';
+        bdcs.async = true;
+        bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=5202514098480040245' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date() / 3600000);
+        last.appendChild(bdcs);
+        
+    })();
+</script>
+
+<script defer="defer" type="text/javascript" id="bdshare_js" data="type=tools" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/bds_s_v2.js"></script>
+
+<script defer="defer">
+	function show_ajax(obj) {
+		var keywords = $(obj).text();
+		var offset = $(obj).offset();
+		var jsonitem = '';
+		$.getJSON("http://www.zhoulujun.cn/zhoulujun/index.php?m=content&c=index&a=json_list&type=keyword&modelid=1&id=7908&keywords="+encodeURIComponent(keywords),
+				function(data){
+					var j = 1;
+					var string = "<div class='point key-float'><div style='position:relative'><div class='arro'></div>";
+					string += "<a href='JavaScript:;' onclick='$(this).parent().parent().remove();' hidefocus='true' class='close'><span>关闭</span></a><div class='contents f12'>";
+					if(data!=0) {
+						$.each(data, function(i,item){
+							j = i+1;
+							jsonitem += "<a href='"+item.url+"' target='_blank'>"+j+"、"+item.title+"</a><BR>";
+
+						});
+						string += jsonitem;
+					} else {
+						string += '没有找到相关的信息！';
+					}
+					string += "</div><span class='o1'></span><span class='o2'></span><span class='o3'></span><span class='o4'></span></div></div>";
+					$(obj).after(string);
+					$('.key-float').mouseover(
+							function (){
+								$(this).siblings().css({"z-index":0})
+								$(this).css({"z-index":1001});
+							}
+					)
+					$(obj).next().css({ "left": +offset.left-100, "top": +offset.top+$(obj).height()+12});
+				});
+	}
+	function add_favorite(title) {
+		$.getJSON('http://www.zhoulujun.cn/zhoulujun/api.php?op=add_favorite&title='+encodeURIComponent(title)+'&url='+encodeURIComponent(location.href)+'&'+Math.random()+'&callback=?', function(data){
+			if(data.status==1)	{
+				$("#favorite").html('收藏成功');
+			} else {
+				alert('请登录');
+			}
+		});
+	}
+
+</script>
+<script defer="defer" type="text/javascript" src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/api.php"></script>
+
+<script src="./wireshark使用教程及过滤语法总结——血泪史的汇聚 - 网络工程 - 周陆军的个人网站_files/comment.js" type="text/javascript" charset="utf-8"></script>
+
+</body></html>

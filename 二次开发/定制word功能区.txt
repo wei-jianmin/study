@@ -1,0 +1,224 @@
+﻿XML代码是大小写敏感的，这一点一定要注意。
+Ribbon栏中有“开始”、“插入”等多个内置选项卡，有时在自定义时需要将这些内置选项卡屏蔽，看代码
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+<ribbon startFromScratch="true">
+startFromScratch="true"代表隐藏所有内置选项卡,false代表显示，默认是显示。
+在指定位置插入选项卡：
+<tab id="CustomTab" label="My Tab" insertBeforeMso="TabHome">
+=====================================---
+Office 开发人员参考 
+IRibbonUI 对象 
+由 onLoad 过程（在 customUI 标记上指定）返回的对象。该对象包含用于使控件属性失效的方法，以及用于刷新用户界面的方法。
+
+说明
+您可以通过使用 COM 加载项中的回调过程来自定义功能区用户界面 (UI)。当宿主应用程序启动时，将调用 onLoad 回调过程。该回调过程随后将返回指向用户界面 (UI) 的 IRibbonUI 对象。您可以使用该对象来调用 Invalidate、InvalidateControl 和 Refresh 方法。
+
+
+示例
+在下面的示例中，启动宿主应用程序的操作将触发 onLoad 事件过程，然后，该事件过程将调用可创建 IRibbonUI 对象（代表功能区 UI）的过程。接着，将定义一个使所有缓存控件失效并随后刷新 UI 的回调过程。
+
+XML 
+<customUI … OnLoad=”MyAddInInitialize” …> 
+
+Visual Basic for Applications 
+Dim MyRibbon As IRibbonUI
+
+Sub MyAddInInitialize(Ribbon As IRibbonUI)
+    Set MyRibbon = Ribbon
+End Sub
+
+Sub myFunction()
+     MyRibbon.Invalidate()         ‘ Invalidates the caches of all of this add-in’s controls    
+End Sub 
+
+-----------------------------------------------------------------------------------------------
+
+
+Word 2010 开发人员参考 > Microsoft Office 2010 的对象库参考 > 概念
+Office 开发人员参考 
+Office Fluent 功能区概述
+
+在某些 Microsoft Office 应用程序中，CommandBar 已被新的功能区用户界面取代。有关详细信息，请在帮助中搜索关键字“功能区”。 
+
+在 Microsoft Office 2010（和 Microsoft Office 2007）中，Office Fluent 功能区替代了以前的分层菜单、工具栏和任务窗格系统。功能区具有更简单的界面系统，它已进行优化以提高效率和易发现性。功能区改进了上下文菜单、屏幕提示、浮动工具栏以及键盘快捷方式，从而提高了用户的效率和生产率。此外，您还可以使用功能区扩展性 (RibbonX) 改善用户体验。您可以使用可扩展标记语言 (XML) 和几种传统的编程语言之一来操纵构成功能区的组件。由于 XML 是纯文本，因此，可以使用任何文本编辑器来创建自定义文件，也可以使用您喜欢的 XML 编辑器。此外，只需进行很少的调整即可重用自定义文件，因为每个应用程序都使用相同的编程模型。例如，可以重用在 Microsoft® Word 2010、Microsoft Excel® 2010、Microsoft Access 2010 或 Microsoft PowerPoint® 2010 中创建的自定义文件。
+
+通过使用 XML 标记文件自定义功能区，可以大大降低创建基于 CommandBars 对象模型的复杂加载项的需求。不过，使用以前的 Office 版本编写的加载项可以继续在功能区中使用，而只需进行很少的修改，甚至无需进行修改。可以通过任何以下方法，在 Word 2010、Excel 2010 或 PowerPoint 2010 中为功能区创建应用程序级自定义设置： 
+
+在托管或非托管代码中使用 COM 加载项
+使用应用程序特定的加载项，如 .ppam 和 .xlam 文件
+使用 Word 2010 中的模板（.dotm 文件）
+
+在典型方案中，COM 加载项中的代码包含从外部自定义文件或代码自身包含的 XML 中返回 XML 标记的过程。在应用程序启动时，加载项将加载并执行返回 XML 标记的代码。Microsoft Office 对照 XSD 架构验证 XML 标记，然后将其加载到内存中并应用于功能区，然后再显示功能区。菜单项和控件使用回调过程来执行加载项中的代码。文档级自定义设置使用相同的 XML 标记和具有以下扩展名之一的 Open XML 格式文件：.docx、.docm、.xlsx、.xlsm、.pptx 或 .pptm。在此方案中，将创建一个包含 XML 标记的自定义文件，并将其保存到文件夹中。然后，修改 Open XML 格式容器中的各个部分以指向该自定义文件。在 Office 应用程序中打开文档时，该自定义文件将加载到内存中并应用于功能区。接下来，命令和控件将调用文档中包含的代码以提供它们的功能。
+
+现有的解决方案有何变化？ 
+
+在 Office 2007 以前的 Microsoft Office 版本中，开发人员使用 CommandBars 对象模型创建修改 UI 的 Microsoft Visual Basic® 代码。大多数情况下，可以在 Office 2010 中继续使用这些旧代码而无需进行修改。不过，对 Office 2003 中的工具栏所做的更改现在显示在 Microsoft Office 2010 版本的“加载项”选项卡上。显示的自定义类型取决于加载项的原始设计。例如，Office 创建了“菜单命令”组，该组包含在以前的菜单结构（“文件”、“插入”和“工具”菜单等）中添加的项。Office 还创建了“工具栏命令”组，该组包含在以前的内置工具栏（如“常用”、“格式”和“图片”工具栏等）中添加的项。此外，加载项或文档中的自定义工具栏显示在“加载项”选项卡上的“自定义工具栏”组中。
+回调过程在功能区中添加功能
+
+通过使用功能区扩展性，您可以指定回调以便在运行时从 UI 中更新属性和执行操作。例如，请考虑在以下 RibbonX 标记中对某个按钮执行 onAction 回调方法。 
+<button id="myButton" onAction="MyButtonOnAction" /> 
+
+此标记通知 Office 在单击该按钮时调用 MyButtonOnAction 函数。MyButtonOnAction 函数具有一个取决于所选语言的特定签名；下面是一个使用 Microsoft Visual C#® 编写的示例。
+public void MyButtonOnAction (IRibbonControl control)
+   {
+      if (control.Id=="myButton")
+      {
+         System.Windows.Forms.MessageBox.Show("Button clicked!");
+      }
+   } 
+
+使用 COM 加载项自定义功能区
+"应用程序级自定义"导致修改的功能区显示在该应用程序中，而无论打开了哪个文档。您主要通过创建 COM 加载项来进行这些修改。要使用 COM 加载项自定义功能区，请执行以下操作： 
+创建一个 COM 加载项项目。
+创建的加载项必须像所有 COM 加载项一样实现 Extensibility.IDTExtensibility2 接口，
+还要实现位于 Microsoft.Office.Core 命名空间中的 IRibbonExtensibility 接口。
+生成加载项和安装项目，然后安装该项目。
+启动 Office 应用程序。
+在加载加载项时，将触发初始化加载项的 IDTExtensibility2::OnConnection 事件，就像在以前的 Office 版本中一样。
+接下来，将调用 QueryInterface 方法，以确定是否实现了 IRibbonExtensibility 接口。
+如果实现了该接口，则调用 IRibbonExtensibility::GetCustomUI 方法，以便从 XML 自定义文件或该过程内嵌入的 XML 标记中加载 XML 标记，然后将自定义设置加载到应用程序中。
+现在，用户便可以使用自定义 UI 了。
+
+使用 Office Open XML 格式文件自定义功能区
+要使用 XML 标记自定义 UI，请执行以下操作： 
+使用任何文本编辑器创建自定义文件。
+添加 XML 标记以便在功能区中添加新组件，修改现有组件或隐藏组件。将该文件另存为“customUI.xml”。
+在桌面上创建名为“customUI”的文件夹，然后将自定义文件复制到该文件夹中。
+用自定义 UI 架构验证 XML 标记。 //该步骤可选。 
+在 Office 应用程序中创建一个文档，然后将其另存为具有以下扩展名之一的 Open XML 格式文件：.docx、.docm、.xlsx、.xlsm、.pptm 或 .pptx。
+——为安全起见，包含宏的文件具有 m 后缀，这些文件可以包含“由RibbonX 命令和控件调用的”过程。
+为该文档的文件名添加 .zip 扩展名，然后打开该文件。
+通过将文件夹拖动到自定义文件来将该文件添加到容器中。
+将 .zip 文件中的“.rels”文件提取到桌面上。即会将一个包含 .rels 文件的“_rels”文件夹复制到桌面上。
+打开 .rels 文件，添加一个在文档文件与自定义文件之间创建关系的行:
+	在最后一句 </Relationships> 前插入以下代码：
+	<Relationship Id="customUIRelID" 	 Type="http://schemas.microsoft.com/office/2006/relationships/ui/extensibility" 
+	 Target="customUI/CustomUI.xml"/>
+将该 _rels 文件夹添加回容器中，并覆盖现有文件。
+删除 .zip 扩展名，以将该文件重命名为原始名称。
+在打开 Office 文件时，将显示功能区，包括功能区自定义设置。
+XML 标记文件的一般格式
+可以使用 XML 标记来自定义功能区。以下示例说明了可用于在 Office Word 2007 中自定义功能区的 XML 标记文件的一般格式。
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" /* onLoad="myLoadFunc ---WJM */">
+  <ribbon>
+    <tabs>
+      <tab idMso="TabHome">
+        <group idMso="GroupFont" visible="false" />	//隐藏“开始”功能区中的“字体”子功能组，WJM1
+      </tab>
+      <tab id="CustomTab" label="My Tab">
+        <group id="SampleGroup" label="Sample Group">
+          <toggleButton id="ToggleButton1" size="large" label="Large Toggle Button" getPressed="MyToggleMacro"  />
+          <checkBox id="CheckBox1" label="A CheckBox" screentip="This is a check box" onAction="MyCheckboxMacro" />
+          <editBox id="EditBox1" getText="MyTextMacro" label="My EditBox" onChange="MyEditBoxMacro"/>
+          <comboBox id="Combo1" label="My ComboBox" onChange="MyComboBoxMacro">
+            <item id="Zip1" label="33455" />
+            <item id="Zip2" label="81611" />
+            <item id="Zip3" label="31561" />
+          </comboBox>
+          <advanced>
+            <button id="Launcher1" screentip="My Launcher" onAction="MyLauncherMacro" />
+          </advanced>
+        </group>
+        <group id="MyGroup" label="My Group" >
+          <button id="Button" label="My Large Button" size="large" onAction="MyButtonMacro" />
+          <button id="Button2" label="My Normal Button" size="normal" onAction="MyOtherButtonMacro" />
+        </group >
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI> 
+
+此示例按以下顺序对 Word 2007 中的功能区进行以下更改： 
+声明默认命名空间和一个自定义命名空间。
+隐藏内置“Home”选项卡中的内置“GroupFont”组。
+将一个新的“CustomTab”选项卡添加到最后一个内置选项卡的右侧。
+注释： 
+使用 id= identifier 属性可以创建自定义项，如自定义选项卡。使用 idMso= identifier 属性可以引用内置项，如“TabHome”选项卡。 
+试用IRibbonUI中的方法可以起到刷新UI的效果----WJM
+将一个新的“SampleGroup”组添加到“My Tab”选项卡中。
+将一个较大的 ToogleButton1 按钮添加到“My Group”中，并指定一个 onAction 回调和一个 GetPressed 回调。
+将一个带有自定义屏幕提示的 CheckBox1 复选框添加到“My Group”中，并指定一个 onAction 回调。
+将一个 EditBox1 编辑框添加到“My Group”中，并指定一个 onChange 回调。 
+将一个带有三个项的 Combo1 组合框添加到“My Group”中。该组合框指定一个 onChange 回调，它使用来自每个项的文本。
+将一个带有 onAction 回调集的 Launcher1 启动器添加到“My Group”中。启动器还可以显示一个自定义对话框，以便为用户提供更多选项。
+将一个新的“MyGroup”组添加到自定义选项卡中。
+将一个较大的 Button1 按钮添加到“MyGroup”中，并指定一个 onAction 回调。
+将一个普通大小的 Button1 按钮添加到“MyGroup”中，并指定一个 onAction 回调。
+使用旧命令栏加载项
+
+在创建 COM 加载项时，通常需要为用户提供一种与该加载项进行交互的方法。在早期版本的 Office 中，可通过使用 CommandBars 对象模型，在应用程序中添加菜单项或工具栏按钮。在此版本的 Office 中，大多数情况下，无需修改即可继续在功能区中使用自定义应用程序。不过，使用 CommandBars 对象模型进行的更改或者使用修改菜单或工具栏的任何其他技术（如 WordBasic 或 XLM）进行的更改将显示在单独的“加载项”选项卡上。这样，用户就可以更方便地查找控件。
+
+
+动态更新功能区 ---WJM
+返回控件属性的回调（指onLoad方法）通常调用一次，除非指定了重复执行该调用。
+可通过在 CustomUI 元素中实现 onLoad 回调来重新查询回调。
+在成功加载 RibbonX 标记文件后，将会调用一次该回调，并将代码传递到 IRibbonUI 对象。
+下面的示例代码获取 IRibbonUI 对象，以便在运行时更新控件。 
+XML 标记：
+
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" onLoad="ribbonLoaded"> 
+
+在 C# 中：在 Connect 类中编写回调。
+     IRibbonUI myRibbon;
+     public void ribbonLoaded(IRibbonUI ribbon) {
+         myRibbon = ribbon;
+     } 
+
+借助于 Office 2007 和 Office 2010 中的功能区，用户可以灵活地使用 Office 应用程序。
+您可以使用简单的、基于文本的声明性 XML 标记来创建和自定义功能区。
+只需几行 XML 代码，就可以为用户创建适合的界面。
+由于 XML 标记包含在单个文件中，因此，可以在需求发生变化时更方便地修改界面。
+由于将命令放在用户可以轻松找到的位置，还可以提高用户的生产率。
+最后，功能区使各个应用程序之间保持一致，从而减少了用户学习每个应用程序所花的时间。
+
+==========================================================================================
+用 Open XML 格式文件自定义 Office Fluent 功能区:
+在任何文本编辑器中创建自定义文件，并用名称“customUI.xml”保存该文件。
+在该文件中添加以下 XML 标记，然后保存并关闭该文件。
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+  <ribbon>
+    <tabs>
+      <tab id="CustomTab" label="My Tab">
+        <group id="SampleGroup" label="Sample Group">
+          <button id="Button" label="Insert Company Name" size="large" onAction="ThisDocument.InsertCompanyName" />
+        </group >
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI> 
+
+在桌面上创建名为“customUI”的文件夹，然后将该 XML 自定义文件复制到该文件夹。
+用自定义架构验证 XML 标记。 
+  注释 
+该步骤可选。 
+
+在 Word 2007 中创建一个文档，并用名称“RibbonSample.docm”保存该文档。
+打开 Visual Basic 编辑器，在 ThisDocument 代码模块中添加以下过程，然后关闭并保存该文档。
+Sub InsertCompanyName(ByVal control As IRibbonControl)
+   ' Inserts the specified text at the beginning of a range or selection.
+   Dim MyText As String
+   Dim MyRange As Object
+   Set MyRange = ActiveDocument.Range
+   MyText = "Microsoft Corporation"
+   ' Range Example: Inserts text at the beginning
+   ' of the active document
+   MyRange.InsertBefore (MyText)
+   ' Selection Example:
+   'Selection.InsertBefore (MyText)
+End Sub 
+
+在文档文件名中添加“.zip”扩展名，然后双击以打开该文件。
+将 customUI 文件夹从桌面拖到 .zip 文件中，以将自定义文件添加到容器中。
+将“.rels”文件提取到桌面上。即会将一个包含 .rels 文件的“_rels”文件夹复制到桌面上。
+打开“.rels”文件，在最后一个 Relationship 标记和 Relationships 标记之间添加以下行。这会在文档文件与自定义文件之间创建关系。
+<Relationship Id="someID" Type="http://schemas.microsoft.com/office/2006/relationships/ui/extensibility" Target="customUI/customUI.xml" /> 
+
+关闭并保存该文件。
+通过从桌面上拖动 _rels 文件夹将其添加回容器文件中，并覆盖现有文件。
+删除 .zip 扩展名，以将文档文件重命名为原始名称。
+打开该文档，您会看到功能区现在显示“My Tab”选项卡。
+单击该选项卡，您会看到带有一个按钮控件的“Sample Group”组。
+单击该按钮，以将公司名插入到文档中。
+
+
+

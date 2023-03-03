@@ -1,0 +1,18 @@
+__tmainCRTStartup函数分析：
+STARTUPINFO StartupInfo;
+_TUCHAR *lpszCommandLine;
+GetStartupInfo( &StartupInfo );	//当调用进程创建时，该函数检索得到启动的相关信息
+int bFlag=StartupInfo.dwFlags & STARTF_USESHOWWINDOW ? StartupInfo.wShowWindow:SW_SHOWDEFAULT;
+mainret = WinMain((HINSTANCE)&__ImageBase,NULL,lpszCommandLine,bFlag);  (参1)
+
+1.WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+	__in LPTSTR lpCmdLine, int nCmdShow)
+{
+	return AfxWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);   (参1.1)
+}
+1.1 int AFXAPI AfxWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+	__in LPTSTR lpCmdLine, int nCmdShow)
+{
+	CWinThread* pThread = AfxGetThread();
+	CWinApp* pApp = AfxGetApp();
+}

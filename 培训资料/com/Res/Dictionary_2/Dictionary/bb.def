@@ -1,0 +1,5 @@
+LIBRARY	"Dictionary"
+EXPORTS
+func @1
+DllRegisterServer @2
+DllUnregisterServer @3

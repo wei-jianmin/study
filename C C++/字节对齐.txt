@@ -1,0 +1,32 @@
+结构体字节对齐：
+
+语法：
+#pragma pack( [show] | [push | pop] [, identifier], n )
+说明：
+1，pack提供数据声明级别的控制，对定义不起作用；
+2，调用pack时不指定参数，n将被设成默认值；
+3，一旦改变数据类型的alignment，直接效果就是占用memory的减少，但是performance会下降；
+语法具体分析：
+1，show：可选参数；显示当前packing aligment的字节数，以warning message的形式被显示；
+2，push：可选参数；将当前指定的packing alignment数值进行压栈操作，这里的栈是the internal compiler stack，同时设置当前的packing alignment为n；如果n没有指定，则将当前的packing alignment数值压栈；
+3，pop：可选参数；从internal compiler stack中删除最顶端的record；如果没有指定n，则当前栈顶record即为新的packing alignment数值；如果指定了n，则n将成为新的packing aligment数值；如果指定了identifier，则internal compiler stack中的record都将被pop直到identifier被找到，然后pop出identitier，同时设置packing alignment数值为当前栈顶的record；如果指定的identifier并不存在于internal compiler stack，则pop操作被忽略；
+4，identifier：可选参数；当同push一起使用时，赋予当前被压入栈中的record一个名称；当同pop一起使用时，从internal compiler stack中pop出所有的record直到identifier被pop出，如果identifier没有被找到，则忽略pop操作；
+5，n：可选参数；指定packing的数值，以字节为单位；
+另外：
+__attribute(aligned(n))，让所作用的数据成员对齐在n字节的自然边界上；如果结构中有成员的长度大于n，则按照最大成员的长度来对齐；
+__attribute((packed))，取消结构在编译过程中的优化对齐，按照实际占用字节数进行对齐
+字节对齐规则：
+字节对齐的细节和编译器实现相关，但一般而言，满足三个准则：
+1) 结构体变量的首地址能够被其最宽基本类型成员的大小所整除；
+2) 结构体每个成员相对于结构体首地址的偏移量（offset）都是成员大小的整数倍，如有需要编译器会在成员之间加上填充字节（internal adding）；
+3) 结构体的总大小为结构体最宽基本类型成员大小的整数倍，如有需要编译器会在最末一个成员之后加上填充字节（trailing padding）。
+
+
+64位GCC，默认8字节对齐
+#pragma pack() 能够取消自定义的对齐方式，恢复默认对齐。
+#pragma pack(push)：
+英文单词push是“压入”的意思。编译器编译到此处时将保存对齐状态（保存的是push指令之前的对齐状态）。
+#pragma pack(pop)：
+英文单词pop是”弹出“的意思。编译器编译到此处时将恢复push指令前保存的对齐状态（请在使用该预处理命令之前使用#pragma pack(push)）。
+push和pop是一对应该同时出现的名词，只有pop没有push不起作用，只有push没有pop可以保持之前对齐状态（但是这样就没有使用push的必要了）。
+注意，#pragma pack() 取消自定义对齐方式，恢复默认方式，而push之后pop是回到push指令之前的对齐方式。

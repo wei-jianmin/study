@@ -1,0 +1,16 @@
+https://www.cnblogs.com/sparkdev/p/8795141.html
+
+journalctl 用来查询 systemd-journald 服务收集到的日志。
+systemd-journald 服务是 systemd init 系统提供的收集系统日志的服务。
+
+命令格式为：
+journalctl [OPTIONS…] [MATCHES…]
+
+journalctl 命令的路径为：
+/bin/journalctl
+
+不带任何选项时，journalctl 输出所有的日志记录：
+
+常见用法：journalctl -xe
+
+具体用法参看上面的链接

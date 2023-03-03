@@ -1,0 +1,20 @@
+● 如果可执行文件自己的符号表中存在该符号（包括main.o 或其他.o文件，或其他lib库文件中存在该符号）
+则优先使用自己符号表中的符号，而忽略其它动态库中存在的同名符号
+● 如果可执行文件自己的符号表中没有该符号，其它动态库中存在重名的符号，则优先使用强符号
+● 如果其它动态库中的符号都是弱符号，则优先使用第一个找到的符号（排在前面的动态库中的符号）
+
+以reader阅读器为例， 假设 reader.core 是静态库， reader.common / reader.func / reader.ui / reader.app 都依赖该库，
+则原则上，这四个库中，只要有一个链接了 reader.core 静态库即可， 多了只会造成符号的重复，导致各个库增大
+但如果只让其中一个，如 reader.common， 链接 reader.core 库， 也要注意这样一个问题：
+即 reader.common 中只用了部分 reader.core 中的函数，结果导致 reader.core 中只有部分的 .o 子文件被链接进来，
+但 reader.func 也用到了 reader.core 中的函数，但有些函数却不在 reader.common 从 reader.core 中“摘取”的 .o 子文件中，
+但又因为只有 reader.common 链接了 reader.core ，这是就会导致最终生成 reader.app 时，提示缺少符号，
+所以最好的解决办法是：让 reader.ui 去链接 reader.core ，因为知道 reader.app 肯定不会用到 reader.core，
+所以 reader.ui 就是所有可能用到 reader.core 的模块的 “最后一环”，这时链接 reader.core ，可以避免缺少符号这样的编译错误。
+
+测试：
+1. b.a库 中有两个 .o 文件， 一个 .o 文件中有 func_b1， 另一个 .o 文件中有 func_b2
+2. 一个 c.so , 链接了 b.a 库， 但只调用了 func_b1
+   nm c.so 发现符号表中有 func_b1, 没有 func_b2
+3. 一个 d.so , 调用了 func_b2，但没有链接 b.a
+4. 一个main程序，链接 c.so 和 d.so， 编译会失败，找不到符号 func_b2，切换 c.so 和 d.so 的链接顺序也不管用

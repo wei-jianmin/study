@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/u011563755/article/details/78610898"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="利用bat绕过浏览器调用exe不加载所需文件的坑" />
+    <meta name="keywords" content="注册表,浏览器" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>浏览器打开本地exe - u011563755的博客 - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-e2f32ea0d6.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9b39979775.min.css">
+
+    <script type="text/javascript">
+        var username = "u011563755";
+        var blog_address = "https://blog.csdn.net/u011563755";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011563755/article/details/78610898"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+        // 第四范式所需数据
+        var articleTitles = "浏览器打开本地exe - u011563755的博客";
+        var articleID = "78610898";
+
+        var nickName = "小然同学";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<body class="nodata"> 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script type="text/javascript" src="//g.csdnimg.cn/copyright/1.0.2/copyright.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<!-- <div id="breadcrumbs">
+			<span><a href="https://blog.csdn.net/">博客首页</a></span>
+			<i>></i>
+			<span><a href="https://blog.csdn.net/u011563755">u011563755的博客...</a></span>
+			<i>></i>
+			<span>浏览器打开本地exe</span>
+		</div> -->
+		<div class="recommend-right">
+  <ul class="recommend-fixed-box">
+    
+  </ul>
+</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-1 float-left">原</span>				<h1 class="title-article">浏览器打开本地exe</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top">
+																				<span class="time">2017年11月23日 10:06:20</span>
+					<a class="follow-nickName" href="https://me.csdn.net/u011563755" target="_blank">小然同学</a>
+						<span class="read-count">阅读数：2376</span>
+						
+														<span class="tags-box artic-tag-box">
+								<span class="label">标签：</span>
+																<a data-track-click='{"mod":"popu_626","con":"注册表"}' data-track-view='{"mod":"popu_626","con":"注册表"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=注册表&t=blog" target="_blank">注册表																<a data-track-click='{"mod":"popu_626","con":"浏览器"}' data-track-view='{"mod":"popu_626","con":"浏览器"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=浏览器&t=blog" target="_blank">浏览器																<a data-track-click='{"mod":"popu_626","con":"exe"}' data-track-view='{"mod":"popu_626","con":"exe"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=exe&t=blog" target="_blank">exe																</a>
+							</span>
+																															</div>
+				<div class="operating">
+														</div>
+			</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-85423d2993.css" />
+						<div class="htmledit_views">
+                
+<p><span style="font-size:18px;">浏览器打开本地exe程序有很多方法<span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;">ActiveXObject方法只支持IE，谷歌、火狐等浏览器并不支持此操作。</span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;font-size:16px;"><br /></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;">网上搜了很多资料还有自己加注册表方法的比如：</span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;"><br /></span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;"><a href="http://blog.csdn.net/zhuolei123/article/details/50470982" rel="nofollow">http://blog.csdn.net/zhuolei123/article/details/50470982</a><br /></span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;">这篇文章的方法亲测可用。</span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;">或者写注册文件xxx.reg运行之：</span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"></span></p><pre><code class="language-html">Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\Webshell]
+@="URL:Webshell Protocol Handler"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\Webshell\DefaultIcon]
+@="E:\\xxx.exe"
+[HKEY_CLASSES_ROOT\Webshell\shell]
+[HKEY_CLASSES_ROOT\Webshell\shell\open]
+[HKEY_CLASSES_ROOT\Webshell\shell\open\command]
+@="\"E:\\xxx.exe\" \"%1\""</code></pre><span style="font-size:18px;">这种方法也是写注册表文件然后在html中这样写就可以调用了：</span>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;">&lt;a href="Webshell:\"&gt;运行exe&lt;/a&gt;  <br /></span></span></p>
+<p><br /></p>
+<p><br /></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;">但是由于权限问题，打开exe是可以，但是有些exe需要加载其他文件不能加载成功，也就是exe是残缺的，所以解决思路就是写一个bat文件，让bat去调用exe，web端调用这个bat即可。</span></span><br /></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;font-size:16px;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;font-size:16px;"><br /></span></span></p>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:16px;">修改reg文件如下：</span></span></span></p><pre><code class="language-html">Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\Webshell]
+@="URL:Webshell Protocol Handler"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\Webshell\DefaultIcon]
+@="E:\\xxx.bat"
+[HKEY_CLASSES_ROOT\Webshell\shell]
+[HKEY_CLASSES_ROOT\Webshell\shell\open]
+[HKEY_CLASSES_ROOT\Webshell\shell\open\command]
+@="\"E:\\xxx.bat\" \"%1\""</code></pre>
+<p style="font-size:16px;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;font-size:16px;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;font-size:16px;"><br /></span></span></p>
+<span style="font-size:18px;">xxx.bat文件中这样写：</span>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"></span></span></p><pre><code class="language-html">start E:\xxx.exe</code></pre>
+<p><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="color:rgb(69,69,69);font-family:'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;"><span style="font-size:18px;"><br /></span></span></span></p>
+<span style="font-size:18px;">这样启动的exe就可以加载所需要的其他文件咯！</span><br /><br />            </div>
+                </div>
+									<div class="hide-article-box text-center">
+						<a class="btn" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/u011563755/article/details/78610898,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/u011563755/article/details/78610898,"}'>阅读更多</a>
+					</div>
+					<script>
+						(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</script>
+					</article>
+	
+</div>
+<script>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011563755/article/details/78610898#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/c10WTiybQ1Ye3/article/details/78098539,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/c10WTiybQ1Ye3/article/details/78098539,BlogCommendFromBaidu_0"}'>
+		<a href="https://blog.csdn.net/c10WTiybQ1Ye3/article/details/78098539" target="_blank" title="如何优雅地从浏览器打开本地应用">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						如何优雅地从<em>浏览器</em><em>打开</em><em>本地</em>应用				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/6/F/2/3_c10wtiybq1ye3.jpg" alt="c10WTiybQ1Ye3" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">c10WTiybQ1Ye3</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							461</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							今日科技快讯 
+          
+          
+         
+        
+       
+      
+     
+    
+   
+  
+ 
+昨日，中国第一狗仔卓伟、名侦探赵...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zhuolei123/article/details/50470982,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zhuolei123/article/details/50470982,BlogCommendFromBaidu_2"}'>
+		<a href="https://blog.csdn.net/zhuolei123/article/details/50470982" target="_blank" title="如何从网页中调用本地exe应用程序（兼容各个浏览器）">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						如何从网页中调用<em>本地</em><em>exe</em>应用程序（兼容各个<em>浏览器</em>）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/4/4/9/3_zhuolei123.jpg" alt="zhuolei123" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zhuolei123</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1.4万</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							如何从网页中调用本地exe应用程序（兼容各个浏览器）传统的方式就是针对各个不同的浏览器去开发不同的插件，今天我要来介绍另一种方式。 
+        大家都知道网页中启动QQ对话框，是通过 tence...					</p>
+			</div>
+					</a>
+	</div>
+									<!-- 第四范式广告开关 -->
+				<div class="p4courset3_target _4paradigm_box recommend-item-box clearfix" ></div>
+				<script>window.p4sdk_enable_recommendBox=true</script>
+			
+					<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/du_peiduo/article/details/80405361,BlogCommendFromBaidu_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/du_peiduo/article/details/80405361,BlogCommendFromBaidu_1"}'>
+		<a href="https://blog.csdn.net/du_peiduo/article/details/80405361" target="_blank" title="windows 用浏览器打开应用程序的方法">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						windows 用<em>浏览器</em><em>打开</em>应用程序的方法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/E/5/3/3_du_peiduo.jpg" alt="du_peiduo" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">du_peiduo</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-22</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							241</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							以阿里的 OSS 程序为例
+
+
+找到应用程序所在的文件位置： C:\Program Files (x86)\OSS\oss.exe
+新建 regeit.reg 文件内容如下：(路径需要双斜线)
+
+Wi...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_35339997/article/details/76849862,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_35339997/article/details/76849862,BlogCommendFromBaidu_3"}'>
+		<a href="https://blog.csdn.net/qq_35339997/article/details/76849862" target="_blank" title="js调用exe文件 兼容所有浏览器">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						js调用<em>exe</em>文件 兼容所有<em>浏览器</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/2/9/6/3_qq_35339997.jpg" alt="qq_35339997" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_35339997</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-07</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							3487</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							1. 先注册URL PROTOCOL, 在windows 下就是注册表：
+
+========================================================
+
+Wind...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/bushy0401/article/details/17418217,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/bushy0401/article/details/17418217,BlogCommendFromBaidu_4"}'>
+		<a href="https://blog.csdn.net/bushy0401/article/details/17418217" target="_blank" title="在网页中执行本地exe程序的两种方式">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						在网页中执行<em>本地</em><em>exe</em>程序的两种方式				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/C/F/3/3_bushy0401.jpg" alt="bushy0401" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">bushy0401</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-19</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2.6万</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							一、有时候，需要在 网页上去执行本地的一个EXE文件，如果用javascript ,一般浏览器，由于安全问题，都会禁止掉这个特性。但经过测试，目前在ie,firefox中仍然可以用JS来实现，但在ch...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/huang_wei_cai/article/details/52488255,BlogCommendFromBaidu_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/huang_wei_cai/article/details/52488255,BlogCommendFromBaidu_5"}'>
+		<a href="https://blog.csdn.net/huang_wei_cai/article/details/52488255" target="_blank" title="通过浏览器链接打开本地应用（APP）">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						通过<em>浏览器</em>链接<em>打开</em><em>本地</em>应用（APP）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/D/8/1/3_huang_wei_cai.jpg" alt="huang_wei_cai" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">huang_wei_cai</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-09</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							5896</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							前言：业务场景，一个分享出去的h5界面通过页面内某个事件的触发，启动目标app并执行相关逻辑处理或做其他页面跳转（如：跳应用市场下载应用等）。下面是我在企业开发过程中，实操的记录，对于有这块需求的朋友...					</p>
+			</div>
+					</a>
+	</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'left',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 8,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/java_zys/article/details/51837899,BlogCommendFromBaidu_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/java_zys/article/details/51837899,BlogCommendFromBaidu_6"}'>
+		<a href="https://blog.csdn.net/java_zys/article/details/51837899" target="_blank" title="chrome里打开IE？网页里启动本地应用程序？">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						chrome里<em>打开</em>IE？网页里启动<em>本地</em>应用程序？				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/1/C/F/3_java_zys.jpg" alt="java_zys" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">java_zys</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1.9万</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							如何在chrome里打开IE浏览器？如何在网页里打开本地应用程序？自定义协议的实现方法？
+问题的场景是这样的，需要在我们的系统上点击连接地址跳转到其他的系统，但是有些系统是必须要在IE下才能正常使用，...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Strong_dong/article/details/52472025,BlogCommendFromBaidu_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Strong_dong/article/details/52472025,BlogCommendFromBaidu_7"}'>
+		<a href="https://blog.csdn.net/Strong_dong/article/details/52472025" target="_blank" title="在浏览器上打开本地应用">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						在<em>浏览器</em>上<em>打开</em><em>本地</em>应用				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/0/E/4/3_strong_dong.jpg" alt="Strong_dong" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Strong_dong</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1534</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							实现在浏览器中打开本地应用					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/ht_zhaoliubin/article/details/75300818,BlogCommendFromBaidu_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/ht_zhaoliubin/article/details/75300818,BlogCommendFromBaidu_8"}'>
+		<a href="https://blog.csdn.net/ht_zhaoliubin/article/details/75300818" target="_blank" title="通过浏览器的超链接打开本地一个exe文件（即可以传参数）">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						通过<em>浏览器</em>的超链接<em>打开</em><em>本地</em>一个<em>exe</em>文件（即可以传参数）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/F/E/6/3_ht_zhaoliubin.jpg" alt="ht_zhaoliubin" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ht_zhaoliubin</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2913</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							1、首先需要先写一个注册表文件；
+ 通过txt文本写，写完以后更改后缀名；
+Windows Registry Editor Version 5.00
+
+
+[HKEY_CLASSES_ROOT...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_38746645/article/details/77966750,BlogCommendFromBaidu_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_38746645/article/details/77966750,BlogCommendFromBaidu_9"}'>
+		<a href="https://blog.csdn.net/qq_38746645/article/details/77966750" target="_blank" title="浏览器调用windows系统exe文件方法可以用于启动屏幕键盘等功能哦">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>浏览器</em>调用windows系统<em>exe</em>文件方法可以用于启动屏幕键盘等功能哦				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/C/2/C/3_qq_38746645.jpg" alt="qq_38746645" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_38746645</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-13</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							221</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							首先需要起一个名字，用作注册表注册，这个名字可以跟exe文件的名字一样，也可以不一样，不需要带后缀名
+
+然后把该exe文件注册到注册表
+
+然后可以在浏览器地址栏输入  注册表名称+:  呼出该exe...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/cute_zw_0220/article/details/51932913" target="_blank">
+						浏览器this</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/around_primary/article/details/78086700" target="_blank">
+						浏览器</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/xm1037782843/article/details/80642521" target="_blank">
+						5大浏览器浏览器</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/lvjinhan/article/details/73385648" target="_blank">
+						links浏览器</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/wyx100/article/details/50450728" target="_blank">
+						moz浏览器</a>
+					</span>
+								</div>
+			</div>
+					</div>
+		<div class="recommend-item-box blog-expert-recommend-box">
+			<h4 class="text-truncate">博主推荐
+			</h4>
+			<div class="blog-expert-recommend">
+				<div class="blog-expert-load-new" data-index="3">
+					<svg version="1.1" viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+					<path d="M142.5,57.5c-1.3-1.2-2.1-3.3-2.1-5.4c0-4.2,3.3-7.5,7.5-7.5h19.6c4.2,0,7.5,3.3,7.5,7.5s-3.3,7.5-7.5,7.5h-4.2
+					 C170.8,71.2,175,85,175,100c0,41.7-33.8,75-75,75c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5c33.3,0,60-27.1,60-60
+					 C160,83.7,153.8,68.7,142.5,57.5L142.5,57.5z M57.5,142.5c1.2,1.2,2.1,3.3,2.1,5.4c0,4.2-3.3,7.5-7.5,7.5H32.5
+					 c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5h4.2C29.2,128.8,25,115,25,100c0-41.7,33.7-75,75-75c4.2,0,7.5,3.3,7.5,7.5
+					 S104.2,40,100,40c-33.3,0-60,27.1-60,60C40,116.2,46.2,131.2,57.5,142.5z"/>
+					</svg>
+					<span>换一批</span>
+				</div>
+				<div class="blog-expert">
+				</div>
+			</div>
+		</div>
+
+
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <!-- <h3 class="aside-title">个人资料</h3> -->
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/u011563755">
+                <img src="https://avatar.csdn.net/7/E/4/3_u011563755.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/u011563755" target="_blank" class="" id="uid">小然同学</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011563755/article/details/78610898" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="2">
+                        <dt><a href="https://blog.csdn.net/u011563755?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/u011563755?t=1"><span class="count">2</span></a></dd>
+                    </dl>
+        <dl class="text-center" id="fanBox" title="4">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">4</span></dd>
+        </dl>
+        <dl class="text-center" title="2">
+            <dt>喜欢</dt>
+            <dd><span class="count">2</span></dd>
+        </dl>
+        <dl class="text-center" title="1">
+            <dt>评论</dt>
+            <dd><span class="count">1</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="1级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-1"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="3691">
+                3691            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="58">
+                58            </dd>
+        </dl>
+        <dl title="1722622">
+            <dt>排名：</dt>
+            <dd>172万+</dd>
+        </dl>
+    </div>
+    </div>
+		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-百度联盟-300x250 --><script type="text/javascript" src="//rabc1.iteye.com/source/api/ymebi.js?bwoc=oltly"></script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u011563755/article/details/48466607" target="_blank">jawin方式操作dll动态库</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    		    <div id="asideArchive" class="aside-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u011563755/article/month/2017/11">
+                    2017年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u011563755/article/month/2015/09">
+                    2015年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/u011563755/article/details/78610898">浏览器打开本地exe</a>
+					<p class="read">阅读量：<span>2328</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/u011563755/article/details/48466607">jawin方式操作dll动态库</a>
+					<p class="read">阅读量：<span>1305</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/u011563755/article/details/78610898#comments">浏览器打开本地exe</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_39642948" class="user-name" target="_blank">qq_39642948</a>：您好我通过.bat文件启动.exe文件需要传值怎么办，请教一下我QQ1031488718                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//rabc1.iteye.com/source/res/yn6yz.js?ojylrgb=yk"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+										<script>
+				(function() {
+					var s = "_" + Math.random().toString(36).slice(2);
+					document.write('<div id="baidufooter_0001"></div>');
+					(window.slotbydup=window.slotbydup || []).push({
+						id: '5851901',
+						container: 'baidufooter_0001',
+						size: '520,40',
+						display: 'inlay-fix'
+					});
+				})();
+				</script>
+				<script src="https://dup.baidustatic.com/js/os.js"></script>
+				<style>
+					#baidufooter_0001{
+						display: none !important;
+					}
+				</style>
+			
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-bind-login= "true" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li class="btn-like-box long-width">
+			<button class=" long-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>1</p>
+			</button>
+		</li>
+		<li class="">
+						<a class="btn-comments long-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+						1				</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</button>
+		</li>
+							<li class="widescreen-hide">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/u011563755/article/details/48466607" title="jawin方式操作dll动态库">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-shangyiye"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<li class="bdsharebuttonbox _360_interactive"style="margin-top: 8px;">
+			<script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'click', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt="">
+		</li>
+	  
+		<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/u011563755/article/details/48466607" title="jawin方式操作dll动态库">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-shangyiye"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+											</ul>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "浏览器打开本地exe";
+    var ChannelId = 14;
+    var articleId = "78610898";
+    var commentscount = 1;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/u011563755/article/details/78610898";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "%E6%80%8E%E4%B9%88%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%93%E5%BC%80%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["\u6d4f\u89c8\u5668","\u6253\u5f00","\u672c\u5730","exe"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"testcs_dn","nick_name":"\u5faewx\u7b11","avatar":"https:\/\/avatar.csdn.net\/D\/1\/B\/3_testcs_dn.jpg","is_expert":true,"article_count":1271},{"user_name":"Senssic","nick_name":"Senssic","avatar":"https:\/\/avatar.csdn.net\/5\/0\/3\/3_senssic.jpg","is_expert":false,"article_count":239},{"user_name":"xujinming0124","nick_name":"\u65e0_\u5fe7sw","avatar":"https:\/\/avatar.csdn.net\/7\/0\/E\/3_xujinming0124.jpg","is_expert":false,"article_count":36},{"user_name":"zhu530548851","nick_name":"CUC_Tony","avatar":"https:\/\/avatar.csdn.net\/C\/F\/3\/3_zhu530548851.jpg","is_expert":false,"article_count":64},{"user_name":"a376143220","nick_name":"\u6751\u91cc\u7ea2\u5f97\u53d1\u7d2b\u7684\u6f14\u5458","avatar":"https:\/\/avatar.csdn.net\/4\/1\/D\/3_a376143220.jpg","is_expert":false,"article_count":41},{"user_name":"jianxing11","nick_name":"\u661f\u661f702","avatar":"https:\/\/avatar.csdn.net\/0\/7\/B\/3_jianxing11.jpg","is_expert":false,"article_count":18},{"user_name":"weinkym","nick_name":"weinkym","avatar":"https:\/\/avatar.csdn.net\/C\/4\/B\/3_weinkym.jpg","is_expert":false,"article_count":13},{"user_name":"wj_j2ee","nick_name":"wj_j2ee","avatar":"https:\/\/avatar.csdn.net\/7\/E\/D\/3_wj_j2ee.jpg","is_expert":false,"article_count":182},{"user_name":"evanxuhe","nick_name":"\u5f90\u4e09\u7237","avatar":"https:\/\/avatar.csdn.net\/B\/A\/F\/3_evanxuhe.jpg","is_expert":false,"article_count":47},{"user_name":"zealfory","nick_name":"Zoey29","avatar":"https:\/\/avatar.csdn.net\/8\/2\/C\/3_zealfory.jpg","is_expert":false,"article_count":155}];
+		
+		var articleType = 1;
+		var CopyrightContent = '';
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"浏览器打开本地exe");
+        }
+    })
+</script>
+<script src="https://g.csdnimg.cn/login-box/1.0.0/login-box.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-3817a3ac68.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-ad1d4b11a1.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9376486353.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=%E6%80%8E%E4%B9%88%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%93%E5%BC%80%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6"  type="text/javascript"></script>
+</body>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-676a063698.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

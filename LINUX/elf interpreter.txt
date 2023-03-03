@@ -1,0 +1,16 @@
+https://blog.csdn.net/guoqignrus/article/details/119036506
+在Linux程序的执行时，通过读取ELF文件中的rpath和interpreter字段，加载程序需要的依赖库。
+interpreter是elf文件中的一个字段（全名：Requesting program interpreter），它指定了动态库加载器的位置。
+程序启动时操作系统会先把控制权转交给ld-linux-x86-64.so.2，该so负责加载所有程序依赖的so，这个库在程序链接时自动设置。
+这个库的加载不受动态库搜索路径（RPATH,LD_LIBRARY_PATH等）约束，
+是因为在程序编译时，将这个加载器的路径写到二进制文件中了，而在二进制文件中标记的字段就是interpreter
+如果要指定其它加载器，就要修改这个字段：
+    filgcc -Wl,-rpath='/my/lib',-dynamic-linker='/my/lib/ld-linux.so.2' 
+查看interpreter命令
+    readelf -l picToText     // picToText 是被查看的程序名称
+修改interpreter
+    patchelf --set-interpreter /usr/lib64/ld-linux.so.2 app
+    // 1 /usr/lib64/ld-linux.so.2 程序app要使用加载器的绝对路径
+    // 2 要设置的程序名称
+    # 也可以使用相对程序app的路径
+    patchelf --set-interpreter `pwd`/path/lib64/ld-linux-x86-64.so.2 ap

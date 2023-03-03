@@ -1,0 +1,18 @@
+git cat-file
+    在.git/object/xx 下，通常有4中类型的文件: blob、commit、tree、tag
+    通过 git cat-file -t 文件标识符，可以查看文件是什么类型的
+    通过 git cat-file -p 文件标识符，可以查看文件的明文内容
+    
+git ls-files
+    使用git ls-files --stage命令，可以（依据index文件）展示文件与最新的blob的对应关系
+    
+git rev-list
+
+git gc
+    当文件变动发生提交时，该文件系统存储的不是文件的差异信息，而是整个文件内容
+    这种做法，提高 Git 分支的使用效率；但也容易导致代码仓库中内容重复程度过高，从而仓库体积过大。
+    当遇到这种情况时，或者需要将仓库推送到远程主机时，
+    就需要Git中的gc（garbage collect）功能，也就是垃圾回收功能。
+    他能将文件从全量存储压缩为增量存储、删除无用文件等
+    
+    

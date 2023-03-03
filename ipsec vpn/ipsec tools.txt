@@ -1,0 +1,17 @@
+https://www.cnblogs.com/lolau/p/8886129.html
+
+Linux从2.6内核开始自带IPsec模块，配合IPsec-Tools，可以实现Linux的IPsec功能。
+
+IPsec-Tools包含4个模块
+
+libipsec：PF_KEY实现库
+setkey：用于配置SAD（安全关联数据库）和SPD（安全策略数据库）
+racoon：IKE守护程序，用于自动建立IPsec连接
+racoonctl：操作racoon的shell工具
+
+----------------------------------------------------------------------
+
+https://blog.51cto.com/alvin1/1252901
+默认情况下，IPSec-Tools的配置文件均放在/etc/racoon目录下
+setkey.conf文件保存着sad和spd的配置信息，
+racoon.conf文件保存着IKE各个协商阶段各采用什么方式进行协商

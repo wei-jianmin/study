@@ -1,0 +1,15 @@
+常量指针（指向常量的指针）
+const char* p="ABCDEF";
+指针指向的是常量区域
+记忆：
+常见的使用方法，
+(const char*) p = (const char*)"abc";
+常量修饰符在前，指针修饰符在后
+
+指针常量
+char* const p="ABCEDF";
+指针是个常量，不能指向新位置
+记忆：
+这种形式较少使用，
+(char*) (const p) = (char*)"abc"
+指针修饰符在前，常量修饰符在后

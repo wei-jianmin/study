@@ -1,0 +1,56 @@
+inc文件夹/筛选器：
+    存放可被外部使用的，hpp功能文件
+utils文件夹/筛选器：
+    存放可被外部使用的，声明和实现分离的功能类
+ifs文件夹/筛选器：
+    存放接口文件
+project筛选器：
+    放置与.vcproject同级的文件
+    工程名.h ： 存放返回功能接口的方法
+    工程名_import.h ： 存放静态库导出/导入辅助文件
+    
+配套的生成后事件：
+set component_name=cpp.corelib.utils
+xcopy .\ifs\*.h  ..\..\..\include\%component_name%\$(ProjectName)\ifs\ /Y
+xcopy .\inc\*.hpp  ..\..\..\include\%component_name%\$(ProjectName)\inc\ /Y
+xcopy .\utils\*.h  ..\..\..\include\%component_name%\$(ProjectName)\utils\ /Y
+xcopy .\$(ProjectName).h  ..\..\..\include\%component_name%\$(ProjectName)\ /Y
+xcopy .\$(ProjectName)_import.h ..\..\..\include\%component_name%\$(ProjectName)\ /Y
+xcopy $(TargetDir)$(TargetName).lib ..\..\..\lib\$(PLATFORMCODE)\Release\%component_name%\ /Y
+copy  $(TargetPath) "C:\Program Files (x86)\tongz\oesplugin\plugins\cpp.corelib.utils\"$(TargetFileName) /Y
+
+项目组织目录：
+cpp
+|---bin
+|-------windows
+|-----------Debug
+|-----------Release
+|---build
+|-------windows
+|-----------Win32
+|---------------Debug
+|---------------Release
+|---include
+|-------组件名
+|-----------工程名
+|---------------ifs
+|---------------inc
+|---------------utils
+|---------------工程名.h
+|---------------工程名_import.h
+|---lib
+|-------windows
+|-----------Release
+|---------------组件名
+|                   ???.lib
+|---src
+|-------组件名
+|-----------工程名
+|---------------ifs/
+|---------------inc/
+|---------------utils/
+|---------------工程名.h
+|---------------工程名_import.h
+|---------------。。。 
+|---vsprojects
+|

@@ -1,0 +1,4 @@
+Sub asd()
+ KeyBindings.Add ksoKeyCategoryMacro, "aaa", BuildKeyCode(wpsKeyControl, wpsKey1)
+ KeyBindings.Add ksoKeyCategoryMacro, "bbb", BuildKeyCode(wpsKeyControl, wpsKey2)
+End Sub

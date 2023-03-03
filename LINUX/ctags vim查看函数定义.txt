@@ -1,0 +1,82 @@
+安装：
+apt/yum search ctags
+apt/yum install ....
+
+----------------------------------------------------------------------------------
+
+ctags用法
+ctags --list-languages  查看支持标记的语言（基本上支持各种语言）
+ctags --list-maps       查看支持的各种语言对应的文件的扩展名
+ctags --list-kinds      查看ctags可以识别的语法元素 
+ctags --list-kinds=c++  单独查看可以识别的c++的语法元素
+ctags -R                扫描当前目录及所有子目录（递归向下）中的源文件
+    缺点很明显，tags会非常大，tags生成会非常慢，而且代码跳转会卡顿
+ctags `find -name "*.h"`只对特定文件生成tags
+-–languages=c++         只扫描文件内容判定为c++的文件
+–-langmap=c++:+.inl     知ctags，以inl为扩展名的文件是c++语言写的
+:stag xyz -- 用分割的窗口显示xyz的定义，或者C-w ]， 如果用C-w n ]，就会打开一个n行高的窗口
+:ptag xyz -- 在预览窗口中打开xyz的定义，热键是C-w }。
+:pclose -- 关闭预览窗口。热键是C-w z。
+:pedit abc.h -- 在预览窗口中编辑abc.h
+:psearch abc -- 搜索当前文件和当前文件include的文件，显示包含abc的行。
+
+有时一个tag可能有多个匹配，如函数重载，一个函数名就会有多个匹配。 这种情况会先跳转到第一个匹配处。
+
+:[n]tnext -- 下一[n]个匹配。
+:[n]tprev -- 上一[n]个匹配。
+:tfirst -- 第一个匹配
+:tlast -- 最后一个匹配
+:tselect tagname -- 打开选择列表
+tab键补齐
+
+:tag xyz<tab> -- 补齐以xyz开头的tag名，继续按tab键，会显示其他的。
+:tag /xyz<tab> -- 会用名字中含有xyz的tag名补全。
+
+例：想把.S、.x文件也视作c文件，同时把.j文件视作java文件，可用
+ctags --langmap=c:+.S+.x,java:+.j -R *  //如果后缀名前不带+，则表替换而非追加
+
+----------------------------------------------------------------------------------
+
+vim中的操作方法
+ctrl + ]  ： 转到定义
+ctrl + T  ： 跳转到前一次的tag处
+Ctrl+W+]  ： 分割当前窗口，并且跳转到光标下的tag
+tags          :  列出曾经访问过的tag的列表
+tag tagname   ： 使用这个命令可以跳转到tagname的定义处，即使它在另一个文件中
+stag tagname  ： 分割当前窗口，并且跳转到指定的tagl
+
+使用tag命令时，可以输入部分tag名，然后使用Tab键进行补全
+如果存在多个同名的tag，tag命令会给出一个tag的列表，可以通过键入tag的序号来选择tag
+
+----------------------------------------------------------------------------------
+
+vim 配置关联多个tags文件
+例： set tags+=~/vimfiles/tags/XLib/Inc/XLib.tags
+ctags在查找关键字时从tags列表中搜索
+使用 :set tags 可列出当前搜索的tags文件列表
+
+----------------------------------------------------------------------------------
+
+扩展：
+TagList
+TagList插件是一款基于ctags，在vim代码窗口旁以分割窗口形式显示当前的代码结构概览，
+增加代码浏览的便利程度的vim插件
+
+% ： 跳转到匹配的括号，不仅能移动到匹配的(),{}或[]上，而且能在#if，#else， #endif之间跳跃。
+gf : 打开光标处文件
+ctrl+o : 回退至之前打开的文件
+
+cscope
+cscope -Rbq: 生成cscope.out文件
+:cs add /path/to/cscope.out /your/work/dir
+:cs find c func -- 查找func在哪些地方被调用
+:cw -- 打开quickfix窗口查看结果
+
+gtags
+Gtags综合了ctags和cscope的功能。 使用Gtags之前，你需要安装GNU Gtags。 然后在工程目录运行 gtags 。
+:Gtags funcname 定位到 funcname 的定义处。
+:Gtags -r funcname 查询 funcname被引用的地方。
+:Gtags -s symbol 定位 symbol 出现的地方。
+:Gtags -g string Goto string 出现的地方。 :Gtags -gi string 忽略大小写。
+:Gtags -f filename 显示 filename 中的函数列表。 你可以用 :Gtags -f % 显示当前文件。
+:Gtags -P pattern 显示路径中包含特定模式的文件。 如 :Gtags -P .h$ 显示所有头文件， :Gtags -P /vm/ 显示vm目录下的文件。

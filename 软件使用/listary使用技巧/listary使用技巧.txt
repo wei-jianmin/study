@@ -1,0 +1,43 @@
+1.  使用自定义的文件管理器
+    选项/常规设置/默认文件管理器，选择自定义，路径填：E:\Desktop\文件\工具文件\open_folder.vbs，参数填 "%1"
+    open_folder.vbs内容：
+        Set objShell = CreateObject("Wscript.Shell")
+        strPath = "explorer.exe " & Wscript.Arguments(0)
+        objShell.Run strPath
+        
+2.  实现写日志功能
+    选项/关键字/自定义
+    添加自定义命令
+        关键字： rj
+        显示名称： 写日记
+        路径：E:\Desktop\文件\工具文件\打开日志.vbs
+    vbs内容：
+        set fso = createobject("scripting.filesystemobject")  
+        Set objShell = CreateObject("Wscript.Shell")
+        base_name = "E:/工作日志"
+        nowday=formatdatetime(now,2)
+        folder_name = base_name & "/" & year(nowday) & "年" & month(nowday) & "月"
+        file_name = folder_name & "/" & day(nowday) & ".txt"
+
+        'msgbox folder_name
+        'msgbox file_name
+
+        prepare_folder
+        prepare_file
+        objShell.Run "notepad " & file_name
+
+        sub prepare_file()
+          if fso.fileExists(file_name) = false then
+            fso.createtextfile(file_name) 
+          end if
+        end sub
+
+        sub prepare_folder()
+          if fso.folderExists(base_name) = false then
+            msgbox "没有基本文件夹： " & base_name
+            return
+          end if
+          if fso.folderExists(folder_name) = false then
+            fso.createfolder(folder_name)
+          end if
+        end sub

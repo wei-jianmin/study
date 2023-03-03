@@ -1,0 +1,8 @@
+第7版
+增加了支持宽字节版本写日志相关函数
+
+
+第8版
+在第7版的基础上
+viewcall写日志方式改为写成一行，使日志的结构统一性更好，通过宏VIEWCALLONELINE控制
+增加了#pragma comment(lib, "User32.lib")，解决MessageBox无法解析的外部符号错误

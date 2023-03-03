@@ -1,0 +1,24 @@
+<anousment>
+以若干短划线开头的节点，说明该节点是对紧邻的上一句中某个函数的展开
+函数的参数说明，传入的参数，及传入值，都已节点属性的方式给出
+......标识省略了若干条语句
+</anousment>
+<_DllMainCRTStartup 
+declares="HANDLE  hDllHandle, DWORD   dwReason,  LPVOID  lpreserved" >
+......
+return :
+<__DllMainCRTStartup 
+params="hDllHandle, dwReason=1, lpreserved" 
+declares="HANDLE  hDllHandle, DWORD   dwReason,LPVOID  lpreserved">
+......
+if ( dwReason == DLL_PROCESS_ATTACH || dwReason == DLL_THREAD_ATTACH ) {
+	if ( _pRawDllMain )
+                    retcode = (*_pRawDllMain)(hDllHandle, dwReason, lpreserved);
+-------------------<RawDllMain declares="HINSTANCE hInstance, DWORD dwReason, LPVOID">
+
+-------------------</RawDllMain>
+	......
+}
+
+</__DllMainCRTStartup>
+</_DllMainCRTStartup>

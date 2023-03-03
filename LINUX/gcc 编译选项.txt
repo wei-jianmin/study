@@ -1,0 +1,98 @@
+-rpath
+    设置依赖库查找路径
+    -Wl,-rpath='$ORIGIN'
+-fPIC
+    生成位置无关代码，如将跳转生成相对，而非绝对的地址
+    这意味着库文件应该总是带有该选项的，但链接生成可执行程序时，则可以不带该选项
+    readelf --relocs foo.o | egrep '(GOT|PLT|JU?MP_SLOT)'
+    上句大多数时候(和平台有关)可以正确判断是否是以fPIC选项编译的，
+    如果输出为空，基本可以表明不是以fPIC选项编译的，
+    若有输出，基本上表明是以fPIC选项编译的。
+    注意：fPIC是编译选项也是链接选项，如果编译的时候加了fPIC，链接的时候也必须加上。
+-shared
+    生成动态库，如果不带，则是生成可执行文件
+    如果是生成动态库，则不进行链接操作
+    不链接就意味着如果库中有未解决的符号，也不影响动态库的生成
+    但这一有个例外：
+    如果未定义的符号（如函数），带有 __attribute__((visibility("hidden")))
+    则这样的符号必须有相应的实现，否则会报错：
+    对‘myfunc()’未定义的引用
+    hidden symbol `_Z6myfuncv' isn't defined
+    报错原因是试图使用的这个符号指明是不导出的，
+    则如果这个符号是在其它动态库中调用的，则这种符号因为是强制不导出的，所以这种用法肯定是错的，
+    但同时这个符号又没在本库中定义，所以就报错了。
+-fpermissive
+    该选项会将不一致代码的诊断从错误降级为警告
+    该选项最好不要使用，因为会降低对于代码检查的严格性
+    该标志使编译器将某些实际上是错误(但某些编译器允许)的东西报告为警告，以允许代码进行编译，即使它不符合语言规则。
+-fvisibility
+    -fvisibility=hidden|default
+    gcc 在链接时设置 -fvisibility=hidden，则不加 visibility声明的都默认为hidden; 
+    gcc 默认设置 -fvisibility=default，即全部可见；
+--retain-symbols-file
+    控制静态符号表, 此时，除了指定导出的符号外，其它全部为仅内部可见
+    –retain-symbols-file=xxx.sym
+    .sym文件的格式为直接按行列出要导出的符号，如：
+    func_1
+    func_3
+--version-script
+    –version-script=xxx.map 控制动态符号表
+    此时，除了指定导出的符号外，其它全部为仅内部可见
+    .map文件的写法有点类似结构体的写法，如：
+    {
+    global:
+      func_1;
+      func_2;
+    local: *;
+    };  
+-std=c++11
+    支持C++11特性，意味着自动链接c++11相关的库
+_GLIBCXX_USE_CXX11_ABI
+    参：https://blog.csdn.net/dreamvyps/article/details/89179248
+    新旧版本的ABI，可以在GCC5.1之后版本编绎的时候，如果使用C++11标准，
+    定义_GLIBCXX_USE_CXX11_ABI 这个宏为0表示使用旧版本ABI，1新版本
+    如果GCC版本在5.1以下，还是使用老版本的ABI，正常情况下，不会有ABI兼容性问题。
+    如果GCC版本在5.1以上，使用c++11标准编绎的时候，默认使用了新版本的ABI。
+    例如旧版ABI的函数函数签名：Get(std::basic_string<char, std::char_traits, std::allocator >)
+    对应新版ABI的函数签名为：Get(std::__cxx11::basic_string<char, std::char_traits, std::allocator >)
+-Bsymbolic
+    正常情况下，在 linux 平台上 (不使用 - Bsymbolic)，加载的目标文件中第一次出现的符号将在程序中一直被使用，
+    不论是定义在静态可执行部分，还是在动态目标文件中。
+    这是通过符号抢占 (symbol preemption) 来实现的。动态加载器构建符号表，所有的动态符号根据该符号表被决议。
+    所以正常情况下，如果一个符号实例出现在动态库（DSO）中，但是已经在静态可执行文件或者之前加载的动态库中被定义，
+    那么以前的定义也将被用于当前的动态库中。
+    Binds references to all global symbols in a program to the definitions within a user’s shared library.
+    链接器选项 -Bsymbolic 可以与 -shared 一起使用。 ld -shared -Bsymbolic 与 - pie 非常相似。
+    -Bsymbolic 遵循 ELF DF_SYMBOLIC 语义：所有定义的符号都是不可抢占的，优先使用本地符号 
+-Wl,-Bsymbolic 
+    其中 Wl 表示将紧跟其后的参数，传递给连接器 ld。
+    Bsymbolic 表示强制采用本地的全局变量定义，
+    这样就不会出现动态链接库的全局变量定义被应用程序 / 动态链接库中的同名定义给覆盖了
+    经测试，动态库加了该选项，则优先使用动态库自身的符号，否则优先使用之前存在的符号
+    在windows下，动态库只支持使用自身符号，而不支持使用之前存在的符号这种链接方式，
+    如果一个动态库中使用了未定义的符号，则在vs中是编译不过去的，但gcc可以编译成功。
+-static
+    阻止链接动态库（意味着强制链接静态库）
+    如 gcc main.c -static -o test -lpthread  ，链接的pthread库是静态库，而不是动态库
+-static-libgcc
+    只强制链接静态c++标准库（默认-shared-libgcc），该选项只适用于g++，不适用于gcc
+    区别于-static的地方是，-static会强制链接所有静态库，包括c++标准库
+–Wl,-soname,libname.so.x
+    编译时指定要生成的动态库的soname    
+预处理选项
+    -D宏
+    -D宏=值
+    -U宏   取消宏定义
+链接器选项
+    -static   禁止使用动态库
+    -shared   生成动态库，一般和-FPIC搭配使用
+    -Wl,选项  把选项传递给链接器
+    -symbolic 建立共享目标文件时，把引用绑定到全局符号上
+警告选项
+    -w : 进制所有警告信息（不建议）
+    -Wall ： 开启大部分警告信息（建议）
+    -Werror ： 视警告为错误
+
+    
+总结：    
+https://www.cnblogs.com/CocoML/p/14643389.html    

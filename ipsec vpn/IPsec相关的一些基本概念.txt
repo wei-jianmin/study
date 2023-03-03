@@ -1,0 +1,115 @@
+https://blog.csdn.net/naipeng/article/details/71172079
+
+IPsec:
+    Internet Protocol Security是一种开放标准的框架结构，通过使用加密的安全服务以确保在网络上进程保密而安全的通讯。
+    IPsec IP层协议安全主要包括一个IP包进程模块和一个密钥交换模块，IPsec包的处理模块是基本IPsec安全策略(SP)和安全关联（SA）的。
+
+PF_KEY:
+    PF_KEY是密钥管理套接字，在UNPV13e 第19章有介绍。
+
+xfrm:
+    指处理IP数据包的网络框架。是IPSec SPD/SAD的管理模块，
+    与原网络架构的路由和网络数据处理密切相关，策略检查、SA的获取都属于xfrm.支持pf_key和netlink.
+
+racoon:
+    一个密钥管理守护进程，实现用户中的IKE密钥协商模块，
+    主要用于自动方式下与通信对端相应模块的SA协商（相当于openswan的pluto吧），
+    配置管理模块由Setkey实现，用来手动配置SP、SA，完成SPD、SAD的人工管理（相当于openswan的whack?）。
+    为实现racoon和Setkey模块与内核交互，需使用PF_KEYv2套接字
+
+pluto：
+    密钥交换协议(IKE)的守护进程。主要实现IKE协议，以及完成SA的交互。
+    如果pluto使用clips，则使用PF_KEY套接字；
+    如果pluto使用NETKEY,则使用NETLINK_XFRM套接字。
+    pluto可支持内核使用KLIPS或NETKEY实现IPSEC,
+    前者的通信接口socket是PF_KEY, 后者的通信接口是netlink, 
+    另外也支持内核无IPSEC的情况(NO_KERNEL), 不过基本就没什么意义。
+    KLIPS的IPSEC实现是通过构造ipsec*虚拟网卡来实现的, 
+    将数据从该网卡发送, 就意味着对数据进行加密; 
+    从该网卡获取数据, 就是对数据包进行解密。
+    因此安全策略(SP)实际是根据路由来进行的，
+    因此配置加密路由就是配置安全策略，
+    因此专门引入了eroute概念来描述这类路由。(此段引用yfydz的openswan实现)
+
+
+klips / NETKEY：
+    实现IP数据包的安全接受或发送的进程。
+    在内核域中运行，主要负责控制管理SA及密钥，同时处理数据包的加密和解密工作。
+    klips主要由以下模块组成：
+        通信接口socket PF_KEY负责注册和初始化模块，数据包处理和转发模块，
+        数据包的接收和处理模块，SA的管理模块，SHA1、MD5算法实现模块，
+        路由器的基数实现模块，PF_KEY2协议实现模块，其它一些相关子模块。
+        KLIPS不支持IPv6
+        klips是pluto自带的，而这个PF_KEY是clips自带的，
+        Linux内核也有PF_KEY的实现，
+        所以这两种PF_KEY是不一样的
+    NETKEY:
+        又称26sec,通信接口socket netlink,
+         该部分实现包含在2.6内核中，实际是对KAME项目的重写。
+
+
+SA,SP,SADB等具体在代码中怎么操作，代码中的含义是什么？数据是怎么组织的？
+    安全策略（Security Policy，简写为SP）：
+        定义对满足条件IP报文进行安全处理的规则。即下面的一条路由。
+        或者另一描述：安全策略是用来识别一个数据包是应该处理、忽略、还是应该丢弃。
+        SP是Security Policy的缩写。
+        SP是一条规则，决定一条流（flow）是否需要被IPsec处理。
+        SP的处理有三种方式：
+            丢弃
+            不处理
+            处理
+        需要被IPsec处理的流，会被指向到一个template（模板）。
+        一个template可以理解为指向一个SA，template包含以下属性：
+            协议
+                AH或ESP。
+            模式
+                transport或tunnel模式。
+            pattern
+                源IP加目的IP对。
+                NAT的PORT对。
+            SP有一个方向属性，取值分别为：
+                out
+                in
+                fwd
+    安全关联（SecurityAssociation，简写为SA）：
+        这是这组协议中最重要的一个概念，是RFC文档中要求所有实现中必须包含的一个概念。
+        它为当前IP报文的鉴别、加密处理提供必要的算法标识和算法相关的参数。
+        安全关联是由当前IP报文的目的地址、SPI值及协议这个三元组（即SAID）唯一确定的
+        通过SPI加数据包的目的地址可以唯一查找到一个SA。
+        包含的属性：
+            目的地址
+            SPI
+            加密算法(ENC)
+                属性
+                key
+            验证算法(AU)
+                属性
+                key
+    安全参数指针（SecurityParameter Index ，简写为SPI）：
+        是一个32位的整数，用来标识当前IP报文所对应的安全关联
+        是由IKE协商的两侧客户端随机选择的UUID
+        0-255是被保留的值，禁止在SPI中使用
+        
+    安全策略数据库（Security PolicyDatabase，简写为SPD[B]）：
+        存放所有本机安全策略的集合
+
+    安全关联数据库（SecurityAssociation Database ，简写为SAD[B]）：
+        是存放本机所有安全关联的集合
+        
+    总结
+        在整个IPsec的数据流转逻辑中，SP用来表达What todo。SA用来表达How todo。
+        明文报在通过IPsec VPN设备变成ESP发出去的过程是：
+        查找路由 -> 查找policy决定是否需要被ESP -> 查找SA并加密封装 -> 加密封装后的包再查路由
+        IPsec报在通过IPsec VPN设备变成非加密包发出去的过程：
+        查找路由 -> 查找policy决定是否需要解ESP -> 查找SA并解密解封装 -> 解密解封装后的包再查路由
+        
+IKE,ipsec,pluto的深入理解？
+
+
+kernel从Linux2.6内核开始就自带ipsec模块，即ipsec-tools，
+主要包括libipsec、setkey、racoon和racoonctl这个模块，
+setkey主要用于配置SAD（安全关联数据库）和SPD（安全策略数据库），
+racoon用于IKE协商，既实现了双向认证，又能建立和维护IPsec SA
+
+ipsec-tools ：Tools for configuring and using IPSEC
+racoon2 ： An implementation of key management system for IPsec

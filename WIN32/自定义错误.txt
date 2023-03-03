@@ -1,0 +1,7 @@
+/*Error codes are 32-bit values (bit 31 is the most significant bit).Bit 29 is reserved 
+  for application-defined error codes; no system error code has this bit set.If you are
+  defining an error code for your application, set this bit to one. That indicates that 
+  the error code has been defined by an application, and ensures that your error code 
+  does not conflict with any error codes defined by the system. */
+#define USER_ERROR 0X40000000
+#define ERROR_PARAMS USER_ERROR+1	//²ÎÊý´íÎó

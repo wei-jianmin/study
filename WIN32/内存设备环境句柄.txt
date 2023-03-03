@@ -1,0 +1,24 @@
+a memory device context is a device context that exists only in memory. 
+内存设备环境是只存在于内存中的设备环境。
+When the memory device context is created, its display surface is exactly one monochrome pixel wide and one monochrome pixel high. 
+当创建了内存设备环境后，它的显示面是单色像素宽和单色像素高。
+Before an application can use a memory device context for drawing operations,
+在应用程序在使用内存设备环境进行绘画操作前，
+ it must select a bitmap of the correct width and height into the device context. 
+必须选择一个具有合适宽高的bitmap到内存设备环境中。
+This may be done by using CreateCompatibleBitmap to specify the height, width, and color organization required in the function call. 
+这可以通过使用CreateCompatibleBitmap函数来依次指定函数所需要的高度，宽度和颜色
+When a memory device context is created, all attributes are set to typical default values.
+当内存设备环境被创建时，所有的属性被设为典型的默认值。
+The memory device context can be use as a typical device context.
+内存设备环境可以被用作典型的设备环境。
+You can set the attributes to non-default values, 
+你可以设置这些属性为非默认值，
+obtain the current setting of its attributes, and select pens, brushes and regions into it.
+获取当前属性，以及选择画笔、画刷、区域。
+The CreateCompatibleDC function can only be used with devices that support raster operations.
+该CreateCompatibleDC函数只可以与支持光栅操作的设备一起使用。
+An application can determine whether a device supports these operations by calling the GetDeviceCaps function. 
+应用程序可通过调用GetDeviceCaps函数来确定一个设备是否支持这些操作。
+When you no longer need the memory device context, call the DeleteDC function to delete it. 
+当不再用内存设备环境后，用DeleteDC函数来删除它。

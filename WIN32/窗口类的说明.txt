@@ -1,0 +1,48 @@
+http://blog.csdn.net/hanyujianke/article/details/8502337
+window把窗口以不同的类别进行设计，通过不同的类别来管理不同的资源，体现模块化管理的思想。以mfc为例Button类别有ccheckbox，cbutton，radiobutton等 ，Static类别有cstatic、staticgroup等。
+ 一个应用程序在创建某个类型的窗口前，必须首先注册该“窗口类”(Windows Class)。注意，这里不是C++类的类。Register Window把窗口过程、窗口类型以及其他类型信息和要登记的窗口类关联起来。
+“窗口类”的数据结构
+“窗口类”是Windows系统的数据结构，可以把它理解为Windows系统的类型定义，而Windows窗口则是相应“窗口类”的实例。Windows使用一个结构来描述“窗口类”，其定义如下：
+typedef struct _WNDCLASSEX {
+UINT cbSize; //该结构的字节数
+UINT style; //窗口类的风格
+WNDPROC lpfnWndProc; //窗口过程
+int cbClsExtra;//描述在窗口类后再分配多少字节，默认0
+int cbWndExtra;//描述在窗口示例后再分配多少字节，默认0
+HANDLE hInstance; //该窗口类的窗口过程所属的应用实例
+HICON hIcon; //该窗口类所用的像标
+HCURSOR hCursor; //该窗口类所用的光标
+HBRUSH hbrBackground; //该窗口类所用的背景刷
+LPCTSTR lpszMenuName; //该窗口类所用的菜单资源
+LPCTSTR lpszClassName; //该窗口类的名称
+HICON hIconSm; //该窗口类所用的小像标
+} WNDCLASSEX;
+从“窗口类”的定义可以看出，它包含了一个窗口的重要信息，如窗口风格、窗口过程、显示和绘制窗口所需要的信息，等等。关于窗口过程，将在后面消息映射等有关章节作详细论述。
+Windows系统在初始化时，会注册(Register)一些全局的“窗口类”，例如通用控制窗口类。应用程序在创建自己的窗口时，首先必须注册自己的窗口类。
+这个窗口结构体最最重要的就是窗口类别名称（LPCTSTR lpszClassName），这个名称限制了是属于哪一种类。
+下面序列说明：
+static LRESULT CALLBACK mywndproc( HWND hwnd, UINT nid, WPARAM wparm, LPARAM lparm );
+hwnd m_myhwnd = null；
+m_myhwnd = CreateWindowEx(0, _T("Button"), _T("first"), WS_DISABLED, CW_USEDEFAULT,CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT , NULL, NULL,0,0);
+SetWindowLong( m_myhwnd, GWL_WNDPROC, reinterpret_cast<int>(mywndproc));
+static LRESULT CALLBACK mywndproc( HWND hwnd, UINT nid, WPARAM wparm, LPARAM lparm )
+{
+ switch( nid )
+ {
+ case 10:
+    .......
+ case 11:
+    .......  
+ default:
+    .......
+ }
+ return 0;
+}
+ 
+这样就写完了一个窗口，你可以通过：：sendmessage或postmessage向窗口发送消息。注意：：必须要带上（api），若不带上是mfc cwd里面的成员函数。
+此时你会发现怎么没有注册窗口呢，而是直接创建窗口呢。问的很好，因为此处使用了注册了得窗口类Button，故不需要再注册窗口类，若此处窗口类不是”Button"或者也不是注册了得窗口类，则创建窗口失败，m_myhwnd为空。
+通过registerClass和RegisterClassEx函数返回一个原子。什么是原子？所有注册窗口类的名字被保存在一个原子表的内部，以USER32。由类注册函数的返回值是原子。您还可以检索一个窗口类，该类的窗口通过GetClassWord（HWND，GCW_ATOM）要求其类原子的原子。原子可以转换为整数的原子通过的MAKEINTATOM的宏，然后就可以使用函数接受字符串或原子的形式中的类名。最常见的情况是lpClassName参数CreateWindow的宏观和CreateWindowEx函数。
+===================================================================================================
+注册窗口类以后同一类窗口都用一套WindowProc。有统一的行为。
+以后不用每个窗口都实现一次了。
+在我们构造一个窗口类结构后，我们需要将这个类结构指针加入到system atom table 即SAT中，这样系统就可以通过查找这张表来找到用户自定义的窗口类，window预定义的窗口类指针也在SAT中。SAT实际上实现了一种用于查询的映射，atom实际类型是short，即16位数据。只有系统才可直接访问这张表，但在调用某些api函数时，如Registerclass，可以告知系统来存取这张表。当然，还有本地原子表和全局原子表，这些表应用程序是可以直接访问的

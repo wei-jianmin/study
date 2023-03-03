@@ -1,0 +1,108 @@
+https://www.cnblogs.com/xdp-gacl/p/3760336.html
+
+Java Servlet 是运行在 Web 服务器或应用服务器上的程序，
+它是作为来（自 Web 浏览器或其他 HTTP 客户端的）http请求
+和 HTTP 服务器上的数据库或应用程序之间的中间层。
+
+Java Servlet 是运行在带有支持 Java Servlet 规范的解释器的 web 服务器上的 Java 类。
+Servlet 可以使用 javax.servlet 和 javax.servlet.http 包创建，它是 Java 企业版的标准组成部分
+Java Servlet 就像任何其他的 Java 类一样已经被创建和编译
+在您安装 Servlet 包并把它们添加到您的计算机上的 Classpath 类路径中之后，
+您就可以通过 JDK 的 Java 编译器或任何其他编译器来编译 Servlet。
+
+就像任何其他的 Java 程序，您需要通过使用 Java 编译器 javac 编译 Servlet
+
+Servlet是sun公司提供的一门用于开发动态web资源的技术。
+
+Sun公司在其API中提供了一个servlet接口，
+用户若想用发一个动态web资源(即开发一个Java程序向浏览器输出数据)，需要完成以下2个步骤：
+1、编写一个Java类，实现servlet接口
+2、把开发好的Java类部署到web服务器中
+按照一种约定俗成的称呼习惯，通常我们也把实现了servlet接口的java程序，称之为Servlet
+
+Servlet的运行过程   相关参考：file://Tomcat和web服务器.txt
+Servlet程序是由WEB服务器调用，web服务器收到客户端的Servlet访问请求后：  
+① Web服务器首先检查是否已经装载并创建了该Servlet的实例对象。
+  如果是，则直接执行第④步，否则，执行第②步。
+② 装载并创建该Servlet的一个实例对象。
+③ 调用Servlet实例对象的init()方法。
+④ 创建一个用于封装HTTP请求消息的HttpServletRequest对象和
+  一个代表HTTP响应消息的HttpServletResponse对象，
+  然后调用Servlet的service()方法并将请求和响应对象作为参数传递进去。
+⑤ WEB应用程序被停止或重新启动之前，Servlet引擎将卸载Servlet，并在卸载之前调用Servlet的destroy()方法。
+
+file://imgs/servlet调用图.png
+
+https://www.cnblogs.com/foresightman/articles/5951689.html
+Servlet生命周期分为三个阶段：
+　　1，初始化阶段            调用init()方法
+　　2，响应客户请求阶段　　  调用service()方法
+　　3，终止阶段　　          调用destroy()方法
+Servlet初始化阶段：
+    在下列时刻Servlet容器装载Servlet：
+　　　　1，Servlet容器启动时自动装载某些Servlet，实现它只需要在web.XML文件中的
+           <Servlet></Servlet>之间添加如下代码：
+           <loadon-startup>1</loadon-startup>
+　　　　2，在Servlet容器启动后，客户首次向Servlet发送请求
+　　　　3，Servlet类文件被更新后，重新装载Servlet
+　　Servlet被装载后，Servlet容器创建一个Servlet实例并且调用Servlet的init()方法进行初始化。
+    在Servlet的整个生命周期内，init()方法只被调用一次。
+Servlet工作原理：
+    首先简单解释一下Servlet接收和响应客户请求的过程，
+    首先客户发送一个请求，Servlet是调用service()方法对请求进行响应的，
+    通过源代码可见，service()方法中对请求的方式进行了匹配，
+    选择调用doGet,doPost等这些方法，然后再进入对应的方法中调用逻辑层的方法，实现对客户的响应。
+    在Servlet接口和GenericServlet中是没有doGet,doPost等等这些方法的，
+    HttpServlet中定义了这些方法，但是都是返回error信息，
+    所以，我们每次定义一个Servlet的时候，都必须实现doGet或doPost等这些方法。
+　　每一个自定义的Servlet都必须实现Servlet的接口，
+    Servlet接口中定义了五个方法，其中比较重要的三个方法涉及到Servlet的生命周期，
+    分别是上文提到的init(),service(),destroy()方法。
+    GenericServlet是一个通用的，不特定于任何协议的Servlet,它实现了Servlet接口。
+    而HttpServlet继承于GenericServlet，因此HttpServlet也实现了Servlet接口。
+    所以我们定义Servlet的时候只需要继承HttpServlet即可。
+　　Servlet接口和GenericServlet是不特定于任何协议的，
+    而HttpServlet是特定于HTTP协议的类，所以HttpServlet中实现了service()方法，
+    并将请求ServletRequest,ServletResponse强转为HttpRequest和HttpResponse。
+    public void service(ServletRequest req,ServletResponse res)
+                            throws ServletException,IOException
+    {
+          HttpRequest request;
+          HttpResponse response;
+          try
+          {
+             req = (HttpRequest)request;
+             res = (HttpResponse)response;
+          }catch(ClassCastException e)
+          {
+             throw new ServletException("non-HTTP request response");
+          }
+          service(request,response);
+    }
+    代码的最后调用了HTTPServlet自己的service(request,response)方法，
+    然后根据请求去调用对应的doXXX方法，因为HttpServlet中的doXXX方法都是返回错误信息，
+    protected void doGet(HttpServletRequest res,HttpServletResponse resp)
+                                    throws ServletException,IOException
+    {
+       String protocol = req.getProtocol();
+       String msg = IStrings.getString("http.method_get_not_supported");
+       if(protocol.equals("1.1"))
+       {
+          resp.sendError(HttpServletResponse.SC.METHOD.NOT.ALLOWED,msg);
+        }
+       esle
+        {
+          resp.sendError(HttpServletResponse.SC_BAD_REQUEST,msg);
+        }
+    }
+    所以需要我们在自定义的Servlet中override这些方法！
+Servlet响应请求阶段：
+    对于用户到达Servlet的请求，Servlet容器会创建特定于这个请求的ServletRequest对象和ServletResponse对象，
+    然后调用Servlet的service方法。service方法从ServletRequest对象获得客户请求信息，处理该请求，
+    并通过ServletResponse对象向客户返回响应信息。
+    对于Tomcat来说，它会将传递过来的参数放在一个Hashtable中，
+    这是一个String-->String[]的键值映射。
+    HashMap线程不安全的，Hashtable线程安全。
+Servlet终止阶段：
+    当WEB应用被终止，或Servlet容器终止运行，或Servlet容器重新装载Servlet新实例时，
+    Servlet容器会先调用Servlet的destroy()方法，在destroy()方法中可以释放掉Servlet

@@ -1,0 +1,124 @@
+===========================================================================
+                                   插件简介
+===========================================================================
+插件提供了丰富的功能，可以增加基于Gecko的浏览器的灵活性。
+
+● Gecko简介：
+Gecko是一套自由及开放源代码、以C++编写的排版引擎，目前为Mozilla Firefox网页浏览器以及Mozilla Thunderbird电子邮件客户端等Mozilla基金会相关产品所使用。Gecko原本由网景通信公司开发，现在则由Mozilla基金会维护。
+这套排版引擎提供了一个丰富的应用程序接口以供互联网相关的应用程序使用，例如：网页浏览器、HTML编辑器、客户端／服务器等等[2]。虽然最初的主要使用对象为Netscape和Mozilla Firefox网页浏览器，但现在已有很多其他软件在使用这个排版引擎。Gecko是跨平台的，能在Microsoft Windows、Linux和Mac OS X等主要操作系统上运行。
+
+● 插件如何工作：
+当Gecko启动时，它将在系统上特定位置寻找插件模块。
+
+● 当页面引用了插件时，浏览器按如下方式顺序响应：
+检查具有匹配的MIME类型的插件
+将插件代码加载到内存中
+初始化插件
+创建插件的新实例
+
+Gecko可以在单个页面上或同时在多个打开的窗口中加载同一插件的多个实例（如页面中同时有多个播放器），删除插件的最后一个实例后，将从内存中卸载插件代码
+
+当浏览器启动时，它枚举可用的插件（此步骤因平台而异），从每个插件文件中读取资源以确定该插件的MIME类型，并为其MIME注册每个插件库类型。当Gecko遇到为插件注册的MIME类型的数据（嵌入在HTML页面或单独的文件中）时，它将动态将插件代码加载到内存中（如果尚未加载），并且创建该插件的新实例。
+
+● 函数调用
+按照惯例，所有特定于插件的功能均具有前缀“ NPP”，而所有特定于浏览器的功能均具有前缀“ NPN”。
+从技术上讲NP_Initialize，NP_Shutdown不是插件传递给浏览器的功能表的一部分。加载和卸载插件软件时，浏览器会调用它们
+首次加载插件代码时，Gecko会调用插件API函数NP_Initialize。
+创建实例时，浏览器将调用插件API函数NPP_New
+当用户离开实例页面或关闭其窗口时，插件实例将被删除；Gecko调用函数NPP_Destroy通知插件该实例已被删除。
+删除插件的最后一个实例后，将从内存中卸载插件代码。壁虎调用函数NP_Shutdown。插件在未加载时不占用资源（磁盘空间除外）。
+
+● Gecko如何找到插件 （要了解当前安装了哪些插件，请访问about：plugins。）
+windows下：
+MOZ_PLUGIN_PATH环境变量指向的目录。
+%APPDATA%\Mozilla\plugins，其中%APPDATA%表示每个用户的Application Data目录。
+工具包捆绑包中的插件。
+Profile directory\plugins，其中Profile directory是用户个人资料目录。
+HKEY_CURRENT_USER\Software\MozillaPlugins\*\Path注册表值指向的目录，*可以用任何名称替换。
+HKEY_LOCAL_MACHINE\Software\MozillaPlugins\*\Path注册表值指向的目录，*可以用任何名称替换。
+linux下：
+MOZ_PLUGIN_PATH环境变量指向的目录
+Profile directory/plugins，其中Profile directory是当前用户个人资料的目录。
+~/.mozilla/plugins。
+/usr/lib/mozilla/plugins（64位Firefox也进行检查/usr/lib64/mozilla/plugins）。
+/usr/lib64/firefox/plugins （对于64位Firefox）
+
+● 插件API
+插件应用程序编程接口（API）由两组函数和一组共享数据结构组成。
+  插件方法是您在插件中实现的功能。Gecko调用这些功能。所有的名称插件的API函数开始NPP_，例如，NPP_New。
+  浏览器方法是由Gecko实现的功能；插件会调用这些函数。所有的浏览器功能的名称开头NPN_，例如NPN_Write。
+  数据结构是为插件API定义的特定于插件的类型。结构的名称开头NP，例如NPWindow。
+API中的所有插件名称均以开头NP。 
+
+● 窗口式和无窗口式插件
+窗口化插件把自己的窗口绘制到浏览器上。窗口式插件是不透明的，始终位于网页的顶部HTML部分。默认情况下，窗口化插件是窗口化的，因为窗口化插件通常更易于开发且使用更稳定。
+无窗口插件无需在本机窗口中绘制；它是在其自己的绘制目标中绘制的。
+
+● 使用HTML显示插件
+当Gecko遇到文档中的objector embed元素时，它将尝试分别查找和显示由data和src属性表示的文件。
+该<object>元素是HTML规范的一部分，用于在网页中通用包含特殊媒体。它在HTML页面中嵌入了各种对象类型，包括插件，Java组件，ActiveX控件，小程序和图像。
+元素的height和width属性object确定HTML页面中嵌入式插件的大小。例如，此object元素调用一个显示视频的插件：
+<object data="newave.avi" type="video/avi" 
+        width="320" height="200"
+        autostart="true" loop="true">
+</object>
+
+===========================================================================
+                                插件开发
+===========================================================================
+ ● 插件开发流程
+  确定插件功能
+  确定插件的MINE类型
+  准备开发环境（主要是插件SDK）
+  创建插件项目
+  编代码，提供适当的插件API
+  生成插件
+  安装插件
+  调试
+  
+● 注册插件  
+Gecko通过其支持的MIME类型识别插件。当浏览器需要显示特定MIME类型的数据时，浏览器将查找并调用支持该类型的插件对象。
+服务器根据文件扩展名查找由插件注册的MIME类型，然后开始将文件发送到浏览器。浏览器查找媒体类型，如果找到该类型注册的插件，则加载该插件软件。
+windows：
+    为了确定插件处理的MIME类型和文件扩展名，浏览器通常使用以下注册表中描述的插件使用注册表项的内容。
+    但是，当从知名目录加载该插件时，必须使用其他方法。在这种情况下，为了确保将加载该插件文件，它的名称应为“ np * .dll”。
+    此外，插件DLL的Windows版本信息将用于确定MIME类型，文件扩展名，文件打开模板，插件名称和描述。
+    为此，插件DLL的嵌入式资源的版本标记应包含以下字符串/值对集合：
+          MIMEType：用于MIME类型
+          FileExtents：用于文件扩展名
+          FileOpenName：用于文件打开模板
+          ProductName：用于插件名称
+          FileDescription：用于描述
+          Language：使用的语言
+          在MIME类型和文件扩展名字符串中，多个值由“ |”分隔 字符，例如：video/quicktime|audio/aiff|image/jpeg 
+          仅当在开发环境中使用设置为“美国英语”的语言和设置为“ Windows Multilingual”的字符创建版本标记时，才会加载版本标记。该语言和字符集组合的资源代码为040904E4。
+Linux：
+    为了确定插件处理的MIME类型和文件扩展名，浏览器将加载每个库并调用NP_GetMIMEDescription进入点。
+    此导出的C函数应返回一个字符串，其中包含用冒号分隔的类型，扩展名列表和类型描述。
+    每种MIME类型都应以分号分隔。例如：image/xbm:xbm:X Bitmap
+
+● 绘制插件：
+在页面上绘制自身之前，插件必须提供有关其自身的信息，设置其绘制所在的窗口或其他目标，安排重新绘制以及处理事件。
+无窗口插件可以调用以下Netscape方法进行绘制：
+    NPN_ForceRedraw：强制为无窗口插件添加绘制消息。
+    NPN_InvalidateRect：在重新绘制或刷新之前，使无窗口插件中的区域无效。
+    NPN_InvalidateRegion：在重新绘制或刷新之前，使无窗口插件中的区域无效。
+浏览器调用以下插件方法：
+    NPP_GetValue：查询插件以获取信息。
+    NPP_Print：请求实例的特定于平台的打印操作。
+    NPP_SetValue：设置浏览器信息。
+    NPP_SetWindow：设置插件在其中绘制的窗口。
+    NPP_HandleEvent：向实例传递特定于平台的事件。
+插件可以调用以下Netscape方法来查询和设置信息：
+    NPN_GetValue：获取浏览器信息。
+    NPN_SetValue：设置插件浏览器信息。
+
+● 处理内存
+    插件开发人员可以利用插件API中提供的内存功能来分配和释放内存。
+    使用NPN_MemAlloc方法从浏览器分配内存。
+    使用NPN_MemFree方法释放通过NPN_MemAlloc分配的内存。
+    在调用占用大量内存的Mac Toolbox调用之前，请使用NPN_MemFlush方法释放内存（仅限Mac OS）。
+
+● 获取浏览器版本和UI信息 。。。
+● 在状态行上显示消息 。。。
+● 使插件可编写脚本 。。。

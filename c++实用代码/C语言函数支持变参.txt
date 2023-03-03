@@ -1,0 +1,14 @@
+int writelog(const char *format,...)
+{
+	char pmsg[2048]={0};
+	va_list arg_ptr;
+
+	if(format==NULL)
+		return 0;
+	
+	va_start(arg_ptr,format);	//已固定参数地址起点确定变参的内存起始地址。
+	vsnprintf_s(pmsg,2048,2045,format,arg_ptr);
+	va_end(arg_ptr);		// 要写的内容已经存在了pmsg中
+    ......
+	return 0;
+}

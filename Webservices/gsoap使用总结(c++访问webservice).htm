@@ -1,0 +1,900 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0052)https://blog.csdn.net/krens/article/details/78333022 -->
+<!DOCTYPE html><HTML lang="zh-CN"><HEAD>
+<META charset="UTF-8"><LINK rel="canonical" href="https://blog.csdn.net/krens/article/details/78333022">
+<META name="renderer" content="webkit">
+<META name="force-rendering" content="webkit">
+<META content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<META name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<META name="apple-mobile-web-app-status-bar-style" content="black">
+<META name="referrer" content="always">
+<META name="description" content="项目中新加网管平台，所有应用都需要向网管平台（web应用）定时主动上报监控的数据统计。各相关应用与网管平台部署在不同服务器，网络互通。 &#10;各应用包含java，c++的实现。其中c++访问web service可以通过gsoap来实现。gsoap的官网地址：https://www.genivia.com，包含商业版，以及GPLv2的开源版本。 &#10;1、下载地址：https://www.genivia.c">
+<META name="keywords" content="">
+<META content="no-siteapp" http-equiv="Cache-Control"><LINK rel="alternate" 
+href="#" media="handheld">
+<META name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/tingyun-rum-blog.js"></SCRIPT>
+<LINK rel="SHORTCUT ICON" 
+href="https://csdnimg.cn/public/favicon.ico"><TITLE>gsoap使用总结 - krens的专栏 - 
+CSDN博客</TITLE><LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/detail-d4065f0b3a.min.css"><LINK 
+rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/skin3-template-9b39979775.min.css">
+<SCRIPT type="text/javascript">
+        var username = "krens";
+        var blog_address = "https://blog.csdn.net/krens";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/krens/article/details/78333022"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+        // 第四范式所需数据
+        var articleTitles = "gsoap使用总结 - krens的专栏";
+        var articleID = "78333022";
+
+        var nickName = "大四喜2017";
+    </SCRIPT>
+
+<SCRIPT type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/jquery-1.9.1.min.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/main-1.0.6.js"></SCRIPT>
+<!-- 新版上报 -->
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/track.js"></SCRIPT>
+<!-- 新版上报end --><LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/sandalstrap.min.css">
+<STYLE>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </STYLE>
+
+<SCRIPT language="javascript" type="text/javascript" charset="gb2312" src="gsoap使用总结(c++访问webservice)_files/35ff706fd57d11c141cdefcd58d6562b.js"></SCRIPT>
+
+<SCRIPT type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</SCRIPT>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<META name="GENERATOR" content="MSHTML 9.00.8112.16737"></HEAD>
+<BODY class="nodata"><LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/content_toolbar.css">
+<SCRIPT id="toolbar-tpl-scriptId" type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/content_toolbar.js" domain="https://blog.csdn.net/"></SCRIPT>
+<LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/blog_code-c3a0c33d5c.css">
+<LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/paging.css">
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/mvf_news_feed.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/copyright.js"></SCRIPT>
+
+<DIV style="display: none;"><IMG onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);' 
+src=""></DIV><LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/chart-3456820cac.css">
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/ds.js"></SCRIPT>
+
+<DIV id="mainBox" class="container clearfix">
+<DIV class="recommend-right">
+<UL class="recommend-fixed-box"></UL></DIV><main>
+<DIV class="blog-content-box">
+<DIV class="article-header-box">
+<DIV class="article-header">
+<DIV class="article-title-box"><SPAN 
+class="article-type type-1 float-left">原</SPAN>
+<H1 class="title-article">gsoap使用总结</H1></DIV>
+<DIV class="article-info-box">
+<DIV class="article-bar-top"><SPAN class="time">2017年10月24日 18:50:24</SPAN><A 
+class="follow-nickName" href="https://me.csdn.net/krens" 
+target="_blank">大四喜2017</A><SPAN class="read-count">阅读数：4059</SPAN>
+<DIV class="tags-box space"><SPAN class="label">个人分类：</SPAN><A class="tag-link" 
+href="https://blog.csdn.net/krens/article/category/426919" 
+target="_blank">[c++学习]																</A></DIV></DIV>
+<DIV class="operating"></DIV></DIV></DIV></DIV><ARTICLE>
+<DIV id="article_content" class="article_content clearfix csdn-tracking-statistics" 
+data-dsm="post" data-mod="popu_307" data-pid="blog">
+<DIV class="markdown_views prism-atom-one-dark"><!-- flowchart 箭头图标 勿删 --><svg 
+xmlns="http://www.w3.org/2000/svg" style="display: none;"><path id="raphael-marker-block" 
+style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);" stroke-linecap="round" 
+d="M 5 0 L 0 2.5 L 5 5 Z" /></svg>
+<P>项目中新加网管平台，所有应用都需要向网管平台（web应用）定时主动上报监控的数据统计。各相关应用与网管平台部署在不同服务器，网络互通。 <BR>
+各应用包含java，c++的实现。其中c++访问web service可以通过gsoap来实现。</P>
+<P>gsoap的官网地址：<A href="https://www.genivia.com/" 
+rel="nofollow">https://www.genivia.com/</A>，包含商业版，以及GPLv2的开源版本。 <BR>1、下载地址：<A 
+href="https://www.genivia.com/download/gsoap-2.8.54.zip" 
+rel="nofollow">https://www.genivia.com/download/gsoap-2.8.54.zip</A>，发布版本中包含平台无关的源代码，预构建的windows、MAC 
+OS的可执行二进制。</P>
+<P>2、需要用到gsoap的soapcpp2 与wsdl2h 来生成自己的webservice调用的数据结构与应用。 <BR>   解压，在gsoap/bin 
+目录可以看到自带的MAC OS与windows 编译库。 <BR>soapcpp2：gsoap代码生成器。 
+<BR>wsdl2h：自身是gsoap的应用，解析WSDL，XML模式，SOAP/XML。通过wsdl2h 解析 
+webservice的wsdl文件，可以生成对应的调用代码。 <BR>         将wsdl文件转换为 头文件。</P>
+<P>3、 Unix/Linux 上安装gsoap <BR>上传并解压gsoap-2.8.54.zip，在解压目录下</P>
+<P>./configure  <BR>make  <BR>sudo make install 
+<BR>在gsoap目录下生成soapcpp2，wsdl2h，make install将其复制到/usr/local/bin/目录下。</P>
+<P>4、生成自己应用对应的代码文件。 <BR>网管应用的wsdl文件已提供URL,如：<A href="http://10.118.203.187:58080/monitor/rpc/kpi?wsdl" 
+rel="nofollow">http://10.118.203.187:58080/monitor/rpc/kpi?wsdl</A></P>
+<P>使用 wsdl2h 将wsdl对应的xml 转为 头文件。，实现WSDL文件到.h文件的数据映射 <BR>wsdl2h -s -o kpi.h <A 
+href="http://10.118.203.187:58080/monitor/rpc/kpi?wsdl" 
+rel="nofollow">http://10.118.203.187:58080/monitor/rpc/kpi?wsdl</A> <BR>
+kpi.h中包含了web rpc 的数据结构 <BR>ns1__reportKpiData <BR>
+soap_call_ns1__reportKpiData</P>
+<P>使用soapcpp2 将kpi.h 生成对应的代码。</P>
+<H1 id="soapcpp2-i-x-c-l-kpih">soapcpp2 -i -x -C -L kpi.h</H1>
+<P>Saving soapStub.h annotated copy of the source interface file <BR>Saving 
+soapH.h serialization functions to #include in projects <BR>Using ns1 service 
+name: KpiDataServicePortBinding <BR>Using ns1 service style: document <BR>Using 
+ns1 service encoding: literal <BR>Using ns1 service location: <A href="http://10.118.203.187:58080/monitor/rpc/kpi" 
+rel="nofollow">http://10.118.203.187:58080/monitor/rpc/kpi</A> <BR>Using ns1 
+schema namespace: <A href="http://ws.monitor.zte.com/" 
+rel="nofollow">http://ws.monitor.zte.com/</A> <BR>Saving 
+soapKpiDataServicePortBindingProxy.h client proxy class <BR>Saving 
+soapKpiDataServicePortBindingProxy.cpp client proxy class <BR>Saving 
+KpiDataServicePortBinding.nsmap namespace mapping table <BR>Saving soapC.cpp 
+serialization functions</P>
+<P>Compilation successful </P>
+<P>至此，我们已经得到与webservice rpc调用的相关代码与头文件。写个测试代码试试。 <BR>编译需要的文件 <BR>
+KpiDataServicePortBinding.nsmap  <BR>soapC.cpp  <BR>soapH.h  <BR>soapStub.h  
+<BR>soapKpiDataServicePortBindingProxy.cpp  <BR>
+soapKpiDataServicePortBindingProxy.h  <BR>stdsoap2.cpp  –gsoap目录下 <BR>stdsoap2.h 
+     –gsoap目录下 <BR>gsoaptest.cpp</P>
+<H1 id="cat-gsoaptestcpp">cat gsoaptest.cpp</H1>
+<H1 id="include-kpidataserviceportbindingnsmap">include 
+“KpiDataServicePortBinding.nsmap”</H1>
+<H1 id="include-soapkpidataserviceportbindingproxyh">include 
+“soapKpiDataServicePortBindingProxy.h”</H1>
+<P>int main() <BR>{  <BR>        KpiDataServicePortBindingProxy client(“<A href="http://10.118.203.187:58080/monitor/rpc/kpi" 
+rel="nofollow">http://10.118.203.187:58080/monitor/rpc/kpi</A>“); <BR>struct 
+ns1__reportKpiDataResponse response; <BR>        char * msg = 
+“R_receive_mr,2017-10-23 10:19:00,0,1,,,,10.118.203.188,9753”; <BR>if 
+(client.reportKpiData(msg,response) != SOAP_OK)</P><PRE><CODE>    std::cout &lt;&lt; "reportKpiData is not SOAP_OK "  &lt;&lt; std::endl;
+
+    return 0;
+</CODE></PRE>
+<P>}</P>
+<P>对应的编译过程</P>
+<H1 id="cat-makesh">cat make.sh</H1>
+<H1 id="binbash">!/bin/bash</H1>
+<P>g++ -g -I ./ -c stdsoap2.cpp -o stdsoap.o <BR>g++ -g -I ./  -c soapC.cpp  -o 
+soapC.o <BR>g++ -g -I ./gsoap -I ./  -c  soapKpiDataServicePortBindingProxy.cpp  
+-o soapKpiDataServicePortBindingProxy.o <BR>g++ -g -I ./  -c gsoaptest.cpp  -o 
+gsoaptest.o <BR>g++ -g stdsoap.o  soapC.o soapKpiDataServicePortBindingProxy.o 
+gsoaptest.o -o gsoapclient</P>
+<P>rm -rf  *.o <BR>测试OK，web service 可以接受到发送的消息。</P>
+<P>集成到原来应用中遇到的问题： <BR>1、gsoap/stdsoap2_cpp.cpp:6798:undefined reference to 
+`namespaces’ <BR>将代码加入原来应用时，未将KpiDataServicePortBinding.nsmap  
+未include包含代码中。</P>
+<P>2、multiple definition of `namespaces’ <BR>
+排除soapKpiDataServicePortBindingProxy.h 
+中包含判断后，KpiDataServicePortBinding.nsmap的数据结构定义。include的位置从头文件.h移到.cpp文件。</P>
+<P>完结。</P></DIV><LINK rel="stylesheet" href="gsoap使用总结(c++访问webservice)_files/markdown_views-7f770a53f2.css"></DIV>
+<DIV class="hide-article-box text-center"><A id="btn-readmore" class="btn" 
+data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/krens/article/details/78333022,"}' 
+data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/krens/article/details/78333022,"}'>阅读更多</A></DIV>
+<SCRIPT>(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</SCRIPT>
+</ARTICLE></DIV>
+<SCRIPT>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</SCRIPT>
+
+<DIV class="p4course_target"></DIV>
+<SCRIPT>window.p4sdk_enable_courseBox=true</SCRIPT>
+<A id="commentBox"></A>
+<DIV class="comment-box">
+<DIV class="unlogin-box text-center">想对作者说点什么？		<!-- $curl 当前地址 --><BUTTON id="btnCommentUnlogin" 
+class="btn btn-sm btn-red">我来说一句</BUTTON></DIV>
+<DIV class="comment-list-container"><A id="comments"></A>
+<DIV class="comment-list-box"></DIV>
+<DIV id="commentPage" class="pagination-box d-none"></DIV>
+<DIV class="opt-box text-center"><BUTTON id="btnMoreComment" class="btn btn-sm btn-link-blue"></BUTTON></DIV></DIV>
+</DIV>
+<DIV class="recommend-box">
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u010871058/article/details/71599213,BlogCommendFromBaidu_0"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u010871058/article/details/71599213,BlogCommendFromBaidu_0"}'>
+<DIV class="content"><A title="gsoap搭建WebService服务和客户端例子" href="https://blog.csdn.net/u010871058/article/details/71599213?utm_source=blogxgwz0" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>gsoap</EM>搭建WebService服务和客户端例子				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/9/A/3_u010871058.jpg" alt="u010871058" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010871058</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">05-11</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							857</SPAN></P></DIV></A>
+<P class="content"><A title="gsoap搭建WebService服务和客户端例子" href="https://blog.csdn.net/u010871058/article/details/71599213?utm_source=blogxgwz0" 
+target="_blank"><SPAN class="desc oneline">WebService、soap、gsoap基本概念
+WebService服务基本概念：就是一个应用程序，它向外界暴露出一个可以通过web进行调用的API，是分布式的服务组件。本质上就是要以标准的...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/u010871058?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+u010871058的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u012741077/article/details/53073822,BlogCommendFromBaidu_1"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u012741077/article/details/53073822,BlogCommendFromBaidu_1"}'>
+<DIV class="content"><A title="[gSoap]使用RESTful架构搭建简单跨平台Webservice" href="https://blog.csdn.net/u012741077/article/details/53073822?utm_source=blogxgwz1" 
+target="_blank">
+<H4 
+class="text-truncate oneline">[<EM>gSoap</EM>]<EM>使用</EM>RESTful架构搭建简单跨平台Webservice				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/6/7/3_u012741077.jpg" alt="u012741077" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u012741077</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">11-07</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1774</SPAN></P></DIV></A>
+<P class="content"><A title="[gSoap]使用RESTful架构搭建简单跨平台Webservice" href="https://blog.csdn.net/u012741077/article/details/53073822?utm_source=blogxgwz1" 
+target="_blank"><SPAN 
+class="desc oneline">简介　　原先是直接使用的Socket来进行网络编程，但遇到高并发我就难以招架了，与是在网上找了一下，发现了开源的gSoap跨平台库，于是就开始尝试使用起来。 
+ 　　官方主页：https://www.g...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/u012741077?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+星空不语</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u010601662/article/details/54706190,BlogCommendFromBaidu_2"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u010601662/article/details/54706190,BlogCommendFromBaidu_2"}'>
+<DIV class="content"><A title="GSoap工作原理简析" href="https://blog.csdn.net/u010601662/article/details/54706190?utm_source=blogxgwz2" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>GSoap</EM>工作原理简析				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/8/F/3_u010601662.jpg" alt="u010601662" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010601662</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">01-24</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							981</SPAN></P></DIV></A>
+<P class="content"><A title="GSoap工作原理简析" href="https://blog.csdn.net/u010601662/article/details/54706190?utm_source=blogxgwz2" 
+target="_blank"><SPAN class="desc oneline">前言 
+ 因为工作原因，接触GSoap已有大半年时间，春节闲来无事，简单写一下半年来对GSoap的理解。 服务端int main()  {#ifdef 
+WITH_OPENSSL//1、初始化OpenSS...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/u010601662?utm_source=blog_pc_recommand" target="_blank">来自：	<SPAN 
+class="blog_title"> 傲然君</SPAN></A></SPAN></P></DIV></DIV><!-- 第四范式广告开关 -->
+<DIV class="p4courset3_target _4paradigm_box recommend-item-box clearfix"></DIV>
+<SCRIPT>window.p4sdk_enable_recommendBox=true</SCRIPT>
+
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lihao21/article/details/70168050,BlogCommendFromBaidu_3"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lihao21/article/details/70168050,BlogCommendFromBaidu_3"}'>
+<DIV class="content"><A title="gSOAP 初体验" href="https://blog.csdn.net/lihao21/article/details/70168050?utm_source=blogxgwz3" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>gSOAP</EM> 初体验				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/D/E/3_lihao21.jpg" alt="lihao21" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lihao21</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-14</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							2857</SPAN></P></DIV></A>
+<P class="content"><A title="gSOAP 初体验" href="https://blog.csdn.net/lihao21/article/details/70168050?utm_source=blogxgwz3" 
+target="_blank"><SPAN class="desc oneline">由于工作调动关系，需要了解 gSOAP 
+的使用，写个文章记录一下学习的心得，免得以后忘记。安装由于本人使用的是 Mac OS 系统，故以 Mac OS 为例说明如何安装 gSOAP。1）下载 
+gsoa...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/lihao21?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+Leo的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/iteye_3607/article/details/81425009,BlogCommendFromBaidu_4"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/iteye_3607/article/details/81425009,BlogCommendFromBaidu_4"}'>
+<DIV class="content"><A title="gSoap" href="https://blog.csdn.net/iteye_3607/article/details/81425009?utm_source=blogxgwz4" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>gSoap</EM></H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/7/C/3_iteye_3607.jpg" alt="iteye_3607" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">iteye_3607</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">02-13</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							170</SPAN></P></DIV></A>
+<P class="content"><A title="gSoap" href="https://blog.csdn.net/iteye_3607/article/details/81425009?utm_source=blogxgwz4" 
+target="_blank"><SPAN class="desc oneline">由于业务的需求，现在要做webservice的东西。
+ 客户给我推荐了gsoap感觉还挺不错...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/iteye_3607?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+WEBCODE</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u010293286/article/details/70182962,BlogCommendFromBaidu_5"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u010293286/article/details/70182962,BlogCommendFromBaidu_5"}'>
+<DIV class="content"><A title="Gsoap编译" href="https://blog.csdn.net/u010293286/article/details/70182962?utm_source=blogxgwz5" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>Gsoap</EM>编译				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/2/F/3_u010293286.jpg" alt="u010293286" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010293286</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">04-15</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							1062</SPAN></P></DIV></A>
+<P class="content"><A title="Gsoap编译" href="https://blog.csdn.net/u010293286/article/details/70182962?utm_source=blogxgwz5" 
+target="_blank"><SPAN class="desc oneline">gSOAP编译工具提供了一个SOAP/XML 关于C/C++ 
+语言的实现，从而让C/C++语言开发web服务或客户端程序的工作变得轻松了很多。gSOAP支持大多数平台，包括嵌入式系统和小系统。 
+ 你首...</SPAN></A><SPAN class="blog_title_box oneline"><A href="https://blog.csdn.net/u010293286?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+u010293286的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qqwoaidushu88/article/details/52047418,BlogCommendFromBaidu_6"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qqwoaidushu88/article/details/52047418,BlogCommendFromBaidu_6"}'>
+<DIV class="content"><A title="VS2008 gsoap 笔记" href="https://blog.csdn.net/qqwoaidushu88/article/details/52047418?utm_source=blogxgwz6" 
+target="_blank">
+<H4 class="text-truncate oneline">VS2008 <EM>gsoap</EM> 笔记				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/6/D/3_qqwoaidushu88.jpg" alt="qqwoaidushu88" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qqwoaidushu88</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-27</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							945</SPAN></P></DIV></A>
+<P class="content"><A title="VS2008 gsoap 笔记" href="https://blog.csdn.net/qqwoaidushu88/article/details/52047418?utm_source=blogxgwz6" 
+target="_blank"><SPAN class="desc oneline">vs2008 gsoap笔记</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/qqwoaidushu88?utm_source=blog_pc_recommand" target="_blank">来自：	<SPAN 
+class="blog_title"> DC的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident recommend-download-box clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://download.csdn.net/download/codeheng/9569006,BlogCommendFromBaidu_7"}' 
+data-track-view='{"mod":"popu_387","con":",https://download.csdn.net/download/codeheng/9569006,BlogCommendFromBaidu_7"}'><A 
+href="https://download.csdn.net/download/codeheng/9569006?utm_source=blogxgwz7" 
+target="_blank">
+<DIV class="content">
+<DIV><SPAN class="type">下载</SPAN>
+<H4 class="text-truncate oneline clearfix"><EM>gsoap</EM>源代码库						</H4><SPAN 
+class="data float-right">07-06</SPAN></DIV>
+<DIV class="desc oneline">							gsoap_2.8.19.zip源代码					</DIV></DIV></A></DIV>
+<DIV class="recommend-item-box recommend-ad-box">
+<DIV id="kp_box_43" data-pid="60" data-track-view='{"mod":"kp_popu_43","con":",,"}'>
+<DIV id="three_ad8" class="mediav_ad"></DIV>
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/mvf_news_feed.js"></SCRIPT>
+
+<SCRIPT>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad8",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </SCRIPT>
+</DIV>
+<SCRIPT>$(function(){csdn.track.viewCheck($("#kp_box_43"));});</SCRIPT>
+</DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/wu110112/article/details/75048902,BlogCommendESEnWordWeight_8"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/wu110112/article/details/75048902,BlogCommendESEnWordWeight_8"}'>
+<DIV class="content"><A title="windows平台下gsoap生成C++客户端源码" href="https://blog.csdn.net/wu110112/article/details/75048902?utm_source=blogxgwz8" 
+target="_blank">
+<H4 class="text-truncate oneline">
+						windows平台下<EM>gsoap</EM>生成C++客户端源码				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/7/2/3_wu110112.jpg" alt="wu110112" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wu110112</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">07-13</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							955</SPAN></P></DIV></A>
+<P class="content"><A title="windows平台下gsoap生成C++客户端源码" href="https://blog.csdn.net/wu110112/article/details/75048902?utm_source=blogxgwz8" 
+target="_blank"><SPAN class="desc oneline">C++调用 Webservice接口方法 声明：&nbsp; &nbsp; 
+&nbsp;当前我们采用人民网微博接口地址做测试（http://t.people.com.cn/services/MsgContentServic...</SPAN></A><SPAN 
+class="blog_title_box oneline"><A href="https://blog.csdn.net/wu110112?utm_source=blog_pc_recommand" 
+target="_blank">来自：	<SPAN class="blog_title"> 
+华琳科技的专栏</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box type_hot_word">
+<DIV class="content clearfix oneline">
+<H5 class="float-left">相关热词</H5>
+<DIV class="float-left"><SPAN><A href="https://blog.csdn.net/iteye_3607/article/details/81425009" 
+target="_blank">Gsoap</A></SPAN><SPAN><A href="https://blog.csdn.net/10km/article/details/52174616" 
+target="_blank">						gsoap c</A></SPAN><SPAN><A href="https://blog.csdn.net/sunnylion1982/article/details/47186481" 
+target="_blank">						gsoap教程</A></SPAN><SPAN><A href="https://blog.csdn.net/ggz631047367/article/details/44567411" 
+target="_blank">gsoap服务端</A></SPAN><SPAN><A href="https://blog.csdn.net/wesleyluo/article/details/5532633" 
+target="_blank">gsoap使用</A></SPAN></DIV></DIV></DIV>
+<DIV class="recommend-item-box recommend-box-ident type_blog clearfix" 
+data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_16683355/article/details/53695720,BlogCommendESEnWordWeight_9"}' 
+data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_16683355/article/details/53695720,BlogCommendESEnWordWeight_9"}'>
+<DIV class="content"><A title="gsoap 版本问题" href="https://blog.csdn.net/qq_16683355/article/details/53695720?utm_source=blogxgwz9" 
+target="_blank">
+<H4 class="text-truncate oneline"><EM>gsoap</EM> 版本问题				</H4>
+<DIV class="info-box d-flex align-content-center"><!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/6/3/3_qq_16683355.jpg" alt="qq_16683355" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_16683355</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+<P class="date-and-readNum"><SPAN class="date hover-show">12-16</SPAN><SPAN 
+class="read-num hover-hide"><svg xmlns="http://www.w3.org/2000/svg" class="icon csdnc-yuedushu" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-passwords-visible" 
+/></svg>							201</SPAN></P></DIV></A>
+<P class="content"><A title="gsoap 版本问题" href="https://blog.csdn.net/qq_16683355/article/details/53695720?utm_source=blogxgwz9" 
+target="_blank"><SPAN class="desc oneline">客户端 与 服务端 的gsoap 
+版本一定要一致，不然会导致通信问题；一端能发送成功，但收不到对端的数据。...</SPAN></A><SPAN class="blog_title_box oneline"><A 
+href="https://blog.csdn.net/qq_16683355?utm_source=blog_pc_recommand" target="_blank">来自：	<SPAN 
+class="blog_title"> qq_16683355的博客</SPAN></A></SPAN></P></DIV></DIV>
+<DIV class="recommend-item-box blog-expert-recommend-box">
+<H4 class="text-truncate">博主推荐			</H4>
+<DIV class="blog-expert-recommend">
+<DIV class="blog-expert-load-new" data-index="3"><svg xmlns="http://www.w3.org/2000/svg" 
+style="enable-background: new 0 0 200 200;" viewBox="0 0 200 200" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+xml:space="preserve" version="1.1"><path d="M 142.5 57.5 c -1.3 -1.2 -2.1 -3.3 -2.1 -5.4 c 0 -4.2 3.3 -7.5 7.5 -7.5 h 19.6 c 4.2 0 7.5 3.3 7.5 7.5 s -3.3 7.5 -7.5 7.5 h -4.2 C 170.8 71.2 175 85 175 100 c 0 41.7 -33.8 75 -75 75 c -4.2 0 -7.5 -3.3 -7.5 -7.5 c 0 -4.2 3.3 -7.5 7.5 -7.5 c 33.3 0 60 -27.1 60 -60 C 160 83.7 153.8 68.7 142.5 57.5 L 142.5 57.5 Z M 57.5 142.5 c 1.2 1.2 2.1 3.3 2.1 5.4 c 0 4.2 -3.3 7.5 -7.5 7.5 H 32.5 c -4.2 0 -7.5 -3.3 -7.5 -7.5 c 0 -4.2 3.3 -7.5 7.5 -7.5 h 4.2 C 29.2 128.8 25 115 25 100 c 0 -41.7 33.7 -75 75 -75 c 4.2 0 7.5 3.3 7.5 7.5 S 104.2 40 100 40 c -33.3 0 -60 27.1 -60 60 C 40 116.2 46.2 131.2 57.5 142.5 Z" 
+/></svg><SPAN>换一批</SPAN></DIV>
+<DIV class="blog-expert"></DIV></DIV></DIV>
+<DIV class="recommend-loading-box"><IMG src="gsoap使用总结(c++访问webservice)_files/feedLoading.gif"></DIV>
+<DIV class="recommend-end-box">
+<P class="text-center">没有更多推荐了，<A class="c-blue c-blue-hover c-blue-focus" href="https://blog.csdn.net/">返回首页</A></P></DIV></DIV></main><ASIDE>
+<DIV id="asideProfile" class="aside-box"><!-- <h3 class="aside-title">个人资料</h3> -->
+<DIV class="profile-intro d-flex">
+<DIV class="avatar-box d-flex justify-content-center flex-column"><A href="https://blog.csdn.net/krens"><IMG 
+class="avatar_pic" src="gsoap使用总结(c++访问webservice)_files/3_krens.jpg"></A></DIV>
+<DIV class="user-info d-flex justify-content-center flex-column">
+<P class="name csdn-tracking-statistics tracking-click" data-mod="popu_379"><A 
+id="uid" href="https://blog.csdn.net/krens" 
+target="_blank">大四喜2017</A></P></DIV>
+<DIV class="opt-box d-flex justify-content-center flex-column"><SPAN class="csdn-tracking-statistics tracking-click" 
+data-mod="popu_379"><A id="btnAttent" class="btn btn-sm btn-red-hollow attention">关注</A></SPAN></DIV></DIV>
+<DIV class="data-info d-flex item-tiling">
+<DL class="text-center" title="57">
+  <DT><A href="https://blog.csdn.net/krens?t=1">原创</A></DT>
+  <DD><A href="https://blog.csdn.net/krens?t=1"><SPAN 
+  class="count">57</SPAN></A></DD></DL>
+<DL id="fanBox" class="text-center" title="4">
+  <DT>粉丝</DT>
+  <DD><SPAN id="fan" class="count">4</SPAN></DD></DL>
+<DL class="text-center" title="4">
+  <DT>喜欢</DT>
+  <DD><SPAN class="count">4</SPAN></DD></DL>
+<DL class="text-center" title="4">
+  <DT>评论</DT>
+  <DD><SPAN class="count">4</SPAN></DD></DL></DIV>
+<DIV class="grade-box clearfix">
+<DL>
+  <DT>等级：</DT>
+  <DD><A title="4级,点击查看等级说明" href="https://blog.csdn.net/home/help.html#level" 
+  target="_blank"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon icon-level" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bloglevel-4" /></svg></A></DD></DL>
+<DL>
+  <DT>访问：</DT>
+  <DD title="48130">4万+            </DD></DL>
+<DL>
+  <DT>积分：</DT>
+  <DD title="1036">1036            </DD></DL>
+<DL title="57392">
+  <DT>排名：</DT>
+  <DD>5万+</DD></DL></DIV>
+<DIV class="badge-box d-flex"><SPAN>勋章：</SPAN>
+<DIV class="icon-badge" title="持之以恒">
+<DIV class="mouse-box"><svg xmlns="http://www.w3.org/2000/svg" class="icon" 
+aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-lasting" 
+/></svg>
+<DIV class="icon-arrow"></DIV></DIV>
+<DIV class="grade-detail-box">
+<DIV class="pos-box">
+<DIV class="left-box d-flex justify-content-center align-items-center flex-column"><svg 
+xmlns="http://www.w3.org/2000/svg" class="icon" aria-hidden="true"><use 
+xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-m-lasting" 
+/></svg>
+<P>持之以恒</P></DIV>
+<DIV class="right-box d-flex justify-content-center align-items-center">         
+               
+授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！              
+      </DIV></DIV></DIV></DIV>
+<SCRIPT>(function ($) {
+                setTimeout(function(){
+                    $('div.icon-badge.show-moment').removeClass('show-moment');
+                }, 5000);
+            })(window.jQuery)
+        </SCRIPT>
+</DIV></DIV>
+<DIV style="height: 250px;" class="csdn-tracking-statistics mb8 box-shadow" 
+data-mod="popu_4" data-pid="blog">
+<DIV id="cpro_u2734133" class="aside-content text-center">
+<DIV id="kp_box_76" data-pid="56" data-track-view='{"mod":"kp_popu_76","con":",,"}'>
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/mbxf4.js"></SCRIPT>
+</DIV>
+<SCRIPT>$(function(){csdn.track.viewCheck($("#kp_box_76"));});</SCRIPT>
+</DIV></DIV>
+<DIV id="asideNewArticle" class="aside-box">
+<H3 class="aside-title">最新文章</H3>
+<DIV class="aside-content">
+<UL class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+  <LI class="clearfix"><A href="https://blog.csdn.net/krens/article/details/78836214" 
+  target="_blank">localtime时间使用</A></LI>
+  <LI class="clearfix"><A href="https://blog.csdn.net/krens/article/details/78836183" 
+  target="_blank">localtime时间获取</A></LI>
+  <LI class="clearfix"><A href="https://blog.csdn.net/krens/article/details/78365382" 
+  target="_blank">Linux 上readdir 遍历文件夹按文件名排序</A></LI>
+  <LI class="clearfix"><A href="https://blog.csdn.net/krens/article/details/55271519" 
+  target="_blank">【收藏】以太网MAC和PHY之间的接口总结</A></LI>
+  <LI class="clearfix"><A href="https://blog.csdn.net/krens/article/details/55212800" 
+  target="_blank">【网络】接口状态</A></LI></UL></DIV></DIV>
+<DIV id="asideCategory" class="aside-box flexible-box">
+<H3 class="aside-title">个人分类</H3>
+<DIV class="aside-content">
+<UL>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/434521"><SPAN 
+  class="title oneline">[C++ Primer]</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/426919"><SPAN 
+  class="title oneline">[c++学习]</SPAN><SPAN 
+  class="count float-right">9篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/423270"><SPAN 
+  class="title oneline">[C学习]</SPAN><SPAN 
+  class="count float-right">21篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/438093"><SPAN 
+  class="title oneline">[C补充]</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/434512"><SPAN 
+  class="title oneline">[数据结构]</SPAN><SPAN 
+  class="count float-right">2篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/417812"><SPAN 
+  class="title oneline">乱</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI>
+  <LI><A class="clearfix" href="https://blog.csdn.net/krens/article/category/426001"><SPAN 
+  class="title oneline">试题</SPAN><SPAN 
+  class="count float-right">1篇</SPAN></A></LI></UL></DIV>
+<P class="text-center"><A class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</A></P></DIV>
+<DIV id="asideArchive" class="aside-box flexible-box">
+<H3 class="aside-title">归档</H3>
+<DIV class="aside-content">
+<UL class="archive-list"><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2017/12">2017年12月       
+               <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2017/10">2017年10月       
+               <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2017/02">2017年2月        
+              <SPAN class="count float-right">7篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2017/01">2017年1月        
+              <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2015/05">2015年5月        
+              <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2010/09">2010年9月        
+              <SPAN class="count float-right">1篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2008/09">2008年9月        
+              <SPAN class="count float-right">2篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2008/07">2008年7月        
+              <SPAN class="count float-right">42篇</SPAN></A></LI><!--归档统计-->
+  <LI><A href="https://blog.csdn.net/krens/article/month/2008/06">2008年6月        
+              <SPAN class="count float-right">1篇</SPAN></A></LI></UL></DIV>
+<P class="text-center"><A class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</A></P></DIV>
+<DIV id="asideHotArticle" class="aside-box">
+<H3 class="aside-title">热门文章</H3>
+<DIV class="aside-content">
+<UL class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+  <LI><A 
+  href="https://blog.csdn.net/krens/article/details/55271519">【收藏】以太网MAC和PHY之间的接口总结</A>
+  <P class="read">阅读量：<SPAN>4709</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/krens/article/details/78333022">gsoap使用总结</A>
+  <P class="read">阅读量：<SPAN>4054</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/krens/article/details/2646839">[C学习]结构体的自引用＼操作链表</A>
+  <P class="read">阅读量：<SPAN>2967</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/krens/article/details/2652379">[C学习]共用体，枚举类型与typedef</A>
+  <P class="read">阅读量：<SPAN>2358</SPAN></P></LI>
+  <LI><A 
+  href="https://blog.csdn.net/krens/article/details/2956355">双数组trie树的基本构造及简单优化[转]键树相关</A>
+  <P class="read">阅读量：<SPAN>1557</SPAN></P></LI></UL></DIV></DIV>
+<DIV id="asideNewComments" class="aside-box">
+<H3 class="aside-title">最新评论</H3>
+<DIV class="aside-content">
+<UL class="newcomment-list">
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/krens/article/details/78365382#comments" 
+  target="_blank">Linux 上readdir 遍历...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/HengTian_real" 
+  target="_blank">HengTian_real</A>：[reply]HengTian_real[/reply]知道啦～             
+     </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/krens/article/details/78365382#comments" 
+  target="_blank">Linux 上readdir 遍历...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/HengTian_real" 
+  target="_blank">HengTian_real</A>：path.c_str是什么啊                </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/krens/article/details/2652379#comments" 
+  target="_blank">[C学习]共用体，枚举类型与typ...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/u011693423" 
+  target="_blank">u011693423</A>：c99允许共用体变量作为函数参数                </P></LI>
+  <LI><A class="title text-truncate" href="https://blog.csdn.net/krens/article/details/2956355#comments" 
+  target="_blank">双数组trie树的基本构造及简单优...</A>
+  <P class="comment"><A class="user-name" href="https://my.csdn.net/xinranlee" 
+  target="_blank">xinranlee</A>：你好，我最近也专注于双数组trie字典开发，程序开发完了，苦于没有大量的语料，请问知道哪能下载英文... 
+                 </P></LI></UL></DIV></DIV>
+<DIV id="asideFooter">
+<DIV class="aside-box">
+<DIV id="kp_box_77" data-pid="57" data-track-view='{"mod":"kp_popu_77","con":",,"}'>
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/9i6gu.js"></SCRIPT>
+</DIV>
+<SCRIPT>$(function(){csdn.track.viewCheck($("#kp_box_77"));});</SCRIPT>
+</DIV>
+<DIV class="aside-box">
+<DIV class="persion_article"></DIV></DIV></DIV></ASIDE>
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/publib_footer-1.0.3.js" data-isfootertrack="false"></SCRIPT>
+
+<SCRIPT>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</SCRIPT>
+</DIV>
+<DIV class="mask-dark"></DIV>
+<DIV style="display: block;" class="pulllog-box">
+<DIV class="pulllog clearfix"><SPAN class="text float-left">
+<DIV id="dmp_ad_69">
+<DIV id="kp_box_75" data-pid="69" data-track-view='{"mod":"kp_popu_75","con":",,"}'>
+<DIV style="padding: 2px 5px 0px; border: 1px solid rgb(241, 61, 61); margin-right: 5px; float: left;">
+<A style="color: rgb(241, 61, 61); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="https://www.csdn.net/2018dev/?utm_source=blogtextlink" 
+target="_blank">开发者调查</A></DIV>
+<DIV style="background: rgb(0, 0, 0); padding: 2px 5px 0px; border: 1px solid rgb(0, 0, 0); margin-right: 5px; float: left;">
+<A style="color: rgb(255, 255, 255); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="http://ai2018.csdn.net/?utm_source=bkxxl" target="_blank">AI开发者大会日程曝光</A>
+</DIV>
+<DIV style="padding: 2px 5px 0px; border: 1px solid rgb(241, 61, 61); margin-right: 5px; float: left;">
+<A style="color: rgb(241, 61, 61); font-size: 15px; font-weight: bold; text-decoration: none;" 
+href="https://gitbook.cn/gitchat/1024developer?utm_source=wzl1022" target="_blank">全场课程特价最后 
+1 天</A></DIV>
+<DIV style="float: left;">
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/ndr3h.js"></SCRIPT>
+</DIV></DIV>
+<SCRIPT>$(function(){csdn.track.viewCheck($("#kp_box_75"));});</SCRIPT>
+</DIV></SPAN>
+<DIV class="pulllog-btn float-right clearfix">
+<DIV class="float-left csdn-tracking-statistics tracking-click" data-mod="popu_557"><A 
+class="pulllog-login">登录</A></DIV>
+<DIV class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" 
+data-mod="popu_558"><A href="https://passport.csdn.net/account/mobileregister" 
+target="_blank">注册</A></DIV><BUTTON class="btn-close"><svg xmlns="http://www.w3.org/2000/svg" 
+class="icon" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="#csdnc-times" /></svg></BUTTON></DIV></DIV></DIV>
+<DIV style="display: none;" id="loginWrap"></DIV>
+<DIV class="tool-box">
+<UL class="meau-list">
+  <LI class="btn-like-box "><BUTTON class=" low-height hover-box btn-like " 
+  title="点赞"><svg xmlns="http://www.w3.org/2000/svg" class="icon active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-thumbsup-ok" /></svg><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon no-active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-thumbsup" /></svg><SPAN 
+  class="hover-show text-box text"><SPAN class="no-active">点赞</SPAN><SPAN class="active">取消点赞</SPAN></SPAN>
+  <P>0</P></BUTTON></LI>
+  <LI><A class="btn-comments low-height hover-box" title="写评论" href="https://blog.csdn.net/krens/article/details/78333022#commentBox"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-comments" /></svg><SPAN class="hover-show text">评论</SPAN>
+  <P></P></A></LI>
+  <LI id="liTocBox" class="toc-container-box"><BUTTON class="btn-toc low-height hover-box" 
+  title="目录"><svg xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-contents" /></svg><SPAN 
+  class="hover-show text">目录</SPAN></BUTTON>
+  <DIV class="toc-container">
+  <DIV class="pos-box">
+  <DIV class="icon-arrow"></DIV>
+  <DIV class="scroll-box">
+  <DIV class="toc-box"></DIV></DIV></DIV>
+  <DIV class="opt-box"><BUTTON class="btn-opt prev nomore" title="向上"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon" aria-hidden="true"><use 
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-chevronup" 
+  /></svg></BUTTON><BUTTON class="btn-opt next"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon" aria-hidden="true"><use 
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#csdnc-chevrondown" 
+  /></svg></BUTTON></DIV></DIV></LI>
+  <LI><BUTTON class="btn-bookmark low-height hover-box" title="收藏"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon active hover-hide" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bookmark-ok" /></svg><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon no-active hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-bookmark" /></svg><SPAN class="hover-show text">收藏</SPAN><!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> --></BUTTON></LI>
+  <LI class="bdsharebuttonbox"><BUTTON 
+  class="btn-comments low-height hover-box"><svg xmlns="http://www.w3.org/2000/svg" 
+  class="icon hover-hide" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-usephone" /></svg><SPAN class="hover-show text text3">手机看
+  				</SPAN></BUTTON></LI>
+  <LI class="widescreen-hide"><A class="btn-comments low-height hover-box" 
+  title="【收藏】以太网MAC和PHY之间的接口总结" href="https://blog.csdn.net/krens/article/details/55271519"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-chevronleft" /></svg><SPAN 
+  class="hover-show text text3">上一篇</SPAN></A></LI>
+  <LI class="widescreen-hide"><A class="btn-comments hover-box low-height" 
+  title="Linux 上readdir 遍历文件夹按文件名排序" href="https://blog.csdn.net/krens/article/details/78365382"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-chevronright" /></svg><SPAN 
+  class="hover-show text text3">下一篇</SPAN></A></LI>
+  <LI style="margin-top: 8px;" class="bdsharebuttonbox _360_interactive">
+  <DIV id="kp_box_97" data-pid="73" data-track-view='{"mod":"kp_popu_97","con":",,"}'>
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/interactive_plugin.js"></SCRIPT>
+
+<STYLE>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</STYLE>
+
+  <DIV id="_360_interactive">
+<SCRIPT> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'hover', placeholderId: '_360_interactive' }); </SCRIPT>
+  </DIV><IMG style="margin: 0px auto; display: block;" alt="" src="gsoap使用总结(c++访问webservice)_files/201608021757063065.png"></DIV>
+<SCRIPT>$(function(){csdn.track.viewCheck($("#kp_box_97"));});</SCRIPT>
+  </LI><!-- 宽屏更多按钮 -->
+  <LI class="widescreen-more"><A class="btn-comments chat-ask-button low-height hover-box" 
+  title="快问" 
+  href="https://blog.csdn.net/krens/article/details/78333022#chatqa"><svg 
+  xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+  aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xlink:href="#csdnc-more" /></svg><SPAN class="hover-show text">更多</SPAN></A>
+  <UL class="widescreen-more-box">
+    <LI class="widescreen-more"><A class="btn-comments low-height hover-box" 
+    title="【收藏】以太网MAC和PHY之间的接口总结" href="https://blog.csdn.net/krens/article/details/55271519"><svg 
+    xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+    aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xlink:href="#csdnc-chevronleft" /></svg><SPAN 
+    class="hover-show text text3">上一篇</SPAN></A></LI>
+    <LI class="widescreen-more"><A class="btn-comments hover-box low-height" 
+    title="Linux 上readdir 遍历文件夹按文件名排序" href="https://blog.csdn.net/krens/article/details/78365382"><svg 
+    xmlns="http://www.w3.org/2000/svg" class="icon hover-hide" 
+    aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xlink:href="#csdnc-chevronright" /></svg><SPAN 
+    class="hover-show text text3">下一篇</SPAN></A></LI></UL></LI></UL></DIV>
+<SCRIPT>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</SCRIPT>
+
+<SCRIPT>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = articleTitles;
+    var ChannelId = 2;
+    var articleId = "78333022";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/krens/article/details/78333022";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "multiple+definition+of+%27nsfeature%3A%3A";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["gsoap","\u4f7f\u7528","\u603b\u7ed3"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"10km","nick_name":"10km","avatar":"https:\/\/avatar.csdn.net\/F\/0\/E\/3_10km.jpg","is_expert":true,"article_count":377},{"user_name":"lxh1230119","nick_name":"kingkingking","avatar":"https:\/\/avatar.csdn.net\/4\/1\/F\/3_lxh1230119.jpg","is_expert":false,"article_count":136},{"user_name":"hellomxj1","nick_name":"\u4e2d\u83ef\u7530\u5712\u72ac","avatar":"https:\/\/avatar.csdn.net\/7\/4\/D\/3_hellomxj1.jpg","is_expert":false,"article_count":82},{"user_name":"zjai2004","nick_name":"\u67cf\u6bc5","avatar":"https:\/\/avatar.csdn.net\/C\/9\/2\/3_zjai2004.jpg","is_expert":false,"article_count":12},{"user_name":"acs713","nick_name":"Smith\u5148\u751f","avatar":"https:\/\/avatar.csdn.net\/3\/E\/5\/3_acs713.jpg","is_expert":false,"article_count":340},{"user_name":"dronly","nick_name":"dronly","avatar":"https:\/\/avatar.csdn.net\/5\/2\/C\/3_dronly.jpg","is_expert":false,"article_count":14},{"user_name":"susubuhui","nick_name":"susubuhui","avatar":"https:\/\/avatar.csdn.net\/0\/B\/8\/3_susubuhui.jpg","is_expert":false,"article_count":528},{"user_name":"ljpmtjbydd","nick_name":"ljpmtjbydd","avatar":"https:\/\/avatar.csdn.net\/6\/5\/0\/3_ljpmtjbydd.jpg","is_expert":false,"article_count":6},{"user_name":"qq745021926","nick_name":"qq745021926","avatar":"https:\/\/avatar.csdn.net\/E\/3\/4\/3_qq745021926.jpg","is_expert":false,"article_count":89},{"user_name":"helonSY","nick_name":"helonSY","avatar":"https:\/\/avatar.csdn.net\/6\/E\/1\/3_helonsy.jpg","is_expert":false,"article_count":561}];
+
+		var articleType = 1;
+		var CopyrightContent = '';
+</SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/sandalstrap.min.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/paging.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/goTop-v1.0.min.js"></SCRIPT>
+
+<SCRIPT>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,articleTit);
+        }
+    })
+</SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/login-box.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/common-946dc75567.min.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/detail-f4c83f7ff6.min.js"></SCRIPT>
+
+<SCRIPT src="gsoap使用总结(c++访问webservice)_files/skin3-template-9376486353.min.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/fixed-sidebar.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/baidu_search-1.1.2.js"></SCRIPT>
+<!-- 第四范式SDK --><!-- 高亮未与 markdown兼容  -->
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/markdownCopy-3e5d9ef4b0.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/check-adblock.js"></SCRIPT>
+
+<SCRIPT type="text/javascript" src="gsoap使用总结(c++访问webservice)_files/MathJax.js"></SCRIPT>
+
+<SCRIPT type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</SCRIPT>
+</BODY></HTML>

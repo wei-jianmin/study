@@ -1,0 +1,82 @@
+https://docs.strongswan.org/docs/5.9/swanctl/swanctl.html
+
+swanctl Tool
+    swanctl 是一个命令行实用程序，用于通过 vici 接口插件配置、
+    控制和监视 IKE charon 守护进程。vici interface plugin.
+starter （已经不推荐使用）
+    用于启动、停止和配置 IKE 守护进程
+    它很少直接调用，而是使用 ipsec 包装器脚本（内部调用starter工具）
+    它读取并解析 ipsec.conf 配置文件，
+    并将配置传递给键控守护程序中的 stroke 插件（对应vici插件，用于通信）   
+pki Tool
+    pki 命令套件允许您运行简单的公钥基础设施。 
+    生成 RSA、ECDSA 或 EdDSA 公钥对，
+    创建包含 subjectAltNames 的 PKCS#10 证书请求，
+    创建 X.509 自签名最终实体和根 CA 证书，
+    颁发由 CA 的私钥签名并包含的最终实体和中间 CA 证书 
+    subjectAltNames、CRL 分发点和 OCSP 服务器的 URI。
+    您还可以从私钥、证书请求和证书中提取原始公钥，
+    并计算两种基于 SHA1 的密钥 ID。
+scepclient Tool
+    scepclient 工具是简单证书注册协议 (SCEP) 的客户端实现
+    注：
+    这个工具是在 2005 年编写的，从那时起只进行了少量更新。 
+    因此，它实现了 SCEP Internet Draft 的旧版本（draft-nourse-scep 的 10/11 版）。 
+    新的 SCEP RFC 8894 于 2020 年 9 月发布，
+    因此该工具可能与更新的 SCEP 服务器不兼容。 
+    它还使用实际上不再是最先进的默认算法（例如 MD5 散列/签名和单个 DES 加密）。
+pt-tls-client Tool
+    pt-tls-client 是一个简单的客户端，
+    它使用 PT-TLS (RFC 6876) 传输协议来收集客户端平台上的完整性测量。 
+    PT-TLS 使用基于证书的服务器身份验证和可选的基于证书的客户端身份验证进行初始 TLS 握手。
+    或者，可以使用受 TLS 保护的简单的基于密码的 SASL 客户端身份验证。
+    属性请求和完整性测量通过 PA-TNC (RFC 5792) 消息协议
+    在驻留在远程 PT-TLS 服务器上的任意数量的完整性测量验证器 (IMV) 
+    与由 PT-TLS 动态加载的多个完整性测量收集器 (IMC) 之间进行交换。 
+    TLS 客户端根据 /etc/tnc_config 定义的列表。 
+    包含一个或多个 PA-TNC 属性的 PA-TNC 消息被多路复用到 
+    PB-TNC (RFC 5793) 客户端或服务器数据批次中，
+    这些数据批次又通过 PT-TLS 传输。
+sw-collector Tool
+    sw-collector 工具从 apt 历史日志中提取有关软件包安装、
+    更新或删除事件的信息，并将软件事件存储在 SQLite 数据库中。
+    然后将检索到的历史信息合并，
+    并与使用 dpkg-query 获得的实际安装软件包列表保持一致。 
+    sw-collector 用于管理端点上的本地软件清单。
+sec-updater Tool
+    Tsec-updater 工具提取有关 Linux 存储库
+    （例如 Debian 或 Ubuntu）的安全更新和反向移植的信息。 
+    此信息用于更新存储在 strongTNC 工具的 SQLite 数据库中的包版本信息，
+    并提供更新的包版本的 SWID 标签。 
+    dpkg --compare-versions 命令用于确定哪些软件包版本受到给定安全更新的影响。
+ipsec pool Tool
+    ipsec pool 实用程序管理存储在 SQL 数据库中
+    并由 attr-sql 插件提供给对等方的虚拟 IP 地址池和属性。
+    辅助 ipsec 命令（如果可用）将执行路径设置为 ${libexecdir}/ipsec/，
+    通常为 /usr/libexec/ipsec/ 或 /usr/local/libexec/ipsec/。 
+    ${libexecdir} 目录可以使用默认为 ${prefix}/libexec 的 
+    --libexecdir ./configure 选项进行配置。
+    使用 ./configure 选项之一自动启用 ipsec 池实用程序
+    --enable-attr-sql 或 --enable-sql
+    并且可以使用以下 strongswan.conf 选项进行配置
+    。。。
+ipsec attest Tool
+    ipsec attest 实用程序管理用于基于 TPM 的远程证明的测量参考值，
+    例如 Linux 完整性测量体系结构 (IMA)。 有关示例，请参阅可信网络连接。
+    辅助 ipsec 命令（如果可用）将执行路径设置为 ${libexecdir}/ipsec/，
+    通常为 /usr/libexec/ipsec/ 或 /usr/local/libexec/ipsec/。 
+    ${libexecdir} 目录可以使用默认为 ${prefix}/libexec 的 
+    --libexecdir ./configure 选项进行配置。
+    使用 ./configure 选项自动启用 ipsec attest 实用程序
+    --enable-imv-attestation
+    并且可以使用以下 strongswan.conf 选项进行配置
+    。。。
+ipsec conftest Tool
+    ipsec conftest 实用程序允许您在 IKE 上运行基于主流 strongSwan 堆栈的预配置测试。 
+    它可以注入或破坏数据包以测试其他实现在某些条件下的行为。
+    辅助 ipsec 命令（如果可用）将执行路径设置为 ${libexecdir}/ipsec/，
+    通常为 /usr/libexec/ipsec/ 或 /usr/local/libexec/ipsec/。 
+    ${libexecdir} 目录可以使用默认为 ${prefix}/libexec 的 
+    --libexecdir ./configure 选项进行配置。
+    要启用 ipsec conftest 实用程序，请添加
+    --启用-conftest 到 ./configure 选项。

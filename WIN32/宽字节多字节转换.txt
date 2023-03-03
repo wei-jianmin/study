@@ -1,0 +1,59 @@
+多字节和宽字节转换：
+3.0   VC6
+7.0   VS2002
+8.0   VS2005
+9.0   VS2008
+10.0  VS2010
+
+ATL3.0（vC6）的方法：
+A2T A2W W2A ...  
+特点：
+作用域是整个函数
+完全在栈上申请
+使用前需定义USES_CONVERSION
+不能在for循环中使用（使用_alloca在栈上循环申请内存，而无法有效释放）
+
+ATL7.0的方法：
+CA2T CA2W CW2A ...
+特点：
+使用以上宏，实际是使用一个对象类
+当低于128字节内存时，在栈上申请，高出时，在堆上申请
+
+注意事项：
+LPCTSTR ps;
+ps = CString("aaaaaaa");
+AfxMessageBox(ps);
+这种用法是错误的，弹出的对话框里显示的是乱码，
+原因是构建的临时对象CString，他的作用域只有第2句，
+超出了第2句，Cstring对象就被析构了
+
+同理:
+使用CA2T这类的宏时，也有这个特点，因为其本质上是个类似于CString的对象类
+所以 char* p=CW2A(str); 这样的用法是有问题的，
+当该句执行完后，CW2A对象的作用域结束，对象释放，所以p将指向一个错误区域
+可以这样用：
+CW2A cv;
+cv = str;
+char *p = cv;
+
+W2A解析：
+	//USES_CONVERSION; 相当于：
+	int _convert = 0; 
+	UINT _acp = ATL::_AtlGetConversionACP() /*CP_THREAD_ACP*/; 
+	LPCWSTR _lpw = NULL; 
+	LPCSTR _lpa = NULL; 
+
+	char *p;
+	//W2A相当于：（省去了原函数中的空指针判断和字符串长度超限判断）
+	p=(	
+		_lpw = L"待转换数据",
+		_convert = (lstrlenW(_lpw)+1), 
+		AtlW2AHelper((LPSTR)alloca(_convert*sizeof(WCHAR)) , _lpw , _convert*sizeof(WCHAR) , _acp)
+	  );
+
+	/*
+	 *_alloca从程序栈中分配大小字节。
+	 *当调用函数退出时（不是当分配仅超出范围时），自动释放分配的空间
+	 *_alloca已经被摒弃，更好的用法是使用_malloca
+	 *当内存溢出时，会引发异常，但这种异常无法用try catch捕捉，而需要用SEH方式
+	 */

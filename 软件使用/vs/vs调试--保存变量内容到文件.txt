@@ -1,0 +1,79 @@
+调试时，监视窗口或快速监视窗口（ctrl+alt+q）可以执行函数
+利用这个特点，可以先定义一个数据保存函数：
+int fz_savemem2file(const char* file,unsigned char* pos,unsigned int len)
+{
+	FILE* pf = fopen(file,"wb");
+	if(pf)
+	{
+		fwrite(pos,len,1,pf);
+		fclose(pf);
+		return 0;
+	}
+	else
+		return -1;
+}
+
+然后要保存变量内容时，可获取变量内容的地址后，然后在监视窗口中用这个函数保存数据内容到文件
+
+注意：
+    只有代码中有地方调用了这个函数，这个符号才会真正的分配
+    否则，只有声明与定义的地方，没有调用的地方，编译器不会对这个函数进行编译，即使是debug模式
+    可以直接在监视器中输入这个函数名（符号）查看该符号是否有效
+    要确定某个可执行文件或动态库中是否真正包含该符号，可用：
+    dumpbin /relocations  xxx.exe | findstr 符号名
+    
+另：msdn中还提到了一种带上下文的符号表示方式 : "{函数名[,所在文件][,所在模块]}符号"
+
+案例：
+    tzreader中，想保存印章数据，于是在reader.core中添加了fz_savemem2file，
+    为了确保该符号可用，所以在每个模块，如reader.sign、reader.ui等中调用了该函数
+    但在调试的时候，用监视窗口测试，发现fz_savemem2file符号不存在
+    用dumpbin排查，分别使用 /imports 和 /relocations 像个选项对reader.ui.dll 进行查看
+    imports.txt:
+        reader.core-md.dll
+            88 fz_savemem2file
+    relocations.txt:    
+        ADC  HIGHLOW            10160A14  __imp__fz_savemem2file
+    由此可见在reader.core-md.dll中导出的符号名为fz_savemem2file（使用了def文件），
+    但在reader.ui中引用的符号为__imp__fz_savemem2file（引用的头文件，该函数名前不带extern "C"）
+    那为什么reader.ui编译时没有报错找不到符号呢，经测试，应该是与导入库.lib有关
+    进行如下测试：
+        一个a.exe，调用void func();         通过隐式链接调用a.dll、b.dll
+        一个a.dll，定义void func();         通过def文件导出
+        一个b.dll，定义void func2();        通过__declspec导出
+        
+        如果a.dll中的文件后缀是cpp的，编译a.exe时会报错：无法解析的外部符号 __imp__func，
+        dumpbin /exports a.dll :            func = @ILT+305(?func@@YAHXZ)
+        dumpbin /exports a.lib :            ?func@@YAHXZ (int __cdecl func(void))
+        dumpbin /exports b.dll :            ?func2@@YAXXZ = @ILT+110(?func@@YAXXZ)
+        dumpbin /exports b.lib :            ?func2@@YAXXZ (void __cdecl func(void))
+        
+        如果dll中的文件后缀是c的，则成功编译并能正常调用func函数
+        dumpbin /exports a.dll :            func = @ILT+365(_func)
+        dumpbin /exports a.lib :            _func
+        dumpbin /relocations a.exe :        __imp__func , __imp_?func2@@YAXXZ
+        
+        上面的a.exe的重定位符号：__imp__func , __imp_?func2@@YAXXZ，
+        应该理解为：[__imp_]_func , [__imp_]?func2@@YAXXZ，[__imp_]是重定位标识
+        所以，上面编译a.exe时的报错就可以解释了：
+            无法解析的外部符号 __imp__func，即找不到_func函数的定义，
+            因为a.exe是通过隐式调用a.dll,所以使用的是a.lib文件，
+            当a.dll中的文件后缀是cpp时，a.lib中的符号名是?func@@YAHXZ，而不是_func
+            那如果使dumpbin /relocations a.exe的引用符号不带[__imp_]呢？
+            经测试，使用extern "C" 标记不管没，目前没找到解决办法
+            
+----------
+补充说明：
+    1. 上面提到的fz_savemem2file方法，该函数需放在公共静态库中才有效，不能放在公共动态库中
+       而且经测试，该公共静态库，如果是release的，需关闭优化才能在监视器中正常使用
+    2. 静态库不能用dumpbin /exports 查看导出函数（区别与导入库lib），而应该用 dumpbin /symbols
+    
+            
+
+=================================================================
+
+从vs2010开始，有插件VSDebugTool可以达到此功能            
+            
+        
+        
+   

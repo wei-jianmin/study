@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)http://www.jianshu.com/p/80e25cb1d81a -->
+<html><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+
+  <!-- Start of Baidu Transcode -->
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="MobileOptimized" content="width">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="mobile-agent" content="format=html5;url=http://www.jianshu.com/p/80e25cb1d81a">
+  <!-- End of Baidu Transcode -->
+
+    <meta name="description" content="HTTP简介 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。 HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。 HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系...">
+
+  <meta name="360-site-verification" content="604a14b53c6b871206001285921e81d8">
+  <meta property="wb:webmaster" content="294ec9de89e7fadb">
+  <meta property="qc:admins" content="104102651453316562112116375">
+  <meta property="qc:admins" content="11635613706305617">
+  <meta property="qc:admins" content="1163561616621163056375">
+  <meta name="google-site-verification" content="cV4-qkUJZR6gmFeajx_UyPe47GW9vY6cnCrYtCHYNh4">
+  <meta name="google-site-verification" content="HF7lfF8YEGs1qtCE-kPml8Z469e2RHhGajy6JPVy5XI">
+  <meta http-equiv="mobile-agent" content="format=html5; url=http://www.jianshu.com/p/80e25cb1d81a">
+
+  <!-- Apple -->
+  <meta name="apple-mobile-web-app-title" content="简书">
+
+    <!--  Meta for Smart App Banner -->
+  <meta name="apple-itunes-app" content="app-id=888237539, app-argument=jianshu://notes/6291468">
+  <!-- End -->
+
+  <!--  Meta for Twitter Card -->
+  <meta content="summary" property="twitter:card">
+  <meta content="@jianshucom" property="twitter:site">
+  <meta content="关于HTTP协议，一篇就够了" property="twitter:title">
+  <meta content="HTTP简介 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。 HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。 HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断地完善和扩展。目前在WWW中使用的是HTTP/1.0的第六版，HTTP/1.1的规范化工作正在进行之中，而且HTTP-NG(Next Genera..." property="twitter:description">
+  <meta content="http://www.jianshu.com/p/80e25cb1d81a" property="twitter:url">
+  <!-- End -->
+
+  <!--  Meta for OpenGraph -->
+  <meta property="fb:app_id" content="865829053512461">
+  <meta property="og:site_name" content="简书">
+  <meta property="og:title" content="关于HTTP协议，一篇就够了">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="http://www.jianshu.com/p/80e25cb1d81a">
+  <meta property="og:description" content="HTTP简介 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器...">
+  <!-- End -->
+
+  <!--  Meta for Facebook Applinks -->
+  <meta property="al:ios:url" content="jianshu://notes/6291468">
+  <meta property="al:ios:app_store_id" content="888237539">
+  <meta property="al:ios:app_name" content="简书">
+
+  <meta property="al:android:url" content="jianshu://notes/6291468">
+  <meta property="al:android:package" content="com.jianshu.haruki">
+  <meta property="al:android:app_name" content="简书">
+  <!-- End -->
+
+
+    <title>关于HTTP协议，一篇就够了 - 简书</title>
+
+  <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="0Wx1eDnvgCEDbR4DiZWT1h1xKGWXKFti/dFiFkwlnjRZ0uEwm6tJagkhYBVPlUgLsoNyccakx1o+G1Fwl+N15g==">
+
+  <link rel="stylesheet" media="all" href="./关于HTTP协议，一篇就够了 - 简书_files/web-217d166d73e7682f5e81.css">
+  
+  <link rel="stylesheet" media="all" href="./关于HTTP协议，一篇就够了 - 简书_files/entry-a5d96d4884b6cddc11f7.css">
+
+  <link href="http://cdn2.jianshu.io/assets/favicons/favicon-03411b154a430b85d807b4366489c21122fb983a38f3d7ca926f882e6367b13e.ico" rel="icon">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/57-a6f1f1ee62ace44f6dc2f6a08575abd3c3b163288881c78dd8d75247682a4b27.png" sizes="57x57">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/72-fb9834bcfce738fd7b9c5e31363e79443e09a81a8e931170b58bc815387c1562.png" sizes="72x72">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/76-49d88e539ff2489475d603994988d871219141ecaa0b1a7a9a1914f4fe3182d6.png" sizes="76x76">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/114-24252fe693524ed3a9d0905e49bff3cbd0228f25a320aa09053c2ebb4955de97.png" sizes="114x114">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/120-1bb7371f5e87f93ce780a5f1a05ff1b176828ee0d1d130e768575918a2e05834.png" sizes="120x120">
+      <link rel="apple-touch-icon-precomposed" href="http://cdn2.jianshu.io/assets/apple-touch-icons/152-bf209460fc1c17bfd3e2b84c8e758bc11ca3e570fd411c3bbd84149b97453b99.png" sizes="152x152">
+
+  <!-- Start of 访问统计 -->
+  <script src="./关于HTTP协议，一篇就够了 - 简书_files/push.js"></script><script src="./关于HTTP协议，一篇就够了 - 简书_files/hm.js"></script><script async="" src="./关于HTTP协议，一篇就够了 - 简书_files/analytics.js"></script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-35169517-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?0c0e9d9b1e7d617b3e6842e85b9fb068";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+  <!-- End of 访问统计 -->
+<style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.main {
+  position: relative;
+  margin: 0 auto;
+  padding: 0 0 30px 0;
+  width: 620px;
+}
+.main .title {
+    padding-left: 8px;
+    border-left: 3px solid #EA6F5A;
+    line-height: 1;
+    font-size: 15px;
+}
+.main .collection-settings {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    font-size: 13px;
+    color: #A0A0A0;
+}
+.main .collection-settings span {
+      padding-left: 4px;
+}
+.main .include-collection {
+    width: 100%;
+    padding-top: 20px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+}
+.main .include-collection .item {
+      display: inline-block;
+      margin: 0 12px 12px 0;
+      min-height: 32px;
+      background-color: white;
+      border: 1px solid #DCDCDC;
+      border-radius: 4px;
+      vertical-align: top;
+      overflow: hidden;
+}
+.main .include-collection .item img {
+        width: 32px;
+        height: 32px;
+}
+.main .include-collection .item .name {
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 14px;
+}
+.main .include-collection .add-collection-wrap {
+      margin: 0 12px 12px 0;
+}
+.main .include-collection .add-collection {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #DCDCDC;
+      border-radius: 4px;
+}
+.main .include-collection .add-collection i {
+        margin-right: 4px;
+        color: #969696;
+}
+.main .recommend-note a {
+    position: relative;
+    margin: 20px 2px 0 0;
+    width: 200px;
+    height: 160px;
+    display: inline-block;
+}
+.main .recommend-note a:after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 160px;
+      border-radius: 0 0 4px 4px;
+      -webkit-box-shadow: inset 0px -80px 50px -22px rgba(0, 0, 0, 0.6);
+              box-shadow: inset 0px -80px 50px -22px rgba(0, 0, 0, 0.6);
+      top: 0;
+      left: 0;
+      z-index: 1;
+}
+.main .recommend-note .name {
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    right: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #ffffff;
+    z-index: 2;
+}
+.main .recommend-note .author {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 2;
+}
+.main .recommend-note .avatar {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+.main .recommend-note .avatar img {
+      border-radius: 50%;
+}
+.main .recommend-note .author-name {
+    font-size: 12px;
+    color: #ffffff;
+    display: inline-block;
+    vertical-align: -1px;
+}
+.main .show-more {
+    margin: 0 12px 12px 0;
+    font-size: 14px;
+    color: #A0A0A0;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.pc-bind-phone-modal .modal-content, .pc-bind-phone-modal .modal-body {
+  overflow: visible;
+}
+.pc-bind-phone-modal .dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
+}
+.pc-bind-phone-modal .dropdown-menu .tag {
+    background-color: #efefef;
+    color: #4A4A4A;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 25px;
+    font-size: 12px;
+}
+.reader-night-mode .pc-bind-phone-modal .dropdown-menu .tag {
+  background-color: #2F2F2F;
+  color: #999999;
+}
+</style><style type="text/css">
+@charset "UTF-8";
+/*
+ * 变量
+*/
+.tips-card-loading[data-v-f3bf5228], .tips-card[data-v-f3bf5228] {
+  width: 460px;
+  position: relative;
+  left: 0;
+  top: 0;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d9d9d9;
+}
+.tips-card-loading[data-v-f3bf5228] {
+  height: 200px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+}
+.tips-card-loading div[data-v-f3bf5228] {
+    background-color: #EAEAEA;
+}
+.tips-card-loading .avatar[data-v-f3bf5228] {
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 50%;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+.tips-card-loading .name[data-v-f3bf5228] {
+    width: 120px;
+    height: 20px;
+    position: absolute;
+    left: 110px;
+    top: 31px;
+}
+.tips-card-loading .content[data-v-f3bf5228] {
+    position: absolute;
+    left: 110px;
+    top: 62px;
+    width: 238px;
+    height: 39.2px;
+    background-color: transparent;
+}
+.tips-card-loading .content .text[data-v-f3bf5228], .tips-card-loading .content .text-delay[data-v-f3bf5228] {
+      height: 14px;
+      position: absolute;
+      left: 0;
+      width: 100%;
+}
+.tips-card-loading .content .text[data-v-f3bf5228] {
+      top: 2px;
+      -webkit-animation: loading-data-v-f3bf5228 1s ease-in-out infinite;
+      animation: loading-data-v-f3bf5228 1s ease-in-out infinite;
+}
+.tips-card-loading .content .text-delay[data-v-f3bf5228] {
+      bottom: 3px;
+      -webkit-animation: loading-data-v-f3bf5228 1s ease-in-out -0.5s infinite;
+      animation: loading-data-v-f3bf5228 1s ease-in-out -0.5s infinite;
+}
+@keyframes loading-data-v-f3bf5228 {
+0% {
+    width: 60%;
+}
+50% {
+    width: 100%;
+}
+100% {
+    width: 60%;
+}
+}
+@-webkit-keyframes loading {
+0% {
+    width: 60%;
+}
+50% {
+    width: 100%;
+}
+100% {
+    width: 60%;
+}
+}
+.tips-card-loading .meta[data-v-f3bf5228] {
+    width: 30px;
+    height: 42px;
+    position: absolute;
+    bottom: 20px;
+    background-color: transparent;
+}
+.tips-card-loading .meta.meta-1[data-v-f3bf5228] {
+      left: 30px;
+}
+.tips-card-loading .meta.meta-2[data-v-f3bf5228] {
+      left: 90px;
+}
+.tips-card-loading .meta.meta-3[data-v-f3bf5228] {
+      left: 150px;
+}
+.tips-card-loading .meta .count[data-v-f3bf5228], .tips-card-loading .meta .type[data-v-f3bf5228] {
+      position: absolute;
+}
+.tips-card-loading .meta .count[data-v-f3bf5228] {
+      left: -5px;
+      top: 6px;
+      height: 18px;
+      width: 40px;
+}
+.tips-card-loading .meta .type[data-v-f3bf5228] {
+      left: 1px;
+      bottom: 2px;
+      height: 13px;
+      width: 28px;
+}
+.tips-card-loading .button[data-v-f3bf5228] {
+    position: absolute;
+    bottom: 17px;
+    width: 90px;
+    height: 40px;
+    border-radius: 40px;
+}
+.tips-card-loading .message[data-v-f3bf5228] {
+    right: 120px;
+}
+.tips-card-loading .follow[data-v-f3bf5228] {
+    right: 17px;
+}
+.tips-card[data-v-f3bf5228] {
+  z-index: 10;
+}
+.tips-card .card-content[data-v-f3bf5228] {
+    padding: 20px 20px 0 20px;
+}
+.tips-card .card-content .summary[data-v-f3bf5228] {
+      padding: 8px 0 20px 90px;
+      min-height: 92px;
+      position: relative;
+}
+.tips-card .card-content .summary .avatar[data-v-f3bf5228] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 72px;
+        height: 72px;
+        cursor: pointer;
+        border-radius: 50%;
+        background-color: #EAEAEA;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+}
+.tips-card .card-content .summary .name[data-v-f3bf5228] {
+        height: 26px;
+        margin-right: 3px;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        -webkit-box-pack: start;
+        -webkit-justify-content: flex-start;
+            -ms-flex-pack: start;
+                justify-content: flex-start;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+}
+.tips-card .card-content .summary .name .nickname[data-v-f3bf5228] {
+          color: #333333;
+          font-size: 19px;
+          font-weight: bold;
+          overflow: hidden;
+          -o-text-overflow: ellipsis;
+             text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+}
+.tips-card .card-content .summary .name .sex[data-v-f3bf5228], .tips-card .card-content .summary .name .badge[data-v-f3bf5228] {
+          -webkit-flex-shrink: 0;
+              -ms-flex-negative: 0;
+                  flex-shrink: 0;
+          display: inline-block;
+}
+.tips-card .card-content .summary .name .sex[data-v-f3bf5228] {
+          font-size: 19px;
+          width: 19px;
+          margin: 0 4px;
+}
+.tips-card .card-content .summary .intro[data-v-f3bf5228] {
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-bottom: 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #333333;
+}
+.tips-card .card-content .summary .intro.block[data-v-f3bf5228] {
+          color: #999999;
+}
+.tips-card .card-content .summary .list .item[data-v-f3bf5228] {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        color: #999999;
+        cursor: pointer;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis;
+        white-space: nowrap;
+}
+.tips-card .card-content .summary .list .item i[data-v-f3bf5228] {
+          margin-right: 2px;
+}
+.tips-card .card-footer[data-v-f3bf5228] {
+    border-top: 1px solid #F0F0F0;
+    padding: 15px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    overflow: hidden;
+    _zoom: 1;
+}
+.tips-card .card-footer .profile[data-v-f3bf5228] {
+      width: 198px;
+      overflow: hidden;
+      _zoom: 1;
+      float: left;
+}
+.tips-card .card-footer .profile div[data-v-f3bf5228] {
+        float: left;
+        width: 60px;
+        height: 44px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+}
+.tips-card .card-footer .profile div span[data-v-f3bf5228] {
+          display: block;
+          width: 100%;
+          text-align: center;
+}
+.tips-card .card-footer .profile div .type[data-v-f3bf5228] {
+          font-size: 13px;
+          color: #999999;
+}
+.tips-card .card-footer .profile div .count[data-v-f3bf5228] {
+          font-size: 18px;
+          color: #333333;
+}
+.tips-card .card-footer .social[data-v-f3bf5228] {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: row;
+          -ms-flex-direction: row;
+              flex-direction: row;
+      -webkit-box-pack: end;
+      -webkit-justify-content: flex-end;
+          -ms-flex-pack: end;
+              justify-content: flex-end;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      float: right;
+      overflow: hidden;
+      _zoom: 1;
+}
+.tips-card .card-footer .social .message[data-v-f3bf5228] {
+        border: 1px solid rgba(59, 194, 29, 0.7);
+        color: #42C02E;
+        margin: 0 10px 0 16px;
+        font-size: 15px;
+        padding: 8px 0;
+        width: 90px;
+        border-radius: 40px;
+        text-align: center;
+        cursor: pointer;
+        float: left;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+}
+.tips-card .card-footer .social .message[data-v-f3bf5228]:hover {
+          border: 1px solid #42C02E;
+          color: #42C02E;
+          background-color: rgba(59, 194, 29, 0.05);
+}
+.tips-card .card-footer .social .user-follow-button[data-v-f3bf5228] {
+        font-size: 15px;
+        padding: 8px 0;
+        width: 100px;
+}
+.arrow[data-v-f3bf5228] {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.arrow i[data-v-f3bf5228] {
+    position: absolute;
+    left: 50%;
+    margin: 0;
+    margin-left: -10px;
+    border-width: 10px;
+    border-color: transparent;
+    padding: 0;
+}
+.arrow em[data-v-f3bf5228] {
+    display: block;
+    position: absolute;
+    left: -9px;
+    border-width: 9px;
+    border-color: transparent;
+    margin: 0;
+    padding: 0;
+}
+.arrow-type-top[data-v-f3bf5228] {
+  bottom: 1px;
+}
+.arrow-type-top i[data-v-f3bf5228] {
+    border-top-color: #d9d9d9;
+    border-style: solid dashed dashed;
+    top: 0;
+}
+.arrow-type-top em[data-v-f3bf5228] {
+    border-style: solid dashed dashed;
+    border-top-color: #ffffff;
+    top: -10px;
+}
+.arrow-type-bottom[data-v-f3bf5228] {
+  top: 1px;
+}
+.arrow-type-bottom i[data-v-f3bf5228] {
+    border-bottom-color: #d9d9d9;
+    border-style: dashed dashed solid;
+    top: -10px;
+}
+.arrow-type-bottom em[data-v-f3bf5228] {
+    border-style: dashed dashed solid;
+    border-bottom-color: #ffffff;
+    top: -8px;
+}
+.reader-night-mode .tips-card-loading[data-v-f3bf5228] {
+  background-color: #3F3F3F;
+  border-color: #2F2F2F;
+}
+.reader-night-mode .tips-card-loading .avatar[data-v-f3bf5228], .reader-night-mode .tips-card-loading .name[data-v-f3bf5228], .reader-night-mode .tips-card-loading .text[data-v-f3bf5228], .reader-night-mode .tips-card-loading .text-delay[data-v-f3bf5228], .reader-night-mode .tips-card-loading .count[data-v-f3bf5228], .reader-night-mode .tips-card-loading .type[data-v-f3bf5228], .reader-night-mode .tips-card-loading .button[data-v-f3bf5228] {
+    background-color: #545454;
+}
+.reader-night-mode .tips-card[data-v-f3bf5228] {
+  background-color: #3F3F3F;
+  border-color: #2F2F2F;
+}
+.reader-night-mode .tips-card .card-content .summary .name .nickname[data-v-f3bf5228] {
+    color: #C8C8C8;
+}
+.reader-night-mode .tips-card .card-content .summary .name .nickname[data-v-f3bf5228]:hover {
+      color: #ffffff;
+}
+.reader-night-mode .tips-card .card-content .summary .intro[data-v-f3bf5228] {
+    color: #C8C8C8;
+}
+.reader-night-mode .tips-card .card-footer[data-v-f3bf5228] {
+    border-top-color: #2F2F2F;
+}
+.reader-night-mode .tips-card .card-footer .profile div .count[data-v-f3bf5228] {
+      color: #C8C8C8;
+}
+.reader-night-mode .arrow.arrow-type-top em[data-v-f3bf5228] {
+  border-top-color: #3F3F3F;
+}
+.reader-night-mode .arrow.arrow-type-top i[data-v-f3bf5228] {
+  border-top-color: #2F2F2F;
+}
+.reader-night-mode .arrow.arrow-type-bottom em[data-v-f3bf5228] {
+  border-bottom-color: #3F3F3F;
+}
+.reader-night-mode .arrow.arrow-type-bottom i[data-v-f3bf5228] {
+  border-bottom-color: #2F2F2F;
+}
+</style><style type="text/css">
+.v-tooltip-container,
+.v-tooltip-content {
+  display: inline-block;
+}
+.v-tooltip-container {
+  position: relative;
+}
+.v-tooltip-container .v-tooltip-content {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+.v-tooltip-container .v-tooltip-wrap {
+    position: absolute;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-top {
+      bottom: 100%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+          -ms-transform: translateX(-50%);
+              transform: translateX(-50%);
+      padding-bottom: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-bottom {
+      top: 100%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+          -ms-transform: translateX(-50%);
+              transform: translateX(-50%);
+      padding-top: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-left {
+      top: 50%;
+      right: 100%;
+      -webkit-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+              transform: translateY(-50%);
+      padding-right: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-right {
+      top: 50%;
+      left: 100%;
+      -webkit-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+              transform: translateY(-50%);
+      padding-left: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-top-start {
+      bottom: 100%;
+      left: 0;
+      padding-bottom: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-top-end {
+      bottom: 100%;
+      right: 0;
+      padding-bottom: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-bottom-start {
+      top: 100%;
+      left: 0;
+      padding-top: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-bottom-end {
+      top: 100%;
+      right: 0;
+      padding-top: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-left-start {
+      top: 0;
+      right: 100%;
+      padding-right: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-left-end {
+      bottom: 0;
+      right: 100%;
+      padding-right: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-right-start {
+      top: 0;
+      left: 100%;
+      padding-left: 10px;
+}
+.v-tooltip-container .v-tooltip-wrap.v-tooltip-wrap-right-end {
+      bottom: 0;
+      left: 100%;
+      padding-left: 10px;
+}
+</style></head>
+
+  <body lang="zh-CN" class="reader-black-font">
+    <!-- 全局顶部导航栏 -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="width-limit">
+    <!-- 左上方 Logo -->
+    <a class="logo" href="http://www.jianshu.com/"><img src="./关于HTTP协议，一篇就够了 - 简书_files/logo-58fd04f6f0de908401aa561cda6a0688.png" alt="Logo"></a>
+
+    <!-- 右上角 -->
+      <!-- 未登录显示登录/注册/写文章 -->
+      <a class="btn write-btn" target="_blank" href="http://www.jianshu.com/writer#/">
+        <i class="iconfont ic-write"></i>写文章
+</a>      <a class="btn sign-up" href="http://www.jianshu.com/sign_up">注册</a>
+      <a class="btn log-in" href="http://www.jianshu.com/sign_in">登录</a>
+
+    <!-- 如果用户登录，显示下拉菜单 -->
+
+    <div class="style-mode"><a class="style-mode-btn"><i class="iconfont ic-navigation-mode"></i></a> <div class="popover-modal" style="left: 0px; display: none;"><div class="meta"><i class="iconfont ic-navigation-night"></i><span>夜间模式</span></div> <div class="switch day-night-group"><a class="switch-btn">开</a> <a class="switch-btn active">关</a></div> <hr> <div class="switch font-family-group"><a class="switch-btn font-song">宋体</a> <a class="switch-btn font-hei active">黑体</a></div> <div class="switch"><a class="switch-btn active">简</a> <a class="switch-btn">繁</a></div></div></div>
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="nav navbar-nav">
+            <li class="tab ">
+              <a href="http://www.jianshu.com/">
+                <span class="menu-text">首页</span><i class="iconfont ic-navigation-discover menu-icon"></i>
+</a>            </li>
+            <li class="tab ">
+              <a id="web-nav-app-download-btn" class="app-download-btn" href="http://www.jianshu.com/apps?utm_medium=desktop&amp;utm_source=navbar-apps"><span class="menu-text">下载App</span><i class="iconfont ic-navigation-download menu-icon"></i></a>
+            </li>
+          <li class="search">
+            <form target="_blank" action="http://www.jianshu.com/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+              <input type="text" name="q" id="q" value="" autocomplete="off" placeholder="搜索" class="search-input">
+              <a class="search-btn" href="javascript:void(null)"><i class="iconfont ic-search"></i></a>
+</form>          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+    
+<div class="note">
+  <a target="_blank" href="http://www.jianshu.com/apps/download?utm_source=sbc" id="web-note-ad-fixed"><span class="close">×</span></a>
+  <div class="post">
+    <div class="article">
+        <h1 class="title">关于HTTP协议，一篇就够了</h1>
+
+        <!-- 作者区域 -->
+        <div class="author">
+          <a class="avatar" href="http://www.jianshu.com/u/6b5e6dce74c5">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/403680bf739b.jpg" alt="96">
+</a>          <div class="info">
+            <span class="name"><a href="http://www.jianshu.com/u/6b5e6dce74c5">RaphetS</a></span>
+            <!-- 关注用户按钮 -->
+            <a class="btn btn-success follow"><i class="iconfont ic-follow"></i><span>关注</span></a>
+            <!-- 文章数据信息 -->
+            <div class="meta">
+              <!-- 如果文章更新时间大于发布时间，那么使用 tooltip 显示更新时间 -->
+                <span class="publish-time" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="最后编辑于 2017.12.04 05:26">2016.10.13 06:48*</span>
+              <span class="wordage">字数 4806</span>
+            <span class="views-count">阅读 27110</span><span class="comments-count">评论 36</span><span class="likes-count">喜欢 275</span><span class="rewards-count ">赞赏 1</span></div>
+          </div>
+          <!-- 如果是当前作者，加入编辑按钮 -->
+        </div>
+        <!-- -->
+
+        <!-- 文章内容 -->
+        <div data-note-content="" class="show-content">
+          <h1>HTTP简介</h1>
+<p>HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。</p>
+<p>HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。</p>
+<p>HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断地完善和扩展。目前在WWW中使用的是HTTP/1.0的第六版，HTTP/1.1的规范化工作正在进行之中，而且HTTP-NG(Next Generation of HTTP)的建议已经提出。</p>
+<p>HTTP协议工作于客户端-服务端架构为上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据接收到的请求后，向客户端发送响应信息。</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 551px; max-height: 181px; background-color: transparent;">
+<div class="image-container-fill" style="padding-bottom: 32.85%;"></div>
+<div class="image-view" data-width="551" data-height="181"><img data-original-src="//upload-images.jianshu.io/upload_images/2964446-5a35e17f298a48e1.jpg" data-original-width="551" data-original-height="181" data-original-format="image/jpeg" data-original-filesize="21389" style="cursor: zoom-in;" class="" src="./关于HTTP协议，一篇就够了 - 简书_files/2964446-5a35e17f298a48e1.jpg"></div>
+</div>
+<div class="image-caption">http请求-响应模型.jpg</div>
+</div>
+<h1>主要特点</h1>
+<p>1、简单快速：客户向服务器请求服务时，只需传送请求方法和路径。请求方法常用的有GET、HEAD、POST。每种方法规定了客户与服务器联系的类型不同。由于HTTP协议简单，使得HTTP服务器的程序规模小，因而通信速度很快。</p>
+<p>2、灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由Content-Type加以标记。</p>
+<p>3.无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</p>
+<p>4.无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。<br>
+5、支持B/S及C/S模式。</p>
+<h1>HTTP之URL</h1>
+<p>HTTP使用统一资源标识符（Uniform Resource Identifiers, URI）来传输数据和建立连接。URL是一种特殊类型的URI，包含了用于查找某个资源的足够的信息</p>
+<p>URL,全称是UniformResourceLocator, 中文叫统一资源定位符,是互联网上用来标识某一处资源的地址。以下面这个URL为例，介绍下普通URL的各部分组成：</p>
+<h4><a href="https://link.jianshu.com/?t=http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name" target="_blank" rel="nofollow">http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name</a></h4>
+<p>从上面的URL可以看出，一个完整的URL包括以下几部分：<br>
+1.协议部分：该URL的协议部分为“http：”，这代表网页使用的是HTTP协议。在Internet中可以使用多种协议，如HTTP，FTP等等本例中使用的是HTTP协议。在"HTTP"后面的“//”为分隔符</p>
+<p>2.域名部分：该URL的域名部分为“<a href="https://link.jianshu.com/?t=http://www.aspxfans.com" target="_blank" rel="nofollow">www.aspxfans.com</a>”。一个URL中，也可以使用IP地址作为域名使用</p>
+<p>3.端口部分：跟在域名后面的是端口，域名和端口之间使用“:”作为分隔符。端口不是一个URL必须的部分，如果省略端口部分，将采用默认端口</p>
+<p>4.虚拟目录部分：从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”</p>
+<p>5.文件名部分：从域名后的最后一个“/”开始到“？”为止，是文件名部分，如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名</p>
+<p>6.锚部分：从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分</p>
+<p>7.参数部分：从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。本例中的参数部分为“boardID=5&amp;ID=24618&amp;page=1”。参数可以允许有多个参数，参数与参数之间用“&amp;”作为分隔符。</p>
+<p>（原文：<a href="https://link.jianshu.com/?t=http://blog.csdn.net/ergouge/article/details/8185219" target="_blank" rel="nofollow">http://blog.csdn.net/ergouge/article/details/8185219</a> ）</p>
+<h1>URI和URL的区别</h1>
+<h5>URI，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。</h5>
+<p>Web上可用的每种资源如HTML文档、图像、视频片段、程序等都是一个来URI来定位的<br>
+URI一般由三部组成：<br>
+①访问资源的命名机制<br>
+②存放资源的主机名<br>
+③资源自身的名称，由路径表示，着重强调于资源。</p>
+<h5>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。</h5>
+<p>URL是Internet上用来描述信息资源的字符串，主要用在各种WWW客户程序和服务器程序上，特别是著名的Mosaic。<br>
+采用URL可以用一种统一的格式来描述各种信息资源，包括文件、服务器的地址和目录等。URL一般由三部组成：<br>
+①协议(或称为服务方式)<br>
+②存有该资源的主机IP地址(有时也包括端口号)<br>
+③主机资源的具体地址。如目录和文件名等</p>
+<h5>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如<a href="https://link.jianshu.com/?t=mailto:java-net@java.sun.com" target="_blank" rel="nofollow">mailto:java-net@java.sun.com</a>。</h5>
+<p>URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。笼统地说，每个 URL 都是 URI，但不一定每个 URI 都是 URL。这是因为 URI 还包括一个子类，即统一资源名称 (URN)，它命名资源但不指定如何定位资源。上面的 mailto、news 和 isbn URI 都是 URN 的示例。</p>
+<p>在Java的URI中，一个URI实例可以代表绝对的，也可以是相对的，只要它符合URI的语法规则。而URL类则不仅符合语义，还包含了定位该资源的信息，因此它不能是相对的。<br>
+在Java类库中，URI类不包含任何访问资源的方法，它唯一的作用就是解析。<br>
+相反的是，URL类可以打开一个到达资源的流。</p>
+<h1>HTTP之请求消息Request</h1>
+<p>客户端发送一个HTTP请求到服务器的请求消息包括以下格式：</p>
+<h5>请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。</h5>
+<p>&lt;br /&gt;</p>
+<br>
+<div class="image-package">
+<div class="image-container" style="max-width: 466px; max-height: 165px; background-color: transparent;">
+<div class="image-container-fill" style="padding-bottom: 35.410000000000004%;"></div>
+<div class="image-view" data-width="466" data-height="165"><img data-original-src="//upload-images.jianshu.io/upload_images/2964446-fdfb1a8fce8de946.png" data-original-width="466" data-original-height="165" data-original-format="image/png" data-original-filesize="10145" style="cursor: zoom-in;" class="" src="./关于HTTP协议，一篇就够了 - 简书_files/2964446-fdfb1a8fce8de946.png"></div>
+</div>
+<div class="image-caption">Http请求消息结构.png</div>
+</div>
+<ul>
+<li>请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本。</li>
+</ul>
+<h5>Get请求例子，使用Charles抓取的request：</h5>
+<pre class="hljs undefined"><code>GET /562f25980001b1b106000338.jpg HTTP/1.1
+Host    img.mukewang.com
+User-Agent  Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36
+Accept  image/webp,image/*,*/*;q=0.8
+Referer http://www.imooc.com/
+Accept-Encoding gzip, deflate, sdch
+Accept-Language zh-CN,zh;q=0.8
+
+</code></pre>
+<h5>第一部分：请求行，用来说明请求类型,要访问的资源以及所使用的HTTP版本.</h5>
+<p>GET说明请求类型为GET,[/562f25980001b1b106000338.jpg]为要访问的资源，该行的最后一部分说明使用的是HTTP1.1版本。</p>
+<h5>第二部分：请求头部，紧接着请求行（即第一行）之后的部分，用来说明服务器要使用的附加信息</h5>
+<p>从第二行起为请求头部，HOST将指出请求的目的地.User-Agent,服务器端和客户端脚本都能访问它,它是浏览器类型检测逻辑的重要基础.该信息由你的浏览器来定义,并且在每个请求中自动发送等等</p>
+<h5>第三部分：空行，请求头部后面的空行是必须的</h5>
+<p>即使第四部分的请求数据为空，也必须有空行。</p>
+<h5>第四部分：请求数据也叫主体，可以添加任意的其他数据。</h5>
+<p>这个例子的请求数据为空。</p>
+<h5>POST请求例子，使用Charles抓取的request：</h5>
+<pre class="hljs undefined"><code>POST / HTTP1.1
+Host:www.wrox.com
+User-Agent:Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)
+Content-Type:application/x-www-form-urlencoded
+Content-Length:40
+Connection: Keep-Alive
+
+name=Professional%20Ajax&amp;publisher=Wiley
+</code></pre>
+<p>第一部分：请求行，第一行明了是post请求，以及http1.1版本。<br>
+第二部分：请求头部，第二行至第六行。<br>
+第三部分：空行，第七行的空行。<br>
+第四部分：请求数据，第八行。</p>
+<h1>HTTP之响应消息Response</h1>
+<p>一般情况下，服务器接收并处理客户端发过来的请求后会返回一个HTTP的响应消息。</p>
+<h5>HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。</h5>
+<p>&lt;br /&gt;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 683px; max-height: 305px; background-color: transparent;">
+<div class="image-container-fill" style="padding-bottom: 44.66%;"></div>
+<div class="image-view" data-width="683" data-height="305"><img data-original-src="//upload-images.jianshu.io/upload_images/2964446-1c4cab46f270d8ee.jpg" data-original-width="683" data-original-height="305" data-original-format="image/jpeg" data-original-filesize="36691" style="cursor: zoom-in;" class="" src="./关于HTTP协议，一篇就够了 - 简书_files/2964446-1c4cab46f270d8ee.jpg"></div>
+</div>
+<div class="image-caption">http响应消息格式.jpg</div>
+</div>
+<p><strong>例子</strong></p>
+<pre class="hljs undefined"><code>HTTP/1.1 200 OK
+Date: Fri, 22 May 2009 06:07:21 GMT
+Content-Type: text/html; charset=UTF-8
+
+&lt;html&gt;
+      &lt;head&gt;&lt;/head&gt;
+      &lt;body&gt;
+            &lt;!--body goes here--&gt;
+      &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h5>第一部分：状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</h5>
+<p>第一行为状态行，（HTTP/1.1）表明HTTP版本为1.1版本，状态码为200，状态消息为（ok）</p>
+<h5>第二部分：消息报头，用来说明客户端要使用的一些附加信息</h5>
+<p>第二行和第三行为消息报头，<br>
+Date:生成响应的日期和时间；Content-Type:指定了MIME类型的HTML(text/html),编码类型是UTF-8</p>
+<h5>第三部分：空行，消息报头后面的空行是必须的</h5>
+<h5>第四部分：响应正文，服务器返回给客户端的文本信息。</h5>
+<p>空行后面的html部分为响应正文。</p>
+<h1>HTTP之状态码</h1>
+<p>状态代码有三位数字组成，第一个数字定义了响应的类别，共分五种类别:</p>
+<h6>1xx：指示信息--表示请求已接收，继续处理</h6>
+<h6>2xx：成功--表示请求已被成功接收、理解、接受</h6>
+<h6>3xx：重定向--要完成请求必须进行更进一步的操作</h6>
+<h6>4xx：客户端错误--请求有语法错误或请求无法实现</h6>
+<h6>5xx：服务器端错误--服务器未能实现合法的请求</h6>
+<p>常见状态码：</p>
+<pre class="hljs undefined"><code>200 OK                        //客户端请求成功
+400 Bad Request               //客户端请求有语法错误，不能被服务器所理解
+401 Unauthorized              //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用 
+403 Forbidden                 //服务器收到请求，但是拒绝提供服务
+404 Not Found                 //请求资源不存在，eg：输入了错误的URL
+500 Internal Server Error     //服务器发生不可预期的错误
+503 Server Unavailable        //服务器当前不能处理客户端的请求，一段时间后可能恢复正常
+</code></pre>
+<p>更多状态码<a href="https://link.jianshu.com/?t=http://www.runoob.com/http/http-status-codes.html" target="_blank" rel="nofollow">http://www.runoob.com/http/http-status-codes.html</a></p>
+<h1>HTTP请求方法</h1>
+<p>根据HTTP标准，HTTP请求可以使用多种请求方法。<br>
+HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。<br>
+HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。</p>
+<pre class="hljs undefined"><code>GET  请求指定的页面信息，并返回实体主体。
+HEAD     类似于get请求，只不过返回的响应中没有具体的内容，用于获取报头
+POST     向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。
+PUT  从客户端向服务器传送的数据取代指定的文档的内容。
+DELETE   请求服务器删除指定的页面。
+CONNECT  HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。
+OPTIONS  允许客户端查看服务器的性能。
+TRACE    回显服务器收到的请求，主要用于测试或诊断。
+</code></pre>
+<h1>HTTP工作原理</h1>
+<p>HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。</p>
+<p>以下是 HTTP 请求/响应的步骤：</p>
+<h6>1、客户端连接到Web服务器</h6>
+<p>一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80）建立一个TCP套接字连接。例如，<a href="https://link.jianshu.com/?t=http://www.oakcms.cn" target="_blank" rel="nofollow">http://www.oakcms.cn</a>。</p>
+<h6>2、发送HTTP请求</h6>
+<p>通过TCP套接字，客户端向Web服务器发送一个文本的请求报文，一个请求报文由请求行、请求头部、空行和请求数据4部分组成。</p>
+<h6>3、服务器接受请求并返回HTTP响应</h6>
+<p>Web服务器解析请求，定位请求资源。服务器将资源复本写到TCP套接字，由客户端读取。一个响应由状态行、响应头部、空行和响应数据4部分组成。</p>
+<h6>4、释放连接<a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP连接</a>
+</h6>
+<p>若connection 模式为close，则服务器主动关闭<a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP连接</a>，客户端被动关闭连接，释放<a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP连接</a>;若connection 模式为keepalive，则该连接会保持一段时间，在该时间内可以继续接收请求;</p>
+<h6>5、客户端浏览器解析HTML内容</h6>
+<p>客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取响应数据HTML，根据HTML的语法对其进行格式化，并在浏览器窗口中显示。</p>
+<p>例如：在浏览器地址栏键入URL，按下回车之后会经历以下流程：</p>
+<p>1、浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址;</p>
+<p>2、解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立<a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP连接</a>;</p>
+<p>3、浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 <a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP 三次握手</a>的第三个报文的数据发送给服务器;</p>
+<p>4、服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器;</p>
+<p>5、释放 <a href="https://www.jianshu.com/p/ef892323e68f" target="_blank">TCP连接</a>;</p>
+<p>6、浏览器将该 html 文本并显示内容;</p>
+<h1>GET和POST请求的区别</h1>
+<h6>GET请求</h6>
+<pre class="hljs undefined"><code>GET /books/?sex=man&amp;name=Professional HTTP/1.1
+Host: www.wrox.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)
+Gecko/20050225 Firefox/1.0.1
+Connection: Keep-Alive
+
+</code></pre>
+<p>注意最后一行是空行</p>
+<h6>POST请求</h6>
+<pre class="hljs undefined"><code>POST / HTTP/1.1
+Host: www.wrox.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)
+Gecko/20050225 Firefox/1.0.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 40
+Connection: Keep-Alive
+
+name=Professional%20Ajax&amp;publisher=Wiley
+</code></pre>
+<p>1、GET提交，请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以?分割URL和传输数据，多个参数用&amp;连接；例 如：login.action?name=hyddd&amp;password=idontknow&amp;verify=%E4%BD%A0 %E5%A5%BD。如果数据是英文字母/数字，原样发送，如果是空格，转换为+，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如： %E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。</p>
+<p>POST提交：把提交的数据放置在是HTTP包的包体中。上文示例中红色字体标明的就是实际的传输数据</p>
+<h6>因此，GET提交的数据会在地址栏中显示出来，而POST提交，地址栏不会改变</h6>
+<p>2、传输数据的大小：首先声明：HTTP协议没有对传输的数据大小进行限制，HTTP协议规范也没有对URL长度进行限制。</p>
+<p>而在实际开发中存在的限制主要有：</p>
+<p><strong>GET</strong>:特定浏览器和服务器对URL长度有限制，例如 IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系 统的支持。</p>
+<p>因此对于GET提交时，传输数据就会受到URL长度的 限制。</p>
+<p><strong>POST</strong>:由于不是通过URL传值，理论上数据不受 限。但实际各个WEB服务器会规定对post提交数据大小进行限制，Apache、IIS6都有各自的配置。</p>
+<p>3、安全性</p>
+<p>POST的安全性要比GET的安全性高。比如：通过GET提交数据，用户名和密码将明文出现在URL上，因为(1)登录页面有可能被浏览器缓存；(2)其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-site request forgery攻击</p>
+<p>4、Http get,post,soap协议都是在http上运行的</p>
+<p>（1）get：请求参数是作为一个key/value对的序列（查询字符串）附加到URL上的<br>
+查询字符串的长度受到web浏览器和web服务器的限制（如IE最多支持2048个字符），不适合传输大型数据集同时，它很不安全</p>
+<p>（2）post：请求参数是在http标题的一个不同部分（名为entity body）传输的，这一部分用来传输表单信息，因此必须将Content-type设置为:application/x-www-form- urlencoded。post设计用来支持web窗体上的用户字段，其参数也是作为key/value对传输。<br>
+但是：它不支持复杂数据类型，因为post没有定义传输数据结构的语义和规则。</p>
+<p>（3）soap：是http post的一个专用版本，遵循一种特殊的xml消息格式<br>
+Content-type设置为: text/xml   任何数据都可以xml化。</p>
+<p>Http协议定义了很多与服务器交互的方法，最基本的有4种，分别是GET,POST,PUT,DELETE. 一个URL地址用于描述一个网络上的资源，而HTTP中的GET, POST, PUT, DELETE就对应着对这个资源的查，改，增，删4个操作。 我们最常见的就是GET和POST了。GET一般用于获取/查询资源信息，而POST一般用于更新资源信息.</p>
+<p>我们看看GET和POST的区别</p>
+<ol>
+<li><p>GET提交的数据会放在URL之后，以?分割URL和传输数据，参数之间以&amp;相连，如EditPosts.aspx?name=test1&amp;id=123456.  POST方法是把提交的数据放在HTTP包的Body中.</p></li>
+<li><p>GET提交的数据大小有限制（因为浏览器对URL的长度有限制），而POST方法提交的数据没有限制.</p></li>
+<li><p>GET方式需要使用Request.QueryString来取得变量的值，而POST方式通过Request.Form来获取变量的值。</p></li>
+<li><p>GET方式提交数据，会带来安全问题，比如一个登录页面，通过GET方式提交数据时，用户名和密码将出现在URL上，如果页面可以被缓存或者其他人可以访问这台机器，就可以从历史记录获得该用户的账号和密码.</p></li>
+</ol>
+
+        </div>
+        <!--  -->
+
+        <div class="show-foot">
+          <a class="notebook" href="http://www.jianshu.com/nb/6799314">
+            <i class="iconfont ic-search-notebook"></i>
+            <span>Android知识点</span>
+</a>          <div class="copyright" data-toggle="tooltip" data-html="true" data-original-title="转载请联系作者获得授权，并标注“简书作者”。">
+            © 著作权归作者所有
+          </div>
+          <div class="modal-wrap" data-report-note="">
+            <a id="report-modal">举报文章</a>
+          </div>
+        </div>
+    </div>
+
+    <!-- 文章底部作者信息 -->
+      <div class="follow-detail">
+        <div class="info">
+          <a class="avatar" href="http://www.jianshu.com/u/6b5e6dce74c5">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/403680bf739b.jpg" alt="96">
+</a>          <a class="btn btn-success follow"><i class="iconfont ic-follow"></i><span>关注</span></a>
+          <a class="title" href="http://www.jianshu.com/u/6b5e6dce74c5">RaphetS</a>
+          
+        <p>写了 16204 字，被 311 人关注，获得了 867 个喜欢</p></div>
+      </div>
+
+      <div class="support-author"><p>小礼物走一走，来简书关注我</p> <div class="btn btn-pay">赞赏支持</div> <div class="supporter"><ul class="support-list"><li><a target="_blank" href="http://www.jianshu.com/u/c660d8321a5e" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/13cb3eda4817"></a></li></ul> <!----></div> <!----> <!----></div>
+
+    <div class="meta-bottom">
+      <div class="like"><div class="btn like-group"><div class="btn-like"><a href="http://www.jianshu.com/sign_in?utm_source=desktop&amp;utm_medium=not-signed-in-like-button"><i class="iconfont ic-like"></i>喜欢</a></div> <div class="modal-wrap"><a>275</a></div></div> <!----></div>
+      <div class="share-group">
+        <a class="share-circle" data-action="weixin-share" data-toggle="tooltip" data-original-title="分享到微信">
+          <i class="iconfont ic-wechat"></i>
+        </a>
+        <a class="share-circle" data-action="weibo-share" data-toggle="tooltip" href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f=&#39;http://v.t.sina.com.cn/share/share.php?appkey=1881139527&#39;,u=z||d.location,p=[&#39;&amp;url=&#39;,e(u),&#39;&amp;title=&#39;,e(t||d.title),&#39;&amp;source=&#39;,e(r),&#39;&amp;sourceUrl=&#39;,e(l),&#39;&amp;content=&#39;,c||&#39;gb2312&#39;,&#39;&amp;pic=&#39;,e(p||&#39;&#39;)].join(&#39;&#39;);function%20a(){if(!window.open([f,p].join(&#39;&#39;),&#39;mb&#39;,[&#39;toolbar=0,status=0,resizable=1,width=440,height=430,left=&#39;,(s.width-440)/2,&#39;,top=&#39;,(s.height-430)/2].join(&#39;&#39;)))u.href=[f,p].join(&#39;&#39;);};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,&#39;&#39;,&#39;&#39;,&#39;&#39;, &#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》（ 分享自 @简书 ）&#39;,&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weibo&#39;,&#39;页面编码gb2312|utf-8默认gb2312&#39;));" data-original-title="分享到微博">
+          <i class="iconfont ic-weibo"></i>
+        </a>
+          <a class="share-circle" data-toggle="tooltip" href="http://cwb.assets.jianshu.io/notes/images/6291468/weibo/image_31518e05d1cd.jpg" target="_blank" data-original-title="下载长微博图片">
+            <i class="iconfont ic-picture"></i>
+          </a>
+        <a class="share-circle more-share" tabindex="0" data-toggle="popover" data-placement="top" data-html="true" data-trigger="focus" href="javascript:void(0);" data-content="
+          &lt;ul class=&quot;share-list&quot;&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qzone&#39;)+&#39;&amp;title=&#39;+e(&#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》&#39;),x=function(){if(!window.open(r,&#39;qzone&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-zone&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到QQ空间&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://twitter.com/share?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=twitter&#39;)+&#39;&amp;text=&#39;+e(&#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》（ 分享自 @jianshucom ）&#39;)+&#39;&amp;related=&#39;+e(&#39;jianshucom&#39;),x=function(){if(!window.open(r,&#39;twitter&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-twitter&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Twitter&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://www.facebook.com/dialog/share?app_id=483126645039390&amp;display=popup&amp;href=http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=facebook&#39;,x=function(){if(!window.open(r,&#39;facebook&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-facebook&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Facebook&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://plus.google.com/share?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=google_plus&#39;),x=function(){if(!window.open(r,&#39;google_plus&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-google&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到Google+&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,s1=window.getSelection,s2=d.getSelection,s3=d.selection,s=s1?s1():s2?s2():s3?s3.createRange().text:&#39;&#39;,r=&#39;http://www.douban.com/recommend/?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=douban&#39;)+&#39;&amp;title=&#39;+e(&#39;关于HTTP协议，一篇就够了&#39;)+&#39;&amp;sel=&#39;+e(s)+&#39;&amp;v=1&#39;,x=function(){if(!window.open(r,&#39;douban&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r+&#39;&amp;r=1&#39;};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})()&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-douban&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到豆瓣&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        " data-original-title="" title="">更多分享</a>
+      </div>
+    </div>
+      <a id="web-note-ad-1" target="_blank" href="http://www.jianshu.com/apps/download?utm_source=nbc"><img src="./关于HTTP协议，一篇就够了 - 简书_files/web-note-ad-1-10f08e404d3887d2d45a4bc8f1831403.png" alt="Web note ad 1"></a>
+    <div><div id="comment-list" class="comment-list"><div><form class="new-comment"><a class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/avatar_default-78d4d1f68984cd6d4379508dd94b4210.png"></a> <div class="sign-container"><a href="http://www.jianshu.com/sign_in?utm_source=desktop&amp;utm_medium=not-signed-in-comment-form" class="btn btn-sign">登录</a> <span>后发表评论</span></div></form> <!----></div> <div id="normal-comment-list" class="normal-comment-list"><div><div><div class="top-title"><span>36条评论</span> <a class="author-only">只看作者</a> <a class="close-btn" style="display: none;">关闭评论</a> <div class="pull-right"><a class="active">按喜欢排序</a><a class="">按时间正序</a><a class="">按时间倒序</a></div></div></div> <!----> <!----> <div class="comments-placeholder" style="display: none;"><div class="author"><div class="avatar"></div> <div class="info"><div class="name"></div> <div class="meta"></div></div></div> <div class="text"></div> <div class="text animation-delay"></div> <div class="tool-group"><i class="iconfont ic-zan-active"></i><div class="zan"></div> <i class="iconfont ic-list-comments"></i><div class="zan"></div></div></div> <div id="comment-4788971" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/e1fed0fb341b" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/a159a302-7f09-495a-9082-d34c843ad788.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/e1fed0fb341b" target="_blank" class="name">xiasuhuei321</a> <!----> <!----> <div class="meta"><span>2楼 · 2016.10.13 07:21</span></div></div></div> <div class="comment-wrap"><p>get提交的原来会放在url后面，涨姿势了</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>1人赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list"><div id="comment-5041385" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/2144f90c296f" target="_blank">CodingShell</a>：
+            </div> <!----></div> <span><a href="http://www.jianshu.com/users/e1fed0fb341b" class="maleskine-author" target="_blank" data-user-slug="e1fed0fb341b">@xiasuhuei321</a>  学名叫做querystring</span></p> <div class="sub-tool-group"><span>2016.10.23 12:21</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div> <div class="sub-comment more-comment"><a class="add-comment-btn"><i class="iconfont ic-subcomment"></i> <span>添加新评论</span></a> <!----> <!----> <!----></div> <!----></div></div><div id="comment-4791325" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/3974ab7605b8" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/065631850648.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/3974ab7605b8" target="_blank" class="name">Zack_zhou</a> <!----> <!----> <div class="meta"><span>5楼 · 2016.10.13 09:19</span></div></div></div> <div class="comment-wrap"><p>讲URL最后贴的那个连接最后面多了一个“）”，导致连接失效了</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>1人赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4949153" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/42d17c7f191c" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/13-394c31a9cb492fcb39c27422ca7d2815.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/42d17c7f191c" target="_blank" class="name">阿水哥哥</a> <!----> <!----> <div class="meta"><span>12楼 · 2016.10.19 14:51</span></div></div></div> <div class="comment-wrap"><p>点个喜欢, 希望对查询Http资料的人能做点事.呵呵...</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>1人赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4972784" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/c660d8321a5e" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/13cb3eda4817(1)"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/c660d8321a5e" target="_blank" class="name">Samuel_Liu</a> <!----> <!----> <div class="meta"><span>17楼 · 2016.10.20 11:49</span></div></div></div> <div class="comment-wrap"><p>讲HTTP协议最好的博客！ <img src="./关于HTTP协议，一篇就够了 - 简书_files/+1.png" alt=":+1:" title=":+1:" class="emoji" width="20" height="20"> </p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>1人赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-17131928" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/c7346f8f16ec" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/00e32094061f"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/c7346f8f16ec" target="_blank" class="name">oneeno</a> <!----> <!----> <div class="meta"><span>32楼 · 2017.11.08 16:01</span></div></div></div> <div class="comment-wrap"><p>文章有点旧了,有些地方不是很正确, 特别是get和post区别那块, 容易误导人.</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>1人赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list"><div id="comment-17848300" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/37f1904d59fa" target="_blank">Zzzzzz_a7c1</a>：
+            </div> <!----></div> <span>同感</span></p> <div class="sub-tool-group"><span>2017.11.27 15:43</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div> <div class="sub-comment more-comment"><a class="add-comment-btn"><i class="iconfont ic-subcomment"></i> <span>添加新评论</span></a> <!----> <!----> <!----></div> <!----></div></div><div id="comment-4789217" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/12215a28627f" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/b2152cea14ce.jpeg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/12215a28627f" target="_blank" class="name">Hero_here</a> <!----> <!----> <div class="meta"><span>3楼 · 2016.10.13 07:38</span></div></div></div> <div class="comment-wrap"><p>一篇不够啊，再来一篇</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4791545" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/bf30f18c872c" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/9774c6e7-4771-423d-bbda-d82966131b8d.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/bf30f18c872c" target="_blank" class="name">王一航</a> <!----> <!----> <div class="meta"><span>6楼 · 2016.10.13 09:28</span></div></div></div> <div class="comment-wrap"><p>收藏啦 , 写的真好</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list"><div id="comment-4797672" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/6b5e6dce74c5" target="_blank">RaphetS</a>：
+            </div> <!----></div> <span> <a href="http://www.jianshu.com/users/bf30f18c872c" class="maleskine-author" target="_blank" data-user-slug="bf30f18c872c">@王一航</a> 谢谢支持</span></p> <div class="sub-tool-group"><span>2016.10.13 13:57</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div> <div class="sub-comment more-comment"><a class="add-comment-btn"><i class="iconfont ic-subcomment"></i> <span>添加新评论</span></a> <!----> <!----> <!----></div> <!----></div></div><div id="comment-4797302" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/c3c4ea133871" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/3c81ff48a1d0.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/c3c4ea133871" target="_blank" class="name">Alex_Cin</a> <!----> <!----> <div class="meta"><span>7楼 · 2016.10.13 13:36</span></div></div></div> <div class="comment-wrap"><p>楼主好厉害！！！</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list"><div id="comment-4797670" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/6b5e6dce74c5" target="_blank">RaphetS</a>：
+            </div> <!----></div> <span> <a href="http://www.jianshu.com/users/c3c4ea133871" class="maleskine-author" target="_blank" data-user-slug="c3c4ea133871">@Alex_Cin</a> 谢谢支持</span></p> <div class="sub-tool-group"><span>2016.10.13 13:57</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div> <div class="sub-comment more-comment"><a class="add-comment-btn"><i class="iconfont ic-subcomment"></i> <span>添加新评论</span></a> <!----> <!----> <!----></div> <!----></div></div><div id="comment-4811370" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/8e2a32cac72e" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/308be1cc-262e-47e4-a3f6-f5834c21ce4c.png"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/8e2a32cac72e" target="_blank" class="name">_RANGO</a> <!----> <!----> <div class="meta"><span>8楼 · 2016.10.13 23:26</span></div></div></div> <div class="comment-wrap"><p>最近正在整理</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4811787" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/205e82367db2" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/198353daea98.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/205e82367db2" target="_blank" class="name">tpkeeper</a> <!----> <!----> <div class="meta"><span>9楼 · 2016.10.13 23:43</span></div></div></div> <div class="comment-wrap"><p>再来一篇</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4813146" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/661bd92786ee" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/747cd5630abe.jpeg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/661bd92786ee" target="_blank" class="name">tigerkint</a> <!----> <!----> <div class="meta"><span>10楼 · 2016.10.14 04:44</span></div></div></div> <div class="comment-wrap"><p>分析的很详细，请问如果是Android请求网络用post方式如何传参数呢？不能放在URL里面的话？</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list"><div id="comment-4865538" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/e8ca5804ec5a" target="_blank">骑士小子12</a>：
+            </div> <!----></div> <span><a href="http://www.jianshu.com/users/661bd92786ee" class="maleskine-author" target="_blank" data-user-slug="661bd92786ee">@tigerkint</a> 可以将参数封装成对象parmers，然后提交的时候，面向这个parmers就行</span></p> <div class="sub-tool-group"><span>2016.10.16 10:47</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div><div id="comment-4971283" class="sub-comment"><p><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/2ef944aafef7" target="_blank">叮宕</a>：
+            </div> <!----></div> <span><a href="http://www.jianshu.com/users/661bd92786ee" class="maleskine-author" target="_blank" data-user-slug="661bd92786ee">@tigerkint</a> 安卓和java一样，还是用流，分为输入流与输出流，把参数变成字节流然后装饰到输出流，再从输入流或取反馈。</span></p> <div class="sub-tool-group"><span>2016.10.20 10:46</span> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div> <div class="sub-comment more-comment"><a class="add-comment-btn"><i class="iconfont ic-subcomment"></i> <span>添加新评论</span></a> <!----> <!----> <!----></div> <!----></div></div><div id="comment-4865568" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/e8ca5804ec5a" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/5a04650938cf.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/e8ca5804ec5a" target="_blank" class="name">骑士小子12</a> <!----> <!----> <div class="meta"><span>11楼 · 2016.10.16 10:49</span></div></div></div> <div class="comment-wrap"><p>一次http请求结束之后，如果还是保持keep_alive那么tcp就不会断开，那么这个tcp一直保持连接的时间会是多长</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4971234" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/2ef944aafef7" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/d3529a240f8e.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/2ef944aafef7" target="_blank" class="name">叮宕</a> <!----> <!----> <div class="meta"><span>13楼 · 2016.10.20 10:44</span></div></div></div> <div class="comment-wrap"><p>作者有空，可以再写篇restful api相关</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4971427" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/13bf8eccdc99" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/d04df90cee8d.jpg"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/13bf8eccdc99" target="_blank" class="name">爱阿爸的阿龙龙</a> <!----> <!----> <div class="meta"><span>14楼 · 2016.10.20 10:52</span></div></div></div> <div class="comment-wrap"><p>有https的么？</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div><div id="comment-4971626" class="comment"><div><div class="author"><div data-v-f3bf5228="" class="v-tooltip-container" style="z-index: 0;"><div class="v-tooltip-content"><a href="http://www.jianshu.com/u/a64a241d7cec" target="_blank" class="avatar"><img src="./关于HTTP协议，一篇就够了 - 简书_files/c0952e1eb67e"></a>  </div> <!----></div> <div class="info"><a href="http://www.jianshu.com/u/a64a241d7cec" target="_blank" class="name">champer</a> <!----> <!----> <div class="meta"><span>15楼 · 2016.10.20 10:59</span></div></div></div> <div class="comment-wrap"><p>get</p> <div class="tool-group"><a class=""><i class="iconfont ic-zan"></i> <span>赞</span></a> <a class=""><i class="iconfont ic-comment"></i> <span>回复</span></a> <!----> <!----></div></div></div> <div class="sub-comment-list hide"><!----> <!----></div></div></div></div> <!----> <div><ul class="pagination"><!---->  <li><a href="javascript:void(null)" class="active">1</a></li> <li><a>2</a></li> <li><a>下一页</a></li></ul></div></div></div>
+  </div>
+
+  <div class="side-tool"><ul><li data-placement="left" data-toggle="tooltip" data-container="body" data-original-title="回到顶部"><a class="function-button"><i class="iconfont ic-backtop"></i></a></li> <!----> <!----> <li data-placement="left" data-toggle="tooltip" data-container="body" data-original-title="分享文章"><a tabindex="0" role="button" data-toggle="popover" data-placement="left" data-html="true" data-trigger="focus" href="javascript:void(0);" data-content="&lt;ul class=&#39;share-list&#39;&gt;
+                &lt;li&gt;&lt;a class=&quot;weixin-share&quot;&gt;&lt;i class=&quot;social-icon-sprite social-icon-weixin&quot;&gt;&lt;/i&gt;&lt;span&gt;分享到微信&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f=&#39;http://v.t.sina.com.cn/share/share.php?appkey=1881139527&#39;,u=z||d.location,p=[&#39;&amp;url=&#39;,e(u),&#39;&amp;title=&#39;,e(t||d.title),&#39;&amp;source=&#39;,e(r),&#39;&amp;sourceUrl=&#39;,e(l),&#39;&amp;content=&#39;,c||&#39;gb2312&#39;,&#39;&amp;pic=&#39;,e(p||&#39;&#39;)].join(&#39;&#39;);function%20a(){if(!window.open([f,p].join(&#39;&#39;),&#39;mb&#39;,[&#39;toolbar=0,status=0,resizable=1,width=440,height=430,left=&#39;,(s.width-440)/2,&#39;,top=&#39;,(s.height-430)/2].join(&#39;&#39;)))u.href=[f,p].join(&#39;&#39;);};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,&#39;&#39;,&#39;&#39;,&#39;&#39;, &#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》（ 分享自 @简书 ）&#39;,&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weibo&#39;,&#39;页面编码gb2312|utf-8默认gb2312&#39;));&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-weibo&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到微博&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                
+                &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qzone&#39;)+&#39;&amp;title=&#39;+e(&#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》&#39;),x=function(){if(!window.open(r,&#39;qzone&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-zone&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到QQ空间&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://twitter.com/share?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=twitter&#39;)+&#39;&amp;text=&#39;+e(&#39;推荐 RaphetS 的文章《关于HTTP协议，一篇就够了》（ 分享自 @jianshucom ）&#39;)+&#39;&amp;related=&#39;+e(&#39;jianshucom&#39;),x=function(){if(!window.open(r,&#39;twitter&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=600,height=600&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-twitter&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Twitter&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://www.facebook.com/dialog/share?app_id=483126645039390&amp;display=popup&amp;href=http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=facebook&#39;,x=function(){if(!window.open(r,&#39;facebook&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-facebook&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Facebook&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,r=&#39;https://plus.google.com/share?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=google_plus&#39;),x=function(){if(!window.open(r,&#39;google_plus&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})();&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-google&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到Google+&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:void(function(){var d=document,e=encodeURIComponent,s1=window.getSelection,s2=d.getSelection,s3=d.selection,s=s1?s1():s2?s2():s3?s3.createRange().text:&#39;&#39;,r=&#39;http://www.douban.com/recommend/?url=&#39;+e(&#39;http://www.jianshu.com/p/80e25cb1d81a?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=douban&#39;)+&#39;&amp;title=&#39;+e(&#39;关于HTTP协议，一篇就够了&#39;)+&#39;&amp;sel=&#39;+e(s)+&#39;&amp;v=1&#39;,x=function(){if(!window.open(r,&#39;douban&#39;,&#39;toolbar=0,resizable=1,scrollbars=yes,status=1,width=450,height=330&#39;))location.href=r+&#39;&amp;r=1&#39;};if(/Firefox/.test(navigator.userAgent)){setTimeout(x,0)}else{x()}})()&quot;&gt;&lt;i class=&#39;social-icon-sprite social-icon-douban&#39;&gt;&lt;/i&gt;&lt;span&gt;分享到豆瓣&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;" data-original-title="" title="" class="function-button"><i class="iconfont ic-share"></i></a> <!----></li> <!----></ul></div>
+</div>
+<div class="note-bottom">
+  <div><div class="main"><div class="title">被以下专题收入，发现更多相似内容</div> <!----> <div class="include-collection"><!----> <a href="http://www.jianshu.com/c/3fde3b545a35?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/android.graphics.Bitmap_3d178cba.jpeg"><div class="name">Android知识</div></a><a href="http://www.jianshu.com/c/a91556d96768?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/android.graphics.Bitmap_3dee6d40.jpeg"><div class="name">android...</div></a><a href="http://www.jianshu.com/c/a4477647fe99?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/IMG_0008.JPG"><div class="name">Android大法好</div></a><a href="http://www.jianshu.com/c/5139d555c94d?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/1416528891_3612.png"><div class="name">Android...</div></a><a href="http://www.jianshu.com/c/07c623fe0fed?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/android.graphics.Bitmap_4391fcf0.jpeg"><div class="name">Java知识</div></a><a href="http://www.jianshu.com/c/d1591c322c89?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/android.graphics.Bitmap_15f127c2.jpeg"><div class="name">Android开发</div></a><a href="http://www.jianshu.com/c/NEt52a?utm_source=desktop&amp;utm_medium=notes-included-collection" target="_blank" class="item"><img src="./关于HTTP协议，一篇就够了 - 简书_files/computer_guy.jpg"><div class="name">程序员</div></a> <a class="show-more">
+        展开更多
+        <i class="iconfont ic-show"></i></a></div></div> <!----> <!----></div>
+  <div data-vcomp="recommended-notes" data-note-id="6291468"></div>
+  <!-- 相关文章 -->
+  <div class="seo-recommended-notes">
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/1f7da85b0aab?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/2964446-1c4cab46f270d8ee(1).jpg" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/1f7da85b0aab?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">【转】关于HTTP协议，一篇就够了</a>
+          <p class="description">原文链接：http://www.jianshu.com/p/80e25cb1d81a HTTP简介 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/2e5315d47fae?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/4f20ba97-cf5b-4347-a8c9-2eba38391b41.jpg" alt="48">
+            </div>
+            <span class="name">悬笔e绝</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="http://www.jianshu.com/p/f93e183fb523?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">关于HTTP协议，一篇就够了</a>
+          <p class="description">HTTP简介 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。 HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件,...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/078dd34b19d0?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/14-0651acff782e7a18653d7530d6b27661.jpg" alt="48">
+            </div>
+            <span class="name">加油小杜</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/46fd0faecac1?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/7328262-54f7992145380c10.png" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/46fd0faecac1?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">Spring Cloud</a>
+          <p class="description">Spring Cloud为开发人员提供了快速构建分布式系统中一些常见模式的工具（例如配置管理，服务发现，断路器，智能路由，微代理，控制总线）。分布式系统的协调导致了样板模式, 使用Spring Cloud开发人员可以快速地支持实现这些模式的服务和应用程序。他们将在任何分布式...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/d90908cb0d85?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/2-9636b13945b9ccf345bc98d0d81074eb.jpg" alt="48">
+            </div>
+            <span class="name">卡卡罗2017</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/7275aa3e4a13?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/4796541-4793234667db50b9.png" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/7275aa3e4a13?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">HTTP协议详解</a>
+          <p class="description">一、概念（载录于：http://www.cnblogs.com/EricaMIN1987_IT/p/3837436.html） 协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTM...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/e30af3b46745?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/4-3397163ecdb3855a0a4139c34a695885.jpg" alt="48">
+            </div>
+            <span class="name">yuantao123434</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/59126c9d9bbf?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/1539105-4724f23c3eb85dcd.png" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/59126c9d9bbf?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">Http协议详解</a>
+          <p class="description">Http协议详解 标签（空格分隔）： Linux 声明：本片文章非原创，内容来源于博客园作者MIN飞翔的HTTP协议详解地址http://www.cnblogs.com/EricaMIN1987_IT/p/3837436.html，这里只是排版方式的修改，提供自己学习并分享...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/e98cacedbfa8?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/46a6b1d94359.jpg" alt="48">
+            </div>
+            <span class="name">Sivin</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="http://www.jianshu.com/p/fc239e029b59?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">分享自己</a>
+          <p class="description">别人给予你 厚重的货币 我只能与你分享 蓝天下的一米阳光 别人给予你 繁多的商品 我只能与你分享 风雨中的一把雨伞 别人给予你 扬起嘴角时的微笑 我只能与你 分享悲伤时的泪水 别人给予你 他们的所有 我只能与你 分享我自己</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/4fddc9acf466?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/26f5466d0cbe.jpg" alt="48">
+            </div>
+            <span class="name">方成学长</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="http://www.jianshu.com/p/ec517c3aeb2b?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">那些年一起骑车的人和事</a>
+          <p class="description">﻿今天第一次共享单车处女秀。 大约是太久没骑车，再加上本身就笨手笨脚，骑得磕磕碰碰。糖需要骑一段就等我很久，中间过马路还走错一次，我们的手机都在她身上，差点丢了彼此。紧张又新奇。 曾经那段骑单车的日子，便随着车轮转动，不知不觉缓缓浮出水面。 是到上海第二年才学会骑车的。 借...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/4e239ef8e0ee?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/3d14b711e0c8.jpg" alt="48">
+            </div>
+            <span class="name">何潘夏</span>
+</a>        </div>
+
+        <div class="note ">
+                    <a class="title" target="_blank" href="http://www.jianshu.com/p/501e0567f12d?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">神的大能（汤姆华森）中</a>
+          <p class="description">Ⅱ、既然神有权柄，照样，祂也有无限的大能。没有大能的权柄算什么呢？"祂……大有能力"（伯九4）。以下所述显出神的大能。﻿﻿ 1、在祂的创造上。创造需要无限量的大能。全世界的人无法造出一只苍蝇。神创造的大能是显而易见的；因为祂不需借任何工具；也不需靠任何物质；反而物质是祂创造...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/9c4f0b26657f?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/f63b76e2-c9e7-4ddd-9c0a-2acb9360a2b8.jpg" alt="48">
+            </div>
+            <span class="name">伯特利Bethel</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/910f3634e605?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/2183529-b2c207b6a8130a4f.png" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/910f3634e605?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">2017中国Hadoop技术峰会精彩主题提前看</a>
+          <p class="description">一年一度的中国Hadoop技术峰会即将举行，从2008年至今，已经举办过八次了，每一次的峰会的主题都特别的精彩，3月24日第九届中国Hadoop技术峰会（CHINA HADOOP SUMMIT）将于北京举行。 会议时间：2017-03-24 08:30:00至 2017-0...</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/036cb131c8de?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/562a02f1-6913-49cf-8a3d-813da722004d.jpg" alt="48">
+            </div>
+            <span class="name">活动家会议</span>
+</a>        </div>
+
+        <div class="note have-img">
+          <a class="cover" target="_blank" href="http://www.jianshu.com/p/75f3c4d74980?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <img src="./关于HTTP协议，一篇就够了 - 简书_files/5712099-82b3cc8bf77cd71f" alt="240">
+</a>          <a class="title" target="_blank" href="http://www.jianshu.com/p/75f3c4d74980?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">讲道理，草帽海贼团是不是多了一个备用食材……</a>
+          <p class="description">话说乔巴上船的时候路飞有开玩笑说，要把乔巴当做备用食材的这个梗大家还记得吗？ 现在海贼王第十人甚平已定，草帽海贼团是不是又多了一个备用食材呢？ 食材一号： 食材二号： O(∩_∩)O哈哈~</p>
+          <a class="author" target="_blank" href="http://www.jianshu.com/u/c48b18511c6b?utm_campaign=maleskine&amp;utm_content=user&amp;utm_medium=seo_notes&amp;utm_source=recommendation">
+            <div class="avatar">
+              <img src="./关于HTTP协议，一篇就够了 - 简书_files/9f75b48e-2fea-49a3-ae35-df5ab4ee1aac" alt="48">
+            </div>
+            <span class="name">锦年柒夏</span>
+</a>        </div>
+  </div>
+</div>
+
+    <script type="application/json" data-name="page-data">{"user_signed_in":false,"locale":"zh-CN","os":"windows","read_mode":"day","read_font":"font2","note_show":{"is_author":false,"is_following_author":false,"is_liked_note":false,"follow_state":0,"uuid":"57445adc-cca7-4729-b462-7aa2126dde62"},"note":{"id":6291468,"slug":"80e25cb1d81a","user_id":2964446,"notebook_id":6799314,"commentable":true,"likes_count":275,"views_count":27110,"public_wordage":4806,"comments_count":36,"total_rewards_count":1,"is_author":false,"author":{"nickname":"RaphetS","total_wordage":16204,"followers_count":311,"total_likes_count":867}}}</script>
+    
+    <script src="./关于HTTP协议，一篇就够了 - 简书_files/babel-polyfill-676833c6a4d68573b4c3.js" crossorigin="anonymous"></script>
+    <script src="./关于HTTP协议，一篇就够了 - 简书_files/web-base-27748475f60cb52965bf.js" crossorigin="anonymous"></script>
+<script src="./关于HTTP协议，一篇就够了 - 简书_files/web-552a8ee538a12427a75e.js" crossorigin="anonymous"></script>
+    
+    <script src="./关于HTTP协议，一篇就够了 - 简书_files/entry-e1b430d2e9207f3b8fc2.js" crossorigin="anonymous"></script>
+    <script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+  
+
+<!----><!----></body></html>

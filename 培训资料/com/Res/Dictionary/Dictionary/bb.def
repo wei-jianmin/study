@@ -1,0 +1,3 @@
+LIBRARY	"Dictionary"
+EXPORTS
+func @1

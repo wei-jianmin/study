@@ -1,0 +1,17 @@
+工作交接：
+1.oes：魏建民
+	svn：E:\WorkSpace\projects\baseroot\ess\trunk\source\cpp\src\cpp.ess.lib
+2.安全接入：董甲彬
+	svn：E:\WorkSpace\projects\baseroot\nginx
+3.openvpn：魏建民、张楠楠
+	svn：E:\WorkSpace\projects\baseroot\openvpn\trunk\source\cpp
+	虚拟机linux和国产化：
+		虚拟机：192.168.3.219：openvpn服务端编译：/home/tzwy/zhouping/openvpn/   使用方法参见readme.txt
+								gmssl的android版本编译：/home/tzwy/zhouping/Android/projects/gmssl-for-android-master/tools/
+		过检使用的gmnginx，地址：国产化：192.168.3.221：/home/tzwy/zhouping/nginx/nginx-1.20.1/    执行./build_r.sh
+				  openvpn服务端程序arm打包：192.168.3.221：/home/tzwy/zhouping/ovpnpkg/
+	目录说明：
+		1.android程序源码：E:\WorkSpace\projects\baseroot\openvpn\trunk\source\cpp\Android\ics-openvpn - 0.7.24
+		2.服务端程序解决方案：E:\WorkSpace\projects\baseroot\openvpn\trunk\source\cpp\vsprojects
+		3.deb包组织结构：E:\WorkSpace\projects\baseroot\openvpn\trunk\source\cpp\linux_package\amd\ovpnpkg
+		

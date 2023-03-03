@@ -1,0 +1,708 @@
+骑缝章实现方案：
+改变列宽：调整该页最后一列的宽度，使该页所有列宽度的总和趋近于页面宽度，同时适当调整页边距，使骑缝章位置可以更靠近页面边缘。
+
+相关技术：
+● 获取/设置页边距
+Sub get_margin()
+    MsgBox "l=" & Sheet1.PageSetup.LeftMargin & "  r=" & Sheet1.PageSetup.RightMargin
+End Sub
+Sub set_margin()
+    Sheet1.PageSetup.LeftMargin = 54
+    Sheet1.PageSetup.RightMargin = 0
+End Sub
+● 获取/设置行高和列宽
+● 获取水平/垂直分页符的个数与位置
+● 获取打印页面宽度与高度
+
+
+---------------
+k = (i - 4.2) / 6   '字符数和磅值的转换关系
+Sheet1.Columns(1).ColumnWidth = k '以字符为单位设置列宽
+
+
+Worksheets("Sheet1").Activate
+boldCell = "A1"
+Application.Evaluate(boldCell).Font.Bold = True
+
+Sub f()
+MsgBox Sheet1.VPageBreaks(1).Location.Address
+MsgBox Sheet1.VPageBreaks(1).Location.Left
+MsgBox Sheet1.VPageBreaks(2).Location.Left
+MsgBox Sheet1.VPageBreaks(1).Location.Column
+MsgBox Sheet1.VPageBreaks(2).Location.Column
+End Sub
+
+Worksheet.ResetAllPageBreaks 方法 
+重新设置指定工作表上的所有分页符。
+
+Worksheet.DisplayPageBreaks 属性 
+如果显示指定工作表中的分页符（包括自动和手动分页符），则该属性值为 True。Boolean 类型，可读写
+
+Worksheet.StandardHeight 属性  
+以磅（磅：指打印的字符的高度的度量单位。1 磅等于 1/72 英寸，或大约等于 1 厘米的 1/28。）为单位返回工作表中所有行的标准高度（默认值）。Double 类型，只读。
+
+在打印预览中显示工作表 Sheet1。
+Visual Basic for Applications 
+Worksheets("Sheet1").PrintPreview 
+
+Window.RangeFromPoint 方法 
+返回位于屏幕上指定坐标位置的 Shape 或 Range 对象。如果指定坐标位置上没有任何形状，则此方法将返回 Nothing。
+
+Window.ScrollIntoView 方法 
+滚动文档窗口，使指定矩形区域中的内容显示在文档窗口或窗格的左上角或右下角（取决于 Start 参数值）。
+
+ ActiveSheet.DisplayPageBreaks = False 控制分页符的显示
+ 
+  With ActiveSheet.PageSetup
+        .LeftHeader = "&G"	//左页眉内容
+        .CenterHeader = ""	//中页眉内容
+        .RightHeader = ""	//右页眉内容
+        .LeftFooter = ""	//左页脚内容
+        .CenterFooter = ""	//中页脚内容
+        .RightFooter = ""	//右页脚内容
+        .LeftMargin = Application.InchesToPoints(0.7)	//左边距
+        .RightMargin = Application.InchesToPoints(6.66666666666667E-02)	//右边距
+        .TopMargin = Application.InchesToPoints(0.508333333333333)	//顶边距
+        .BottomMargin = Application.InchesToPoints(0.75)	//底边距
+        .HeaderMargin = Application.InchesToPoints(0.266666666666667)	//页眉边距
+        .FooterMargin = Application.InchesToPoints(0.3)	//页脚边距
+        .Zoom = 100   //页面缩放，打印缩放
+        .PrintErrors = xlPrintErrorsDisplayed
+        .OddAndEvenPagesHeaderFooter = False	//奇偶页页眉页脚不同
+        .DifferentFirstPageHeaderFooter = False	//第一页使用单独的页眉页脚
+        .ScaleWithDocHeaderFooter = True	//返回或设置页眉和页脚是否在文档大小更改时随文档缩放
+        .AlignMarginsHeaderFooter = True  //页眉页脚与页边距对齐
+        .EvenPage.LeftHeader.Text = ""
+        .EvenPage.CenterHeader.Text = ""
+        .EvenPage.RightHeader.Text = ""
+        .EvenPage.LeftFooter.Text = ""
+        .EvenPage.CenterFooter.Text = ""
+        .EvenPage.RightFooter.Text = ""
+        .FirstPage.LeftHeader.Text = ""
+        .FirstPage.CenterHeader.Text = ""
+        .FirstPage.RightHeader.Text = ""
+        .FirstPage.LeftFooter.Text = ""
+        .FirstPage.CenterFooter.Text = ""
+        .FirstPage.RightFooter.Text = ""
+		
+ MsgBox "使用单元格的最后一行位置: " & ExecuteExcel4Macro("GET.DOCUMENT(10)")
+ MsgBox "使用单元格的最后一列位置: " & ExecuteExcel4Macro("GET.DOCUMENT(12)")
+ MsgBox "使用单元格的最后一行所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)),1,MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)+1)")
+ MsgBox "使用单元格的最后一列所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+1所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+2所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+3所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+4所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)+1)")
+ 
+ 
+ 
+ ------------------------------
+ 
+ '获取页面磅值数
+Function get_page_width(size As String)
+    'A4值的宽度
+    If size = "A4" Then
+        get_page_width = 210 * 2.83464567
+    Else
+        get_page_width = 0
+    End If
+End Function
+
+'打印行为控制
+Sub pirnt_setup()
+	Application.PrintCommunication = False
+	ActiveSheet.PageSetup.PrintArea = "$A$1:$D$10"	'打印区域
+    With Sheet1.PageSetup
+		.PrintTitleRows = ""	'打印标题/顶端标题行
+        .PrintTitleColumns = ""	'打印标题/左边标题行
+        .LeftHeader = ""  '左页眉内容
+        .CenterHeader = ""  '中页眉内容
+        .RightHeader = ""   '右页眉内容
+        .LeftFooter = ""    '左页脚内容
+        .CenterFooter = "" '中页脚内容
+        .RightFooter = ""   '右页脚内容
+        .LeftMargin = Application.InchesToPoints(0.7)  '左边距
+        .RightMargin = 1 '右边距
+        .TopMargin = Application.InchesToPoints(0.508333333333333) '顶边距
+        .BottomMargin = Application.InchesToPoints(0.75)    '底边距
+        .HeaderMargin = Application.InchesToPoints(0.266666666666667)   '页眉边距
+        .FooterMargin = Application.InchesToPoints(0.3) '页脚边距
+        .PrintHeadings = True	'打印表头
+        .PrintGridlines = True	'打印网格
+        .PrintComments = xlPrintNoComments	'打印注释
+        .PrintQuality = 300		'打印质量
+        .CenterHorizontally = False	'打印区域处于水平中央
+        .CenterVertically = False	'打印区域处于垂直中央
+        .Orientation = xlPortrait	'纸张方向（xlLandscape）
+        .Draft = False
+        .PaperSize = xlPaperA4	'纸张大小
+        .FirstPageNumber = xlAutomatic	'首页页号
+        .Order = xlDownThenOver	'打印顺序
+        .BlackAndWhite = False	'黑白模式
+		.Zoom = 100   '页面缩放，打印缩放
+        .PrintErrors = xlPrintErrorsDisplayed
+        .OddAndEvenPagesHeaderFooter = False    '奇偶页页眉页脚不同
+        .DifferentFirstPageHeaderFooter = False '第一页使用单独的页眉页脚
+        .ScaleWithDocHeaderFooter = True    '返回或设置页眉和页脚是否在文档大小更改时随文档缩放
+        .AlignMarginsHeaderFooter = True  '页眉页脚与页边距对齐
+        .EvenPage.LeftHeader.Text = ""
+        .EvenPage.CenterHeader.Text = ""
+        .EvenPage.RightHeader.Text = ""
+        .EvenPage.LeftFooter.Text = ""
+        .EvenPage.CenterFooter.Text = ""
+        .EvenPage.RightFooter.Text = ""
+        .FirstPage.LeftHeader.Text = ""
+        .FirstPage.CenterHeader.Text = ""
+        .FirstPage.RightHeader.Text = ""
+        .FirstPage.LeftFooter.Text = ""
+        .FirstPage.CenterFooter.Text = ""
+        .FirstPage.RightFooter.Text = ""
+    End With
+	Application.PrintCommunication = True
+End Sub
+
+Sub fe()
+ Sheet1.PageSetup.RightMargin = 1
+End Sub
+
+Sub asdf()
+  'Sheet1.Activate
+  Dim SealAutoSide As Boolean   '骑缝章靠边
+  Dim PageWidth As Double
+  Dim TableWidth As Double
+  Dim VBreaksDist As Double
+  Dim TmpColumn As Integer
+  Dim Dist As Double
+  '如果需要骑缝章靠边，则调整垂直分页符位置
+  SealAutoSide = True
+  If SealAutoSide Then
+    '先求页面宽度
+    delete_all_shapes
+    pirnt_setup
+    PageWidth = get_page_width("A4")
+    TableWidth = PageWidth - Sheet1.PageSetup.RightMargin - Sheet1.PageSetup.LeftMargin
+
+    Dim vbreaks_index As Integer
+    For vbreaks_index = 1 To Sheet1.VPageBreaks.Count
+      If vbreaks_index > 1 Then
+        VBreaksDist = Sheet1.VPageBreaks(vbreaks_index).Location.Left - Sheet1.VPageBreaks(vbreaks_index - 1).Location.Left
+      Else
+        VBreaksDist = Sheet1.VPageBreaks(vbreaks_index).Location.Left
+      End If
+        TmpColunm = Sheet1.VPageBreaks(vbreaks_index).Location.Column - 1
+        Dist = TableWidth - VBreaksDist
+        Sheet1.Columns(TmpColunm).ColumnWidth = Sheet1.Columns(TmpColunm).ColumnWidth + (Dist - 4.2) / 6
+        Sheet1.Shapes.AddShape msoShapeRectangle, Sheet1.VPageBreaks(vbreaks_index).Location.Left - 50, 100, 50, 100
+    Next
+  End If
+  
+End Sub
+
+Sub delete_all_shapes()
+ Dim s As Shape
+ For Each s In Sheet1.Shapes
+    s.Delete
+ Next
+End Sub
+
+Sub show_shape_count()
+  MsgBox Sheet1.Shapes.Count
+End Sub
+
+Sub show_vbreaks_count()
+ MsgBox Sheet1.VPageBreaks.Count
+End Sub
+
+Sub show_usr_range()
+ MsgBox Sheet1.UsedRange.Columns.Count
+End Sub
+
+Sub show_breaks(flag As Boolean)
+    Sheet1.DisplayPageBreaks = flag
+End Sub
+
+Sub asdf2()
+ 'Cells(1, Sheet1.UsedRange.Columns.Count).Activate
+ 'Sheet1.UsedRange.Select
+' show_breaks (True)
+MsgBox UsedRange.Column + UsedRange.Columns.Count - 1
+MsgBox [IU1].End(1).Column
+End Sub
+Sub fgea()
+    Dim arr() As Integer
+     MsgBox ExecuteExcel4Macro("GET.DOCUMENT(64)").Row(1, 2)
+  'Set arr = ExecuteExcel4Macro("GET.DOCUMENT(64)") '.Row()
+  'msgbox get.document(64)
+'MsgBox UBound(arr) - LBound(arr) + 1
+End Sub
+
+Sub FAWW()
+show_breaks (True)
+MsgBox ExecuteExcel4Macro("COLUMN()")
+    MsgBox ExecuteExcel4Macro("IF(ISERROR(MATCH(ROW(),GET.DOCUMENT(64),1)),1,MATCH(ROW(),GET.DOCUMENT(64),1)+1)")
+End Sub
+
+Sub iifeiia()
+Dim r As Integer, c As Integer
+ MsgBox "使用单元格的最后一行位置: " & ExecuteExcel4Macro("GET.DOCUMENT(10)")
+ MsgBox "使用单元格的最后一列位置: " & ExecuteExcel4Macro("GET.DOCUMENT(12)")
+ MsgBox "使用单元格的最后一行所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)),1,MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)+1)")
+ MsgBox "使用单元格的最后一列所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+1所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+2所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+3所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)+1)")
+ MsgBox "使用单元格的最后一列+4所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)+1)")
+End Sub
+
+Sub sf()
+Dim s As String
+Dim i As Integer
+i = UsedRange.Column + UsedRange.Columns.Count - 1
+s = "IF(ISERROR(MATCH(" & i & ",GET.DOCUMENT(65),1)),1,MATCH(" & i & ",GET.DOCUMENT(65),1)+1)"
+s2 = "IF(ISERROR(MATCH(" & i + 1 & ",GET.DOCUMENT(65),1)),1,MATCH(" & i + 1 & ",GET.DOCUMENT(65),1)+1)"
+MsgBox s
+MsgBox "使用单元格的最后一列所在页码: " & ExecuteExcel4Macro(s)
+MsgBox "使用单元格的最后一列+1所在页码: " & ExecuteExcel4Macro(s2)
+End Sub
+
+
+----------------------------------------------------------------
+
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'----------------------------------------------------------             自主函数            -------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+Sub modify_column_width()
+  'Sheet1.Activate
+  Dim SealAutoSide As Boolean           '骑缝章靠边
+  Dim PageWidth As Integer               '页面宽度
+  Dim TableWidth As Integer              '期望表格宽度
+  Dim TmpTableWidth As Integer           '当前表格宽度
+  Dim TmpColumn As Integer
+  Dim Dist As Integer                    '期望表格宽度-当前表格宽度
+  Dim LayMode As Integer
+  
+  SealAutoSide = True                   '如果需要骑缝章靠边，则调整垂直分页符位置
+  If SealAutoSide Then                  '如果设置了骑缝章自动靠边
+    LayMode = ActiveWindow.View         '记录原始页面布局方式
+    ActiveWindow.View = xlPageLayoutView '更改页面布局方式为页面布局
+    delete_all_shapes                   '删除文档中所有图形
+    pirnt_setup                         '打印设置
+    PageWidth = get_page_width("A4")    '获取页面宽度
+    TableWidth = PageWidth - Sheet1.PageSetup.RightMargin - Sheet1.PageSetup.LeftMargin '期望表格(一页)宽度
+    Dim vbreaks_index As Integer
+    For vbreaks_index = 1 To Sheet1.VPageBreaks.Count
+      If vbreaks_index > 1 Then         '计算当前表格宽度
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left - Sheet1.VPageBreaks(vbreaks_index - 1).Location.Left
+      Else
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left
+      End If
+        TmpColumn = Sheet1.VPageBreaks(vbreaks_index).Location.Column - 1   '得到要调整的列号
+        Dist = TableWidth - TmpTableWidth   '需要修正的宽度
+        'MsgBox "修正前宽度:" & Sheet1.Columns(TmpColumn).Width & "   需达到宽度:" & Sheet1.Columns(TmpColumn).Width + Dist
+        'Sheet1.Columns(TmpColumn).ColumnWidth = Sheet1.Columns(TmpColumn).ColumnWidth + points2chars(Dist)    '设置页面最后一列宽度
+        Call SetColumnWidthInPoints2(TmpColumn, Sheet1.Columns(TmpColumn).Width + Dist)   '设置页面最后一列宽度
+        'MsgBox "修正后宽度:" & Sheet1.Columns(TmpColumn).Width
+        'Sheet1.Shapes.AddShape msoShapeRectangle, Sheet1.VPageBreaks(vbreaks_index).Location.Left - 50, 100, 50, 100
+    Next
+    Dim last_col1 As Integer, last_col2 As Integer
+    Dim str1 As String, str2 As String
+    Dim last_column As Integer
+    last_column = UsedRange.Column + UsedRange.Columns.Count - 1    '最后一列的列号
+    str1 = "IF(ISERROR(MATCH(" & last_column & ",GET.DOCUMENT(65),1)),1,MATCH(" & last_column & ",GET.DOCUMENT(65),1)+1)"           '最后一列所在页号
+    str2 = "IF(ISERROR(MATCH(" & last_column + 1 & ",GET.DOCUMENT(65),1)),1,MATCH(" & last_column + 1 & ",GET.DOCUMENT(65),1)+1)"   '最后一列+1所在页号
+    last_col1 = ExecuteExcel4Macro(str1)                            '最后一列所在页号
+    last_col2 = ExecuteExcel4Macro(str2)                            '最后一列+1所在页号
+    If last_col1 = last_col2 Then                                   '如果同在一页
+        TmpColumn = last_column + 1
+    Else
+        TmpColumn = last_column
+    End If
+    TmpTableWidth = Sheet1.Columns(TmpColumn + 1).Left - Sheet1.VPageBreaks(Sheet1.VPageBreaks.Count).Location.Left
+    Dist = TableWidth - TmpTableWidth                               '需要修正的宽度
+    Sheet1.Columns(TmpColumn).ColumnWidth = Sheet1.Columns(TmpColumn).ColumnWidth + points2chars(Dist)   '设置页面最后一列宽度
+    ActiveWindow.View = LayMode     '恢复原来的页面布局方式
+  End If
+  
+End Sub
+
+Sub modify_column_width2()
+  'Sheet1.Activate
+  Dim SealAutoSide As Boolean           '骑缝章靠边
+  Dim PageWidth As Double               '页面宽度
+  Dim HopeTableWidth As Double              '期望表格宽度
+  Dim TmpTableWidth As Double           '当前表格宽度
+  Dim TmpColumn As Integer
+  Dim Dist As Double                    '期望表格宽度-当前表格宽度
+  
+  SealAutoSide = True                   '如果需要骑缝章靠边，则调整垂直分页符位置
+  If SealAutoSide Then                  '如果设置了骑缝章自动靠边
+    delete_all_shapes                   '删除文档中所有图形
+    pirnt_setup                         '打印设置
+    PageWidth = get_page_width("A4")    '获取页面宽度
+    MsgBox "A4页面宽度为:" & PageWidth
+    HopeTableWidth = PageWidth - Sheet1.PageSetup.RightMargin - Sheet1.PageSetup.LeftMargin '期望表格(一页)宽度
+    MsgBox "期望表格宽度为:" & HopeTableWidth
+    Dim vbreaks_index As Integer
+    For vbreaks_index = 1 To Sheet1.VPageBreaks.Count
+      If vbreaks_index > 1 Then         '计算当前表格宽度
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left - Sheet1.VPageBreaks(vbreaks_index - 1).Location.Left
+      Else
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left
+      End If
+        MsgBox "当前表格宽度为:" & TmpTableWidth
+        TmpColumn = Sheet1.VPageBreaks(vbreaks_index).Location.Column - 1   '得到要调整的列号
+        MsgBox "要修正的列号为:" & TmpColumn
+        Dist = HopeTableWidth - TmpTableWidth   '需要修正的宽度
+        MsgBox "修正前列宽度:" & Sheet1.Columns(TmpColumn).Width & "，需达到列宽度:" & Sheet1.Columns(TmpColumn).Width + Dist
+        'MsgBox "--修正前列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth & "，需达到列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth + points2chars(Dist)
+        'Sheet1.Columns(TmpColumn).ColumnWidth = Sheet1.Columns(TmpColumn).Col umnWidth + points2chars(Dist)    '设置页面最后一列宽度
+        Call SetColumnWidthInPoints2(TmpColumn, Sheet1.Columns(TmpColumn).Width + Dist - 1) '设置页面最后一列宽度
+        MsgBox "修正后列宽度:" & Sheet1.Columns(TmpColumn).Width
+        'MsgBox "--修正后列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth
+        'Sheet1.Shapes.AddShape msoShapeRectangle, Sheet1.VPageBreaks(vbreaks_index).Location.Left - 50, 100, 50, 100
+        Exit For
+    Next
+ End If
+  
+End Sub
+
+Sub modify_column_width3()
+  'Sheet1.Activate
+  Dim SealAutoSide As Boolean           '骑缝章靠边
+  Dim PageWidth As Integer               '页面宽度
+  Dim HopeTableWidth As Integer              '期望表格宽度
+  Dim TmpTableWidth As Integer           '当前表格宽度
+  Dim TmpColumn As Integer
+  Dim Dist As Integer                    '期望表格宽度-当前表格宽度
+  
+  SealAutoSide = True                   '如果需要骑缝章靠边，则调整垂直分页符位置
+  If SealAutoSide Then                  '如果设置了骑缝章自动靠边
+    delete_all_shapes                   '删除文档中所有图形
+    pirnt_setup                         '打印设置
+    PageWidth = get_page_width("A4")    '获取页面宽度
+    MsgBox "A4页面宽度为:" & PageWidth
+    HopeTableWidth = PageWidth - Sheet1.PageSetup.RightMargin - Sheet1.PageSetup.LeftMargin '期望表格(一页)宽度
+    MsgBox "期望表格宽度为:" & HopeTableWidth
+    Dim vbreaks_index As Integer
+    For vbreaks_index = 1 To Sheet1.VPageBreaks.Count
+      If vbreaks_index > 1 Then         '计算当前表格宽度
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left - Sheet1.VPageBreaks(vbreaks_index - 1).Location.Left
+      Else
+        TmpTableWidth = Sheet1.VPageBreaks(vbreaks_index).Location.Left
+      End If
+        MsgBox "当前表格宽度为:" & TmpTableWidth
+        TmpColumn = Sheet1.VPageBreaks(vbreaks_index).Location.Column - 1   '得到要调整的列号
+        MsgBox "要修正的列号为:" & TmpColumn
+        Dist = HopeTableWidth - TmpTableWidth   '需要修正的宽度
+        MsgBox "修正前列宽度:" & Sheet1.Columns(TmpColumn).Width & "，需达到列宽度:" & Sheet1.Columns(TmpColumn).Width + Dist
+        'MsgBox "--修正前列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth & "，需达到列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth + points2chars(Dist)
+        'Sheet1.Columns(TmpColumn).ColumnWidth = Sheet1.Columns(TmpColumn).Col umnWidth + points2chars(Dist)    '设置页面最后一列宽度
+        Call SetColumnWidthInPoints2(TmpColumn, Sheet1.Columns(TmpColumn).Width + Dist) '设置页面最后一列宽度
+        MsgBox "修正后列宽度:" & Sheet1.Columns(TmpColumn).Width
+        'MsgBox "--修正后列宽度:" & Sheet1.Columns(TmpColumn).ColumnWidth
+        'Sheet1.Shapes.AddShape msoShapeRectangle, Sheet1.VPageBreaks(vbreaks_index).Location.Left - 50, 100, 50, 100
+        'Exit For
+    Next
+ End If
+  
+End Sub
+
+Sub delete_all_shapes()
+ Dim s As Shape
+ For Each s In Sheet1.Shapes
+    s.Delete
+ Next
+End Sub
+
+Sub show_shape_count()
+  MsgBox Sheet1.Shapes.Count
+End Sub
+
+Sub show_vbreaks_count()
+ MsgBox Sheet1.VPageBreaks.Count
+End Sub
+
+Sub show_usr_range()
+ MsgBox Sheet1.UsedRange.Columns.Count
+End Sub
+
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'----------------------------------------------------------            非自主函数            -------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+ '获取页面磅值数
+Function get_page_width(size As String)
+    'A4值的宽度
+    If size = "A4" Then
+        If Sheet1.PageSetup.Orientation = xlPortrait Then
+            get_page_width = 210 * 2.83464567
+        Else
+            get_page_width = 297 * 2.83464567
+        End If
+    Else
+        get_page_width = 0
+    End If
+End Function
+
+ '获取页面磅值数
+Function get_page_width2(size As String)
+    'A4值的宽度
+    If size = "A4" Then
+        If Sheet1.PageSetup.Orientation = xlPortrait Then
+            get_page_width = 595 '210 * 2.83464567
+        Else
+            get_page_width = 842 '297 * 2.83464567
+        End If
+    Else
+        get_page_width = 0
+    End If
+End Function
+
+'打印行为控制
+Sub pirnt_setup()
+    Application.PrintCommunication = False
+
+    With Sheet1.PageSetup
+        .PrintArea = ""         '打印区域
+        .PrintTitleRows = ""    '打印标题/顶端标题行
+        .PrintTitleColumns = "" '打印标题/左边标题行
+        .LeftHeader = ""        '左页眉内容
+        .CenterHeader = ""      '中页眉内容
+        .RightHeader = ""       '右页眉内容
+        .LeftFooter = ""        '左页脚内容
+        .CenterFooter = ""      '中页脚内容
+        .RightFooter = ""       '右页脚内容
+        .LeftMargin = 50        '左边距
+        .RightMargin = 1        '右边距
+        .TopMargin = 40         '顶边距
+        .BottomMargin = 40      '底边距
+        .HeaderMargin = 10      '页眉边距
+        .FooterMargin = 10      '页脚边距
+        .PrintHeadings = False  '打印表头
+        .PrintGridlines = False '打印网格
+        .PrintComments = xlPrintNoComments  '打印注释
+        .PrintQuality = 300     '打印质量
+        .CenterHorizontally = False         '打印区域处于水平中央
+        .CenterVertically = False           '打印区域处于垂直中央
+        .Orientation = xlPortrait           '纸张方向（xlLandscape）
+        .Draft = False
+        .PaperSize = xlPaperA4  '纸张大小
+        .FirstPageNumber = xlAutomatic      '首页页号
+        .Order = xlDownThenOver '打印顺序
+        .BlackAndWhite = False  '黑白模式
+        .Zoom = 100             '页面缩放，打印缩放
+        .PrintErrors = xlPrintErrorsDisplayed
+        .OddAndEvenPagesHeaderFooter = False    '奇偶页页眉页脚不同
+        .DifferentFirstPageHeaderFooter = False '第一页使用单独的页眉页脚
+        .ScaleWithDocHeaderFooter = True        '返回或设置页眉和页脚是否在文档大小更改时随文档缩放
+        .AlignMarginsHeaderFooter = True        '页眉页脚与页边距对齐
+        .EvenPage.LeftHeader.Text = ""
+        .EvenPage.CenterHeader.Text = ""
+        .EvenPage.RightHeader.Text = ""
+        .EvenPage.LeftFooter.Text = ""
+        .EvenPage.CenterFooter.Text = ""
+        .EvenPage.RightFooter.Text = ""
+        .FirstPage.LeftHeader.Text = ""
+        .FirstPage.CenterHeader.Text = ""
+        .FirstPage.RightHeader.Text = ""
+        .FirstPage.LeftFooter.Text = ""
+        .FirstPage.CenterFooter.Text = ""
+        .FirstPage.RightFooter.Text = ""
+    End With
+    Application.PrintCommunication = True
+End Sub
+
+Function points2chars(point As Double)
+    points2chars = (point - 4.2) / 6#
+End Function
+
+Sub show_breaks(flag As Boolean)
+    Sheet1.DisplayPageBreaks = flag
+End Sub
+
+Sub SetColumnWidthInPoints(col As Integer, points As Variant)
+    Dim savewidth As Variant
+    Dim lowerwidth As Variant, upwidth As Variant, curwidth As Variant
+    Dim Count As Integer
+ 
+    ' 关闭屏幕刷新
+    Application.ScreenUpdating = False
+
+    ' 设置lowerwidth和upperwidth变量
+    lowerwidth = 0
+    upwidth = 255
+    
+        ' 设置列宽为最大值
+    ActiveCell.ColumnWidth = 255
+    ' 设置curwidth为最大允许值得一半
+    Sheet1.Columns(col).ColumnWidth = 127.5
+    curwidth = Sheet1.Columns(col).ColumnWidth
+    ' 设置count为0，这样当没有找到完全匹配值时不至于无限循环
+    Count = 0
+    ' 如果单元格宽度与指定值不同且循环计数少于20次的时候则继续循环
+    While (Sheet1.Columns(col).Width <> points) And (Count < 20)
+        ' 如过单元格宽度小于希望的单元格宽度
+        If Sheet1.Columns(col).Width < points Then
+            ' 设lowerwidth为curwidth
+            lowerwidth = curwidth
+            ' 设置单元格宽度为curwidth和upwidthd的平均值
+            Sheet1.Columns(col).ColumnWidth = (curwidth + upwidth) / 2
+        ' 如过单元格宽度大于希望的单元格宽度
+        Else
+           ' 设upwidth为curwidth
+           upwidth = curwidth
+           ' 设置单元格宽度为curwidth和lowerwidthd的平均值
+           Sheet1.Columns(col).ColumnWidth = (curwidth + lowerwidth) / 2
+        End If
+        ' 设curwidth为目前列宽
+        curwidth = Sheet1.Columns(col).ColumnWidth
+        ' 增加计数器
+        Count = Count + 1
+    Wend
+End Sub
+
+
+Sub SetColumnWidthInPoints2(col As Integer, points As Variant)
+    ' 关闭屏幕刷新
+    Application.ScreenUpdating = False
+    
+    ' 把宽度调到刚刚大于指定像素宽
+    Dim colw As Double
+    colw = 1
+    Sheet1.Columns(col).ColumnWidth = 1
+    Do While Sheet1.Columns(col).Width < points
+        colw = colw + 1
+        Sheet1.Columns(col).ColumnWidth = colw
+    Loop
+    
+    ' 二次逼近法
+    Dim loop_limit As Integer, loop_count As Integer
+    Dim precision As Double
+    Dim diff As Double
+    Dim maxw As Double, minw As Double, midw As Double
+    loop_count = 0
+    loop_limit = 20
+    precision = 0.01
+    
+    maxw = colw
+    minw = colw - 1
+    
+    Do
+        midw = (maxw + minw) / 2
+        Sheet1.Columns(col).ColumnWidth = midw      '设置新列宽
+        diff = Sheet1.Columns(col).Width - points   '设置的列宽 - 期望列宽
+        If diff > 0 Then   '实际列宽>期望列宽
+            maxw = midw
+        Else               '实际列宽<期望列宽
+            minw = midw
+        End If
+        '超过所能设置的精度,退出循环
+        If Abs(maxw - minw) < 0.01 Then
+            Exit Do
+        End If
+         '超过限定循环次数，退出循环
+        loop_count = loop_count + 1
+        If loop_count > loop_limit Then
+            Exit Do
+        End If
+    Loop While Abs(diff) > precision
+    
+    If Sheet1.Columns(col).Width > points Then       '确保新设的列宽不超过指定列宽(根据情况，可以省略)
+        Sheet1.Columns(col).ColumnWidth = midw - 0.01 '设置新列宽
+    End If
+    
+    ' 恢复屏幕刷新
+    Application.ScreenUpdating = True
+End Sub
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'----------------------------------------------------------            测试用函数            -------------------------------------------------------------
+'----------------------------------------------------------                                 -------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Sub test()
+    MsgBox 595 & "---" & 210 * 2.83464567
+    MsgBox 842 & "---" & 297 * 2.83464567
+End Sub
+
+Sub fe()
+ Sheet1.PageSetup.RightMargin = 1
+End Sub
+
+Sub asdf2()
+ 'Cells(1, Sheet1.UsedRange.Columns.Count).Activate
+ 'Sheet1.UsedRange.Select
+' show_breaks (True)
+MsgBox UsedRange.Column + UsedRange.Columns.Count - 1
+MsgBox [IU1].End(1).Column
+End Sub
+Sub fge12a()
+    'Dim arr() As Integer
+   '  MsgBox ExecuteExcel4Macro("GET.DOCUMENT(50)")
+  'Set arr = ExecuteExcel4Macro("GET.DOCUMENT(64)") '.Row()
+  'msgbox get.document(64)
+'MsgBox UBound(arr) - LBound(arr) + 1
+MsgBox points2chars(109)
+End Sub
+
+Sub FAWW()
+show_breaks (True)
+MsgBox ExecuteExcel4Macro("COLUMN()")
+    MsgBox ExecuteExcel4Macro("IF(ISERROR(MATCH(ROW(),GET.DOCUMENT(64),1)),1,MATCH(ROW(),GET.DOCUMENT(64),1)+1)")
+End Sub
+
+Sub iifeiia()
+Dim r As Integer, c As Integer
+ Debug.Print "使用单元格的最后一行位置: " & ExecuteExcel4Macro("GET.DOCUMENT(10)")
+ Debug.Print "使用单元格的最后一列位置: " & ExecuteExcel4Macro("GET.DOCUMENT(12)")
+ Debug.Print "使用单元格的最后一行所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)),1,MATCH(GET.DOCUMENT(10),GET.DOCUMENT(64),1)+1)")
+ Debug.Print "使用单元格的最后一列所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12),GET.DOCUMENT(65),1)+1)")
+ Debug.Print "使用单元格的最后一列+1所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+1,GET.DOCUMENT(65),1)+1)")
+ Debug.Print "使用单元格的最后一列+2所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+2,GET.DOCUMENT(65),1)+1)")
+ Debug.Print "使用单元格的最后一列+3所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+3,GET.DOCUMENT(65),1)+1)")
+ Debug.Print "使用单元格的最后一列+4所在页码: " & ExecuteExcel4Macro("IF(ISERROR(MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)),1,MATCH(GET.DOCUMENT(12)+4,GET.DOCUMENT(65),1)+1)")
+End Sub
+
+Sub sf()
+Dim s As String
+Dim i As Integer
+i = UsedRange.Column + UsedRange.Columns.Count - 1
+s = "IF(ISERROR(MATCH(" & i & ",GET.DOCUMENT(65),1)),1,MATCH(" & i & ",GET.DOCUMENT(65),1)+1)"
+s2 = "IF(ISERROR(MATCH(" & i + 1 & ",GET.DOCUMENT(65),1)),1,MATCH(" & i + 1 & ",GET.DOCUMENT(65),1)+1)"
+MsgBox s
+MsgBox "使用单元格的最后一列所在页码: " & ExecuteExcel4Macro(s)
+MsgBox "使用单元格的最后一列+1所在页码: " & ExecuteExcel4Macro(s2)
+End Sub
+Sub iiia()
+'MsgBox Sheet1.PageSetup.LeftMargin
+'MsgBox Sheet1.PageSetup.RightMargin
+'MsgBox Sheet1.PageSetup.LeftMargin + Sheet1.PageSetup.RightMargin
+MsgBox Sheet1.Columns(1).Left
+MsgBox Sheet1.Columns(12).Left
+MsgBox Sheet1.VPageBreaks(1).Location.Left
+End Sub
+Sub fiia()
+    MsgBox Sheet1.Columns(1).Width
+    Call SetColumnWidthInPoints2(1, 190)
+    MsgBox Sheet1.Columns(1).Width
+End Sub
+
+Sub ifea()
+ Debug.Print "asdfasdfasdfasd"
+End Sub

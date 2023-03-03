@@ -1,0 +1,31 @@
+	va_list arg_ptr;
+	va_start(arg_ptr,format);	//已固定参数地址起点确定变参的内存起始地址。
+	vsprintf(buf,format,arg_ptr);   //wvsprintf(buf,format,arg_ptr);
+	va_end(arg_ptr);
+  
+  等价于：
+	char * arg_ptr;
+	arg_ptr = (char *)(&reinterpret_cast<const char &>(format)) +( (sizeof(format) + sizeof(int) - 1) & ~(sizeof(int) - 1) );
+	vsprintf(buf,format,arg_ptr);  //wvsprintf(buf,format,arg_ptr);
+	arg_ptr = (char*)0;
+	
+	对第二句的解释：
+	&reinterpret_cast<const char &>(format)) ： 获取format指针的地址，
+	( (sizeof(format) + sizeof(int) - 1) & ~(sizeof(int) - 1) ) ：获取format指针的长度，并确保其为int所占字节数的整数倍
+	(sizeof(format) + sizeof(int) - 1) ： 确保format至少达到sizeof(int)的长度
+	& ~(sizeof(int) - 1) ： 以sizeof(int)为单位，把余数的部分过滤掉
+	
+	解释：
+	函数的各个参数在内存中是连续存放的，每个参数所占字节数为int的整数倍
+	
+	延伸：
+	void func(int i,double d,char* ps,char c,int j)
+  {
+    void *p = func;
+    p = &i;
+    int i2 = *(int*)((int)p+0);
+    double d2 = *(double*)((int)p+4);
+    char *ps2 = *(char**)((int)p+12);
+    char c2 = *(char*)((int)p+16);
+    int j2 = *(int*)((int)p+20);
+  }

@@ -1,0 +1,243 @@
+class Base
+{
+public:
+    Base()
+    {
+        next = NULL;
+    }
+    bool resolve(int condition)
+    {
+        if(true == do(condition)) 
+            return true;
+        if(next)
+            return next->resolve(condition);
+        else
+            return false;
+    }
+    void setNext(Base* ne)
+    {
+        next = ne;
+    }
+    virtual bool do(int condition)=0;
+private:
+    Base *next;  //注1：static的是不是更好点？或者必须是static的？因为这个成员需要全局共享
+}
+
+class E1 : public Base
+{
+public:
+    bool do(int condition)
+    {
+        if(condition != 1)
+        {
+            printf("E1 not support condition %d\n",condition);
+            return false;
+        }
+        puts("condition suffice E1 !");
+        return true;
+    }
+}
+
+class E2 : public Base
+{
+public:
+    bool do(int condition)
+    {
+        if(condition != 2)
+        {
+            printf("E2 not support condition %d\n",condition);
+            return false;
+        }
+        puts("condition suffice E2 !");
+        return true;
+    }
+}
+
+class E3 : public Base
+{
+public:
+    bool do(int condition)
+    {
+        if(condition != 3)
+        {
+            printf("E3 not support condition %d\n",condition);
+            return false;
+        }
+        puts("condition suffice E3 !");
+        return true;
+    }
+}
+
+int main()
+{
+    E1 e1;
+    E2 e2;
+    E3 e3;
+    e1.setNext(&e2);
+    e2.setNext(&e3);
+    bool b = e1.resolve(3);
+    return 0;
+}
+
+对于注1的解答：
+    不需要，之所以会有上面的疑问，是因为理解错误
+    Base *next 不是个链表结构，而只是记录下一个处理者
+    如例中，e1.next 只记录了 &e2，e2.next 只记录了 &e3
+    另外，通常使用责任链的第一节点(e1)发起任务调用(resolve)，
+    否则就会漏掉前面节点对应条件下的处理能力。
+    从这个例子中，也可看出这种设计模式的缺点：
+    在main中构建责任链部分的代码不够自动化，比较繁琐
+    
+针对上面的缺点进行改进：（自己想的）
+    改进思路：
+        让责任类的添加更加智能化 ： 添加时自动添加到链表的尾部
+        随处可以添加 : 改为添加指针，自释放
+    更改后的效果（测试可用）：
+    
+#include <stdio.h>
+class Base;
+
+class IBase
+{
+public:    
+	friend class Base;
+	IBase()
+	{
+		next = NULL;
+	}
+	virtual ~IBase(){}
+	virtual bool dowork(int condition) = 0;
+private:
+	IBase *next;
+};  
+
+class Base
+{
+public:
+	static Base& getInstance()
+	{
+		static Base e0;
+		return e0;
+	}
+public:    
+	Base()
+	{
+		next = NULL;
+		last = NULL;
+	}
+	~Base()
+	{
+		clean();
+	}
+	void clean()
+	{
+		IBase * tmp = next;
+		while(tmp)
+		{
+			IBase * p = tmp;
+			tmp = tmp->next;
+			delete p;
+		}
+		next = NULL;
+		last = NULL;
+	}
+	bool resolve(int condition)
+	{
+		IBase* tmp = next;
+		while(tmp)
+		{
+			if(true == tmp->dowork(condition))
+				return true;
+			tmp = tmp->next;
+		}
+		return false;
+	}
+	void addElement(IBase* base)
+	{
+		if(last)
+			last->next = base;
+		else
+			next = base;
+		last = base;
+	}
+	virtual bool dowork(int condition)
+	{
+		return false;
+	}
+private:
+	IBase *next;
+	IBase *last;
+};  
+
+class E1 : public IBase
+{
+public:
+	~E1()
+	{
+		puts("E1 destruct");
+	}
+	bool dowork(int condition)
+	{
+		if(condition != 1)
+		{
+			printf("E1 not support condition %d\n",condition);
+			return false;
+		}
+		puts("condition suffice E1 !");
+		return true;
+	}
+};
+
+class E2 : public IBase
+{
+public:
+	~E2()
+	{
+		puts("E2 destruct");
+	}
+	bool dowork(int condition)
+	{
+		if(condition != 2)
+		{
+			printf("E2 not support condition %d\n",condition);
+			return false;
+		}
+		puts("condition suffice E2 !");
+		return true;
+	}
+};
+
+class E3 : public IBase
+{
+public:
+	~E3()
+	{
+		puts("E3 destruct");
+	}
+	bool dowork(int condition)
+	{
+		if(condition != 3)
+		{
+			printf("E3 not support condition %d\n",condition);
+			return false;
+		}
+		puts("condition suffice E3 !");
+		return true;
+	}
+};
+
+int main()
+{
+	if(1)
+	{
+		Base base = Base::getInstance();
+		base.addElement(new E1);
+		base.addElement(new E2);
+		base.addElement(new E3);
+		base.resolve(3);
+	}
+	getchar();
+	return 0;
+}
+    
+        

@@ -1,0 +1,11 @@
+char* GetDllPath()
+{
+	static char curDir[100] = {0};
+	if(strlen(curDir)==0)
+	{
+		MEMORY_BASIC_INFORMATION mbi;
+		HMODULE handle = ((::VirtualQuery(GetDllPath, &mbi, sizeof(mbi)) != 0) ? (HMODULE)mbi.AllocationBase : NULL);
+		GetModuleFileName(handle,curDir,100);
+	}
+	return curDir;
+}

@@ -1,0 +1,47 @@
+1. 查看已安装软件   yum list installed
+2. 查看可安装软件   yum list
+3. 查找软件         yum search <keyword>
+4. 安装软件         yum install <package_name>
+5. 卸载软件         yum remove/clean <package_name>
+6. 同步可安装软件   ??
+7. 覆盖安装         yum reinstall <package_name>
+8. 查看配置的软件源 yum repolist
+
+选项：
+-q, --quiet         静默执行
+-v, --verbose       详尽的操作过程
+-y, --assumeyes     回答全部问题为是
+--assumeno          回答全部问题为否
+
+---------------------------------
+
+
+1. 列出所有可更新的软件清单命令：yum check-update
+
+2. 更新所有软件命令：yum update
+
+3. 仅安装指定的软件命令：yum install <package_name>
+
+4. 仅更新指定的软件命令：yum update <package_name>
+
+5. 列出所有可安裝的软件清单命令：yum list
+
+6. 删除软件包命令：yum remove <package_name>
+
+7. 查找软件包命令：yum search <keyword>
+
+8. 清除缓存命令:
+
+yum clean packages: 清除缓存目录下的软件包
+yum clean headers: 清除缓存目录下的 headers
+yum clean oldheaders: 清除缓存目录下旧的 headers
+yum clean, yum clean all (= yum clean packages; yum clean oldheaders) :清除缓存目录下的软件包及旧的 headers
+
+----------------------
+
+https://cloud.tencent.com/developer/article/1464422
+进入yum源配置目录： cd /etc/yum.repos.d
+备份源 ： mv CentOS-Base.repo CentOS-Base.repo.bak
+使用阿里云源： wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+清除原来的元数据缓存： yum clean all
+更新新的元数据缓存： yum makecache

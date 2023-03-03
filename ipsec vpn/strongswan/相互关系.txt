@@ -1,0 +1,6 @@
+strongswan vs charon
+    strongswan 是项目名，charon是主程序名
+    strongSwan 在一个叫 pluto 的服务中实现了 IKEv1，IKEv2 则由一个叫 charon 的服务提供
+    
+strongswan和xfrm
+    xfrm是内核机制，

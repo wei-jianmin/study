@@ -1,0 +1,3 @@
+:::µÈÍ¬ÓÚmoveÃüÁî 
+@echo off
+move %*

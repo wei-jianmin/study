@@ -1,0 +1,6 @@
+1.把CChildFrame文件拷过来
+2.把CMainFrame的父类改为CMDIFrameWnd（原来为CFrameWnd）
+  把对应cpp文件中所有的CFrameWnd也改为CMDIFrameWnd
+3.在app的源文件中加入"ChildFrm.h"引用
+4.在InitInstance函数中：
+5.把CMainFrame中的构造函数改为public的

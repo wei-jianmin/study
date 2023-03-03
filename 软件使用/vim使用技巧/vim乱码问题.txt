@@ -1,0 +1,4 @@
+fileencodings  :  打开文件时，从指定的编码集中猜测，用逗号分割
+encoding: 文件读取（存放）到缓冲区中所使用的编码，通常选用utf-8
+termencoding : 显示到屏幕所使用的编码
+

@@ -1,0 +1,15 @@
+https://blog.csdn.net/weixin_34345695/article/details/116695852
+
+systemctl 替换了之前的 service，用systemd替换掉了initd来引导系统
+systemd带来的一个变化就是网络接口的命名方式变了（之前叫eth0）:
+
+名字规律：
+    前两个字符代表网卡类型
+    * en — Ethernet
+    * sl — serial line IP (slip)
+    * wl — wlan
+    * ww — wwan
+
+网卡名 enp3s0 代表的意思：
+    en代表以太网卡
+    p3、s0代表PCI接口的物理位置为(3, 0), 其中横座标代表bus，纵座标代表slot

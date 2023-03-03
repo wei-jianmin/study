@@ -1,0 +1,22 @@
+原先是把sm4_setkey_enc和sm4_crypt_cbc封装成了一个函数：
+  sm4_enc_data(一定长度的字符串）
+  {
+    sm4_ctx ctx;
+    unsigned char key[16]={......};
+    sm4_setkey_enc(ctx,key);
+    sm4_crypt_cbc(待加密数据);
+   }
+当对一个大文件加密时，把文件分割成一块块的小数据，
+多次调用sm4_enc_data加密，最后拼合。
+
+这里有个错误点：
+sm4_setkey_enc(ctx,key); 应该在整个文件加密阶段只调用一次，
+而按照上面的封装方法，则没加密一段数据，就设置一次key，
+
+之所以在整个文件加密阶段只调用一次设置key，
+是因为sm4_setkey_enc内部，把16字节的key进行一定运算处理后，记录在ctx中了
+每次调用sm4_crypt_cbc，都会自动改变ctx中记录的key
+
+所以正确的做法是不能把sm4_setkey_enc和sm4_crypt_cbc封装成一个函数，
+而是应该把他们分开，
+这两个函数可以公用一个全局的sm4_ctx

@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/u011722133/article/details/52813374"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="在GIS（地理信息管理系统）中，判断一个坐标是否在多边形内部是个经常要遇到的问题。乍听起来还挺复杂。根据W. Randolph Franklin 提出的PNPoly算法，只需区区几行代码就解决了这个问题。
+ 
+假设多边形的坐标存放在一个数组里，首先我们需要取得该数组在横坐标和纵坐标的最大值和最小值，根据这四个点算出一个四边型，首先判断目标坐标点是否在这个四边型之内，如果在这个四边型之外，那可以跳过" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>如何判断一个点是否在多边形内？ - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-24839514bc.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-24eac2b658.min.css">
+
+    <script type="text/javascript">
+        var username = "u011722133";
+        var blog_address = "https://blog.csdn.net/u011722133";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011722133/article/details/52813374"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.3/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<body>
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<!-- <div id="breadcrumbs">
+			<span><a href="https://blog.csdn.net/">博客首页</a></span>
+			<i>></i>
+			<span><a href="https://blog.csdn.net/u011722133">子墨的专栏</a></span>
+			<i>></i>
+			<span>如何判断一个点是否在多边形内？</span>
+		</div> -->
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-2 float-left">转</span>				<h1 class="title-article">如何判断一个点是否在多边形内？</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top d-flex">
+																				<span class="time">2016年10月14日 10:03:32</span>
+					<div class="float-right">
+						<span class="read-count">阅读数：12695</span>
+																	</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css" />
+						<div class="htmledit_views">
+                
+<pre id="best-content-2611700284" class="best-text mb-10" style="font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;background-color:rgb(255,255,255);min-height:55px;"><span style="color:rgb(51,51,51);">在GIS（地理信息管理系统）中，判断一个坐标是否在多边形内部是个经常要遇到的问题。乍听起来还挺复杂。根据W. Randolph Franklin 提出的PNPoly算法，只需区区几行代码就解决了这个问题。
+ 
+假设多边形的坐标存放在一个数组里，首先我们需要取得该数组在横坐标和纵坐标的最大值和最小值，根据这四个点算出一个四边型，首先判断目标坐标点是否在这个四边型之内，如果在这个四边型之外，那可以跳过后面较为复杂的计算，直接返回false。
+ 
+if (p.x &lt; minX || p.x &gt; maxX || p.y &lt; minY || p.y &gt; maxY) {
+     // 这个测试都过不了。。。直接返回false；
+}
+接下来是核心算法部分：
+ 
+int pnpoly (int nvert, float *vertx, float *verty, float testx, float testy) {
+    int i, j, c = 0;
+    for (i = 0, j = nvert-1; i &lt; nvert; j = i++) {
+        if ( ( (verty[i]&gt;testy) != (verty[j]&gt;testy) ) &amp;&amp;
+(testx &lt; (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
+            c = !c;
+    }
+    return c;
+}
+ 
+额，代码就这么简单，但到底啥意思呢：
+ 
+首先，参数nvert 代表多边形有几个点。浮点数testx, testy代表待测试点的横坐标和纵坐标，*vertx,*verty分别指向储存多边形横纵坐标数组的首地址。
+我们注意到，每次计算都涉及到相邻的两个点和待测试点，然后考虑两个问题：
+1. 被测试点的纵坐标testy是否在本次循环所测试的两个相邻点纵坐标范围之内？即
+verty[i] &lt;testy &lt; verty[j]
+或者
+verty[j] &lt;testy &lt; verty[i]
+2. 待测点test是否在i,j两点之间的连线之下？看不懂后半短if statement的朋友请自行在纸上写下i,j两点间的斜率公式，要用到一点初中解析几何和不等式的知识范畴，对广大码农来说小菜一碟。
+然后每次这两个条件同时满足的时候我们把返回的布尔量取反。
+可这到底是啥意思啊？
+这个表达式的意思是说，随便画个多边形，随便定一个点，然后通过这个点水平划一条</span><span style="color:#ff6666;">射线</span><span style="color:#333333;">，先数数看这条</span></pre><pre class="best-text mb-10" style="background-color:rgb(255,255,255);font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;min-height:55px;"><span style="color:rgb(255,102,102);">射线</span><span style="color:#333333;">和多边形的边相交几次，（或者说先排除那些不相交的边，第一个判断条件），然后再数这条</span><span style="color:#ff6666;">射线</span><span style="color:#333333;">穿越多边形的次数是否为奇数，如果是奇数，那么该点在多边形内，如果是偶数，则在多边形外。详细的数学证明这里就不做了，不过读者可以自行画多边形进行验证。</span></pre><pre class="best-text mb-10" style="background-color:rgb(255,255,255);font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;min-height:55px;"><span style="color:#333333;">
+</span></pre><pre class="best-text mb-10" style="background-color:rgb(255,255,255);font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;min-height:55px;"><span style="color:#ff6666;">以上转载百度知道；以下转载<a href="http://www.cnblogs.com/luxiaoxun/" rel="nofollow" style="text-decoration:none;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13.92px;background-color:rgb(248,248,238);">阿凡卢</a>，转载地址：http://www.cnblogs.com/luxiaoxun/p/3722358.html</span></pre><pre class="best-text mb-10" style="background-color:rgb(255,255,255);font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;min-height:55px;"><span style="color:#333333;"></span></pre><h1 class="postTitle" style="font-size:10px;font-weight:normal;font-family:Verdana, Arial, Helvetica, sans-serif;"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/luxiaoxun/p/3722358.html" rel="nofollow" style="font-size:20px;color:rgb(0,0,0);text-decoration:none;">判断点是否在多边形内部</a></h1><div class="clear" style="clear:both;font-family:Verdana, Arial, Helvetica, sans-serif;"></div><div class="postBody" style="font-size:13.92px;font-family:Verdana, Arial, Helvetica, sans-serif;"><div id="cnblogs_post_body" style="overflow:auto;"><p>如何判断一个点是否在多边形内部？</p><p>（1）面积和判别法：判断目标点与多边形的每条边组成的三角形面积和是否等于该多边形，相等则在多边形内部。</p><p>（2）夹角和判别法：判断目标点与所有边的夹角和是否为360度，为360度则在多边形内部。</p><p>（3）引射线法：从目标点出发引一条射线，看这条射线和多边形所有边的交点数目。如果有奇数个交点，则说明在内部，如果有偶数个交点，则说明在外部。</p><p>具体做法：将测试点的Y坐标与多边形的每一个点进行比较，会得到一个测试点所在的行与多边形边的交点的列表。在下图的这个例子中有8条边与测试点所在的行相交，而有6条边没有相交。如果测试点的两边点的个数都是奇数个则该测试点在多边形内，否则在多边形外。在这个例子中测试点的左边有5个交点，右边有三个交点，它们都是奇数，所以点在多边形内。</p><p><img src="http://images.cnitblog.com/i/434101/201405/112137381678569.gif" alt="" style="border:0px;display:block;" /></p><p>算法图解：</p><p><img src="http://images.cnitblog.com/blog/434101/201412/061456221234057.jpg" alt="" style="border:0px;width:669px;" /></p><p>关于这个算法的具体的更多图形例子：http://alienryderflex.com/polygon/</p><p>参考代码：</p><div class="cnblogs_code" style="background-color:rgb(245,245,245);border:1px solid rgb(204,204,204);overflow:auto;font-family:'Courier New' !important;font-size:12px !important;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div><pre style="font-family:'Courier New' !important;"><span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> pnpoly(<span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> nvert, <span style="color:rgb(0,0,255);line-height:1.5 !important;">float</span> *vertx, <span style="color:rgb(0,0,255);line-height:1.5 !important;">float</span> *verty, <span style="color:rgb(0,0,255);line-height:1.5 !important;">float</span> testx, <span style="color:rgb(0,0,255);line-height:1.5 !important;">float</span><span style="line-height:1.5 !important;"> testy)
+{
+  </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> i, j, c = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span><span style="line-height:1.5 !important;">;
+  </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">for</span> (i = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span>, j = nvert-<span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span>; i &lt; nvert; j = i++<span style="line-height:1.5 !important;">) 
+  {
+    </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">if</span> ( ((verty[i]&gt;testy) != (verty[j]&gt;testy)) &amp;&amp;<span style="line-height:1.5 !important;">
+     (testx </span>&lt; (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) +<span style="line-height:1.5 !important;"> vertx[i]) )
+       c </span>= !<span style="line-height:1.5 !important;">c;
+  }
+  </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">return</span><span style="line-height:1.5 !important;"> c;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div></div><p>来自一个polygon的内部实现：</p><div class="cnblogs_code" style="background-color:rgb(245,245,245);border:1px solid rgb(204,204,204);overflow:auto;font-family:'Courier New' !important;font-size:12px !important;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div><pre style="font-family:'Courier New' !important;">      <span style="color:rgb(0,0,255);line-height:1.5 !important;">public</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">bool</span><span style="line-height:1.5 !important;"> IsInside(PointLatLng p)
+      {
+         </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> count =<span style="line-height:1.5 !important;"> Points.Count;
+
+         </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">if</span>(count &lt; <span style="color:rgb(128,0,128);line-height:1.5 !important;">3</span><span style="line-height:1.5 !important;">)
+         {
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">return</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">false</span><span style="line-height:1.5 !important;">;
+         }
+
+         </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">bool</span> result = <span style="color:rgb(0,0,255);line-height:1.5 !important;">false</span><span style="line-height:1.5 !important;">;
+
+         </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">for</span>(<span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> i = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span>, j = count - <span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span>; i &lt; count; i++<span style="line-height:1.5 !important;">)
+         {
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">var</span> p1 =<span style="line-height:1.5 !important;"> Points[i];
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">var</span> p2 =<span style="line-height:1.5 !important;"> Points[j];
+
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">if</span>(p1.Lat &lt; p.Lat &amp;&amp; p2.Lat &gt;= p.Lat || p2.Lat &lt; p.Lat &amp;&amp; p1.Lat &gt;=<span style="line-height:1.5 !important;"> p.Lat)
+            {
+               </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">if</span>(p1.Lng + (p.Lat - p1.Lat) / (p2.Lat - p1.Lat) * (p2.Lng - p1.Lng) &lt;<span style="line-height:1.5 !important;"> p.Lng)
+               {
+                  result </span>= !<span style="line-height:1.5 !important;">result;
+               }
+            }
+            j </span>=<span style="line-height:1.5 !important;"> i;
+         }
+         </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">return</span><span style="line-height:1.5 !important;"> result;
+      }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div></div><p>特殊情况：要检测的点在多变形的一条边上，射线法判断的结果是不确定的，需要特殊处理（<span>If the test point is on the border of the polygon, this algorithm will deliver unpredictable results</span>）。</p><p>计算一个多边形的面积（area of a polygon）：</p><div class="cnblogs_code" style="background-color:rgb(245,245,245);border:1px solid rgb(204,204,204);overflow:auto;font-family:'Courier New' !important;font-size:12px !important;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div><pre style="font-family:'Courier New' !important;">        <span style="color:rgb(0,0,255);line-height:1.5 !important;">private</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">static</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">double</span> SignedPolygonArea(List&lt;PointLatLng&gt;<span style="line-height:1.5 !important;"> points)
+        {
+            </span><span style="color:rgb(0,128,0);line-height:1.5 !important;">//</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> Add the first point to the end.</span>
+            <span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> pointsCount =<span style="line-height:1.5 !important;"> points.Count;
+            PointLatLng[] pts </span>= <span style="color:rgb(0,0,255);line-height:1.5 !important;">new</span> PointLatLng[pointsCount + <span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span><span style="line-height:1.5 !important;">];
+            points.CopyTo(pts, </span><span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span><span style="line-height:1.5 !important;">);
+            pts[pointsCount] </span>= points[<span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span><span style="line-height:1.5 !important;">];
+
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">for</span> (<span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> i = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span>; i &lt; pointsCount + <span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span>; ++<span style="line-height:1.5 !important;">i)
+            {
+                pts[i].Lat </span>= pts[i].Lat * (System.Math.PI * <span style="color:rgb(128,0,128);line-height:1.5 !important;">6378137</span> / <span style="color:rgb(128,0,128);line-height:1.5 !important;">180</span><span style="line-height:1.5 !important;">);
+                pts[i].Lng </span>= pts[i].Lng * (System.Math.PI * <span style="color:rgb(128,0,128);line-height:1.5 !important;">6378137</span> / <span style="color:rgb(128,0,128);line-height:1.5 !important;">180</span><span style="line-height:1.5 !important;">);
+            }
+
+            </span><span style="color:rgb(0,128,0);line-height:1.5 !important;">//</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> Get the areas.</span>
+            <span style="color:rgb(0,0,255);line-height:1.5 !important;">double</span> area = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span><span style="line-height:1.5 !important;">;
+            </span><span style="color:rgb(0,0,255);line-height:1.5 !important;">for</span> (<span style="color:rgb(0,0,255);line-height:1.5 !important;">int</span> i = <span style="color:rgb(128,0,128);line-height:1.5 !important;">0</span>; i &lt; pointsCount; i++<span style="line-height:1.5 !important;">)
+            {
+                area </span>+= (pts[i + <span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span>].Lat - pts[i].Lat) * (pts[i + <span style="color:rgb(128,0,128);line-height:1.5 !important;">1</span>].Lng + pts[i].Lng) / <span style="color:rgb(128,0,128);line-height:1.5 !important;">2</span><span style="line-height:1.5 !important;">;
+            }
+
+            </span><span style="color:rgb(0,128,0);line-height:1.5 !important;">//</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> Return the result.</span>
+            <span style="color:rgb(0,0,255);line-height:1.5 !important;">return</span><span style="line-height:1.5 !important;"> area;
+        }
+
+        </span><span style="color:rgb(128,128,128);line-height:1.5 !important;">///</span> <span style="color:rgb(128,128,128);line-height:1.5 !important;">&lt;summary&gt;</span>
+        <span style="color:rgb(128,128,128);line-height:1.5 !important;">///</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> Get the area of a polygon
+        </span><span style="color:rgb(128,128,128);line-height:1.5 !important;">///</span> <span style="color:rgb(128,128,128);line-height:1.5 !important;">&lt;/summary&gt;</span>
+        <span style="color:rgb(128,128,128);line-height:1.5 !important;">///</span> <span style="color:rgb(128,128,128);line-height:1.5 !important;">&lt;param name="points"&gt;&lt;/param&gt;</span>
+        <span style="color:rgb(128,128,128);line-height:1.5 !important;">///</span> <span style="color:rgb(128,128,128);line-height:1.5 !important;">&lt;returns&gt;&lt;/returns&gt;</span>
+        <span style="color:rgb(0,0,255);line-height:1.5 !important;">public</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">static</span> <span style="color:rgb(0,0,255);line-height:1.5 !important;">double</span> GetPolygonArea(List&lt;PointLatLng&gt;<span style="line-height:1.5 !important;"> points)
+        {
+            </span><span style="color:rgb(0,128,0);line-height:1.5 !important;">//</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> Return the absolute value of the signed area.
+            </span><span style="color:rgb(0,128,0);line-height:1.5 !important;">//</span><span style="color:rgb(0,128,0);line-height:1.5 !important;"> The signed area is negative if the polygon is oriented clockwise.</span>
+            <span style="color:rgb(0,0,255);line-height:1.5 !important;">return</span><span style="line-height:1.5 !important;"> Math.Abs(SignedPolygonArea(points));
+        }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5 !important;"><a title="复制代码" style="color:#008000;border:none !important;"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码" style="border:none !important;" /></a></span></div></div><p> </p><p> </p><p> </p><p>参考资料：</p><p>http://alienryderflex.com/polygon/</p><p>http://en.wikipedia.org/wiki/Point_in_polygon</p><p>http://www.codeproject.com/Tips/84226/Is-a-Point-inside-a-Polygon</p><p> </p></div><div id="MySignature" style="background-color:rgb(248,248,238);border:1px solid rgb(232,231,208);color:#808080;"><div style="line-height:25px;">作者：<a href="http://www.cnblogs.com/luxiaoxun/" rel="nofollow" style="color:#008000;text-decoration:none;">阿凡卢</a></div><div style="line-height:25px;">出处：<a href="http://www.cnblogs.com/luxiaoxun/" rel="nofollow" style="color:#008000;text-decoration:none;">http://www.cnblogs.com/luxiaoxun/</a></div><div style="line-height:25px;">本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</div></div></div><br /><pre class="best-text mb-10" style="background-color:rgb(255,255,255);font-family:'Microsoft YaHei', arial, 'courier new', courier, '宋体', monospace;font-size:16px;line-height:29px;min-height:55px;"><span style="color:#333333;">
+</span></pre>
+            </div>
+                </div>
+				<div class="hide-article-box text-center">
+			<a class="btn btn-red-hollow" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/u011722133/article/details/52813374,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/u011722133/article/details/52813374,"}'>阅读更多</a>
+		</div>
+        	</article>
+	
+		<div class="article-bar-bottom">
+								<div class="tags-box">
+			<span class="label">个人分类：</span>
+						<a class="tag-link" href="https://blog.csdn.net/u011722133/article/category/5793005"  target="_blank">算法与数据结构						</a>
+		</div>
+					</div>
+	</div>
+<script>
+    $(".MathJax").remove();
+</script>
+
+<!-- 博客详情页PC增加广告系统刷量代码 -->
+<div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+<script id="adJs52b5334"></script>
+<script>document.getElementById("adJs52b5334").src = "https://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+</div>
+
+<script>
+	(function(){
+		var btnReadmore = $("#btn-readmore");
+		if(btnReadmore.length>0){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*2){
+				articleBox.css({
+					'height':winH*2+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+	})()
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011722133/article/details/52813374#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zhzzha/article/details/50261949,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zhzzha/article/details/50261949,BlogCommendFromBaidu_0"}'>
+		<a href="https://blog.csdn.net/zhzzha/article/details/50261949" target="_blank" title="<em>判断</em>点<em>是否</em>在一个任意<em>多边形</em>内几种方法">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>判断</em>点<em>是否</em>在一个任意<em>多边形</em>内几种方法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/2/8/F/3_zhzzha.jpg" alt="zhzzha" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zhzzha</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-11</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1663</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							首先，作为任意多边形，想要进行数学计算，都要将其分解为简单的三角形，且多边形分为凸多边形和凹多边形，首先要区分这两种多边形。否则，在连线过程中如果是凹多边形则会连接到多边形以外的区域。
+
+
+首先我们不...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u010059658/article/details/48680491,BlogCommendFromBaidu_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u010059658/article/details/48680491,BlogCommendFromBaidu_1"}'>
+		<a href="https://blog.csdn.net/u010059658/article/details/48680491" target="_blank" title="C  <em>判断</em>点<em>是否</em>在<em>多边形</em>内">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						C  <em>判断</em>点<em>是否</em>在<em>多边形</em>内				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/B/B/E/3_u010059658.jpg" alt="u010059658" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010059658</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-23</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							630</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							FROM:http://blog.csdn.net/okvee/article/details/5643407
+
+// 功能：判断点是否在多边形内 
+// 方法：求解通过该点的水平线与多边形各边的交点...					</p>
+			</div>
+					</a>
+	</div>
+									<div class="recommend-item-box recommend-box-ident type_blog clearfix">
+					<script type="text/javascript" src="//rabc1.iteye.com/production/source/pc3553.js?pkcgstj=jm"></script>
+				</div>
+			
+					<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u012898245/article/details/79450433,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u012898245/article/details/79450433,BlogCommendFromBaidu_2"}'>
+		<a href="https://blog.csdn.net/u012898245/article/details/79450433" target="_blank" title="JAVA<em>判断</em>一个地理坐标<em>是否</em>在一个<em>多边形</em>区域内和<em>是否</em>在一个圆形区域内(经纬度)">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						JAVA<em>判断</em>一个地理坐标<em>是否</em>在一个<em>多边形</em>区域内和<em>是否</em>在一个圆形区域内(经纬度)				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/2/6/4/3_u012898245.jpg" alt="u012898245" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u012898245</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-05</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1921</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							怎么样判断一个坐标点在一个多边形区域内？包括规则多边形，不规则多边形，还有圆。。。1 判断一个坐标是否在圆形区域内？多边形和圆分开写，首先简单的就是判断是否在圆里面，如何判断一个坐标是否在圆形区域内，...					</p>
+			</div>
+					</a>
+	</div>
+							<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_387","con":",https://download.csdn.net/download/xue_yuan/3167908,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_387","con":",https://download.csdn.net/download/xue_yuan/3167908,BlogCommendFromBaidu_3"}'>
+			<a href="https://download.csdn.net/download/xue_yuan/3167908" target="_blank">
+				<div class="content">
+					<h4 class="text-truncate oneline">
+							C++<em>判断</em>点<em>是否</em>在<em>多边形</em>内					</h4>
+					<p>
+						<span class="data">2011年04月07日 </span>
+						<span class="size">464KB</span>
+						<span class="type">下载</span>
+					</p>
+				</div>
+				<div class="img-box float-left">
+						<img src="https://csdnimg.cn/release/download/old_static/images/minetype/rar.svg" alt="">
+				</div>
+			</a>
+		</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/xsmxxl/article/details/78434185,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/xsmxxl/article/details/78434185,BlogCommendFromBaidu_4"}'>
+		<a href="https://blog.csdn.net/xsmxxl/article/details/78434185" target="_blank" title="地图处理方法-<em>判断</em><em>一个点</em><em>是否</em>在某个区域内">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						地图处理方法-<em>判断</em><em>一个点</em><em>是否</em>在某个区域内				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/5/6/6/3_xsmxxl.jpg" alt="xsmxxl" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xsmxxl</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-03</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							4172</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							判断一个点是否在某个区域内(多边形)
+比如滴滴会根据乘客所在的不同区域，给出不同的价格。市区堵一点，那么价格也高点。获取服务范围只规定在某个范围内...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/JUST_DO_1122/article/details/70666555,searchFromBaidu_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/JUST_DO_1122/article/details/70666555,searchFromBaidu_5"}'>
+		<a href="https://blog.csdn.net/JUST_DO_1122/article/details/70666555" target="_blank" title="<em>判断</em>点<em>是否</em>在<em>多边形</em>内">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>判断</em>点<em>是否</em>在<em>多边形</em>内				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/0/D/E/3_just_do_1122.jpg" alt="JUST_DO_1122" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">JUST_DO_1122</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-24</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							429</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							//解题思想用射线法
+//该题思想是向由点P向x正方向发射一个射线，穿过多边形线段上的个数为奇数则在多边形内，偶数则在多边形外
+//具体方法是：点的Y值大于等于多边形上某个线段的最小值且小于该线段...					</p>
+			</div>
+					</a>
+	</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'left',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 8,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zizahn/article/details/52276434,searchFromBaidu_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zizahn/article/details/52276434,searchFromBaidu_6"}'>
+		<a href="https://blog.csdn.net/zizahn/article/details/52276434" target="_blank" title="<em>判断</em>点<em>是否</em>在<em>多边形</em>内部">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>判断</em>点<em>是否</em>在<em>多边形</em>内部				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/A/A/A/3_zizahn.jpg" alt="zizahn" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zizahn</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-22</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							138</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							1.判断点是否在三角形内部
+struct Point{ //点
+ double x,y;
+};
+
+struct Vr{   //向量
+ Point s,e;
+};
+
+double cross(Vr ...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/bluedoctor/article/details/3639119,BlogCommendFromGuangxin_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/bluedoctor/article/details/3639119,BlogCommendFromGuangxin_7"}'>
+		<a href="https://blog.csdn.net/bluedoctor/article/details/3639119" target="_blank" title="<em>判断</em><em>一个点</em><em>是否</em>在一个<em>多边形</em>内部">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>判断</em><em>一个点</em><em>是否</em>在一个<em>多边形</em>内部				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/3/C/D/3_bluedoctor.jpg" alt="bluedoctor" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">bluedoctor</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-29</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1950</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							原理先通过点做向右的一条射线如果射线与多边形相交的点为奇数，则在多边形内。是否相交判断：1。判断在边的左边或右边（也有可能在线段上或线段的延伸线上）2。判断点的Y值是否在线段两个端点Y值之间所有边（点...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/ShangQuan2012/article/details/51912617,BlogCommendFromGuangxin_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/ShangQuan2012/article/details/51912617,BlogCommendFromGuangxin_8"}'>
+		<a href="https://blog.csdn.net/ShangQuan2012/article/details/51912617" target="_blank" title="<em>判断</em><em>一个点</em><em>是否</em>在一个复杂<em>多边形</em>的内部">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>判断</em><em>一个点</em><em>是否</em>在一个复杂<em>多边形</em>的内部				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/D/9/6/3_shangquan2012.jpg" alt="ShangQuan2012" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ShangQuan2012</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2904</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							如何判断一个点是否在多边形内部？
+
+（1）面积和判别法：判断目标点与多边形的每条边组成的三角形面积和是否等于该多边形，相等则在多边形内部。
+
+（2）夹角和判别法：判断目标点与所有边的夹角和是否...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/shao941122/article/details/51504519,BlogCommendFromGuangxin_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/shao941122/article/details/51504519,BlogCommendFromGuangxin_9"}'>
+		<a href="https://blog.csdn.net/shao941122/article/details/51504519" target="_blank" title="［几何］<em>判断</em>点<em>是否</em>在不规则<em>多边形</em>内">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						［几何］<em>判断</em>点<em>是否</em>在不规则<em>多边形</em>内				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/F/A/0/3_shao941122.jpg" alt="shao941122" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">shao941122</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-26</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							6796</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							最近项目用到在Google map上判断事发地点，是否在管辖区域内。典型的判断一个点是否在不规则多边形内的例子。
+但是Google map没有提供相应的api，找资料发现百度地图提供了，肿么办，为了一...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/qq_37423198/article/details/76180905" target="_blank">
+						如何</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/zuimei_forver/article/details/68941201" target="_blank">
+						如何如何设计索引</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/jy_sharer/article/details/17381609" target="_blank">
+						如何如何提高口语</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/linuxshine/article/details/8808693" target="_blank">
+						如何反向域名解析</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/koozxcv/article/details/51307390" target="_blank">
+						如何租房子</a>
+					</span>
+								</div>
+			</div>
+					</div>
+	
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/u011722133">
+                <img src="https://avatar.csdn.net/A/4/C/3_u011722133.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/u011722133" target="_blank" class="text-truncate" id="uid">narutojxl</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u011722133/article/details/52813374" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="0">
+                        <dt>原创</dt>
+            <dd><span class="count">0</span></dd>
+                    </dl>
+        <dl class="text-center" title="21">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">21</span></dd>
+        </dl>
+        <dl class="text-center" title="8">
+            <dt>喜欢</dt>
+            <dd><span class="count">8</span></dd>
+        </dl>
+        <dl class="text-center" title="11">
+            <dt>评论</dt>
+            <dd><span class="count">11</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="3级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-3"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="80575">
+                8万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="960">
+                960            </dd>
+        </dl>
+        <dl title="60931">
+            <dt>排名：</dt>
+            <dd>6万+</dd>
+        </dl>
+    </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-百度联盟-300x250 --><script type="text/javascript" src="//rabc1.iteye.com/source/api/ymebi.js?bwoc=oltly"></script>    </div>
+</div>
+		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/2728671">
+                    c++学习                    <span class="count float-right">23篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/5696911">
+                    gcc                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/5767657">
+                    kinect                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/5793005">
+                    算法与数据结构                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6422200">
+                    VO                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6448451">
+                    工具                    <span class="count float-right">30篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6479038">
+                    Boost                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6540411">
+                    OPENCV-ROS                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6553783">
+                    数学基础                    <span class="count float-right">13篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/6970163">
+                    OPENCV                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/7090067">
+                    Ceres                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/7623756">
+                    Eigen                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u011722133/article/category/7736817">
+                    SFM                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//rabc1.iteye.com/source/res/yn6yz.js?ojylrgb=yk"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+			<script>
+			(function() {
+				var s = "_" + Math.random().toString(36).slice(2);
+				document.write('<div id="baidufooter_0001"></div>');
+				(window.slotbydup=window.slotbydup || []).push({
+					id: '5851901',
+					container: 'baidufooter_0001',
+					size: '520,40',
+					display: 'inlay-fix'
+				});
+			})();
+			</script>
+			<script src="https://dup.baidustatic.com/js/os.js"></script>
+			<style>
+				#baidufooter_0001{
+					display: none !important;
+				}
+			</style>
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li>
+			<button class="long-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg><svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>3</p>
+			</button>
+		</li>
+		<li>
+						
+			<a class="btn-comments low-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+										</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg>
+				<span class="hover-show text">
+					手机看
+				</span>
+			</button>
+		</li>	
+						<li class="">
+			<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/u011722133/article/details/52852163" title="C++中复制构造函数与重载赋值操作符总结">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-xiayiye"></use>
+				</svg>
+				<span class="hover-show text">下一篇</span>
+			</a>
+		</li>
+									<li class="">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/u011722133/article/details/52750354" title="玩转Google开源C++单元测试框架Google Test系列(gtest)(总)">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-shangyiye"></use>
+					</svg>
+					<span class="hover-show text">上一篇</span>
+				</a>
+			</li>
+						<li class="bdsharebuttonbox"style="margin-top: 8px;">
+			<script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'hover', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt="">
+		</li>
+	  	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "如何判断一个点是否在多边形内？";
+    var ChannelId = 0;
+    var articleId = "52813374";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/u011722133/article/details/52813374";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E7%82%B9%E5%9C%A8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%86%85%E9%83%A8";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = 'atom-one-dark';
+    var highlight = ["\u5982\u4f55","\u5224\u65ad","\u4e00\u4e2a\u70b9","\u662f\u5426","\u591a\u8fb9\u5f62"];//高亮数组
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.3/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"如何判断一个点是否在多边形内？");
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-4d72a3f9df.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-7e8d71609d.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-a7ed44649d.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E7%82%B9%E5%9C%A8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%86%85%E9%83%A8"  type="text/javascript"></script>
+</body>
+<div class="box-box-aways">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <div id="adAways">
+        <script>
+            (function() {
+            (window.slotbydup=window.slotbydup || []).push({
+            id: '5868728',
+            container: 'adAways',
+            size: '250,500',
+            display: 'inlay-fix'
+            });
+            })();
+            </script>
+        <script src="https://dup.baidustatic.com/js/os.js"></script>
+    </div>
+</div>
+<div class="box-box-default">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//rabc1.iteye.com/common/web/9lqf6q.js?mh=zzjepzz"></script>
+</div>
+<div class="box-box-large">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//rabc1.iteye.com/site/web/iv1mdp.js?id=vveasfs"></script>
+</div>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-93244aa03c.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

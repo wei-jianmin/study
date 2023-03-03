@@ -1,0 +1,4 @@
+void CxxxView::OnInitialUpdate()
+{
+    GetDocument()->SetTitle(_T("自定义标题");
+}

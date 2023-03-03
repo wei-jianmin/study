@@ -1,0 +1,17 @@
+$(FULL_CURRENT_PATH)：	文件全路径
+$(CURRENT_DIRECTORY)：	文件所在文件夹
+$(FILE_NAME)		：	文件名
+$(NAME_PART)		：	文件名部分
+$(EXT_PART)			：	文件扩展名部分
+$(NPP_DIRECTORY)	：	notepad程序路径
+$(CURRENT_WORD)		:	当前选中的文本
+$(CURRENT_LINE)		：	光标所在行
+$(CURRENT_COLUMN)	：	光标所在列
+
+可以借助cmd命令，完成多条命令的处理：
+cmd 常用控制参数：
+/C      执行字符串指定的命令然后终止
+/K      执行字符串指定的命令但保留
+cmd后可通过&，连接多个命令字符串
+如：
+cmd /k cd /d $(CURRENT_DIRECTORY) & "$(NAME_PART)" & PAUSE & EXIT

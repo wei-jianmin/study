@@ -1,0 +1,183 @@
+http://bbs.csdn.net/topics/390205943
+1.获取应用程序指针
+    CMyApp* pApp=(CMyApp*)AfxGetApp();
+2.获取主框架指针
+CwinApp中的共有成员变量m_pMainWnd就是主框架的指针
+    CMainFrame* pMainFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
+或者
+    CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+3.获取菜单指针
+    CMenu* pMenu = AfxGetMainWnd()->GetMenu();
+4.获取工具栏状态栏指针
+（1）主框架中可以直接使用m_wndToolBar,m_wndStatusBar
+ (2) 其他情况下可通过如下获得
+    CToolBar* pToolBar = (CToolBar*)AfxGetMainWnd()->GetDescendantWindow(AFX_IDW_TOOLBAR);
+　　CStatusBar* pStatusBar = (CStatusBar*)AfxGetMainWnd()->GetDescendantWindow(AFX_IDW_STATUS_BAR);
+
+或
+
+     CFrameWnd* pParent = AFXGetParentFrame(this);   
+
+     CMFCStatusBar* m_pWndStatusBar = DYNAMIC_DOWNCAST(CMFCStatusBar, pParent->GetDlgItem(AFX_IDW_STATUS_BAR));
+
+　5、获取控件指针
+
+　　先用 GetDlgItem() 再转换，如：
+
+     CButton* pButton = (CButton*)GetDlgItem(IDC_MYBUTTON);
+
+  6、获取文档、视图指针
+
+　　SDI:
+
+　　CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+
+　　CYourDoc* pDoc = (CYourDoc*)pMainFrame->GetActiveDocument();
+
+　　CYourView* pView = (CYourView*)pMainFrame->GetActiveView();
+
+　　MDI:
+
+　　CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+
+　　CChildFrame* pChildFrame = (CChildFrame*)pMainFrame->GetActiveFrame();
+
+　　CYourDoc* pDoc = (CYourDoc*)pChildFrame->GetActiveDocument();
+
+　　CYourView* pView = (CYourView*)pChildFrame->GetActiveView();
+
+　　7、文档、视图
+
+　　从视图获取文档指针：
+
+　　CYourDoc* pDoc = GetDocument();
+
+　　从文档获取视图指针：
+
+　　利用成员函数 GetFirstViewPosition() 和 GetNextView() 遍历
+
+　　virtual POSITION GetFirstViewPosition() const;
+
+　　virtual CView* GetNextView(POSITION& rPosition) const;
+
+　　SDI:
+
+　　CYourView* pView;
+
+　　POSITION pos = GetFirstViewPosition();
+
+　　pView = GetNextView(pos);
+
+　　MDI:
+
+　　定义函数
+
+　　CView* CYourDoc::GetView(CRuntimeClass* pClass)
+
+　　{
+
+　　CView* pView;
+
+　　POSITION pos=GetFirstViewPosition();
+
+　　while(pos!=NULL)
+
+　　{
+
+    pView=GetNextView(pos);
+
+　　if(!pView->IsKindOf(pClass))
+
+　　break;
+
+　　}
+
+　　if(!pView->IsKindOf(pClass))
+
+　　{
+
+　　AfxMessageBox("Connt Locate the View.");
+
+　　return NULL;
+
+　　}
+
+　　return pView;
+
+　　}
+
+　　使用如下：
+
+　　CYourView* pView=(CYourView*)GetView(RUNTIME_CLASS(CYourView));
+
+8、文档模版、文档
+
+　　从文档获取文档模版指针：
+
+　　CDocTemplate* GetDocTemplate() const;
+
+　　从文档模版获取文档指针：
+
+　　viaual POSITION GetFirstDocPosition( ) const = 0;
+
+　　visual CDocument* GetNextDoc(POSITION & rPos) const = 0;
+
+　　9、获取分割视图中各个视图的指针
+
+　　主框架中定义：CSplitterWnd m_wndSplitter;
+
+　　定义两个View类：CView1、CView2
+
+　　框架类中重载：
+
+　　BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT, CCreateContext* pContext)
+
+　　{
+
+　　VERIFY(m_splitter.CreateStatic(this,2,1)); //分割成两行一列
+
+　　 VERIFY(m_splitter.CreateView(0,0,RUNTIME_CLASS(CView1),CSize(100,100),pContext));
+
+　　 VERIFY(m_splitter.CreateView(1,0,RUNTIME_CLASS(CView2),CSize(100,100),pContext));
+
+　　return TRUE;
+
+　　}
+
+　　获取分割视图指针
+
+　　CView1* pView1 = (CView1*)m_wndSplitter.GetPane(0,0);
+
+　　CView2* pView2 = (CView2*)m_wndSplitter.GetPane(1,0);
+
+　　10、通过鼠标获得子窗口指针
+
+　　CWnd* ChildWindowFromPoint(POINT point) const;
+
+　　CWnd* ChildWindowFromPoint(POINT point,UINT nFlags) const;
+
+　　用于确定包含指定点的子窗口
+
+　　如果指定点在客户区之外，函数返回NULL；
+
+　　如果指定点在客户区内，但是不属于任何一个子窗口，函数返回该CWnd的指针；
+
+　　如果有多个子窗口包含指定点，则返回第一个子窗口的指针。
+
+　　还要注意的是，该函数返回的是一个伪窗口指针，不能将它保存起来供以后使用。
+
+　　对于第二个参数nFlags有几个含义：
+
+　　CWP_ALL file://不忽略任何子窗口
+
+　　CWP_SKIPNIVSIBLE file://忽略不可见子窗口
+
+　　CWP_SKIPDISABLED file://忽略禁止的子窗口
+
+　　CWP_SKIPRANSPARENT file://忽略透明子窗口
+
+　　获取工具条的指针
+
+　　在缺省状态下，有一个默认的工具条AFX_IDW_TOOLBAR，我们可以根据相应的ID去获取工具条指针，方法如下：
+
+　　CToolBar* pToolBar=(CToolBar*)AfxGetMainWnd()->GetDescendantWindow(AFX_IDW_TOOLBAR);

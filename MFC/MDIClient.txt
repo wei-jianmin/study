@@ -1,0 +1,4 @@
+MDI客户窗口
+　　一个MDI应用的主框架窗口包含一个特殊的子窗口称为MDICLIENT窗口。MDICLIENT窗口负责管理主框架窗口的客户区。MDICLIENT窗口本身有自己的子窗口即由CMDIChildWnd派生的文档窗口，也就是MDI子窗口。MDI主框架窗口负责管理MDICLIENT子窗口。当控制条（菜单条，状态条等）发生变化时，MDI主框架窗口重新配置MDICLIENT窗口。MDICLIENT子窗口负责管理全部的MDI子窗口。父窗口负责将某些命令传递到子窗口。因此，消息队列发向MDI子窗口的消息由MDICLIENT窗口负责传递，发向MDICLIENT窗口和MDI子窗口的消息由主框架窗口负责传递。
+
+m_hWndMDIClient为主框架窗口的成员变量（CMDIFrameWnd类的成员变量），在主框架窗口被创建时，会自动调用到CFrameWnd的消息响应函数OnCreate，继而调用到CFrameWnd：OnCreateHelper，继而调用到CMDIFrameWnd::OnCreateClient，继而调用到CMDIFrameWnd::CreateClient，在该函数里面有m_hWndMDIClient = ::AfxCtxCreateWindowEx（）

@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="origin" />
+<title>初探freetype字体库 - 竹印 - 博客园</title>
+<meta property="og:description" content="简单的freetype使用，显示一个汉字的基本程序" />
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=giTNza-Of-PEt5UsELhFQAR7G6-bfaSa4oolcq7i9-o1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/KJC/bundle-KJC.css?v=SBtLze_k2f8QMx9yu0UzPZOmkUXedeg_e6WBRIadVBo1"/>
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/KJC/bundle-KJC-mobile.css?v=d9LctKHRIQp9rreugMcQ1-UJuq_j1fo0GZXTXj8Bqrk1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/shtianhai/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/shtianhai/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/shtianhai/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">var currentBlogApp = 'shtianhai', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=yRkjgN2sBQkB4hX-wirHxPomeBT9sB5dawr6ob7KIvg1" type="text/javascript"></script>
+<style type="text/css">
+[id^="ad_"] {display:none!important;display:none}</style>
+</head>
+<body>
+<a name="top"></a>
+
+<table class="Framework" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td colspan="3">
+			
+<div id="top">
+<table cellpadding="10" cellspacing="0">
+	<tr>
+		<td nowrap>
+			<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="https://www.cnblogs.com/shtianhai/">竹印</a></h1>
+			有梦即有路，自强可得之！
+		</td>
+	</tr>
+</table>
+</div>
+<div id="sub">
+	<div id="sub-right"></div>
+	
+&nbsp;
+<a id="blog_nav_sitehome" href="https://www.cnblogs.com/">博客园</a> :: 
+<a id="blog_nav_myhome" href="https://www.cnblogs.com/shtianhai/">首页</a> ::
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a> ::
+<a id="blog_nav_contact" accesskey="9" rel="nofollow" href="https://msg.cnblogs.com/send/%E7%AB%B9%E5%8D%B0">联系</a> ::
+<a id="blog_nav_rss" href="https://www.cnblogs.com/shtianhai/rss">订阅</a>
+<a id="blog_nav_rss_image" class="XMLLink" href="https://www.cnblogs.com/shtianhai/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a> ::
+<a id="blog_nav_admin" rel="nofollow" href="https://i.cnblogs.com/">管理</a>
+
+</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="LeftCell">
+			<div id="leftmenu">
+            	
+		            <div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+		            
+	            
+	            <div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+		</td>
+		<td class="MainCell">
+			<div id="main">
+				
+<div id="post_detail">
+	<div class="post">
+		<div class="posthead">
+			<h2>
+				<a id="cb_post_title_url" class="singleposttitle" href="https://www.cnblogs.com/shtianhai/archive/2010/09/02/1816199.html">初探freetype字体库</a>
+			</h2>
+ 			Posted on <span id="post-date">2010-09-02 16:51</span> <a href='https://www.cnblogs.com/shtianhai/'>竹印</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=1816199" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(1816199);return false;">收藏</a>
+			<script type="text/javascript">var allowComments=true,cb_blogId=75044,cb_entryId=1816199,cb_blogApp=currentBlogApp,cb_blogUserGuid='be57f290-e8b0-df11-8eb9-001cf0cd104b',cb_entryCreatedDate='2010/9/2 16:51:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+			
+		</div>
+		<div class="postbody"><div id="cnblogs_post_body" class="blogpost-body"><p>文字的显示依赖于字体字库，大致的字体字库分为点阵字库、笔画字库和轮廓字库。</p>
+<p>点阵字库：缺点比较明显，缩放存在锯齿，渲染旋转等操作相对复杂，且效果不理想，先大多用在嵌入式行业（基本抛弃），常见格式有bdf，pcf，fnt，hbf，hzf等。</p>
+<p>笔画字体：不讨论。</p>
+<p>轮廓字体：即矢量字体，利用字体轮廓及填充实现字体显示，优势明显，渲染缩放较容易，但效率相对低些（相对于嵌入式）</p>
+<p>&nbsp;</p>
+<p>简单来说，freetype为字体字库提供了一套解决方案，支持文字字体渲染等操作，主要还是其为C语言编写，跨平台，为很多不支持矢量字体格式的嵌入式系统提供使用嵌入式字体的可能，且效率不低。</p>
+<p>基本流程为：<br />加载字体字库文件-&gt; 查找待显示的文字索引-&gt; 渲染操作（若反走样处理）-&gt;处理为位图数据-&gt;显示</p>
+<p>freetype官网http://freetype.sourceforge.net/index2.html</p>
+<p>下面为在XP下显示中文字体的实例，在官方下载源码，在..\freetype-2.4.2\builds\win32\vc2008\下打开工程，编译为链接库，新建VS2008的MFC程序，加载freetype242.lib库。</p>
+<p>&nbsp;</p>
+<p>简单考虑，直接在MFC中的draw函数中画出一个中文汉字。便于显示，使用GDI+画出汉字，因此首先对GDI+进行初始化等操作（GDI+的相关知识不讨论，不清楚可以留言或索取GDI+文档，网上也可以搜搜）</p>
+<p>在view.h中添加头文件声明</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp">#include &lt;ft2build.h&gt;
+#include FT_FREETYPE_H
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>在view.h中添加成员变量</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp">public:
+    FT_Library library;
+    FT_Face face;
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>在view.cpp的构造函数中添加</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp">// 初始化库
+bool bError = FT_Init_FreeType(&amp;library);
+if (!bError)
+{
+// 是否初始化成功
+}
+// 加载一个字库文件，这里为黑体中文字库
+bError = FT_New_Face(library, 
+"C:\\WINDOWS\\Fonts\\simhei.ttf", 
+0, &amp;face);
+if (bError == FT_Err_Unknown_File_Format)
+{
+// 表示可以打开和读此文件，但不支持此字体格式
+}
+else if (bError)
+{
+// 其他错误
+}
+// 设定为UNICODE，默认也是
+ FT_Select_Charmap(face,FT_ENCODING_UNICODE);
+ // 设定字体字符宽高和分辨率
+bError = FT_Set_Char_Size(face, 0, 16*64, 300, 300);
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>在::OnDraw(CDC* pDC)中添加代码</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp">bool bError;
+wchar_t wChar= _T('博');
+// 查找&lsquo;好&rsquo;的字符索引
+FT_UInt glyph_index = FT_Get_Char_Index(face, wChar);
+// 装载字型图像到字形槽
+bError = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+
+
+// 转换为位图数据
+if (face-&gt;glyph-&gt;format != FT_GLYPH_FORMAT_BITMAP)
+{
+// 第二个参数为渲染模式，这里渲染为1位位图（黑白位图），若为FT_RENDER_MODE_NORMAL则渲染为256级灰度图
+bError = FT_Render_Glyph(face-&gt;glyph, FT_RENDER_MODE_MONO);
+}
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>这里便可以通过face-&gt;glyph-&gt;bitmap获得字体&ldquo;博&rdquo;的位图数据了，bitmap中存放了如位图的宽高、色深，调色板等信息，便可以通过GDI+绘制该图像了&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp">//创建位位图
+BITMAPINFO bmpinfo = {0};
+// 初始化位图结构体
+bmpinfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+bmpinfo.bmiHeader.biWidth = face-&gt;glyph-&gt;bitmap.width;
+bmpinfo.bmiHeader.biHeight = face-&gt;glyph-&gt;bitmap.rows;
+bmpinfo.bmiHeader.biBitCount = 1;// 与渲染模式有关，详见FreeType API手册的FT_Bitmap部分说明
+bmpinfo.bmiHeader.biClrImportant = 0;
+bmpinfo.bmiHeader.biClrUsed = 0;
+bmpinfo.bmiHeader.biCompression = BI_RGB;
+bmpinfo.bmiHeader.biPlanes = 1;
+bmpinfo.bmiHeader.biSizeImage = 0;
+
+
+// 创建内存位图
+unsigned char *pvBits = new unsigned char[10000];
+HBITMAP hBitmap =CreateDIBSection(NULL, &amp;bmpinfo, DIB_RGB_COLORS, (void ** )&amp;pvBits, NULL, 0 );
+
+int iLineBytes = (bmpinfo.bmiHeader.biWidth + 7) / 8;
+for (int i = 0; i != bmpinfo.bmiHeader.biHeight; ++i)
+{
+memcpy(pvBits + i * iLineBytes, face-&gt;glyph-&gt;bitmap.buffer + i * iLineBytes, iLineBytes);
+}
+
+Bitmap *pBitmap = Bitmap::FromHBITMAP(hBitmap, NULL);
+Graphics graphic(pDC-&gt;m_hDC);
+graphic.DrawImage(pBitmap, Point(20, 150));
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>这部分代码不多解释，只是显示位图数据，这里face-&gt;glyph-&gt;bitmap是没有调色板的1位位图，源于使用FT_RENDER_MODE_MONO渲染模式</p>
+<p>&nbsp;</p>
+<p>显示预览</p>
+<p><img src="https://pic002.cnblogs.com/img/china_larry/201009/2010090216541727.jpg" alt="" /></p>
+<pre class="brush:cpp"></pre>
+<pre class="brush:cpp">这里字体倒置与位图坐标系有关，只要简单处理即可，不讨论。</pre>
+<p>简单的描述一下freetype的使用流程，更详细的函数说明及流程请参阅&ldquo;freetype2开发入门&rdquo;， 网上有此文档，感兴趣可以看看。</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+</div>
+	</div></div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='cnblogs_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='cnblogs_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="https://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br />
+	Copyright &copy; 竹印
+</p>
+
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

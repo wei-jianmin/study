@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <Configuration status="WARN" >  
+         <!--变量定义 -->
+        <properties>  
+        	<!-- e:/logs --><!-- /home/tass_api_server/logs -->
+ 			<property name="LOG_HOME">/home/tass_api_server/logs</property>
+            <property name="every_file_size">5M</property> 
+            <property name="file_count">10</property> 
+        </properties>  
+      
+        <Appenders>  
+            <Console name="Console" target="SYSTEM_OUT">  
+                <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%level][%class][%line]:%message%n" />  
+            </Console>  
+      
+            <RollingRandomAccessFile name="infoLog" fileName="${LOG_HOME}/app.log"  
+                                     filePattern="${LOG_HOME}/info.%d{yyyy-MM-dd}.log.gz" append="true">  
+                <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%level][%class][%line]:%message%n"/>  
+                <Filters>  
+                    <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="NEUTRAL"/>  
+                </Filters>  
+                <Policies>  
+                    <TimeBasedTriggeringPolicy interval="1" modulate="true"/>  
+                </Policies>  
+            </RollingRandomAccessFile>  
+            
+            <RollingRandomAccessFile name="warnLog" fileName="${LOG_HOME}/warn.log"  
+                                     filePattern="${LOG_HOME}/warn.%d{yyyy-MM-dd}.log.gz" append="true">  
+                <Filters>  
+                    <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>  
+                    <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>  
+                </Filters>  
+                <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%level][%class][%line]:%message%n"/>  
+                <Policies>  
+                    <TimeBasedTriggeringPolicy interval="1" modulate="true"/>  
+                </Policies>  
+            </RollingRandomAccessFile>  
+            <RollingRandomAccessFile name="errorLog" fileName="${LOG_HOME}/error.log"  
+                                     filePattern="${LOG_HOME}/error.%d{yyyy-MM-dd}.log.gz" append="true">  
+                <Filters>  
+                    <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>  
+                </Filters>  
+                <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%level][%class][%line]:%message%n"/>  
+                <Policies>  
+                    <TimeBasedTriggeringPolicy interval="1" modulate="true"/>  
+                </Policies>  
+            </RollingRandomAccessFile>  
+      
+            
+            
+            
+            
+                 <!-- tasaAuth server -->  
+            <RollingRandomAccessFile name="tasaAuthLog" fileName="${LOG_HOME}/tasaAuth/tasaAuth.log"  
+                                     filePattern="${LOG_HOME}/tasaAuth/tasaAuth.%d{yyyy-MM-dd}-%i.log" append="true">  
+                <PatternLayout pattern="[tasaAuth][%date{yyyy-MM-dd HH:mm:ss.SSS}][%level][%class][%line]:%message%n"/>  
+                <Filters>  
+                    <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="NEUTRAL"/>  
+                </Filters>  
+                <Policies>  
+                    <TimeBasedTriggeringPolicy interval="1" modulate="true"/>  
+                    <SizeBasedTriggeringPolicy size="${every_file_size}"/>  
+                </Policies>  
+           
+                <DefaultRolloverStrategy max="${file_count}">  
+                <Delete basePath="${LOG_HOME}/tasaAuth" maxDepth="2">  
+                     <IfFileName glob="*.log"/>  
+                     <IfLastModified age="10d"/>  
+                </Delete>  
+               </DefaultRolloverStrategy>  
+            </RollingRandomAccessFile>  
+      
+     
+            <!--  
+            <Cat name="catAppender">  
+                <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line]:%message%n"/>  
+            </Cat>  
+            -->
+        </Appenders>  
+      
+        <Loggers>  
+            <!-- 第三方的软件日志级别 -->  
+            <AsyncLogger name="org.springframework" level="info" additivity="true">  
+                <AppenderRef ref="warnLog"/>  
+                <AppenderRef ref="errorLog"/>  
+            </AsyncLogger>  
+      
+            <!-- 应用的日志级别 -->  
+            <AsyncLogger name="com.xxxx.emidas.coupon" level="info" additivity="true">  
+                <AppenderRef ref="infoLog"/>  
+                <AppenderRef ref="warnLog"/>  
+                <AppenderRef ref="errorLog"/>  
+            </AsyncLogger>  
+      
+      
+      
+               <!--includeLocation="true" 异步日志中加入类名及行数等详细信息（性能会下降），默认false-->
+            <AsyncLogger name="tasaAuth" level="info" additivity="false"  includeLocation="true">  
+                <AppenderRef ref="tasaAuthLog"/>  
+                <!--  <AppenderRef ref="Console" />  -->
+            </AsyncLogger>  
+             
+           
+      
+            <!-- 剩余其他的日志级别 -->  
+            <asyncRoot level="info" includeLocation="true">  
+                <AppenderRef ref="infoLog" />  
+                <AppenderRef ref="Console" />  
+                <!--  <AppenderRef ref="catAppender"/>  -->
+            </asyncRoot>  
+        </Loggers>  
+    </Configuration>  

@@ -1,0 +1,56 @@
+参：https://www.jianshu.com/p/a3c983edabd1
+
+libc是Linux下原来的标准C库，后来逐渐被glibc取代
+在此之前除了有libc，还有klibc,uclibc。
+现在只要知道用的最多的是glibc就行了，
+主流的一些linux操作系统如 Debian, Ubuntu，Redhat等用的都是glibc或者其变种
+
+那glibc都做了些什么呢？
+glibc是Linux系统中最底层的API，几乎其它任何的运行库都要依赖glibc。 
+glibc最主要的功能就是对系统调用的封装
+你想想看，你怎么能在C代码中直接用fopen函数就能打开文件？ 打开文件最终还是要触发系统中的sys_open系统调用，而这中间的处理过程都是glibc来完成的
+除了封装系统调用，glibc自身也提供了一些上层应用函数必要的功能,
+如string,malloc,stdlib,linuxthreads,locale,signal等等。
+
+那eglibc又是什么？
+eglibc的主要特性是为了更好的支持嵌入式架构
+但它是二进制兼容glibc的，
+就是说如果你的代码之前依赖eglibc库，那么换成glibc后也不需要重新编译。
+ubuntu系统用的就是eglibc
+
+当然如果你写的是C++代码，还有两个库也要非常重视了，libc++/libstdc++,
+两个都是C++标准库。libc++是针对clang编译器特别重写的C++标准库，那libstdc++自然就是gcc的事儿了。
+libstdc++与gcc的关系就像clang与libc++
+libstdc++与gcc是捆绑在一起的，也就是说安装gcc的时候会把libstdc++装上
+那为什么glibc和gcc没有捆绑在一起呢？
+相比glibc，libstdc++虽然提供了c++程序的标准库，但它并不与内核打交道。
+对于系统级别的事件，libstdc++首先是会与glibc交互，才能和内核通信。
+相比glibc来说，libstdc++就显得没那么基础了
+
+说完了这些库，这些库最终都是拿来干嘛的？
+当然是要将它们与你的程序链接在一起！ 这时候就不得不说说gcc了(当然还有前文提到的clang以及llvm等编译器，本文就不细说它们的区别了)。
+你写的C代码.c文件通过gcc首先转化为汇编.S文件，之后汇编器as将.S文件转化为机器代码.o文件，
+生成的.o文件再与其它.o文件，或者之前提到的libc.so.6库文件通过ld链接器链接在一块生成可执行文件。
+
+那g++是做什么的? 
+后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序
+后缀为.cpp的，两者都会认为是c++程序
+在编译阶段，g++会调用gcc,对于c++代码，两者是等价的
+但是因为gcc命令不能自动和C++程序使用的库联接，需要这样，gcc -lstdc++
+
+====================================================================================
+
+glibc对应的动态库为： /usr/lib32/libc.so.6 其版本号为 GLIBC_2.19 这样的形式
+libstdc++对应的动态库为：/usr/lib32/libstdc++.so.6 其版本号为 GLIBCXX_3.4 这样的形式
+查看版本号的方法为：
+    strings /usr/lib32/libc.so.6 | grep GLIBC
+    strings /usr/lib32/libstdc++.so.6 | grep GLIBC
+因为ldd也是libc提供的，所以也可以用ldd命令查看libc的版本
+    ldd --version    
+
+
+
+
+
+
+

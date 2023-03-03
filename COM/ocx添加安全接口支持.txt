@@ -1,0 +1,84 @@
+1. 添加
+#include<ObjSafe.h> 
+2.
+● 在类声明中添加：
+DECLARE_INTERFACE_MAP()
+● 在cpp文件中添加：
+BEGIN_INTERFACE_MAP( CWordToolsXPCtrl, COleControl )
+	INTERFACE_PART(CWordToolsXPCtrl, IID_IObjectSafety, ObjSafe)
+END_INTERFACE_MAP()
+3.
+● 在类声明中添加：
+//下面是需要添加IObjectSafety接口的内容   
+//DECLARE_INTERFACE_MAP()
+BEGIN_INTERFACE_PART(ObjSafe, IObjectSafety)    
+STDMETHOD_(HRESULT, GetInterfaceSafetyOptions) (/* [in] */REFIID riid,   
+						/* [out] */DWORD __RPC_FAR *pdwSupportedOptions,
+						/* [out] */DWORD __RPC_FAR *pdwEnabledOptions  ); 
+STDMETHOD_(HRESULT, SetInterfaceSafetyOptions) (/* [in] */REFIID riid,
+						/* [in] */DWORD dwOptionSetMask, 
+						/* [in] */DWORD dwEnabledOptions   ); 
+END_INTERFACE_PART(ObjSafe); // 调度和事件 ID
+● 在cpp文件中添加：
+/////////安全接口支持//////////////////////////
+ULONG FAR EXPORT CWordToolsXPCtrl::XObjSafe::AddRef()  
+{     
+	METHOD_PROLOGUE(CWordToolsXPCtrl , ObjSafe)  
+		return pThis->ExternalAddRef(); 
+}   
+ULONG FAR EXPORT CWordToolsXPCtrl ::XObjSafe::Release() 
+{  
+	METHOD_PROLOGUE(CWordToolsXPCtrl , ObjSafe) 
+		return pThis->ExternalRelease(); 
+}  
+HRESULT FAR EXPORT CWordToolsXPCtrl ::XObjSafe::QueryInterface(REFIID iid, void FAR* FAR* ppvObj) 
+{    
+	METHOD_PROLOGUE(CWordToolsXPCtrl , ObjSafe) 
+		return (HRESULT)pThis->ExternalQueryInterface(&iid, ppvObj); 
+}   
+const DWORD dwSupportedBits =  INTERFACESAFE_FOR_UNTRUSTED_CALLER | INTERFACESAFE_FOR_UNTRUSTED_DATA;  
+const DWORD dwNotSupportedBits = ~ dwSupportedBits;  
+
+HRESULT STDMETHODCALLTYPE CWordToolsXPCtrl::XObjSafe::GetInterfaceSafetyOptions
+						(/* [in] */REFIID riid, 
+						 /* [out] */DWORD __RPC_FAR *pdwSupportedOptions, 
+						 /* [out] */DWORD __RPC_FAR *pdwEnabledOptions) 
+{   
+	METHOD_PROLOGUE(CWordToolsXPCtrl , ObjSafe)  
+	HRESULT retval = ResultFromScode(S_OK); 
+	IUnknown FAR* punkInterface;   
+	retval = pThis->ExternalQueryInterface(&riid, (void * *)&punkInterface);   
+	if (retval != E_NOINTERFACE)
+	{      
+		punkInterface->Release();  
+	}  
+	*pdwSupportedOptions = *pdwEnabledOptions = dwSupportedBits; 
+	return retval; 
+}   
+HRESULT STDMETHODCALLTYPE CWordToolsXPCtrl ::XObjSafe::SetInterfaceSafetyOptions
+						(/* [in] */REFIID riid, 
+						 /* [in] */DWORD dwOptionSetMask, 
+						 /* [in] */DWORD dwEnabledOptions) 
+{    
+	METHOD_PROLOGUE(CWordToolsXPCtrl , ObjSafe)  
+	IUnknown FAR* punkInterface;  
+	pThis->ExternalQueryInterface(&riid, (void * *)&punkInterface); 
+	if (punkInterface) 
+	{  
+		punkInterface->Release(); 
+	}   
+	else 
+	{   
+		return ResultFromScode(E_NOINTERFACE); 
+	} 
+	if (dwOptionSetMask & dwNotSupportedBits) 
+	{  
+		return ResultFromScode(E_FAIL); 
+	}   
+	dwEnabledOptions &= dwSupportedBits;  
+	if ((dwOptionSetMask & dwEnabledOptions) != dwOptionSetMask) 
+	{  
+		return ResultFromScode(E_FAIL);  
+	}      
+	return ResultFromScode(S_OK);  
+}

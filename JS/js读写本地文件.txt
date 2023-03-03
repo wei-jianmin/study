@@ -1,0 +1,35 @@
+function savefile(fname,fdata){
+
+var fso;
+
+try { 
+fso=new ActiveXObject("Scripting.FileSystemObject"); 
+} catch (e) { 
+alert("当前浏览器不支持写文件");
+return
+} 
+
+var f1 = fso.createtextfile(fname,true);	//第二个参数表是否重写文件
+f1.write(fdata); 
+openf1.Close(); 
+alert("文件已保存")
+}
+
+function readfile(fname){
+
+var fso;
+
+try { 
+fso=new ActiveXObject("Scripting.FileSystemObject"); 
+} catch (e) { 
+alert("当前浏览器不支持读文件");
+return ""
+}
+
+var openf1 = fso.OpenTextFile(fname);
+str = openf1.ReadAll(); //ReadLine();
+openf1.Close();
+alert("读文件完成")
+return str
+}
+	

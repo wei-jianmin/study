@@ -1,0 +1,180 @@
+语法格式：
+    ip xfrm XFRM-OBJECT COMMAND
+    XFRM-OBJECT := state | policy | monitor
+    
+    state:
+        ip xfrm state { add | update } ID [ ALGO-LIST ] [ mode MODE ] [ mark MARK [ mask MASK ] ] 
+                                          [ reqid REQID ] [ seq SEQ ] [ replay-window SIZE ] 
+                                          [ replay-seq SEQ ] [ replay-oseq SEQ ] [ flag FLAG-LIST ] 
+                                          [ sel SELECTOR ] [ LIMIT-LIST ] [ encap ENCAP ] 
+                                          [ coa ADDR[/PLEN] ] [ ctx CTX ]
+
+        ip xfrm state allocspi ID [ mode MODE ] [ mark MARK [ mask MASK ] ] 
+                                  [ reqid REQID ] [ seq SEQ ] [ min SPI max SPI ]
+
+        ip xfrm state { delete | get } ID [ mark MARK [ mask MASK ] ]
+
+        ip xfrm state { deleteall | list } [ ID ] [ mode MODE ] [ reqid REQID ] [ flag FLAG-LIST ]
+
+        ip xfrm state flush [ proto XFRM-PROTO ]
+
+        ip xfrm state count
+       
+        关键词：
+            ID := [ src ADDR ] [ dst ADDR ] [ proto XFRM-PROTO ] [ spi SPI ]
+
+            XFRM-PROTO := esp / ah / comp / route2 / hao
+                esp    : IPsec Encapsulating Security Payload
+                ah     : IPsec Authentication Header
+                comp   : IP Payload Compression
+                route2 : Mobile IPv6 Type 2 Routing Header
+                hao    : Mobile IPv6 Home Address Option
+
+            ALGO-LIST := [ ALGO-LIST ] ALGO
+
+            ALGO := enc/auth ALGO-NAME ALGO-KEYMAT                  或
+                    auth-trunc ALGO-NAME ALGO-KEYMAT ALGO-TRUNC-LEN 或
+                    aead ALGO-NAME ALGO-KEYMAT ALGO-ICV-LEN         或
+                    comp ALGO-NAME
+                algorithm type ：
+                    encryption (enc), 
+                    authentication (auth or auth-trunc), 
+                    authenticated encryption with associated data (aead), 
+                    compression (comp)
+                the algorithm name ：ALGO-NAME
+                the keying material ：ALGO-KEYMAT (for all except comp) 
+                    可以同时包含key和盐值或nonce值;请参阅相应的RFC
+                the truncation(截断) length ；ALGO-TRUNC-LEN (for auth-trunc only) 
+                the Integrity Check Value length : ALGO-ICV-LEN (for aead only) 
+                加密算法包括：
+                    ecb(cipher_null), cbc(des), cbc(des3_ede), cbc(cast5), 
+                    cbc(blowfish), cbc(aes), cbc(serpent), cbc(camellia), 
+                    cbc(twofish), and rfc3686(ctr(aes)).
+                Authentication认证算法包括：
+                    digest_null, hmac(md5), hmac(sha1), hmac(sha256), 
+                    hmac(sha384), hmac(sha512), hmac(rmd610), and xcbc(aes).
+                使用相关数据进行身份验证加密算法包括
+                (Authenticated encryption with associated data, AEAD) ：
+                    rfc4106(gcm(aes)), rfc4309(ccm(aes)), and rfc4543(gcm(aes)).
+                压缩算法包括：
+                    deflate, lzs, and lzjh.
+                
+            MODE := transport | tunnel | beet | ro | in_trigger
+                beet       ： Bound  End-to- End Tunnel (for IPsec ESP only)
+                ro         :  Mobile IPv6 modes are route optimization
+                in_trigger : inbound trigger
+                
+            FLAG-LIST := [ FLAG-LIST ] FLAG
+
+            FLAG := noecn | decap-dscp | nopmtudisc | wildrecv | icmp | af-unspec | align4
+
+            SELECTOR := [ src ADDR[/PLEN] ] [ dst ADDR[/PLEN] ] [ dev DEV ] [ UPSPEC ]
+                用于根据源地址、目的地址、网络设备和/或UPSPEC选择策略控制的流量
+                
+            UPSPEC := proto { PROTO 或 
+                              tcp/udp/sctp/dccp [ sport PORT ] [ dport PORT ] 或
+                              icmp/ipv6-icmp/mobility-header [ type NUMBER ] [ code NUMBER ] 或
+                              gre [ key DOTTED-QUAD/NUMBER ] 
+                             }
+                用于按协议选择流量
+                对于 tcp、udp、sctp 或 dccp 协议，可以选择指定源端口和目标端口
+                对于 icmp，ipv6-icmp，或 mobility-header 协议，可以选择指定类型和代码编号
+                对于 gre 协议，可以选择将密钥指定为点dotted-quad或数字。 
+                其他协议可以通过名称或编号PROTO进行选择。
+
+            LIMIT-LIST := [ LIMIT-LIST ] limit LIMIT
+                以秒、字节或数据包数为单位设置限制
+                
+            LIMIT := { time-soft | time-hard | time-use-soft | time-use-hard } SECONDS |
+                   { byte-soft | byte-hard } SIZE |
+                   { packet-soft | packet-hard } COUNT
+
+            ENCAP := { espinudp | espinudp-nonike } SPORT DPORT OADD
+           
+    policy:
+        ip xfrm policy { add | update } SELECTOR dir DIR [ ctx CTX ] [ mark MARK [ mask MASK ] ] 
+                                                         [ index INDEX ] [ ptype PTYPE ] 
+                                                         [ action ACTION ] [ priority PRIORITY ] 
+                                                         [ flag FLAG-LIST ] [ LIMIT-LIST ] [ TMPL-LIST ]
+
+        ip xfrm policy { delete | get } { SELECTOR | index INDEX } dir DIR [ ctx CTX ] 
+                                        [ mark MARK [ mask MASK ] ] [ ptype PTYPE ]
+
+        ip xfrm policy { deleteall | list } [ SELECTOR ] [ dir DIR ] [ index INDEX ] 
+                                            [ ptype PTYPE ] [ action ACTION ] [ priority PRIORITY ]
+
+        ip xfrm policy flush [ ptype PTYPE ]
+
+        ip xfrm policy count
+            
+        关键词：
+            SELECTOR := [ src ADDR[/PLEN] ] [ dst ADDR[/PLEN] ] [ dev DEV ] [ UPSPEC ]
+                根据源地址、目的地址、网络设备和/或UPSPEC选择策略控制的流量。
+                
+            UPSPEC := proto { PROTO |
+                   { tcp | udp | sctp | dccp } [ sport PORT ] [ dport PORT ] |
+                   { icmp | ipv6-icmp | mobility-header } [ type NUMBER ] [ code NUMBER ] |
+                   gre [ key { DOTTED-QUAD | NUMBER } ] }
+                用于按协议选择流量
+                对于 tcp、udp、sctp 或 dccp 协议，可以选择指定源端口和目标端口
+                对于 icmp，ipv6-icmp，或 mobility-header 协议，可以选择指定类型和代码编号
+                对于 gre 协议，可以选择将密钥指定为点dotted-quad或数字。 
+                其他协议可以通过名称或编号PROTO进行选择。
+                
+            DIR := in | out | fwd
+
+            CTX :
+                sets the security context
+                
+            PTYPE := main | sub
+
+            ACTION := allow | block
+
+            PRIORITY :
+                is a number that defaults to zero.
+
+            FLAG-LIST := [ FLAG-LIST ] FLAG
+
+            FLAG := localok | icmp
+
+            LIMIT-LIST := [ LIMIT-LIST ] limit LIMIT
+
+            LIMIT := { time-soft | time-hard | time-use-soft | time-use-hard } SECONDS |
+                   { byte-soft | byte-hard } SIZE |
+                   { packet-soft | packet-hard } COUNT
+
+            TMPL-LIST := [ TMPL-LIST ] tmpl TMPL
+
+            TMPL := ID [ mode MODE ] [ reqid REQID ] [ level LEVEL ]
+
+            ID := [ src ADDR ] [ dst ADDR ] [ proto XFRM-PROTO ] [ spi SPI ]
+
+            XFRM-PROTO := esp | ah | comp | route2 | hao
+
+            MODE := transport | tunnel | beet | ro | in_trigger
+
+            LEVEL := required | use
+                可以选择指定要监视的xfrm对象
+                
+    monitor:
+        ip xfrm monitor [ all-nsid ] [ all | LISTofXFRM-OBJECTS ]
+
+详述：
+    ip xfrm state add         add new state into xfrm
+    ip xfrm state update      update existing state in xfrm
+    ip xfrm state allocspi    allocate an SPI value
+    ip xfrm state delete      delete existing state in xfrm
+    ip xfrm state get         get existing state in xfrm
+    ip xfrm state deleteall   delete all existing state in xfrm
+    ip xfrm state list        print out the list of existing state in xfrm
+    ip xfrm state flush       flush all state in xfrm
+    ip xfrm state count       count all existing state in xfrm
+    ip xfrm monitor           state monitoring for xfrm objects
+    ip xfrm policy add        add a new policy
+    ip xfrm policy update     update an existing policy
+    ip xfrm policy delete     delete an existing policy
+    ip xfrm policy get        get an existing policy
+    ip xfrm policy deleteall  delete all existing xfrm policies
+    ip xfrm policy list       print out the list of xfrm policies
+    ip xfrm policy flush      flush policies
+    ip xfrm policy count      count existing policies

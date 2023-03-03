@@ -1,0 +1,36 @@
+context.gc_arena
+
+struct gc_arena
+{
+    struct gc_entry *list;      
+    struct gc_entry_special *list_special;
+};
+
+// Each time the gc_malloc() function is called,
+// it allocates sizeof(gc_entry) + the requested number of bytes.
+// The gc_entry is then stored as a header in front 
+// of the memory address returned to the caller.
+struct gc_entry
+{
+    struct gc_entry *next;    //4字节
+};
+
+// Garbage collection entry for a specially allocated structure that needs
+// a custom free function to be freed like struct addrinfo
+struct gc_entry_special
+{
+    struct gc_entry_special *next;   //12字节
+    void (*free_fnc)(void *);
+    void *addr;
+};
+
+实现原理总结：
+申请内存有两种方式：
+一种是通过gc_malloc()函数申请，这种方式申请的内存，
+申请时会在申请的堆前面多申请4个字节用以存放gc_entry，用它指向下一个申请的内存地址
+通过这种方式，每次申请的内存会自动用头插法串成一个链表。
+另一种方式是其它函数申请的内存，这种方式申请的内存，
+需要单独再创建一个数据结构gc_entry_special，
+该结构记录的下一个gc_entry_special数据结构的内存地址、申请的堆内存的地址以及该堆内存的释放函数
+通过这种方式申请的内存，每次都需要手动将申请的gc_entry_special结构头插到gc_entry_special链表中
+最后，用个gc_arena对象，记录上面两个链表的头指针

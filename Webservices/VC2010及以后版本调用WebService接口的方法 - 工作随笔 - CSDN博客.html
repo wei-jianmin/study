@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/ryu2003/article/details/70577725"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="近日在项目中需要频繁调用一个webservice接口，以达到增加数据做性能测试的目的。最开始想的是直接用LR调用20W次，结果在跑的时候发现LR11版本和12版本均会出现调用几百次后内存崩溃的情况，且单线程运行速度很慢，于是就考虑使用VC多线程来调用此接口的办法。 
+兴冲冲的打开VC2015，百度之后基本上介绍的方法都是直接添加服务引用（WebReference），但是突然发现VC2015的引用页面" />
+    <meta name="keywords" content="web service" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>VC2010及以后版本调用WebService接口的方法 - 工作随笔 - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-bbbe7084c5.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin-yellow/skin-yellow-2eefd34acf.min.css">
+
+    <script type="text/javascript">
+        var username = "ryu2003";
+        var blog_address = "https://blog.csdn.net/ryu2003";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/ryu2003/article/details/70577725"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin-yellow";
+        // 第四范式所需数据
+        var articleTitles = "VC2010及以后版本调用WebService接口的方法 - 工作随笔";
+        var articleID = "70577725";
+
+        var nickName = "ryu2003";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<body class="nodata"> 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script type="text/javascript" src="//g.csdnimg.cn/copyright/1.0.3/copyright.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<div class="recommend-right">
+  <ul class="recommend-fixed-box">
+    
+  </ul>
+</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-1 float-left">原</span>				<h1 class="title-article">VC2010及以后版本调用WebService接口的方法</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top">
+																				<span class="time">2017年04月24日 11:30:47</span>
+					<a class="follow-nickName" href="https://me.csdn.net/ryu2003" target="_blank">ryu2003</a>
+						<span class="read-count">阅读数：2380</span>
+						
+														<span class="tags-box artic-tag-box">
+								<span class="label">标签：</span>
+																<a data-track-click='{"mod":"popu_626","con":"web service"}' data-track-view='{"mod":"popu_626","con":"web service"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=web service&t=blog" target="_blank">web service																</a>
+							</span>
+																															</div>
+				<div class="operating">
+														</div>
+			</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+					版权声明：本文为博主原创文章，未经博主允许不得转载。					https://blog.csdn.net/ryu2003/article/details/70577725				</div>
+								            <div class="markdown_views prism-atom-one-dark">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>近日在项目中需要频繁调用一个webservice接口，以达到增加数据做性能测试的目的。最开始想的是直接用LR调用20W次，结果在跑的时候发现LR11版本和12版本均会出现调用几百次后内存崩溃的情况，且单线程运行速度很慢，于是就考虑使用VC多线程来调用此接口的办法。 <br>
+兴冲冲的打开VC2015，百度之后基本上介绍的方法都是直接添加服务引用（WebReference），但是突然发现VC2015的引用页面根本就没有服务引用，不死心，分别试了VC2010/2013，均发现没有（最新的VC2017）；最后在VC2005上发现了此引用按钮，测试后可以再2005上引入webservice接口。 <br>
+那么在VC2005之后，没有服务器引用的情况下，如何调用webservice接口接口呢？经过研究后发现，原来Visual Studio 2008以及以后版本中，微软停止了非托管C++的直接WebService引用。ATL Server代码已经托管到开源网站上，我们可以找到ATL Server的源代码，编译出Sproxy.exe，这个工具可以根据wsdl文件来生成非托管的代理类。 <br>
+具体方法如下：</p>
+
+<p>1.下载ATL_Server源代码，编译代码中的SProxy工程形成sproxy.exe。代码下载地址为：<a href="http://atlserver.codeplex.com/" rel="nofollow">http://atlserver.codeplex.com/</a>，需要注意的是，此工程需要使用VC2005打开。 <br>
+ 2.将下载好的ATL_Server源代码中的include文件夹完整的拷贝到目前使用版本的VC的include文件夹中，例如：VC2015对应的文件夹为：\Microsoft Visual Studio 14.0\VC\atlmfc\include。 <br>
+ 3.浏览器访问需要调用的webservice接口的WSDL页面，将整个页面另存为xxx.wsdl，如：webservice.wsdl。而后将此文件和sproxy.exe放置在同一文件夹下面。 <br>
+ 4.使用如下命令行：sproxy.exe /wsdl webservice.wsdl ；就会在当前运行cmd的目录下生成webservice.h文件。 <br>
+ 5.直接#include此文件和using namespace 就好了。</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs lasso"> <span class="hljs-variable">#include</span> <span class="hljs-string">"I.h"</span>
+ using namespace I;
+ <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span><span class="hljs-built_in">..</span>
+ CI  I_WebService;
+ I_WebService<span class="hljs-built_in">.</span>YZ_ReportEinCheckingResult();<span class="hljs-comment">//接具体的调用方法</span></code></pre>
+
+<p>PS：在编译的时候可能会遇到找不到dbgautoattach.h此头文件的问题，此文件包含在VC2005的VC\include下面，将此拷贝到VC2015的VC\include下面即可解决此问题。 <br>
+ PS2：编译中可能还会出现很多莫名其妙的错误，记得工程设置 否 (/sdl-)</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-778f64ae39.css" rel="stylesheet">
+                </div>
+									<div class="hide-article-box text-center">
+						<a class="btn" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/ryu2003/article/details/70577725,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/ryu2003/article/details/70577725,"}'>阅读更多</a>
+					</div>
+					<script>
+						(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</script>
+					</article>
+	
+</div>
+<script>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<button id="btnCommentUnlogin" class="btn btn-sm btn-red">我来说一句</button>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>
+        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/manytao/article/details/6288599,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/manytao/article/details/6288599,BlogCommendFromBaidu_2"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/manytao/article/details/6288599?utm_source=blogxgwz0" target="_blank" title="VC 通过Soap访问WebService">
+				<h4 class="text-truncate oneline">
+						VC 通过Soap访问WebService				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/5/1/3_manytao.jpg" alt="manytao" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">manytao</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-30</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1.1万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/manytao/article/details/6288599?utm_source=blogxgwz0" target="_blank" title="VC 通过Soap访问WebService">
+							<span class="desc oneline">  在VC中,我们选择通过Soap规则来访问WebService,划分为以下步骤 1.所谓工欲善其事,必先利其器,既然选择Soap,我们首先要去微软官方下载soap sdk3.0安装包,地址： htt...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/manytao?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> ManyTao's Blog</span></a></span>
+                        					</p>
+			</div>
+					</div>
+							<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/john_ma1019/3574107,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/john_ma1019/3574107,BlogCommendFromBaidu_0"}'>
+			<a href="https://download.csdn.net/download/john_ma1019/3574107?utm_source=blogxgwz1" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							VC++（MFC）中WebService服务的调用						</h4>
+						<span class="data float-right">09-04</span>
+					</div>
+					<div class="desc oneline">
+							VC++（MFC）中WebService服务的调用					</div>
+				</div>
+			</a>
+		</div>
+									<!-- 第四范式广告开关 -->
+				<div class="p4courset3_target _4paradigm_box recommend-item-box clearfix" ></div>
+				<script>window.p4sdk_enable_recommendBox=true</script>
+			
+					<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/majiandongde/article/details/6859092,BlogCommendFromBaidu_1"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/majiandongde/article/details/6859092,BlogCommendFromBaidu_1"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/majiandongde/article/details/6859092?utm_source=blogxgwz2" target="_blank" title="vc 与webservice通信的几种方法">
+				<h4 class="text-truncate oneline">
+						vc 与webservice通信的几种方法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/2/C/8/3_majiandongde.jpg" alt="majiandongde" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">majiandongde</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-10</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2400</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/majiandongde/article/details/6859092?utm_source=blogxgwz2" target="_blank" title="vc 与webservice通信的几种方法">
+							<span class="desc oneline">vc 与webservice通信有这么几种方法，现在总结一下。
+        首先webservice服务会提供接口，接口的说明都会放在一个wsdl文档中。没有接触过vc与webservice通信...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/majiandongde?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> majiandongde的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+							<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/goodwinds/409339,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/goodwinds/409339,BlogCommendFromBaidu_3"}'>
+			<a href="https://download.csdn.net/download/goodwinds/409339?utm_source=blogxgwz3" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							mfc调用webservice的客户端						</h4>
+						<span class="data float-right">04-11</span>
+					</div>
+					<div class="desc oneline">
+							mfc调用webservice的客户端,使用非托管。					</div>
+				</div>
+			</a>
+		</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/wutaozhao/article/details/6027527,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/wutaozhao/article/details/6027527,BlogCommendFromBaidu_4"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/wutaozhao/article/details/6027527?utm_source=blogxgwz4" target="_blank" title="MFC 调用 WebService">
+				<h4 class="text-truncate oneline">
+						MFC 调用 WebService				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/9/F/3_wutaozhao.jpg" alt="wutaozhao" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wutaozhao</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-22</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							7100</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/wutaozhao/article/details/6027527?utm_source=blogxgwz4" target="_blank" title="MFC 调用 WebService">
+							<span class="desc oneline">系统环境: IDE是VS2003， WebService服务器运行于Windows7，MFC程序也运行于Windows7，同一电脑。在Win7里面，要做的准备操作，就是安装配置IIS，Win7默认并没...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/wutaozhao?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> 登山</span></a></span>
+                        					</p>
+			</div>
+					</div>
+							<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/jillcomputer/2889072,BlogCommendFromBaidu_5"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/jillcomputer/2889072,BlogCommendFromBaidu_5"}'>
+			<a href="https://download.csdn.net/download/jillcomputer/2889072?utm_source=blogxgwz5" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							VC++调用WebService的方式						</h4>
+						<span class="data float-right">12-07</span>
+					</div>
+					<div class="desc oneline">
+							Microsoft Visual C++调用WebService的实现代码,还包括BASE64编码方法					</div>
+				</div>
+			</a>
+		</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				typeof NEWS_FEED != "function" ? "" : NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'left',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 8,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/xjkstar/article/details/20052443,BlogCommendFromBaidu_6"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/xjkstar/article/details/20052443,BlogCommendFromBaidu_6"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/xjkstar/article/details/20052443?utm_source=blogxgwz6" target="_blank" title="[gSOAP]MFC调用WEBService">
+				<h4 class="text-truncate oneline">
+						[gSOAP]MFC调用WEBService				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/2/4/3_xjkstar.jpg" alt="xjkstar" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xjkstar</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">02-27</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							3637</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/xjkstar/article/details/20052443?utm_source=blogxgwz6" target="_blank" title="[gSOAP]MFC调用WEBService">
+							<span class="desc oneline">gSOAP编译工具提供了一个SOAP/XML 关于C/C++ 语言的实现，从而让C/C++语言开发web服务或客户端程序的工作变得轻松了很多。
+
+gSOAP官网：点击打开链接
+
+
+我现在只想...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/xjkstar?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> xjkstar的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/shixin_0125/article/details/42493535,BlogCommendFromBaidu_7"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/shixin_0125/article/details/42493535,BlogCommendFromBaidu_7"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/shixin_0125/article/details/42493535?utm_source=blogxgwz7" target="_blank" title="VC++使用Soap ToolKit3.0调用WebService接口">
+				<h4 class="text-truncate oneline">
+						VC++使用Soap ToolKit3.0调用WebService接口				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/D/B/3_shixin_0125.jpg" alt="shixin_0125" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">shixin_0125</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-07</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2606</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/shixin_0125/article/details/42493535?utm_source=blogxgwz7" target="_blank" title="VC++使用Soap ToolKit3.0调用WebService接口">
+							<span class="desc oneline">由于项目需要，需要实现VC调用WebService接口，之前没接触过这个，所以花了一天找了点资料，并自己编写了demo。
+
+
+     1. 首先看了Soap相关资料，见http://www.w...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/shixin_0125?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> Legendary丶Jack</span></a></span>
+                        					</p>
+			</div>
+					</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/linshixina/article/details/19776069,BlogCommendFromBaidu_8"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/linshixina/article/details/19776069,BlogCommendFromBaidu_8"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/linshixina/article/details/19776069?utm_source=blogxgwz8" target="_blank" title="在VC中调用WebService">
+				<h4 class="text-truncate oneline">
+						在VC中调用WebService				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/4/C/3_linshixina.jpg" alt="linshixina" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">linshixina</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">02-23</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							479</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/linshixina/article/details/19776069?utm_source=blogxgwz8" target="_blank" title="在VC中调用WebService">
+							<span class="desc oneline">在VC中调用WebService
+
+声明：此内容仅代表网友个人经验或观点，不代表本网站立场和观点。
+
+
+一、什么是WebService ？
+WebService其实就是一个基于网络的应用程...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/linshixina?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> linshixina的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/kyfvc/article/details/10441895,BlogCommendFromBaidu_9"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/kyfvc/article/details/10441895,BlogCommendFromBaidu_9"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/kyfvc/article/details/10441895?utm_source=blogxgwz9" target="_blank" title="用C++开发与调用WebService的例子">
+				<h4 class="text-truncate oneline">
+						用C++开发与调用WebService的例子				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/1/F/3_kyfvc.jpg" alt="kyfvc" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">kyfvc</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-28</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2095</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/kyfvc/article/details/10441895?utm_source=blogxgwz9" target="_blank" title="用C++开发与调用WebService的例子">
+							<span class="desc oneline">一 服务器端
+1.首先编写 add.h文件：
+1//gsoap ns service name: add
+2//gsoap ns service namespace: http://localh...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/kyfvc?utm_source=blog_pc_recommand">来自：	<span class="blog_title"> kyfvc的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+						<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/sinat_33718563/article/details/79241129" target="_blank">
+						vc2010高亮</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/zhiyuan_x/article/details/54911771" target="_blank">
+						vc2010书签</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/to_Baidu/article/details/61681564" target="_blank">
+						vc2010主题</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/bcbobo21cn/article/details/45003669" target="_blank">
+						vc2010指南</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/jcx5083761/article/details/7770107" target="_blank">
+						vc2010断点</a>
+					</span>
+								</div>
+			</div>
+					</div>
+		<div class="recommend-item-box blog-expert-recommend-box">
+			<h4 class="text-truncate">博主推荐
+			</h4>
+			<div class="blog-expert-recommend">
+				<div class="blog-expert-load-new" data-index="3">
+					<svg version="1.1" viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+					<path d="M142.5,57.5c-1.3-1.2-2.1-3.3-2.1-5.4c0-4.2,3.3-7.5,7.5-7.5h19.6c4.2,0,7.5,3.3,7.5,7.5s-3.3,7.5-7.5,7.5h-4.2
+					 C170.8,71.2,175,85,175,100c0,41.7-33.8,75-75,75c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5c33.3,0,60-27.1,60-60
+					 C160,83.7,153.8,68.7,142.5,57.5L142.5,57.5z M57.5,142.5c1.2,1.2,2.1,3.3,2.1,5.4c0,4.2-3.3,7.5-7.5,7.5H32.5
+					 c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5h4.2C29.2,128.8,25,115,25,100c0-41.7,33.7-75,75-75c4.2,0,7.5,3.3,7.5,7.5
+					 S104.2,40,100,40c-33.3,0-60,27.1-60,60C40,116.2,46.2,131.2,57.5,142.5z"/>
+					</svg>
+					<span>换一批</span>
+				</div>
+				<div class="blog-expert">
+				</div>
+			</div>
+		</div>
+
+
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <!-- <h3 class="aside-title">个人资料</h3> -->
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/ryu2003">
+                <img src="https://avatar.csdn.net/F/C/E/3_ryu2003.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/ryu2003" target="_blank" class="" id="uid">ryu2003</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a class="btn btn-sm btn-red-hollow" id="btnAttent">关注</a>
+            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="42">
+                        <dt><a href="https://blog.csdn.net/ryu2003?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/ryu2003?t=1"><span class="count">42</span></a></dd>
+                    </dl>
+        <dl class="text-center" id="fanBox" title="20">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">20</span></dd>
+        </dl>
+        <dl class="text-center" title="23">
+            <dt>喜欢</dt>
+            <dd><span class="count">23</span></dd>
+        </dl>
+        <dl class="text-center" title="52">
+            <dt>评论</dt>
+            <dd><span class="count">52</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="5级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-5"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="240799">
+                24万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="2183">
+                2183            </dd>
+        </dl>
+        <dl title="24630">
+            <dt>排名：</dt>
+            <dd>2万+</dd>
+        </dl>
+    </div>
+        <div class="badge-box d-flex">
+        <span>勋章：</span>
+                        <a class="icon-badge" title="持之以恒">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#csdnc-m-lasting"></use>
+            </svg>
+            <div class="icon-arrow"></div>
+            <div class="grade-detail-box item2">
+                <div class="pos-box">
+                    <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-m-lasting"></use>
+                        </svg>
+                        <p>持之以恒</p>
+                    </div>
+                    <div class="right-box d-flex justify-content-center align-items-center">
+                        授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+                    </div>
+                </div>
+            </div>
+        </a>
+                            </div>
+    </div>
+		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-百度联盟-300x250 --><script type="text/javascript" src="//rabc1.iteye.com/common/production/web/z3n86.js?lg=yyovfyh"></script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/ryu2003/article/details/82791754" target="_blank">windows10 专业版密钥激活方法（20180920亲测可用）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/ryu2003/article/details/82746445" target="_blank">CentOS7 升级Openssl的办法</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/ryu2003/article/details/82255341" target="_blank">Vmware Vcenter6.5 全新安装及群集配置介绍</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/ryu2003/article/details/82255319" target="_blank">VMware vSphere</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/ryu2003/article/details/80463129" target="_blank">有关蓝牙耳机和蓝牙音频的那点事儿</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/ryu2003/article/category/6072954">
+                    <span class="title oneline">RFS</span>
+                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/ryu2003/article/category/6072955">
+                    <span class="title oneline">性能测试</span>
+                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/ryu2003/article/category/6072956">
+                    <span class="title oneline">杂七杂八</span>
+                    <span class="count float-right">25篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/ryu2003/article/category/6207449">
+                    <span class="title oneline">Advanced Installer</span>
+                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/ryu2003/article/category/7992976">
+                    <span class="title oneline">虚拟化</span>
+                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2018/09">
+                    2018年9月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2018/08">
+                    2018年8月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2018/05">
+                    2018年5月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2018/03">
+                    2018年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2017/11">
+                    2017年11月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2017/08">
+                    2017年8月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2017/07">
+                    2017年7月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2017/03">
+                    2017年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/12">
+                    2016年12月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/10">
+                    2016年10月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/09">
+                    2016年9月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/08">
+                    2016年8月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/07">
+                    2016年7月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/06">
+                    2016年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/05">
+                    2016年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/04">
+                    2016年4月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/03">
+                    2016年3月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/02">
+                    2016年2月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/ryu2003/article/month/2016/01">
+                    2016年1月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/ryu2003/article/details/50855146">解决在Windows server 2012R2上无法安装Intel I219-V,I211，I217-V,I218-V网卡驱动的问题</a>
+					<p class="read">阅读量：<span>40691</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/ryu2003/article/details/50587837">谈谈安装MYSQL ODBC遇到的报错（Error 1918）</a>
+					<p class="read">阅读量：<span>27157</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/ryu2003/article/details/52511967">在华为服务器 RH 2288H V3上装 windows server 2012 R2的办法</a>
+					<p class="read">阅读量：<span>21549</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/ryu2003/article/details/68483917">PCI简易通讯控制器驱动的安装办法</a>
+					<p class="read">阅读量：<span>20768</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/ryu2003/article/details/78492127">CentOS7下解决ifconfig command not found的办法</a>
+					<p class="read">阅读量：<span>14341</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/ryu2003/article/details/50855146#comments">解决在Windows server...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/u013423593" class="user-name" target="_blank">u013423593</a>：[reply]weixin_40953651[/reply]
+我今天下载看也是两行，什么情况                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/ryu2003/article/details/78492127#comments">CentOS7下解决ifconfi...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_38631247" class="user-name" target="_blank">qq_38631247</a>：[reply]YYZZHC999[/reply]
+666                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/ryu2003/article/details/78492127#comments">CentOS7下解决ifconfi...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/YYZZHC999" class="user-name" target="_blank">YYZZHC999</a>：谢谢分享。                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/ryu2003/article/details/50855146#comments">解决在Windows server...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/weixin_40953651" class="user-name" target="_blank">weixin_40953651</a>：我下载的在笔记本打开没有楼主讲的三行，只有两行。。。                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/ryu2003/article/details/50855146#comments">解决在Windows server...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/weixin_42591160" class="user-name" target="_blank">weixin_42591160</a>：你好，请问下为什么我I219-V安装上了 I211AT无法安装？何解？                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//rabc1.iteye.com/common/site/resource/nqnl.js?mhzzpw=gzj"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+            <div id="dmp_ad_69"><div id="kp_box_75" data-pid="69" data-track-view='{"mod":"kp_popu_75","con":",,"}'><div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://www.csdn.net/2018dev/?utm_source=blogtextlink" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">开发者调查</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #000;padding:2px 5px 0px 5px;background:#000;">
+<a href="http://ai2018.csdn.net/?utm_source=bkxxl" target="_blank" style="color:#fff;font-weight:bold;text-decoration:none;font-size:15px;">AI开发者大会日程曝光</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://gitbook.cn/gitchat/1024developer?utm_source=wzl1022" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">全场课程、电子书5折起</a>
+</div>
+
+<div style="float:left;">
+<script type="text/javascript" src="//rabc1.iteye.com/common/js/ndr3h.js?b=wosyvccl"></script>
+</div></div><script>$(function(){csdn.track.viewCheck($("#kp_box_75"));});</script></div>            		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <div class="float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                <a class="pulllog-login">登录</a>
+            </div>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li class="btn-like-box ">
+			<button class=" low-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>0</p>
+			</button>
+		</li>
+		<li class="">
+						<a class="btn-comments low-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+										</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</button>
+		</li>
+							<li class="widescreen-hide">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/ryu2003/article/details/70170429" title="Loadrunner调用Webservice接口进行性能测试时的方法及优化总结">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-shangyiye"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<li class="widescreen-hide">
+			<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/ryu2003/article/details/74457064" title="浅谈SDI接口">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-xiayiye"></use>
+				</svg>
+				<span class="hover-show text text3">下一篇</span>
+			</a>
+		</li>
+						<li class="bdsharebuttonbox _360_interactive"style="margin-top: 8px;">
+			<script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> typeof INTERACTIVE_PLUGIN != "object" ? '' : INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'click', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt="">
+		</li>
+	  
+		<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/ryu2003/article/details/70170429" title="Loadrunner调用Webservice接口进行性能测试时的方法及优化总结">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-shangyiye"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+																<li class="widescreen-more">
+					<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/ryu2003/article/details/74457064" title="浅谈SDI接口">
+						<svg class="icon hover-hide" aria-hidden="true">
+							<use xlink:href="#csdnc-xiayiye"></use>
+						</svg>
+						<span class="hover-show text text3">下一篇</span>
+					</a>
+				</li>
+							</ul>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = articleTitles;
+    var ChannelId = 16;
+    var articleId = "70577725";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/ryu2003/article/details/70577725";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "vs+mfc+%E8%AE%BF%E9%97%AE+web+service";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["vc2010","\u4ee5\u540e","\u7248\u672c","\u8c03\u7528","webservice\u63a5\u53e3","\u65b9\u6cd5"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"projectNo","nick_name":"\u679c\u5b50\u7684\u535a\u5ba2","avatar":"https:\/\/avatar.csdn.net\/4\/4\/5\/3_projectno.jpg","is_expert":false,"article_count":38},{"user_name":"high2011","nick_name":"high2011","avatar":"https:\/\/avatar.csdn.net\/7\/7\/2\/3_high2011.jpg","is_expert":false,"article_count":649},{"user_name":"Miller_l","nick_name":"Lystery","avatar":"https:\/\/avatar.csdn.net\/B\/5\/D\/3_miller_l.jpg","is_expert":false,"article_count":10},{"user_name":"shuang1457","nick_name":"Log-PS","avatar":"https:\/\/avatar.csdn.net\/F\/F\/E\/3_shuang1457.jpg","is_expert":false,"article_count":29},{"user_name":"u014242422","nick_name":"\u6e38\u4e91\u51cc\u5251","avatar":"https:\/\/avatar.csdn.net\/3\/C\/4\/3_u014242422.jpg","is_expert":false,"article_count":24},{"user_name":"zhongguomao","nick_name":"SAP\u5251\u5ba2","avatar":"https:\/\/avatar.csdn.net\/8\/2\/9\/3_zhongguomao.jpg","is_expert":false,"article_count":4623},{"user_name":"quwei7515","nick_name":"quwei7515","avatar":"https:\/\/avatar.csdn.net\/2\/6\/B\/3_quwei7515.jpg","is_expert":false,"article_count":44},{"user_name":"lynnlin1122","nick_name":"lynnlin1122","avatar":"https:\/\/avatar.csdn.net\/9\/9\/0\/3_lynnlin1122.jpg","is_expert":false,"article_count":218},{"user_name":"scjthree","nick_name":"\u4e9a\u5b58","avatar":"https:\/\/avatar.csdn.net\/A\/F\/6\/3_scjthree.jpg","is_expert":false,"article_count":66},{"user_name":"qq_35706453","nick_name":"Lyy\u63d0\u62c9\u7c73\u82cf","avatar":"https:\/\/avatar.csdn.net\/F\/7\/0\/3_qq_35706453.jpg","is_expert":false,"article_count":0}];
+
+		var articleType = 1;
+		var CopyrightContent = '本文为博主原创文章，未经博主允许不得转载。';
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,articleTit);
+        }
+    })
+</script>
+<script src="https://g.csdnimg.cn/login-box/1.0.1/login-box.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-f5eab3c803.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-434e58b8c9.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin-yellow/skin-yellow-9376486353.min.js"></script>
+<script src="//g.csdnimg.cn/fixed-sidebar/1.0.5/fixed-sidebar.js" type="text/javascript"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=vs+mfc+%E8%AE%BF%E9%97%AE+web+service"  type="text/javascript"></script>
+</body>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/markdownCopy-3e5d9ef4b0.js" /></script>
+
+<script type="text/javascript" src="//g.csdnimg.cn/check-adblock/1.0.9/check-adblock.js"></script>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

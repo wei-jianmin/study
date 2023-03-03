@@ -1,0 +1,87 @@
+在.git/object/xx 下，通常有4中类型的文件: blob、commit、tree、tag
+通过 git cat-file -t 文件标识符，可以查看文件是什么类型的
+通过 git cat-file -p 文件标识符，可以查看文件的明文内容
+这里对前3中文件进行介绍：
+    blob文件（block object，块对象）
+        在git add命令时，会创建这样的文件，每一个add的文件，都对应一个唯一的blob文件
+        即使这个文件进行了简单的修改，在重新add的时候，也会生成一个新的blob文件
+        blob文件是个压缩的二进制流（zlib的deflate算法），解压后，就是git add所添加的文件
+    commit文件和tree文件：
+        在每次commit时，会产生这样的两个文件
+        tree文件的内容形如：
+            100644 blob 2125fa6aa20c84b9f2378515a89779b05b265e6a    1.pdf
+            100644 blob bd41cba781d8349272bf3eb92568285b411c027c    1.txt
+            100644 blob 70a06e7c1ac5bcc4e4a0b841256a2c3d10adedc9    2.txt
+        一个文件没有改变，提交时，仍然会将该文件对应blob文件的相关信息记录在tree文件中
+        一个文件发生改变，提交时，会将该文件所对应新blob文件的相关信息记录在tree文件中
+        所以一个tree，表达的是：本次提交后，版本库所维持的所有最新文件
+        
+        commit文件的内容形如：
+            tree 4c02896db728fbb515232c19ba10fde676c0cd5d
+            parent 04c0de5ce8bcbd2579e980e32abe7e9f46ce16e5
+            author xingyuxinhen <wei-jianmin@163.com> 1618391933 +0800
+            committer xingyuxinhen <wei-jianmin@163.com> 1618391933 +0800
+
+            my comment
+        tree后面跟的是本次提交所对应的tree文件和
+        parent后面跟的是上次的commit文件，因此，一系列的提交，会形成一个commit文件链表，
+        理解这个commit文件链表很重要，git可以拥有多个提交分支（主分支或辅助分支），
+        每个分支就对应这样一个commit文件链表
+        假设当前分支为主分支，则.git/HEAD中记录的内容为  ref: refs/heads/master
+        而 .git/refs/heads/master中记录的内容为最新一次提交的commit文件的名字
+        
+    如果用图形表示这3中文件类型，则通常用圆形表示提交，用三角形表示tree，用方块表示blob
+
+.git/index文件
+    索引文件，即通常所说的git暂存区，跟tree文件类型差不多，commit提交时生成的tree文件，就是参照该index文件
+    但索引文件可能更复杂，借助index文件，可以把多次git add进行智能合并
+    使用git ls-files --stage命令，可以（依据index文件）展示文件与最新的blob的对应关系
+    index文件结构包括如下部分：（https://zhuanlan.zhihu.com/p/76634986）
+        1. 索引标识符部分（12字节）
+            其中前四字节包含了『DIRC』(0x44495243)，指『DirCache』，用于标识该文件是否是合法的索引文件，
+            之后四字节包含了索引文件的版本，当前版本为『2』（0x00000002），
+            再之后四字节为32位无符号整数，标识了索引的文件数目
+        2. 状态数据，该部分存储与文件相关的状态
+            索引识别符接下来的8字节包含了文件的创建时间
+            设备编号与inode编号各占四个字节，实inode编号在Git中唯一的作用是检测文件是否修改
+            接下来的四个字节是文件权限，如-rw-r--r--
+            接下来的四个字节是所属用户UID
+            接下里的四个字节是所属用户组
+            接下来的四个字节是文件大小
+            接下来的20个字节是文件所对应的Git对象文件的SHA-1哈希
+            接下来的两个字节包含了如下内容
+                1位假定不变标识：0 表示跟踪所有变更，1 表示忽略所有变更
+                1位扩展标识：该标识在当前索引文件版本（版本2）中无意义，被置0。
+                2位阶段标识：该标识用于在合并分支的时候使用，
+                             可以通过# 0x01中所提到的git ls-files --stage命令获取。
+                             普通（未合并）文件通常为0。
+                12位文件名长度：该标识存储了文件名的长度，最长支持到4095位（0xFFF）
+            接下来存的是变长的文件路径名
+            接下来是32位分隔符，分隔符长度为8字节（32位），通常为0x00000000，以分隔不同的文件。
+        3.  目录索引
+                 32位识别符，该识别符包含四个字节，即TREE（0x54524545）。
+                 32位目录索引长度
+                 每个目录节点
+                    可变长目录名：目录索引中的目录名与文件索引的文件名有所区别，
+                                  使用NUL字符（即0x00或\0）结尾（与字符串一致）。
+                                  目录名相对于该目录的父目录定位。若当前节点是根目录，则只包含一个NUL。
+                    索引中该树所包含的节点数（即叶子节点）：
+                                  该值格式为ASCII数字，由于目录索引只是缓存，因此若其值为-1（0x2d31），
+                                  说明并未缓存叶子节点数量，若为其他值，则其值为索引中该树所包含的节点数
+                    一字节的ASCII空格
+                    索引中该树所包含的子树数
+                    一字节的ASCII换行符
+                    160位SHA-1校验值
+                    160位文件校验值
+        事实上Git的索引文件相当复杂，除了以上提到的文件索引（一定有）和目录索引（可能有）以外，还会有以下若干种索引：
+            REUC - Resolve Undo 用于解决冲突后复原冲突，可以先手动触发一个冲突，解决之后利用hexdump查看 。
+            link - Split Index 用于分散索引文件，避免索引文件体积过大，可使用git update-index --split-index手动开启 。
+            UNTR - Untracked Cache 用于缓存在工作区但未提交的文件索引，可使用git update-index --untracked-cache手动开启 。
+            FSMN - File System Monitor Cache 文件系统监视缓存，通过文件系统所提供信息的变更来判断文件是否发生了改变，
+                   可先编辑.git/config文件，在core字段内加入fsmonitor = true，然后执行git update-index --fsmonitor手动开启 。
+            EOIE - End of Index Entry 文件索引结束标识符，用于更快读取文件索引后方的扩展索引（而不用等待文件索引完成），
+                   可先编辑.git/config文件，在index字段内加入threads = true激活之。
+            IEOT - Index Entry Offset Table 索引项偏移表，用于优化多核心处理器下Git索引的性能。
+                   该功能于Git2.20版本推出（2018年底），本文撰写于2019年8月，主流发行版的Git大多尚未支持该特性，
+                   同样可先编辑.git/config文件，在index字段内加入threads = true激活之
+                

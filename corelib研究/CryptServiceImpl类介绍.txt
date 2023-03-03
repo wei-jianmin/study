@@ -1,0 +1,18 @@
+CryptServiceImpl类介绍：
+CryptServiceImpl类中有三个成员变量：
+AutoPtr<ICryptServiceCert>				cert_svc_;
+AutoPtr<ICryptServiceAssist>			assist_svc_;
+std::string								providers_dir_;
+在创建CryptServiceImpl类的构造函数中，会为cert_svc_和assist_svc_创建相应对象
+
+ICryptServiceCert的实现类是CertServiceImpl，
+ICryptServiceAssist的实现类是AssistImpl，
+虽然这两个接口继承自unknown接口，但这两个类却都是先继承自泛类CryptServiceModule，
+然后再间接集成各自相应的接口，
+CryptServiceModule泛类的作用是维护一个ICryptService* crypt_app_成员变量
+
+CryptServiceImpl类有三个3个接口是用于返回其3个成员变量的，
+BindProvidersDir接口是用于给providers_dir_成员变量赋值的，
+EnumCspTypeTable接口枚举providers_dir_下面的文件，并将corelib.crypt.开头的dll文件路径放到输出参数中
+CreateCspModule接口创建CspModuleImpl类对象，该类对象也是通过泛类CryptServiceModule，间接继承ICspModule
+

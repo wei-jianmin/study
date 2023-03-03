@@ -1,0 +1,306 @@
+linux  epoll
+windows 完成端口
+重叠io
+多路复用
+socket 异步 同步
+socket  客户端 服务端
+http 客户端 服务端
+
+=============================================================================
+
+socket有阻塞模式和非阻塞模式
+默认是阻塞的
+可以设置阻塞超时，超时了accept、read、write怎么办？
+设置阻塞与非阻塞方法：
+ linux：
+ int flags = fcntl(sock, F_GETFL, 0);
+ fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+ windows：
+ ioctlsocket(s, FIONBIO, (unsigned long *)&ul);
+
+在阻塞模式下，探测读写缓冲区中的数据量（预判读写操作是否会阻塞）：
+探测读缓冲区：
+  a. ioctlsocket方法
+   
+
+
+ioctlsocket函数讲解：
+  功能：设置阻塞/非阻塞、查看读缓冲区数据量
+  int PASCAL FAR ioctlsocket( SOCKET s, long cmd, u_long FAR* argp);
+    s：一个标识套接口的描述字。
+    cmd：对套接口s的操作命令。
+    argp：指向cmd命令所带参数的指针。
+    cmd参数可选值：
+      FIONBIO：　　
+      允许或禁止套接口s的非阻塞模式。argp指向一个无符号长整型。
+      如允许非阻塞模式则非零，如禁止非阻塞模式则为零。
+      FIONREAD：
+  　　确定套接口s自动读入的数据量。argp指向一个无符号长整型，其中存有ioctlsocket()的返回值。
+      如果s是SOCKET_STREAM类型，则FIONREAD返回在一次recv()中所接收的所有数据量，这通常（不一定）与套接口中排队的数据总量相同。
+      如果s是SOCK_DGRAM 型，则FIONREAD返回套接口上排队的第一个数据报大小。
+      SIOCATMARK：
+  　　确实是否所有的带外数据都已被读入。这个命令仅适用于SOCK_STREAM类型的套接口，
+      且该套接口已被设置为可以在线接收带外数据（SO_OOBINLINE）。如无带外数据等待读入，
+      则该操作返回TRUE真。否则的话返回FALSE假，下一个recv()或recvfrom()操作将检索“标记”前一些或所有数据。
+      应用程序可用SIOCATMARK操作来确定是否有数据剩下。
+      如果在“紧急”（带外）数据[前有常规数据，
+      则按序接收这些数据（请注意，recv()和recvfrom()操作不会在一次调用中混淆常规数据与带外数]据）。
+      argp指向一个BOOL型数，ioctlsocket()在其中存入返回值。
+    说明：
+    该函数只提供了伯克利套接字方法ioctl中的一部分功能，例如他没有类似ioctl中FIOASYNC参数这样的功能。
+
+fcntl函数讲解：
+  头文件：
+  #include <unistd.h>
+  #include <fcntl.h>
+  函数原型：          
+  int fcntl(int fd, int cmd);
+  int fcntl(int fd, int cmd, long arg);         
+  int fcntl(int fd, int cmd, struct flock *lock);
+  根据cmd参数的不同，fcntl函数可分为5种功能：
+    1.复制一个现有的描述符（cmd=F_DUPFD）. 类似dup操作。
+    2.获得／设置文件描述符标记(cmd=F_GETFD或F_SETFD).
+    3.获得／设置文件状态标记(flag)(cmd=F_GETFL或F_SETFL). 比如阻塞与非阻塞
+    4.获得／设置异步I/O所有权(cmd=F_GETOWN或F_SETOWN).
+    5.获得／设置记录锁(cmd=F_GETLK,F_SETLK或F_SETLKW).
+
+setsockopt函数讲解
+ 功能： 可用于设置读写缓冲区大小，超时时间，多路复用等
+ int setsockopt(
+    __in          SOCKET s,
+    __in          int level,    //定义选项的级别 ，如SOL_SOCKET
+    __in          int optname,
+    __in          const char* optval,
+    __in          int optlen
+  );
+  level可以为SOL_SOCKET、IPPROTO_TCP、NSPROTO_IPX等，这里只关注SOL_SOCKET
+  optname因level的不同而有不同的可选值，在SOL_SOCKET级别时的可选值：
+  SO_BROADCAST BOOL 
+      是否允许收发广播消息
+  SO_CONDITIONAL_ACCEPT BOOL
+      如果处于非阻塞模式下的socket在connect()的过程中可以设置connect()延时,直到accpet()被呼叫
+      (本函数设置只有在非阻塞的过程中有显著的作用，在阻塞的函数调用中作用不大)
+  SO_DONTLINGER BOOL 
+    当有未发送完的数据时，不阻塞关闭。 利用SO_LINGER选项也能达到此效果。
+  SO_LINGER LINGER
+    指定函数close对面向连接的协议如何操作（如TCP）。
+    缺省close操作是立即返回，如果有数据残留在套接口缓冲区中则系统将试着将这些数据 发送给对方。 
+    SO_LINGER选项用来改变此缺省设置。使用如下结构： struct linger { int l_onoff; int l_linger; }; 
+    有下列三种情况： 
+      l_onoff为0，则该选项关闭，l_linger的值被忽略，等于缺省情况，close立即返回； 
+      l_onoff为非0，l_linger为0，则套接口关闭时TCP夭折连接，
+             TCP将丢弃保留在套接口发送缓冲区中的任何数据并发送一个RST 给对方，而不是通常的四分组终止序列，这避免了TIME_WAIT状态；
+      l_onoff 为非0，l_linger为非0，当套接口关闭时内核将拖延一段时间（由l_linger决定）。
+            如果套接口缓冲区中仍残留数据，进程将处于睡眠状态，直 到
+            （a）所有数据发送完且被对方确认，之后进行正常的终止序列（描述字访问计数为0）
+             或（b）延迟时间到。
+            此种情况下，应用程序检查close的返回值是 非常重要的，
+            如果在数据发送完并被确认前时间到，close将返回EWOULDBLOCK错误且套接口发送缓冲区中的任何数据都丢失。
+            close的成功返 回仅告诉我们发送的数据（和FIN）已由对方TCP确认，它并不能告诉我们对方应用进程是否已读了数据。
+            如果套接口设为非阻塞的，它将不等待close完 成。 
+            l_linger的单位依赖于实现，4.4BSD假设其单位是时钟滴答（百分之一秒），但Posix.1g规定单位为秒。
+  SO_RCVBUF & SO_SNDBUF int 
+      设置收发缓冲区大小,这与SO_MAX_MSG_SIZE无关，并且不一定与TCP接收窗口的大小相对应。
+      int nRecvBuf=321024;      setsockopt(s,SOL_SOCKET,SO_RCVBUF,(const char)&nRecvBuf,sizeof(int));
+      int nSendBuf=321024;      setsockopt(s,SOL_SOCKET,SO_SNDBUF,(const char)&nSendBuf,sizeof(int));
+  SO_REUSEADDR BOOL 
+      closesocket（一般不会立即关闭而经历TIME_WAIT的过程）后想继续重用该socket，则： 
+      BOOL bReuseaddr=TRUE;   setsockopt(s,SOL_SOCKET ,SO_REUSEADDR,(const char)&bReuseaddr,sizeof(BOOL)); 
+  SO_SNDTIMEO & SO_RCVTIMEO int (从Windows Sockets 2才开始支持)
+      设置收发超时时间，毫秒为单位
+      int nNetTimeout=1000; 
+      发送时限：setsockopt(socket，SOL_S0CKET,SO_SNDTIMEO，(char )&nNetTimeout,sizeof(int));
+      接收时限：setsockopt(socket，SOL_S0CKET,SO_RCVTIMEO，(char )&nNetTimeout,sizeof(int));
+  SO_KEEPALIVE BOOL Sends 
+      保活(keep-alives). 不支持ATM(Asynchronous Transfer Mode,异步传输模式)sockets(返回错误). 
+      设置该选项可以不断定时给对端发送不携带数据的ack包，从而保持路由器中的NAT记录不会因为本条映射因长时间不用而被清理掉。
+  SO_DONTROUTE BOOL 
+      Disable routing: send directly to an interface. 
+      When this option is set, it succeeds but is ignored for both AF_INET and AF_INET6 sockets. 
+      This option is not supported on ATM sockets (results in an error). 
+  SO_GROUP_PRIORITY int 
+      Reserved. 
+  SO_OOBINLINE BOOL 
+      Receives OOB data in the normal data stream. 
+      (See section Protocol Independent Out-Of-band Data for a discussion of this topic.) 
+  SO_EXCLUSIVEADDRUSE BOOL 
+      Enables a socket to be bound for exclusive access. Does not require administrative privilege.  
+  SO_DEBUG BOOL Records debugging information. 
+  SO_UPDATE_ACCEPT_CONTEXT int 
+      Updates the accepting socket with the context of the listening socket. 
+  PVD_CONFIG 
+      Service Provider Dependent This object stores the configuration information for the service provider associated with socket s. 
+      The exact format of this data structure is service provider specific. 
+  
+  
+  
+shutdown(s,SD_BOTH)  关闭socket，而不管缓冲区中是否有未发送完的数据
+  The shutdown function disables sends or receives on a socket.
+  int shutdown( SOCKET s, int how );
+    s     Descriptor identifying a socket.
+    how   Flag that describes what types of operation will no longer be allowed.
+      关闭功能可用于所有类型的套接字，以禁用接收和/或传输。
+      如果how参数是SD_RECEIVE，则不允许随后调用套接字上的recv函数。这对较低的协议层(如IP层)没有影响。
+      对于TCP套接字，如果套接字上仍有等待接收的数据排队等待数据，或者随后有数据到达，则会重置连接，因为无法将数据传递给用户。
+      对于UDP套接字，传入的数据报被接受并排队。
+      在任何情况下都不会生成ICMP错误数据包。
+      如果how参数是SD_SEND，则不允许后续调用send函数。对于TCP套接字，将在接收器发送并确认所有数据后发送FIN。
+      设置SD_BOTH的方式将同时禁用发送和接收，如上所述。
+      关闭功能不会关闭套接字。在调用closesocket之前，不会释放连接到套接字的任何资源。
+  为确保所有数据在关闭之前在连接的套接字上发送和接收，应用程序应在调用closesocket之前使用shutdown关闭连接。例如，要启动正常断开连接：
+
+shutdown和close的关系：
+    shutdown()函数可以选择关闭全双工连接的读通道或者写通道，
+    如果两个通道同时关闭，则这个连接不能再继续通信。
+    close()函数会同时关闭全双工连接的读写通道，
+    除了关闭连接外，还会释放套接字占用的文件描述符。
+    而shutdown()只会关闭连接，但是不会释放占用的文件描述符。
+    所以即使使用了SHUT_RDWR类型调用shutdown()关闭连接，
+    也仍然要调用close()来释放连接占用的文件描述符。
+    对一个tcp socket调用close()的默认动作是将该socket标记为已关闭并立即返回到调用该api的进程中。
+    此时，从应用层来看，该socket fd不能再被进程使用，即不能再作为read或write的参数。
+    而从传输层来看，TCP会尝试将目前send buffer中积压的数据发到链路上，然后才会发起TCP的4次挥手以彻底关闭TCP连接。
+    close函数把描述符的引用计数减一，仅仅在该计数变为0的时候，才真正的关闭套接字，
+    而使用shutdown函数可以不管引用计数就激发了TCP的正常连接终止序列；
+    close函数终止读和写两个方向的数据传输。
+    既然TCP连接是全双工的，有时候我们需要告知对端我们已经完成了数据发送，
+    我们仅仅需要关闭数据发送的一个通道，但是我们还是可以接收到对端发送过来的数据，
+    这种控制只有利用shutdown函数才能实现
+    现在总结一下shutdown()和close()的主要区别：
+     1)对应的系统调用不同
+     2)shutdown()只能用于套接字文件，close()可以用于所有文件类型
+     3)shutdown()只是关闭连接，并没有释放文件描述符，close()可以
+     4)shutdown()不能用于TCP_CLOSE状态的套接字，否则会返回 ENOTCONN 错误
+     5)shutdown()可以选择关闭读通道或写通道，close()不能。
+     
+RST包介绍：
+  RST表示复位，用来异常的关闭连接，TCP处理程序会在自己认为的异常时刻发送RST包。
+    1. 发送RST包关闭连接时，不必等缓冲区的包都发出去，直接就丢弃缓冲区中的包，发送RST。
+    2. 而接收端收到RST包后，也不必发送ACK包来确认。
+  什么时候会发送RST包：
+    1. 建立连接的SYN到达某端口，但是该端口上没有正在 监听的服务。
+    2. TCP收到了一个根本不存在的连接上的分节。
+    3. 请求超时。使用setsockopt的SO_RCVTIMEO选项设置recv的超时时间。接收数据超时时，会发送RST包。
+    4. 已经建立起了连接，然后又发送希望建立连接的SYN包，就会收到对方发来的RST包。
+    例如，
+      A向B发起连接，但B之上并未监听相应的端口，这时B操作系统上的TCP处理程序会发RST包。
+      又比如，AB正常建立连接了，正在通讯时，A向B发送了FIN包要求关连接，
+      B发送ACK后，网断了，A通过若干原因放弃了这个连接（例如进程重启）。
+      网通了后，B又开始发数据包，A收到后表示压力很大，不知道这野连接哪来的，
+      就发了个RST包强制把连接关了，B收到后会出现connect reset by peer错误。
+    
+    
+  使用shutdown、close关闭套接字，发送的是FIN，不是RST。
+  套接字关闭前，使用sleep。对运行的程序Ctrl+C，会发送FIN，不是RST
+  套接字关闭前，执行return、exit(0)、exit(1)，会发送FIN、不是RST。 
+
+非阻塞时，connect、accept、read、write怎么办？
+  accept: 
+      成功返回一个新的套接字描述符，失败返回-1,错误原因在errno中。
+      accept因为没有新连接而导致的错误返回，错误码为EWOULDBLOCK（11）
+  connect：
+      成功返回0，表示连接建立成功，失败返回SOCKET_ERROR，相应的设置errno，通过errno获取错误信息。
+      非阻塞工作模式，调用connect()函数会立刻返回EINPROCESS错误（errno=EINPROCESS），
+      但TCP通信的三路握手过程仍在继续，所以可以使用select函数来检查这个连接是否建立成功。
+      select判断规则：
+      1） 如果select()返回0，表示在select()超时，超时时间内未能成功建立连接，
+          也可以再次执行select()进行检测，如若多次超时，需返回超时错误给用户。
+      2） 如果select()返回大于0的值，则说明检测到可读或可写的套接字描述符。
+          源自 Berkeley 的实现有两条与 select 和非阻塞 I/O 相关的规则：
+          A) 当连接建立成功时，套接口描述符变成 可写（连接建立时，写缓冲区空闲，所以可写）
+          B) 当连接建立出错时，套接口描述符变成 既可读又可写（由于有未决的错误，从而可读又可写）
+          而如果调用select时，socket已建立好连接，且对方已经发来了数据（读缓冲区中有数据），
+          则select返回是，套接口也是可读可写的。因此select返回是，如果socket是可读写的，
+          并不能说明建立连接出错了，因此，当发现套接口描述符可读或可写时，还需进一步判断是连接成功还是出错。
+          但select的返回至少说明了建立连接过程已经结束（要么建立连接成功，要么建立连接失败，不会是正在进行中）
+          那如果select返回，且套接口是可读写的，如何进一步判断是否建立成功呢？有以下几个办法：
+          a. getsockopt(sockfd,SOL_SOCKET,SO_ERROR,(char *)&error,&len) 获取的error 值将是0,
+             如果建立连接时遇到错误，则errno 的值是连接错误所对应的errno值，比如ECONNREFUSED，ETIMEDOUT 等
+          b. 再次调用connect，相应返回失败，如果错误errno是EISCONN，表示socket连接已经建立，否则认为连接失败。
+  read:
+      read成功，则返回读到的字节数。如已到达文件结尾，则返回0.
+      阻塞与非阻塞read/recv返回值没有区分，都是 <0 出错 =0 连接关闭 >0 接收到数据大小。    
+   write：
+      阻塞与非阻塞write/send返回值没有区分，都是 <0：出错，=0：连接关闭，>0发送数据大小
+      
+阻塞的read
+  首先阻塞接收的recv有时候会返回0，这仅在对端已经关闭TCP连接时才会发生。
+  而当拔掉设备网线的时候，recv并不会发生变化，仍然阻塞，如果在这个拔网线阶段，socket被关掉了，
+  后果可能就是recv永久的阻塞了。所以一般对于阻塞的socket都会用setsockopt来设置recv超时。
+  当超时时间到达后，recv会返回错误，也就是-1，而此时的错误码是EAGAIN或者EWOULDBLOCK，
+  POSIX.1-2001上允许两个任意一个出现都行，所以建议在判断错误码上两个都写上。
+  如果socket是被对方用linger为0的形式关掉，也就是直接发RST的方式关闭的时候，
+  recv也会返回错误，错误码是ENOENT
+  还有一种经常在代码中常见的错误码，那就是EINTER，
+  意思是系统在接收的时候因为收到其他中断信号而被迫返回，不算socket故障，应该继续接收。
+  非阻塞模式下返回值 <0时并且(errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+  的情况下认为连接是正常的，继续接收。
+阻塞的write
+  非阻塞模式下返回值 <0时并且 (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+  的情况下认为连接是正常的， 继续发送。
+          
+非阻塞一般可以配合select使用
+setsockopt可以设配置socket，包括阻塞/非阻塞、超时时间、缓冲区大小，默认是什么？
+socket的默认超时时间是几十秒到几分钟不等
+接收缓冲区的默认值是：1048576，1M。发送缓冲区的默认值是：512488，512K。
+进一步查阅资料发现， linux下socket缓冲区大小的默认值在/proc虚拟文件系统中有配置
+/proc/sys/net/ipv4/tcp_wmem（或tcp_rmem）中分别记录了缓冲区的最小值、默认值、最大值。
+
+
+linux下，ioctl可以查看读写缓冲区中实时数据的大小
+
+socket可以通过read/write或send/recv来读写，后者可以通过flags参数完成更多功能，
+参 https://blog.csdn.net/petershina/article/details/7946615
+read/write对文件描述符读写，send/recv对socket读写
+
+如何能在阻塞模式下，检测缓冲区数据的大小
+
+TCP带外数据OOB   参： https://blog.csdn.net/ty_laurel/article/details/52164669
+
+windows 信号/事件学习 及 socket相关信号处理 WaitForMultipleObjects 信号注册、信号发送
+
+
+====================================================
+http vs tcp
+HTTP连接最显著的特点是客户端发送的每次请求都需要服务器回送响应，在请求结束后，会主动释放连接。从建立连接到关闭连接的过程称为“一次连接”。
+1）在HTTP 1.0中，客户端的每次请求都要求建立一次单独的连接，在处理完本次请求后，就自动释放连接。
+2）在HTTP 1.1中则可以在一次连接中处理多个请求，并且多个请求可以重叠进行，不需要等待一个请求结束后再发送下一个请求。
+
+
+======================================================
+tcp 相关
+为什么要三次握手：  假设有个请求连接的包在网络上滞留了很长时间后发给服务器，
+（这时候客户端早就重新发送连接请求包，跟服务器正常会话，并关闭连接了），
+服务器对这个包进行应答，此时客户端是不会回应的，所以就不会建立起一个错误的连接。
+
+四次挥手：
+1.客户端或服务端想对方发送带FIN的报文， 之后，自己进入FIN_WAIT_1状态，表明自己不会再向对方发'数据'了（但仍能回应），
+  对方接到FIN包后，进入CLOSE_WAITv动态
+2.对方发送回应自己的报文，自己收到后，进入FIN_WAIT_2状态，表明得知了对方已经收到了自己发出的、表明不再发送数据的包
+3.对方向自己发送带FIN的包要求断开连接，并进入LAST_ASK状态，表明其不再往这边发数据了
+4.自己收到后，给对方发送一个回应包，并让自己进入TIME_WAIT状态，对方收到这个回应包后，进入CLOSED状态
+
+为什么四次分手：
+因为是全双工的，还支持半双工通信
+
+MSL：报文段最大生存时间，四次挥手的最后一步，自己收到对方发送的断开连接包后，不是立即关闭，而是进入TIME_WAIT状态，
+这个状态会持续2*MSL，在这段时间内，仍能对服务器发来的数据进行回应，之所以要这样做（而不是立即关闭），有2个方面的考虑：
+1. 保证TCP协议的全双工连接能够可靠关闭
+如果自己在第4不发完最后一个回应包后就关闭了，可能存在回应包在网络中丢失的情况，对方等了1*MSL时间后，没收到回应，
+会再发出1个FIN包要求断开连接，如果自己在一去一回这2*MSL的时间内没有关闭，就能对对方本次发来的FIN包做出回应，
+如果本次的回应包还丢失，那对方已经连续等了4*MSL时间了，还没收到回应包，那对方就会主动关闭连接。
+2. 保证本次回应FIN的包不会和下个建立连接的SYN包错位（即保证断开连接和建立连接的过程不会重叠交叉）
+如果自己在第4不发完最后一个回应包后就关闭了，关闭后又紧跟着重新发起对服务端的连接，则可能回应断开连接的包还没发到对方，
+而建立连接的包先发给对方了（这个建立连接包的ip-port完全有可能跟之前发的那个回应断开连接包的ip-port是一样的），
+如此一来，对方接受到的包就会发生错乱。
+
+==========================================================================
+
+
+
+
+
+阅读器调用oes问题支持（泰安 李浩） 完成
+oes自动升级，改为用http方式，完成
+linux下ofd阅读器问题修改，进行中
+

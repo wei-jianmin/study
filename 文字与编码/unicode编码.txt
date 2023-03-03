@@ -1,0 +1,11 @@
+unicode的概念 > 宽字节的概念
+
+unicode-代码页1200 						宽字节，狭义的unicode
+unicode(big endian)-代码页1201   		大字接序宽字节
+unicode(utf-8 带签名)-代码页65001 	 	windows下特有的 带BOM头的utf-8文件
+unicode(utf-8 无签名)-代码页65001		标准的不带BOM头的utf-8文件
+unicode(utf-7)-代码页65000				比较少用的一种编码
+
+附：
+1）Little-endian：将低序字节存储在起始地址（低位编址） 
+2）Big-endian：将高序字节存储在起始地址（高位编址）

@@ -1,0 +1,111 @@
+<全文签章>
+解锁文档
+接受所有修订
+获取章图形
+绑定章
+获取章类型GetSignType
+解绑章
+页面跳转到章处
+获取页码
+更新状态栏信息
+<TZWY_SingleSign>
+解锁文档
+获取章
+获取章的宽高
+绑定章
+获取章类型GetSignType
+解绑章
+如果章类型是手写签批，则产生签批图片
+<TZWY_GenSignData>
+连接key
+生成签章时间字符串
+读取章ID："HT48F22580D8027175"
+读取公钥
+获得签名证书
+读取签章人
+获取MAC
+if （签章类型 != 手写签批）
+{
+	if（配置文件中WriteESealToKey为Y）
+	<TZWY_TZGetOffLineESeal>
+	如果配置文件中ReadESealFromFile为Y，则从Res文件夹中的ESeal.txt文件中读章
+	否则，从key中读章
+	解密印章
+	得到的印章数据是xml格式
+	解析xml的印章数据，获取
+		印章类型、印章编号、印章名称
+		证书编号、有效时间、印章图片格式
+		在线离线标志、签名证书、签名数据、防伪信息
+	</TZWY_TZGetOffLineESeal>
+	if（配置文件中WriteESealToKey不为Y   或   TZIsOnLine函数返回真）
+	<TZWY_TZGetOnLineESeal>
+	检查配置文件中OnLineVerify，如果为Y：{
+		从key中读公钥
+		<TZOnLineVerify>
+		连接key
+		从配置文件中读取esm服务器地址
+		<PostData>
+		获取服务器公钥
+		</PostData>
+		<TZVerifyServerKey>
+		客户端验证服务器
+		</TZVerifyServerKey>
+		<TZVerifyClientKey>
+		服务器验证客户端
+		</TZVerifyClientKey>
+		</TZOnLineVerify>
+		如果TZOnLineVerify验证失败，返回错误
+		检查ESM服务器地址是否复合HTML结构
+		检查连接
+		检查配置文件ReadESealFromFile配置项，如果为Y
+			从TZRes\\ESeal.txt中读取
+		否则，从服务器获取章数据
+		清空TZSignCtx::TZInterSeal中原先保存的数据，包括
+			章类型、章名、证书ID、有效时限、
+			图片数据、签名证书、防伪信息等等
+		根据前面读到的章数据，重新配置TZSignCtx::TZInterSeal中的各成员值
+	}
+	</TZWY_TZGetOnLineESeal>
+}
+else
+{
+	说明是签批
+	章图片记为“无”
+	。。。。。。
+}
+if（配置文件中VerifyUserESealRight为Y）
+{
+	//如果是标准格式新的，验证有无使用此印章的权限？？？
+}
+证书有效期判断
+	读取key中证书
+	验证证书有效时限
+印章有效期判断
+获取原文哈希
+二次哈希
+产生签名数据
+</TZWY_GenSignData>
+根据章ID和时间，产生章名、章ID
+设置其它章属性，如时间、证书、签名只、方位信息、章ID、签名值、是否是在线章、签章类型等等
+指定章图片
+根据签章个数，计算当前章的序号
+文档锁定
+</TZWY_SingleSign>
+设置状态栏
+设置光标
+如果是签章，调用TZSignLog
+<TZSignLog>
+如果配置文件中LogSign选项不是Y，函数返回
+<TZIsOnLine>
+如果配置文件中OnLineConfig选项为Y
+	返回配置文件中OnLineState
+否则
+	根据userRight（章中的数据ESeal/ESealInfo/property/userRight）及配置文件中的ToogleOnLineState项决定返回真或假
+</TZIsOnLine>
+如果TZIsOnLine返回真
+	如果配置文件LogOffLineSign为Y，调用TZLogToFile,将签章日志写到本地文件中（C:\SignLog.log）
+否则
+	如果配置文件LogOnLineSign为Y，调用TZLogToServer，PostData
+</TZSignLog>
+签章完成提示
+</全文签章>

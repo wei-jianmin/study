@@ -1,0 +1,36 @@
+SOAP学习笔记
+
+SOAP  ： simple Object ask protocal
+
+简介：
+基于xml和http，旨在使不同系统，不同语言的应用程序之间可以进行通信。
+
+语法：
+一条 SOAP 消息就是一个普通的 XML 文档，包含下列元素：
+    必需的 Envelope 元素，可把此 XML 文档标识为一条 SOAP 消息
+    可选的 Header 元素，包含头部信息
+    必需的 Body 元素，包含所有的调用和响应信息
+    可选的 Fault 元素，提供有关在处理此消息所发生错误的信息
+模板：
+<?xml version="1.0"?>
+//必选
+<soap:Envelope xmlns:soap="http://www.w3.org/2001/12/soap-envelope" soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">
+    <soap:Header> 。。。 </soap:Header>  //可选
+    <soap:Body>   //必选
+    ...
+        <soap:Fault>。。。</soap:Fault>  //可选
+    </soap:Body>
+</soap:Envelope>  
+
+xmlns:soap 命名空间
+SOAP 消息必须拥有与命名空间 "http://www.w3.org/2001/12/soap-envelope" 相关联的一个 Envelope 元素。
+如果使用了不同的命名空间，应用程序会发生错误，并抛弃此消息。
+
+encodingStyle 属性
+SOAP 的 encodingStyle 属性用于定义在文档中使用的数据类型。此属性可出现在任何 SOAP 元素中，并会被应用到元素的内容及元素的所有子元素上。
+SOAP 消息没有默认的编码方式。
+
+SOAP Header 元素
+可选的 SOAP Header 元素可包含有关 SOAP 消息的应用程序专用信息（比如认证、支付等）。
+如果 Header 元素被提供，则它必须是 Envelope 元素的第一个子元素。
+注意： 所有 Header 元素的直接子元素必须是合格的命名空间。

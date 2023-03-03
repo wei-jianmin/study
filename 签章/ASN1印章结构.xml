@@ -1,0 +1,40 @@
+<Certificate SEQUENCE>
+	<TBSCertificate name="tbsCertificate">
+		<Context[0] name="version" disc="证书版本号">
+			<INTEGER/>
+		</Context[0]>
+		<CertificateSerialNumber name="serialNumber" disc=" 证书序列号，对同一CA所颁发的证书，序列号唯一标识证书">
+		</CertificateSerialNumber>
+		<AlgorithmIdentifier name="signature" disc="证书签名算法标识">
+			<OBJECT_IDENTIFIER name="algorithm">
+			</OBJECT_IDENTIFIER>
+			<ANY_DEFINED_BY_algorithm name="parameters" disc="DSA(DSS)算法时的parameters,RSA算法没有此参数">
+				<INTEGER name="p"/>
+				<INTEGER name="q"/>
+				<INTEGER name="g"/>
+			</ANY_DEFINED_BY_algorithm>
+		</AlgorithmIdentifier>
+		<Name type="CHOICE" name="issuer" disc="证书发行者名称">
+			<RelativeDistinguishedName type="SEQUENCE" name="RDNSequence">
+
+			</RelativeDistinguishedName>
+		</Name>
+		<Validity name="validity" disc="证书有效期">
+			<UTCTime name="" disc=""/>
+			<UTCTime name="" disc=""/>
+		</Validity>
+		<Name name="subject " disc="证书主体名称">
+		</Name>
+		<SubjectPublicKeyInfo name="subjectPublicKeyInfo" disc="证书公钥">
+		</SubjectPublicKeyInfo>
+		<UniqueIdentifier name="issuerUniqueID" disc=" 证书发行者ID(可选)，只在证书版本2、3中才有">
+		</UniqueIdentifier>
+		<UniqueIdentifier name="subjectUniqueID" disc="证书主体ID(可选)，只在证书版本2、3中才有">
+		</UniqueIdentifier>
+		<Extensions name="extensions" disc="证书扩展段（可选），只在证书版本3中才有">
+		</Extensions>
+	</TBSCertificate>
+	<AlgorithmIdentifier name="signatureAlgorithm">
+	</AlgorithmIdentifier>
+	<BITSTRING name="signatureValue"/>
+</Certificate>

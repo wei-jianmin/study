@@ -1,0 +1,320 @@
+https://docs.oracle.com/cd/E26926_01/html/E25912/sasl.intro.20.html
+
+简单验证和安全层 (Simple Authentication and Security Layer, SASL) 介绍
+
+SASL 为应用程序和共享库的开发者提供了用于验证、数据完整性检查和加密的机制。 
+开发者可通过 SASL 对通用 API 进行编码。 此方法避免了对特定机制的依赖性。 
+SASL 特别适用于使用 IMAP、SMTP、ACAP 和 LDAP 协议的应用程序，因为这些协议全都支持 SASL。 
+RFC 2222 中对 SASL 进行了介绍。
+
+SASL 库基础
+SASL 库称为 libsasl。libsasl 是一个框架，允许正确编写的 SASL 使用者应用程序使用系统中可用的所有 SASL 插件。 
+术语插件是指为 SASL 提供服务的对象。 插件位于 libsasl 的外部。 
+SASL 插件可用于验证和安全性、名称标准化以及辅助属性（如口令）的查找。 
+加密算法存储在插件中，而不是 libsasl 中。
+
+libsasl 为使用者应用程序和库提供应用编程接口 (application programming interface, API)。 
+服务提供者接口 (service provider interface, SPI) 是为插件提供的，用于为 libsasl 提供服务。
+libsasl 不能识别网络或协议。 相应地，应用程序必须负责在客户机与服务器之间发送和接收数据。
+
+SASL 对用户使用两个重要的标识符
+    验证 ID (authid) 是用于验证用户的用户 ID。 验证 ID 授予用户系统访问权限。 
+    授权 ID (userid) 用于检查是否允许用户使用特定选项。
+
+SASL 客户机应用程序和 SASL 服务器应用程序将协商公用的 SASL 机制和安全级别。 
+通常，SASL 服务器应用程序会将其可接受的验证机制的列表发送给客户机。 
+随后 SASL 客户机应用程序便可决定哪种验证机制最能满足其要求。 
+此后，客户机与服务器使用双方同意的验证机制，对它们之间交换的由 SASL 提供的验证数据进行验证。 
+此交换将持续下去，直到验证成功完成、失败或被客户机或服务器中止。
+
+在验证过程中，SASL 验证机制可以协商安全层。 如果已选择安全层，则必须在 SASL 会话期间使用该层。
+
+安全机制
+安全机制插件为 libsasl 提供安全服务。 以下是安全机制提供的一些典型功能：
+    在客户端进行验证
+    在服务器端进行验证
+    完整性，即检查传输的数据是否保持不变
+    保密性，即对传输的数据进行加密和解密
+SASL 安全强度因子
+    SSF（即安全强度因子）指示 SASL 保护的强度。 
+    如果该机制支持安全层，则客户机与服务器会协商 SSF。 
+    SSF 的值基于执行 SASL 协商之前指定的安全属性。 
+    如果协商结果是非零 SSF，则验证完成后，客户机和服务器都需要使用该机制的安全层。
+    SSF 由具有以下值之一的整数表示：
+        0 －无保护。
+        1 －仅限于完整性检查。
+        >1 －支持验证、完整性和保密性。 数字表示加密密钥长度。
+    保密性和完整性操作是通过安全机制执行的。libsasl 可以协调这些请求。
+    注 - 在协商过程中，SASL 客户机会选择具有最大 SSF 的机制。 
+         但是，实际所选的 SASL 机制可能随后会协商较小的 SSF
+    
+SASL 中的通信
+    应用程序通过 libsasl API 与 libsasl 进行通信。
+    libsasl 可通过应用程序注册的回调方式请求其他信息。 
+    应用程序不会直接调用插件，而只是通过 libsasl 进行调用。
+    一般情况下，插件会调用 libsasl 框架的插件，随后这些插件调用应用程序的回调。 
+    SASL 插件还可以直接调用应用程序，不过应用程序不知道调用来自插件还是来自 libsasl。
+    回调在以下几个方面非常有用。
+        libsasl 可以使用回调获取完成验证所需的信息。
+        libsasl 使用者应用程序可以使用回调更改插件和配置数据的搜索路径、验证文件以及更改各种缺省行为。
+        服务器可以使用回调来更改授权策略、提供不同的口令验证方法以及获取口令更改信息。
+        客户机和服务器可以使用回调来指定错误消息的语言。
+    
+    应用程序可以注册两种回调：全局回调和会话回调。 
+    此外，libsasl 定义了大量用于为不同种类的回调注册的回调标识符。 
+    如果未注册给定类型的回调，则 libsasl 将执行缺省操作。
+    
+    会话回调将覆盖全局回调。 如果为给定 ID 指定了会话回调，则不会为该会话调用全局回调。 
+    某些回调必须是全局的，因为这些回调发生在会话之外。
+    以下实例要求使用全局回调：
+        确定要装入的插件的搜索路径
+        验证插件
+        定位配置数据
+        记录错误消息
+        对 libsasl 或其插件的其他全局配置
+
+    可以使用给定 SASL 回调 ID 的 NULL 回调函数来注册 SASL 回调。
+    NULL 回调函数指示配备客户机的目的是为了提供所需的数据。 
+    所有的 SASL 回调 ID 都以前缀 SASL_CB_ 开头。
+  
+    。。。。。。
+    
+==============================================================================================
+
+https://www.cnblogs.com/yanwei-wang/p/4679950.html
+
+SASL - 简单认证和安全层 
+    SASL是一种用来扩充C/S模式验证能力的机制认证机制,  全称Simple Authentication and Security Layer.
+    当你设定sasl时，你必须决定两件事；
+    一是用于交换“标识信息”（或称身份证书）的验证机制；一是决定标识信息存储方法的验证架构。
+    sasl验证机制规范client与server之间的应答过程以及传输内容的编码方法，
+    sasl验证架构决定服务器本身如何存储客户端的身份证书以及如何核验客户端提供的密码。
+    如果客户端能成功通过验证，服务器端就能确定用户的身份，并借此决定用户具有怎样的权限。
+
+比较常见的机制；
+4.1 plain(较常用)
+   plain是最简单的机制，但同时也是最危险的机制，
+   因为身份证书（登录名称与密码）是以base64字符串格式通过网络，没有任何加密保护措施。
+   因此，使用plain机制时，你可能会想要结合tls。
+4.2 login
+   login不是其正式支持的机制，但某些旧版的mua使用这种机制，
+   所以cyrus sasl让你可选择其是否支持login机制。
+   如果你的用户仍在使用这类老掉牙的mua，你必须在编译sasl函数库时，指定要包含login的支持。 
+   login的证书交换过程类似plain。
+4.3 otp
+   otp是一种使用“单次密码”的验证机制。
+   此机制不提供任何加密保护，因为没必要－－每个密码都只能使用一次，每次联机都要改用新密码。
+   smto client必须能够产生otp证书。
+4.4 digest-md5(较常用)
+   使用这种机制时，client与server共享同一个隐性密码，而且此密码不通过网络传输。
+   验证过程是从服务器先提出challenge（质询）开始，客户端使用此challenge与隐性密码计算出一个response（应答）。
+   不同的challenge，不可能计算出相同的response；
+   任何拥 有secret password的一方，都可以用相同的challenge算出相同的response。
+   因此，服务器只要比较客户端返回的response是否与自己算 出的response相同，就可以知道客户端所拥有的密码是否正确。
+   由于真正的密码并没有通过网络，所以不怕网络监测。
+4.5 kerberos
+   kerberos是一种网络型验证协议。除非你的网络已经使用kerberos，否则你应该用不到kerberos机制；
+   相对的，如果你的网络已经架设了kerberos验证中心，sasl就能完美的将smtp验证整合进现有的体系。
+4.6 anonymous
+   anonymous机制对smtp没有意义，因为smtp验证的用意在于限制转发服务的使用对象，
+   而不是为了形成open relay，sasl之所以提供这种机制，主要是为了支持其他协议。
+   当客户端链接到一个支持sasl的邮件服务器时，服务器会以优先级列出可用的机制供客户端选择。
+   如果客户端也支持多钟机制，则当第一种机制验证失败时，客户端可能会继续尝试第二种机制，
+   直到通过验证或是所有机制都失败为止。如果双方在一开始就无法协调出共同的机制，验证过程就算失败。
+   一旦双方在使用哪种机制上达成共识，就开始进行验证过程。
+   实际的交互过程随机制而定，但通常包含一次或多次应答过程。验证协议本身也规定了应答内容的编码格式。
+总结 
+   数字证书, 是级联认证派发的, 最上层是根CA认证中心. 
+   数字证书的根本作用, 是为了保证所有人公钥的安全性和真实性. 
+   大致认证过程是: 通过CA的公钥来解出该CA所派发的证书里面所包含的公钥(用户或者机构的). 
+   并通过该公钥来验证证书持有人的真实性. (因为持有人并不一定是证书所有人)
+   通过上面对SSL的分析，我们可以看到，SSL并不能阻止别人获得你传输的数据，
+   但是由于你传输的数据都是加密过的，别人拿到了毫无用处，一样可以保护信息的安全。
+   还有一点需要强调一下，SSL并不依赖于TCP，它可以建立在任何可靠的传输层协议（比如TCP）之上。
+   也就是说SSL是不能建立在UDP之上的。
+   这是显然的，如果传输都不可靠，偶尔丢两个包或者包的顺序换一换的话，怎么保证安全呢？
+   SASL是提供一种用户身份认证机制, 你可以简单认为是用来认证用户的账号/密码是否运行进入系统或者使用系统的服务. 
+   一般较长使用digest-md5, 该种机制下, 密码可以不用在网络上传输, 也就不用怕密码被窃听.
+   
+   
+  ============================================================================================================
+
+NAME
+     saslauthd — sasl authentication server
+
+SYNOPSIS
+     saslauthd -a authmech [-Tvdchlr] [-O option] [-m mux_path] [-n threads] [-s size]
+               [-t timeout]
+
+DESCRIPTION
+     saslauthd is a daemon process that handles plaintext authentication requests on behalf of
+     the SASL library.
+
+     The server fulfills two roles: it isolates all code requiring superuser privileges into a
+     single process, and it can be used to provide proxy authentication services to clients that
+     do not understand SASL based authentication.
+
+     saslauthd should be started from the system boot scripts when going to multi-user mode. When
+     running against a protected authentication database (e.g. the shadow mechanism), it must be
+     run as the superuser. Otherwise it is recommended to run daemon unprivileged as
+     saslauth:saslauth, requiring the runtime directory to have root:saslauthd owner. You can do
+     so by following these steps in machines using systemd(1) :
+
+     1.   create directory /etc/systemd/system/saslauthd.service.d/
+     2.   create file /etc/systemd/system/saslauthd.service.d/user.conf with content
+
+          [Service]
+          User=saslauth
+          Group=saslauth
+
+     3.   Reload systemd service file: run “systemctl daemon-reload”
+
+   Options
+     Options named by lower-case letters configure the server itself.  Upper-case options control
+     the behavior of specific authentication mechanisms; their applicability to a particular
+     authentication mechanism is described in the AUTHENTICATION MECHANISMS section.
+
+     -a authmech
+             Use authmech as the authentication mechanism. (See the AUTHENTICATION MECHANISMS
+             section below.) This parameter is mandatory.
+
+     -O option
+             A mechanism specific option (e.g. rimap hostname or config file path)
+
+     -H hostname
+             The remote host to be contacted by the rimap authentication mechanism. (Deprecated,
+             use -O instead)
+
+     -m path
+             Use path as the pathname to the named socket to listen on for connection requests.
+             This must be an absolute pathname, and MUST NOT include the trailing "/mux".  Note
+             that the default for this value is "/var/state/saslauthd" (or what was specified at
+             compile time) and that this directory must exist for saslauthd to function.
+
+     -n threads
+             Use threads processes for responding to authentication queries. (default: 5)  A
+             value of zero will indicate that saslauthd should fork an individual process for
+             each connection.  This can solve leaks that occur in some deployments.
+
+     -s size
+             Use size as the table size of the hash table (in kilobytes)
+
+     -t timeout
+             Use timeout as the expiration time of the authentication cache (in seconds)
+
+     -T      Honour time-of-day login restrictions.
+
+     -h      Show usage information
+
+     -c      Enable caching of authentication credentials
+
+     -l      Disable the use of a lock file for controlling access to accept().
+
+     -r      Combine the realm with the login (with an '@' sign in between).  e.g.  login: "foo"
+             realm: "bar" will get passed as login: "foo@bar".  Note that the realm will still be
+             passed, which may lead to unexpected behavior for authentication mechanisms that
+             make use of the realm, however for mechanisms which don't, such as getpwent, this is
+             the only way to authenticate domain-specific users sharing the same userid.
+
+     -v      Print the version number and available authentication mechanisms on standard error,
+             then exit.
+
+     -d      Debugging mode.
+
+   Logging
+     saslauthd logs its activities via syslogd using the LOG_AUTH facility.
+
+AUTHENTICATION MECHANISMS
+     saslauthd supports one or more "authentication mechanisms", dependent upon the facilities
+     provided by the underlying operating system.  The mechanism is selected by the -a flag from
+     the following list of choices:
+
+     dce        (AIX)
+
+                Authenticate using the DCE authentication environment.
+
+     getpwent   (All platforms)
+
+                Authenticate using the getpwent() library function. Typically this authenticates
+                against the local password file. See your system's getpwent(3) man page for
+                details.
+
+     kerberos4  (All platforms)
+
+                Authenticate against the local Kerberos 4 realm. (See the NOTES section for
+                caveats about this driver.)
+
+     kerberos5  (All platforms)
+
+                Authenticate against the local Kerberos 5 realm.
+
+     pam        (Linux, Solaris)
+
+                Authenticate using Pluggable Authentication Modules (PAM).
+
+     rimap      (All platforms)
+
+                Forward authentication requests to a remote IMAP server. This driver connects to
+                a remote IMAP server, specified using the -O flag, and attempts to login (via an
+                IMAP ‘LOGIN’ command) using the credentials supplied to the local server. If the
+                remote authentication succeeds the local connection is also considered to be
+                authenticated. The remote connection is closed as soon as the tagged response
+                from the ‘LOGIN’ command is received from the remote server.
+
+                The option parameter to the -O flag describes the remote server to forward
+                authentication requests to.  hostname can be a hostname (imap.example.com) or a
+                dotted-quad IP address (192.168.0.1). The latter is useful if the remote server
+                is multi-homed and has network interfaces that are unreachable from the local
+                IMAP server. The remote host is contacted on the ‘imap’ service port. A
+                non-default port can be specified by appending a slash and the port name or
+                number to the hostname argument.
+
+                The -O flag and argument are mandatory when using the rimap mechanism.
+
+     shadow     (AIX, Irix, Linux, Solaris)
+
+                Authenticate against the local "shadow password file".  The exact mechanism is
+                system dependent.  saslauthd currently understands the getspnam() and getuserpw()
+                library routines. Some systems honour the -T flag.
+
+     sasldb     (All platforms)
+
+                Authenticate against the SASL authentication database.  Note that this is
+                probably not what you want to use, and is even disabled at compile-time by
+                default.  If you want to use sasldb with the SASL library, you probably want to
+                use the pwcheck_method of "auxprop" along with the sasldb auxprop plugin instead.
+
+     ldap       (All platforms that support OpenLDAP 2.0 or higher)
+
+                Authenticate against an ldap server.  The ldap configuration parameters are read
+                from /etc/saslauthd.conf.  The location of this file can be changed with the -O
+                parameter. See the LDAP_SASLAUTHD file included in the cyrus-sasl2-doc package
+                for the list of available parameters.
+
+     sia        (Digital UNIX)
+
+                Authenticate using the Digital UNIX Security Integration Architecture (a.k.a.
+                "enhanced security").
+
+NOTES
+     The kerberos4 authentication driver consumes considerable resources. To perform an
+     authentication it must obtain a ticket granting ticket from the TGT server on every
+     authentication request. The Kerberos library routines that obtain the TGT also create a
+     local ticket file, on the reasonable assumption that you will want to save the TGT for use
+     by other Kerberos applications. These ticket files are unusable by saslauthd , however there
+     is no way not to create them. The overhead of creating and removing these ticket files can
+     cause serious performance degradation on busy servers. (Kerberos was never intended to be
+     used in this manner, anyway.)
+
+FILES
+     /var/run/saslauthd/mux  The default communications socket.
+
+     /etc/saslauthd.conf     The default configuration file for ldap support.
+
+SEE ALSO
+     passwd(1), getpwent(3), getspnam(3), getuserpw(3), sasl_checkpass(3)
+     sia_authenticate_user(3),
+Powered by the Ubuntu Manpage Repository, file bugs in Launchpad
+
+? 2019 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.
+   

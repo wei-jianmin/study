@@ -1,0 +1,109 @@
+https://blog.csdn.net/jkwanga/article/details/109621684
+
+ipsec.conf      //配置ipsec隧道信息
+ipsec.secerts   //psk密钥 配置设备私钥证书 配置eap用户名和密码
+strongswan.conf //为strongswan提供所有组件配置
+
+
+所有配置文件存放于/etc下，但
+对于配置文件内容的讲解，请参看链接原文
+
+---------------------------------------------------------------------
+
+ipsec.conf 和 ipsec.secerts 并不是strongswan专有的配置文件，
+像如openswan、libreswan（centOS自带）也会使用该配置文件（因为他们都源自同一项目）
+Libreswan是Openswan的分支
+strongSwan和Libreswan都起源于FreeS / WAN项目
+strongSwan，是一个完整的开源 IPsec VPN 解决方案，
+可以运行在 Linux、Windows 和 Mac OS X 上，
+此外，它还兼容基于 Android 和 iOS 的产品所支持的 IPsec 功能
+
+---------------------------------------------------------------------
+
+https://www.cnblogs.com/collapsar/p/9510526.html
+ipsec.conf是stroke插件使用的配置文件，可以配置ike proposal、ike peer、ipsec proposal等属
+注：
+    1.      IKE是UDP之上的一个应用层协议，用于在两个IPsec对等体之间协商IPsec SA的协议；
+    2.      IKE不是IPsec专有协议；
+    3.      IKE为IPsec协商建立SA，并把建立的参数及生成的密钥交给IPsec；
+    4.      IPsec使用IKE建立的SA对IP报文加密或认证处理。
+    
+---------------------------------------------------------------------
+
+https://wiki.strongswan.org/projects/strongswan/wiki/IpsecStroke
+
+stroke工具是被ipsec命令调用的一个小型辅助工具，用于控制和监控IPsec连接。
+它通过套接字接口与 IKE 守护程序加载的 stroke 插件进行通信。
+虽然该工具确实支持一些基本的配置操作，
+但它还远远不够完善，因此不应该被用于传输连接信息。
+
+从5.2.0开始，一个新的配置和控制接口可用，可以通过swanctl命令访问。
+
+---------------------------------------------------------------------
+
+https://blog.csdn.net/wq897387/article/details/123446049
+
+配置strongswan的时候建议通过强大的vici接口和swanctl命令行工具。
+swanctl.conf配置文件是被swanctl用来存储证书和相应的私有密钥的地方。
+全局的strongswan设置信息被定义在strongswan.conf里。
+例外，ipsec stroke接口和它的ipsec.conf和ipsec.secrets配置文件都是可以被使用的
+
+strongswan通常是被swanctl命令管理的，而IKE进程charon是被systemd控制的
+因为历史原因，strongswan可以被ipsec命令控制，
+ipsec start将启动开始进程依次启动并配置密钥进程charon
+连接和CHILD_SAs在swanctl.conf里被定义（或者定义在ipsec.conf的conn章节）
+
+---------------------------------------------------------------------
+
+https://docs.strongswan.org/docs/5.9/config/quickstart.html
+这里有几个strongswan的官方案例        
+    
+---------------------------------------------------------------------
+
+https://docs.strongswan.org/docs/5.9/swanctl/swanctlConf.html
+这里是swanctl.conf的官方说明
+    https://docs.strongswan.org/docs/5.9/swanctl/swanctlConf.html
+    这里是swanctl.conf的官方说明
+    该文件为 swanctl --load-* commands.swanctl.conf 提供连接、机密和 IP 地址池    
+    <authorities>
+        定义认证机构互补属性的部分
+    <connections>
+        定义 IKE 连接配置的部分
+    <secrets>
+        定义 IKE/EAP/XAuth 身份验证和私钥解密的秘密
+        ecret 部分采用具有特定前缀的子部分，该前缀定义 secret 类型。
+        不建议定义任何私钥解密口令，因为使用加密密钥没有真正的安全好处。
+        在加载凭据时，要么未加密地存储密钥，要么手动输入密钥
+                    
+---------------------------------------------------------------------
+
+https://blog.csdn.net/lanmolei814/article/details/38078361
+https://blog.csdn.net/hhd1988/article/details/124838253
+这里是ipsec.conf的中文说明
+    CONFIG SECTIONS 此部分包含了软件启动时所使用到的信息 
+        如：
+        config setup
+            interfaes="ipsec0=eth1 ipsec1=ppp0"
+            klipsdebug=none
+            plutodebug=control
+            protostack=auto
+            manualstart=
+    CONN SECTIONS   conn项定义了一个IPsec连接的规范，名字可以随意定义
+        如：
+        conn snt
+            left=10.11.11.1
+            leftsubnet=10.0.1.0/24
+            leftnexthop=172.16.55.66
+            leftsourceip=10.0.1.1
+            right=192.168.22.1
+            rightsubnet=10.0.2.0/24
+            rightnexthop=172.16.88.99
+            rightsourceip=10.0.2.1
+            keyingtries=%forever
+    系统自动定义了一些conns部分于用默认的策略组。
+    如果conn中定义了 auto=ignore，那么默认定义将被忽略
+
+---------------------------------------------------------------------
+
+https://wiki.strongswan.org/projects/strongswan/wiki/Fromipsecconf
+这里是 ipsec.conf 和 swanctl.conf 的对照关系表

@@ -1,0 +1,76 @@
+1. 取随机大素数 p,q
+2. 计算 n = p*q
+3. 计算 L = (p-1)*(q-1)
+4. 选择 1 < e < L , e 与 L 互素(互质)
+5. 计算d, 满足 d*e % L = 1
+6. (n,e)作为公钥
+7. (d,p,q)作为私钥
+        
+由公钥推私钥：
+根据： d*e % L = 1, L = (p-1)*(q-1)
+其中， p,q是已知的，可以算出L，d也是已知的，可推出e
+这意味着由 (d,p,q) 可推出 (n,e)
+
+公钥加密，用 n,e 作算子  ： sec_text = ori_text ^ e % n
+私钥解密，用 n,d 作算子  :  ori_text = sec_text ^ d % n
+
+举例： 
+参：https://blog.csdn.net/weixin_39758953/article/details/113019844
+1. 设 p = 3, q = 11
+2. n = 33
+3. L = 2*10 = 20
+4. e 选 3
+5. d*3 % 20 = 1, d = 7 (d 也可为27 等）
+6. n=33,e=3 作为公钥
+7, p=3,q=11,d=7 作为私钥
+
+对原文11,5,25进行加密（e=3,n=33）
+11^3 % 33 = 11
+5^3 % 33 = 26
+25^3 % 33 = 16
+对密文11,26,16进行解密(d=7,n=33)
+11^7 % 33 = 11
+26^7 % 33 = 5
+16^7 % 33 = 25
+
+RSA是在1978年提出的
+RSA算法的安全性基于数论中大素数分解的困难性
+RSA算法是第一个既能用于数据加密也能用于数字签名的算法
+为提高保密强度，RSA密钥至少为500位长，一般推荐使用1024位。
+在重要应用中，使用512位的密钥已不安全，需要采用1024位的密钥。
+
+
+附注：
+  互质：互质是公约数只有1的两个整数，叫做互质整数
+  模除法的重要性质：
+    b|a <=> a mod b=0
+    (a+b) mod n= (a mod n + b mod n) mod n
+    (a-b) mod n= (a mod n - b mod n) mod n
+    (a*b) mod n= (a mod n * b mod n) mod n  //模除可以进到因子中
+        ● 理解：
+        b = b1+b2，b1能被n整除，b2是b被n整数后的余数
+        = (a*b1 + a*b2) mod n
+        = (a*b1 mod n + a*b2 mod n) mod n
+        = (0 + a*b2 mod n) mod n
+        = ( b2 个 a 相加 ) mod n
+        = ( b2 个 a mod n 相加 ) mod n
+        = (a mod n * b2) mod n
+        = (a mod n * b mod n) mod n
+        ● 证明：
+        设 a = Qc+R, b = Q`c+R`
+        (a*b)%c=[(cQ+R)(cQ`+R`)]%c=(cQQ`+cRQ`+cR`Q+RR`)%c
+        由于cQQ`,cRQ`,cR`Q均可以被c整除，所以(a*b)%c = (RR`)%c
+        因为R,R`为余数，所以(a*b)%c = [(a%c)*(b%c)]%c
+        ● 引申：
+        (a*b*c) mod n
+        =[(a1+a2)(b1+b2)(c1+c2)] mod n
+        =[(a1*b1+a1*b2+a2*b1+a2*b2)(c1+c2)] mod n
+        =[a1*b1*c1 + a1*b2*c1 + a2*b1*c1 + a2*b2*c1
+         +a1*b1*c2 + a1*b2*c2 + a2*b1*c2 + a2*b2*c2] mod n
+        =(a2*b2*c2) mod n
+        =(a mod n * b mod n * c mod n) mod n
+    (a^m) mod c = [(a mod c)^m] mod c   //模除可以进到底数中
+        ● 理解
+        a ^ m = a * a * a * ...
+        (a*a*a*...) mod n = (a mod n * a mod n * a mod n * ...) mod n
+        = ((a mod n)^m) mod n

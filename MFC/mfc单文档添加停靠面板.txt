@@ -1,0 +1,57 @@
+假定：文档中已经有类试图和文档大纲停靠面板，考虑在此基础上再添加一个自定义面板
+当前环境:vs2008
+1. 派生继承自CDockablePane的类CMyPane
+2. 为CMyPane添加OnCreate，OnPaint消息响应函数
+3. 在CMainFrame头文件中添加CMyPane头文件引用，并声明相关成员变量CMyPane m_wndMyPane
+3. 在CMainFrame::CreateDockingWindows方法中完成浮动面板的创建，仿照函数中的例子，调用m_wndMyPane.Create方法，完成自定义浮动窗口的创建
+4. 在CMainFrame::OnCreate函数中，CreateDockingWindows()调用完成之后，添加m_wndMyPane.EnableDocking(CBRS_ALIGN_ANY)，使自定义窗口可以浮动
+5. 在CMainFrame::OnCreate函数中，添加m_wndMyPane.AttachToTabWnd(...)，使自定义窗口附着在文档大纲浮动面板上并使窗口显示
+6. 运行查看效果
+7. 在CMyPane类中完成函数细节
+
+---------------------------------------------------------------------------------------------
+
+为浮动面板添加工具栏:
+1. 在浮动面板头文件MyPane.h中添加类：
+   class CMFCToolBar2 : public CMFCToolBar
+   {
+      virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
+      {
+         CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);    
+      }
+      virtual BOOL AllowShowOnList() const { return FALSE; }
+   };
+   如果直接使用CMFCToolBar，经测试，创建的工具栏不是彩色的
+
+2. 在CMyPane中添加成员变量 CMFCToolBar2 m_toolbar;
+
+3. 在资源视图中，创建工具栏IDR_XXX，被在工具栏中添加工具栏按钮，为其指定ID及HelpText
+
+4. 在资源视图中，创建BMP资源图片IDB_XXX，图像的高度与自定义工具栏按钮高度一致，图像宽度等于工具栏按钮宽度的总和，
+   在图片中绘制要在工具栏按钮上显示的图片
+
+5. 在OnCreate方法中，创建该工具栏：
+   m_toolbar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_XXX);	//创建工具栏
+   m_toolbar.LoadToolBar(IDR_XXX, 0, 0, TRUE /* 已锁定*/,IDB_XXX/*工具栏无效时的图片ID*/,0,IDB_XXX/*工具栏有效时的图片ID*/);  //为工具栏加载相关资源
+   m_toolbar.SetPaneStyle(m_toolbar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
+   m_toolbar.SetPaneStyle(m_toolbar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
+   m_toolbar.SetOwner(this);
+   m_toolbar.SetRouteCommandsViaFrame(FALSE);  // 所有命令将通过此控件路由，而不是通过主框架路由
+
+6. 添加成员函数（辅助完成工具栏的显示）
+   void CMyPane::AdjustLayout(void)
+   {
+      if (GetSafeHwnd() == NULL)
+      {
+         return;
+      }
+      CRect rectClient;
+      GetClientRect(rectClient);
+      int cyTlb = m_abcBar.CalcFixedLayout(FALSE, TRUE).cy;
+      m_toolbar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
+   }
+
+7. 为CMyPane类添加WM_SIZE响应函数，在OnSize函数中，调用AdjustLayout()，否则工具栏显示不出来
+
+8. 在CMyPane中，根据自定义工具栏按钮的ID，为工具栏按钮添加消息响应函数
+

@@ -1,0 +1,38 @@
+GUI中创建控制台窗口，方便输出日志
+if (!AllocConsole())
+{
+  MyDbgPrint("创建调试控制台失败");
+}
+else
+{
+  char szBuff[128];
+  wsprintfA(szBuff,"游戏调试输出窗口 进程ID:%d",GetCurrentProcessId());
+  SetConsoleTitleA(szBuff);  //设置控制台标题
+  freopen("conin$", "r+t", stdin);   
+  freopen("conout$", "w+t", stdout);   
+  freopen("conout$", "w+t", stderr);   
+}
+
+关闭控制台窗口
+fclose(stderr);   
+fclose(stdout);   
+fclose(stdin);   
+FreeConsole();   
+
+
+将控制台输出附加到父进程的控制台里面
+if (!AttachConsole(ATTACH_PARENT_PROCESS))
+{
+    MyDbgPrint("附加到父进程控制台失败");
+}
+else
+{
+//  char szBuff[128];
+//  wsprintfA(szBuff,"游戏调试输出窗口 进程ID:%d",
+//  GetCurrentProcessId());
+//  SetConsoleTitleA(szBuff);
+    freopen("conin$", "r+t", stdin);   
+    freopen("conout$", "w+t", stdout);   
+    freopen("conout$", "w+t", stderr);   
+}
+

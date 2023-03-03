@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.tass</groupId>
+	<artifactId>HSMControlTool</artifactId>
+	<version>1.0.14</version>
+	<packaging>jar</packaging>
+
+	<name>HSMControlTool</name>
+	<url>http://maven.apache.org</url>
+	
+	<parent>  
+        <groupId>org.springframework.boot</groupId>  
+        <artifactId>spring-boot-starter-parent</artifactId>  
+        <version>1.4.3.RELEASE</version>  
+        <relativePath />  
+    </parent>  
+	<properties>
+	    <spring.version>4.3.9.RELEASE</spring.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<java.home>C:/Program Files/Java/jdk1.8.0_77</java.home>
+		<!-- 打包存放地址 -->
+		<deploy.address>D:/git/1528/HSMControlTool/target</deploy.address>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>  
+            <groupId>org.springframework.boot</groupId>  
+            <artifactId>spring-boot-starter-web</artifactId>  
+        </dependency>  
+	 	<dependency>
+   			<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-tomcat</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+		</dependency> 
+		<dependency>
+			<groupId>aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.1_2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.68</version>
+		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+        
+        <dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+<!-- 			<scope>provided</scope> -->
+		</dependency>
+        
+		<dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+    	</dependency>
+   	 	<dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+     	</dependency>
+     	<dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.com.tass.sm</groupId>
+            <artifactId>cn-sm</artifactId>
+            <version>0.1.01</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.tass</groupId>
+            <artifactId>TassCloudApi</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+	</dependencies>
+		
+	<build>
+		<plugins>
+			<!-- spring dev -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.4.2.RELEASE</version>
+				<configuration>
+					<mainClass>com.tass.boot.App</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<!-- spring热部署 -->
+					<dependency>
+						<groupId>org.springframework</groupId>
+						<artifactId>springloaded</artifactId>
+						<version>1.2.6.RELEASE</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<!-- 忽略无web.xml警告 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<!-- 打包时将jsp文件拷贝到META-INF目录下 -->
+			<resource>
+				<!-- 指定resources插件处理哪个目录下的资源文件 -->
+				<directory>src/main/webapp</directory>
+				<!--注意此次必须要放在此目录下才能被访问到 -->
+				<targetPath>META-INF/resources</targetPath>
+				<includes>
+					<include>**/**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/source</directory>
+				<includes>
+					<include>**/**</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+	
+	</build>
+</project>

@@ -1,0 +1,48 @@
+LRESULT CALLBACK WndProc (HWND hwnd, UINT imessage, WPARAM wParam, LPARAM lParam)
+{
+
+WORD x,y;
+HCURSOR hCursor;   //定义表示光标句柄
+switch (imessage)  //定义表示鼠标光标的变量
+{
+case WM_MOUSEMOVE:
+x= LOWORD(lParam);
+y= HIWORD(lParam);
+if (x>=50 && x<=400 &&y>=50 &&y<=300)
+{
+if (x>=50&&x<=100&&y>=50&&y<=100)
+{
+hCursor=LoadCursor(NULL,IDC_CROSS);
+                              //如果改成loadCursor(hWndInstance,IDC_CROSS);为什么指向那片区域是变空白hWndInstance不是当前程序的实例句柄吗？
+SetCursor(hCursor);     //设置当前鼠标光标
+}
+if (x>=100&&x<=150&&y>=50&&y<=100)
+{
+                 hCursor=LoadCursor(NULL,IDC_SIZEALL);
+ SetCursor(hCursor);
+}
+if (x>=150&&x<=200&&y>=50&&y<=100)
+{
+hCursor=LoadCursor(NULL,IDC_IBEAM);
+SetCursor(hCursor);
+}
+if (x>=50&&x<=100&&y>=100&&y<=150)
+{
+hCursor=LoadCursor(NULL,IDC_SIZENESW);
+SetCursor(hCursor);
+}
+if (x>=100&&x<=250&&y>=100&&y<=150)
+{
+hCursor=LoadCursor(NULL,IDC_SIZENS);
+SetCursor(hCursor);
+}
+}
+else{hCursor=LoadCursor(NULL,IDC_WAIT);SetCursor(hCursor);}
+return 0;
+case WM_DESTROY:
+PostQuitMessage (0) ;
+return 0 ;
+
+default:  return (DefWindowProc (hwnd, imessage, wParam, lParam)) ;
+}
+}

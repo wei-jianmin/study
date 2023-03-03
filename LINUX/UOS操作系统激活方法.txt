@@ -1,0 +1,5 @@
+第一步： 改激活地址
+    方式一. 打开授权客户端点击右上角【设置】，选择自定义【https】，输入telicense.chinauos.com 点击【确定】
+    方式二. 命令行输入：uos-activator-cmd -s --https telicense.chinauos.com
+第二步：输入激活码，并点激活按钮
+    9HAAACAAYXS2RR64RYAK3SR6V

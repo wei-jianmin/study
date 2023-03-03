@@ -1,0 +1,17 @@
+Nodejs 是基于 Chrome 的 V8 引擎开发的一个 C++ 程序，目的是提供一个 JS 的运行环境
+最早 Nodejs 主要是安装在服务器上，辅助大家用 JS 开发高性能服务器代码
+Nodejs 下运行 JS 代码有两种方式，一种是在 Node.js 的交互环境下运行，
+另外一种是把代码写入文件中，然后用 node 命令执行文件代码
+Nodejs 跟浏览器是不同的环境，写 JS 代码的时候要注意这些差异
+
+如果你是一个前端程序员，你不懂得像 PHP、Python 或 Ruby 等动态编程语言，
+然后你想创建自己的服务，那么 Node.js 是一个非常好的选择。
+Node.js 是运行在服务端的 JavaScript，如果你熟悉 Javascript，那么你将会很容易的学会 Node.js
+当然，如果你是后端程序员，想部署一些高性能的服务，那么学习 Node.js 也是一个非常好的选择。
+
+
+关于npm
+npm 是 Node Package Manager 的缩写，意思是 Node 的包管理系统
+在这里，我们要实现各种功能几乎都能找到现成的别人写好的包，直接拿了用就好了
+当系统上安装好了 Node.js 之后，就会配套安装一个命令，叫做 npm 。
+执行 npm install moment 就可以把 moment 这个包从 npm 的软件包仓库中下载这个包，然后安装到本地了。

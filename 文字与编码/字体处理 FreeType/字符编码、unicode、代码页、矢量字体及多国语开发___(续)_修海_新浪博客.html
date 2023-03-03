@@ -1,0 +1,863 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>字符编码、unicode、代码页、矢量字体及多国语开发___(续)_修海_新浪博客</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8,chrome=1" />
+<meta name="renderer" content="webkit">
+<meta name="keywords" content="字符编码、unicode、代码页、矢量字体及多国语开发___(续)_修海_新浪博客,修海,it" />
+<meta name="description" content="字符编码、unicode、代码页、矢量字体及多国语开发___(续)_修海_新浪博客,修海," />
+<meta http-equiv="mobile-agent" content="format=html5; url=http://blog.sina.cn/dpool/blog/s/blog_94479040010159sq.html?vt=4">
+<meta http-equiv="mobile-agent" content="format=wml; url=http://blog.sina.cn/dpool/blog/ArtRead.php?nid=94479040010159sq&vt=1">
+<!–[if lte IE 6]>
+<script type="text/javascript">
+try{
+document.execCommand("BackgroundImageCache", false, true);
+}catch(e){}
+</script>
+<![endif]–>
+<script type="text/javascript">
+window.staticTime=new Date().getTime();
+</script>
+<link rel="pingback" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php?rsd" />
+<link href="http://blog.sina.com.cn/blog_rebuild/blog/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest" />
+<link rel="alternate" type="application/rss+xml" href="http://blog.sina.com.cn/rss/2487717952.xml" title="RSS" />
+<link href="http://simg.sinajs.cn/blog7style/css/conf/blog/article.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/common/common.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/blog/blog.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/module/common/blog.css" type="text/css" rel="stylesheet" /><style id="tplstyle" type="text/css">@charset "utf-8";@import url("http://simg.sinajs.cn/blog7newtpl/css/30/30_1/t.css");
+</style>
+<style id="positionstyle"  type="text/css">
+.sinabloghead .blogtoparea{ left:120px;top:43%;}
+.sinabloghead .blognav{ left:120px;top:75.5%;}
+</style>
+<style id="bgtyle"  type="text/css">
+</style>
+<style id="headtyle"  type="text/css">
+</style>
+<style id="navtyle"  type="text/css">
+</style>
+<script type="text/javascript" src="http://d1.sina.com.cn/litong/zhitou/sspnew.js"></script><style type="text/css">
+.sinaads {display:none!important;display:none}
+.article-ad,.s-ad,.ad_01_left,.ad_01_right,.ad_01_center,#sinaExtAdvPos,.mod_ad,.ad_content,#pip_taobao,[class^="adNone"],#ad_tl_01,#ad_top,.top-ads,.zhitou-wrap,.adNone,iframe[src*=".sina.com.cn/litong/"],#sinaAdvIframe,#sinaBGWallAdvContainer,#blk_xlzttltop_01,#blk_sxad_2,iframe[src^="http://img.adbox.sina.com.cn/"] {display:none!important;display:none}
+#adtopad {display:none!important;display:none}
+#sinaAdvIframe,#sinaBGWallAdvContainer {display:none!important;display:none}</style>
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('[id="bb9c190068b84055"]');
+hQGHuMEAyLn('iframe[src*=".sina.com.cn/litong/tanx"],iframe[src^="http://blog.sina.com.cn/lm/iframe/article/"],#searchToQing[style],#recommendShangXun,.sinaads + #module_910,div[id$="_panel"][style*="140"][style*="330"]');
+hQGHuMEAyLn('img[src$="/ad1.jpg"],.topADs,.article-body > p + .article-video,.side-c2 > iframe[src$="/photo.html"]');</script></head>
+<body>
+<!--$sinatopbar-->
+<div style="z-index:512;" class="nsinatopbar">
+  <div style="position:absolute;left:0;top:0;" id="trayFlashConnetion"></div>
+  <div class="ntopbar_main"> 
+    <a id="login_bar_logo_link_350" href="http://blog.sina.com.cn" target="_blank"><img class="ntopbar_logo" src="http://simg.sinajs.cn/blog7style/images/common/topbar/topbar_logo.gif" width="100" alt="新浪博客"></a>
+    <div class="ntopbar_floatL">
+      <div class="ntopbar_search" id="traySearchBar"></div>
+	  <div class="ntopbar_ad" id="loginBarActivity" style="display:none;"></div>
+    </div>
+    <div class="ntopbar_loading"><img src="http://simg.sinajs.cn/blog7style/images/common/loading.gif">加载中…</div>
+  </div>
+</div>
+<!--$end sinatopbar-->
+
+<div class="sinabloga" id="sinabloga">
+	<div id="sinablogb" class="sinablogb">
+
+	   
+ <div id="sinablogHead" class="sinabloghead">
+     <div style="display: none;" id="headflash" class="headflash"></div>
+	   <div id="headarea" class="headarea">
+      <div id="blogTitle" class="blogtoparea">
+      <h1 id="blogname" class="blogtitle"><a href="http://blog.sina.com.cn/123seasky"><span id="blognamespan">加载中...</span></a></h1>
+	  		
+					<div id="bloglink" class="bloglink"><a href="http://blog.sina.com.cn/123seasky">http://blog.sina.com.cn/123seasky</a>  <a onclick="return false;" class="CP_a_fuc" href="#" id="SubscribeNewRss">[<cite>订阅</cite>]</a><a class="CP_a_fuc" href="javascript:void(scope.pa_add.add('2487717952'));">[<cite>手机订阅</cite>]</a></div>
+      </div>
+      <div class="blognav" id="blognav">
+      			  <div id="blognavBg" class="blognavBg"></div> <div class="blognavInfo"> 
+		<span><a   href="http://blog.sina.com.cn/123seasky">首页</a></span>
+      <span><a class="on" href="http://blog.sina.com.cn/s/articlelist_2487717952_0_1.html">博文目录</a></span>
+      <span><a href="http://photo.blog.sina.com.cn/123seasky">图片</a></span>
+      <span class="last"><a  href="http://blog.sina.com.cn/s/profile_2487717952.html">关于我</a></span></div>
+      </div>      		      		 	
+      
+             <div class="autoskin" id="auto_skin">
+       </div>
+
+<div class="adsarea">
+     <a href="#"><div id="template_clone_pic" class="pic"></div></a>
+     <div id="template_clone_link" class="link wdc_HInf"></div>
+     <div id="template_clone_other" class="other"></div>        
+</div>
+    </div>
+    </div>
+    
+    <!--主题内容开始 -->
+    <div class="sinablogbody" id="sinablogbody">
+		
+	<!--第一列start-->
+    <div id="column_1" class="SG_colW21 SG_colFirst"><div class="SG_conn" id="module_901">
+    <div class="SG_connHead">
+            <span class="title" comp_title="个人资料">个人资料</span>
+            <span class="edit">
+                        </span>
+    </div>
+    <div class="SG_connBody">
+        <div class="info">
+                         
+            <div class="info_img" id="comp_901_head"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://p1.sinaimg.cn/2487717952/180/99611340539204" id="comp_901_head_image" width="180" height="180" alt="修海" title="修海" /></div>
+            
+            <div class="info_txt">
+              <div class="info_nm">
+                <img id="comp_901_online_icon" style="display:none;" class="SG_icon SG_icon1" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />
+                <span class="SG_txtb"><strong id="ownernick">修海                                </strong></span>
+                
+                <div class="clearit"></div>
+              </div>
+              <div class="info_btn1">
+                <a target="_blank" href="http://weibo.com/u/2487717952?source=blog" class="SG_aBtn SG_aBtn_ico"><cite><img class="SG_icon SG_icon51" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />微博</cite></a>
+                <div class="clearit"></div>
+              </div>
+    <div class="SG_j_linedot"></div>        <div class="info_locate" id = "info_locate_id">
+<div class="SG_j_linedot"></div>
+<div class="info_btn2">
+    <p>
+    <a href="javascript:void(0);" class="SG_aBtn " id="comp901_btn_invite"><cite >加好友</cite></a>
+    <a href="javascript:void(0);" class="SG_aBtn" id="comp901_btn_sendpaper"><cite >发纸条</cite></a>
+    </p>
+    <p>
+    <a href="http://blog.sina.com.cn/s/profile_2487717952.html#write" class="SG_aBtn"   id="comp901_btn_msninfo"><cite>写留言</cite></a>
+    <a href="#" onclick="return false;" class="SG_aBtn"  id="comp901_btn_follow"><cite onclick="Module.SeeState.add()">加关注</cite></a>
+    </p>
+    <div class="clearit"></div>
+</div>
+<div class="SG_j_linedot"></div>
+</div>
+                  <div class="info_list">     
+                                   <ul class="info_list1">
+                    <li><span class="SG_txtc">博客等级：</span><span id="comp_901_grade"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/1.gif"  /><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/4.gif"  /></span></li>
+                    <li><span class="SG_txtc">博客积分：</span><span id="comp_901_score"><strong>0</strong></span></li>
+                    </ul>
+                    <ul class="info_list2">
+                    <li><span class="SG_txtc">博客访问：</span><span id="comp_901_pv"><strong>56,097</strong></span></li>
+                    <li><span class="SG_txtc">关注人气：</span><span id="comp_901_attention"><strong>123</strong></span></li>
+                    <li><span class="SG_txtc">获赠金笔：</span><strong id="comp_901_d_goldpen">0支</strong></li>
+                    <li><span class="SG_txtc">赠出金笔：</span><strong id="comp_901_r_goldpen">0支</strong></li>
+					<li class="lisp" id="comp_901_badge"><span class="SG_txtc">荣誉徽章：</span></li>
+                    </ul>
+                  </div>
+<div class="clearit"></div>
+    </div>
+    <div class="clearit"></div>
+</div>
+            </div>       
+            <div class="SG_connFoot"></div>
+</div>
+<div id="module_903" class="SG_conn ">
+    <div class="SG_connHead">
+    <span comp_title="相关博文" class="title">相关博文</span>
+    <span class="edit"> </span>
+    </div>
+    <div class="SG_connBody">
+    <div class="atcTitList relaList">        <ul class="">
+
+                <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_41" class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_42"  class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        
+                	</ul>
+    <div class="atcTit_more"><span class="SG_more"><a href="http://blog.sina.com.cn/" target="_blank">更多&gt;&gt;</a></span></div></div>    </div>
+    <div class="SG_connFoot"></div>
+  </div>
+<div id="module_904_top_ad"></div>
+<div class="SG_conn " id="module_904">
+<div class="SG_connHead">
+<span class="title">推荐博文</span>
+</div>
+<div class="SG_connBody ">
+	<div class="atcTitList relaList">		<ul class="">
+			<li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="高考状元失联九年是当代自私的典" target="_blank" href="http://blog.sina.com.cn/s/blog_537368000102xr98.html?tj=2?tj=2">高考状元失联九年是当代自私的典</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1400072192" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="网盘衰落之后，为何这款私人云盘" target="_blank" href="http://blog.sina.com.cn/s/blog_665a4de50102x5mb.html?tj=2?tj=2">网盘衰落之后，为何这款私人云盘</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1717194213" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="短期调整或将仍有反复" target="_blank" href="http://blog.sina.com.cn/s/blog_4c7ca1550102wqoo.html?tj=2?tj=2">短期调整或将仍有反复</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1283236181" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="人工智能与隐私保护" target="_blank" href="http://blog.sina.com.cn/s/blog_6c7e111d0102x4g7.html?tj=2?tj=2">人工智能与隐私保护</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1820201245" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="台湾科技挣扎，人祸大于天灾？" target="_blank" href="http://blog.sina.com.cn/s/blog_4a46c3960102wifo.html?tj=2?tj=2">台湾科技挣扎，人祸大于天灾？</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1246151574" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="收入份额=市场份额，虎嗅想干什" target="_blank" href="http://blog.sina.com.cn/s/blog_5ff50e8f0102w4tq.html?tj=2?tj=2">收入份额=市场份额，虎嗅想干什</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1609895567" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="传奇的谢幕，谈岩田聪和他的任天" target="_blank" href="http://blog.sina.com.cn/s/blog_b4474abf0102vqy3.html?tj=2?tj=2">传奇的谢幕，谈岩田聪和他的任天</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/3024571071" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="家常主食轻松做之——培根香葱花" target="_blank" href="http://blog.sina.com.cn/s/blog_500017680102vrck.html?tj=2?tj=2">家常主食轻松做之——培根香葱花</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1342183272" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="盘点2015最惊艳流行的婚礼蛋" target="_blank" href="http://blog.sina.com.cn/s/blog_73f3af200102vq43.html?tj=2?tj=2">盘点2015最惊艳流行的婚礼蛋</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1945349920" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="非洲荒漠“精灵怪圈”引发诸多猜" target="_blank" href="http://blog.sina.com.cn/s/blog_69f845650102wbfo.html?tj=2?tj=2">非洲荒漠“精灵怪圈”引发诸多猜</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1777878373" class="SG_linkb"></a></p>
+		</li>		</ul>
+		<div id="atcPicList">
+		</div>
+	<div class="atcTit_more"><span class="SG_more"><a target="_blank" href="http://blog.sina.com.cn/">查看更多</a>&gt;&gt;</span></div></div></div>
+<div class="SG_connFoot"></div>
+</div>
+        <div class="SG_conn" id="module_47"><div class="SG_connHead">
+                <span class="title" comp_title="谁看过这篇博文">谁看过这篇博文</span>
+                                <span class="edit"></span>
+            </div>
+            <div class="SG_connBody">
+            	<div class="wdtLoading"><img src="http://simg.sinajs.cn/blog7style/images/common/loading.gif" />加载中…</div>            </div>
+            <div class="SG_connFoot"></div>
+                  </div></div>
+	<!--第一列end-->
+	
+	<!--第二列start-->
+	<div id="column_2" class="SG_colW73">	
+<div id="module_920" class="SG_conn">
+	<div class="SG_connHead">
+	    <span comp_title="正文" class="title">正文</span>
+	    <span class="edit"><span id="articleFontManage" class="fontSize">字体大小：<a href="javascript:;" onclick="changeFontSize(2);return false;">大</a> <strong>中</strong> <a href="javascript:;" onclick="changeFontSize(0);return false;">小</a></span></span>
+	</div>
+    <div class="SG_connBody">
+<!--博文正文 begin -->
+	<div id="articlebody" class="artical" favMD5='{"94479040010159sq":"6e00e9aa81fc58ce4d3242abd0fb630e"}'>
+		<div class="articalTitle"> 
+			
+								<h2 id="t_94479040010159sq" class="titName SG_txta">字符编码、unicode、代码页、矢量字体及多国语开发___(续)</h2>
+			
+					<span class="time SG_txtc">(2012-06-26 09:42:21)</span><div class="turnBoxzz"><a href="javascript:;" class="SG_aBtn SG_aBtn_ico SG_turn"  action-type="reblog" action-data="{srcBlog:1, blogId:'94479040010159sq'}"><cite><img class="SG_icon SG_icon111" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle">转载<em class="arrow">▼</em></cite></a></div>		</div>
+		<div class="articalTag" id="sina_keyword_ad_area">
+			<table>
+				<tr>
+					<td class="blog_tag">
+					<script>
+					var $tag='it';
+					var $tag_code='ecf6695c7db4e73a2bd0db699e16d5a8';
+					var $r_quote_bligid='94479040010159sq';
+					var $worldcup='0';
+					var $worldcupball='0';
+					</script>
+											<span class="SG_txtb">标签：</span>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=it&by=tag" target="_blank">it</a></h3>
+																</td>
+					<td class="blog_class">
+											<span class="SG_txtb">分类：</span>
+						<a target="_blank" href="http://blog.sina.com.cn/s/articlelist_2487717952_1_1.html">嵌入式技术专题</a>
+										</td>
+				</tr>
+			</table>
+		</div>
+						<!-- 正文开始 -->
+		<div id="sina_keyword_ad_area2" class="articalContent   ">
+			<div STYLE="LAYoUT-GriD: 15.6pt none">
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 7.5pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'"><br />
+</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+无辜的<font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">：</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">在<font FACE="Arial">windows</FONT><font FACE="宋体">下打开一个记事本，输入</FONT><font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">保存后，再次打开却发现</FONT><font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">不见了</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">首先了解，不同编码文本的存储，开头字节：</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-8<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>EF&nbsp;<wbr>BB&nbsp;<wbr>BF</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-16/UCS-2,little&nbsp;<wbr>endian<font FACE="宋体">：&nbsp;<wbr></FONT><font FACE="Arial">FF&nbsp;<wbr>FE&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-16/UCS-2,big&nbsp;<wbr>endian<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>FE&nbsp;<wbr>FF&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-32/UCS-4,little&nbsp;<wbr>endian<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>FF&nbsp;<wbr>FE&nbsp;<wbr>00&nbsp;<wbr>00</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-32/UCS-4,big&nbsp;<wbr>endian<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>00&nbsp;<wbr>00&nbsp;<wbr>FE&nbsp;<wbr>FF</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">“<font FACE="宋体">连通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">的几种编码：</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>GBK<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>C1&nbsp;<wbr>AA&nbsp;<wbr>CD&nbsp;<wbr>A8</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-16(big&nbsp;<wbr>endian)<font FACE="宋体">：</FONT><font FACE="Arial">DE&nbsp;<wbr>8F&nbsp;<wbr>1A&nbsp;<wbr>90&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>UTF-8<font FACE="宋体">：</FONT><font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>E8&nbsp;<wbr>BF&nbsp;<wbr>9E&nbsp;<wbr>E9&nbsp;<wbr>80&nbsp;<wbr>9A</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+打开一个文本要确定它的编码格式有三种途径：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">第一<font FACE="Arial">:</FONT><font FACE="宋体">检测文本开头字节</FONT><font FACE="Arial">(</FONT><font FACE="宋体">最理想的方法</FONT><font FACE="Arial">)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">第二<font FACE="Arial">:</FONT><font FACE="宋体">猜测，通过读取几个字符测试出可能的编码类型</FONT><font FACE="Arial">(</FONT><font FACE="宋体">防止未加格式头</FONT><font FACE="Arial">)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">第三<font FACE="Arial">:</FONT><font FACE="宋体">提示，当打开一个不确定编码类型的文本时可以弹出对话框，让用户来选择</FONT><font FACE="Arial">(</FONT><font FACE="宋体">如</FONT><font FACE="Arial">mail)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">其实软件开发中可能三种方法都会用到</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">Microsoft<font FACE="宋体">在采用第二种方法进行打时出错</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">“<font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">的错误出在</FONT><font FACE="Arial">TXT</FONT><font FACE="宋体">文件在保存时默认采用</FONT><font FACE="Arial">ANSI</FONT><font FACE="宋体">，而当打开时自动猜测成</FONT><font FACE="Arial">UTF-8</FONT><font FACE="宋体">打开</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">所以显示乱码，是猜错引起的。而只要我们以保存的编码方式打开就不会出问题。而<font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">这个编码是个意外</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+从字符编码角度分析原因：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">这应该就是<font FACE="Arial">Microsoft</FONT><font FACE="宋体">程序上的</FONT><font FACE="Arial">bug</FONT><font FACE="宋体">了，且至今未找到更好的解决方案</FONT><font FACE="Arial">(</FONT><font FACE="宋体">做了优化，即可能是随机多取几字符进行测试&nbsp;<wbr>，所以在</FONT><font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">后面如果再多输入几个字符就不会出现乱码了</FONT><font FACE="Arial">)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">先看<font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">的内码</FONT><font FACE="Arial">(GBK)</FONT><font FACE="宋体">：</FONT><font FACE="Arial">0xC1AACDA8</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>C1-&nbsp;<wbr>1100&nbsp;<wbr>0001&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>AA-&nbsp;<wbr>1010&nbsp;<wbr>1010&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>CD-&nbsp;<wbr>1100&nbsp;<wbr>1101&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>A8-&nbsp;<wbr>1010&nbsp;<wbr>1000</SPAN><span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">其中一二字节和三四字节中开头都是<font FACE="Arial">“110”</FONT><font FACE="宋体">和</FONT><font FACE="Arial">“10”</FONT><font FACE="宋体">，正好与</FONT><font FACE="Arial">UTF8</FONT><font FACE="宋体">规则里的双字节模板一致，所以就猜成按</FONT><font FACE="Arial">UTF-8</FONT><font FACE="宋体">编码方式打开了</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">所以只要出现类似<font FACE="Arial">“110”</FONT><font FACE="宋体">和</FONT><font FACE="Arial">“10”</FONT><font FACE="宋体">的字符编码，且以</FONT><font FACE="Arial">ANSI</FONT><font FACE="宋体">存储，自动打开都会出现乱码的情况，如</FONT><font FACE="Arial">“</FONT><font FACE="宋体">联系</FONT><font FACE="Arial">”</FONT><font FACE="宋体">和</FONT><font FACE="Arial">“this&nbsp;<wbr>app&nbsp;<wbr>can&nbsp;<wbr>break”&nbsp;<wbr></FONT><font FACE="宋体">等等</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">根据规则统计，一切字符的高字节在<font FACE="Arial">C0≤AA≤DF</FONT><font FACE="宋体">且低字节在</FONT><font FACE="Arial">80≤BB≤BF</FONT><font FACE="宋体">这个范围时，</FONT><font FACE="Arial">notepad</FONT><font FACE="宋体">都无法确认文档的格式，没有自动依照</FONT><font FACE="Arial">ANSI</FONT><font FACE="宋体">格式来显示</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">而<font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">就是</FONT><font FACE="Arial">0xC1AACDA8</FONT><font FACE="宋体">，刚好在上面地范围内，所以不能正常显示，像这样的字符有近二千个</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">所以说<font FACE="Arial">“</FONT><font FACE="宋体">联通</FONT><font FACE="Arial">”</FONT><font FACE="宋体">是无辜的</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+字库：</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">是外文字体、中文字体以及相关字符形状的电子文字字体集合，被广泛用于计算机、网络及相关电子产品上</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+字库分类：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">按语种不同可分为：外文字库、中文字库、图形符号库；外文字库又可分为：英文字库、俄文字库、日文字库等等</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">按不同公司划分为：微软字库、方正字库、汉仪字库、文鼎字库、汉鼎字库、长城字库、金梅字库等等</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">按历史版本划分，如汉字库：<font FACE="Arial">GB</FONT><font FACE="宋体">字库、</FONT><font FACE="Arial">GBK</FONT><font FACE="宋体">字库、</FONT><font FACE="Arial">GB18030</FONT><font FACE="宋体">字库等等</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">按字符字形划分如：宋体、楷体、方正舒体、黑体、<font FACE="Arial">MingLiU</FONT><font FACE="宋体">、</FONT><font FACE="Arial">Gulim</FONT><font FACE="宋体">等</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">按字模存在形式划分为，常见的有：点阵字库、矢量字库、<font FACE="Arial">PostScript</FONT><font FACE="宋体">字库、图形字库等</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+以<font FACE="Arial">GB2312</FONT><font FACE="宋体">字库举例说明：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">为了便于管理<font FACE="Arial">GB2312</FONT><font FACE="宋体">字库，通常采用的是区位码</FONT><font FACE="Arial">(</FONT><font FACE="宋体">内码</FONT><font FACE="Arial">&ndash;&nbsp;<wbr>0xA0A0)</FONT><font FACE="宋体">进行检索&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">假设：有一字符串<font FACE="Arial">str,</FONT><font FACE="宋体">当前字号占</FONT><font FACE="Arial">s_size</FONT><font FACE="宋体">字节，求当前字符在字库中的偏移地址</FONT><font FACE="Arial">offset_addr</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>s_row&nbsp;<wbr>=&nbsp;<wbr>*(str)-0xA0;&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>s_col&nbsp;<wbr>=&nbsp;<wbr>*(str+1)-0xA0;&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>offset_addr=(94*(s_row-1)+(s_col-1))*s_size;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr><font FACE="宋体">读取点阵信息到</FONT><font FACE="Arial">buffer</FONT><font FACE="宋体">：</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>fseek(fp,offset_addr,SEEK_SET);&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>fread(buffer,s_size,1,fp);&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 7.5pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 18pt; CoLor: rgb(51,51,255); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+6<font FACE="宋体">、矢量字体的应用移植</FONT><font FACE="Arial">:</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 7.5pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">FreeType&nbsp;<wbr>2<font FACE="宋体">被设计为一种占用空间小、高效、高度可定制的、并且可以产生可移植的高品质输出（符号图像）。可以被用在诸如图像库、展出服务器、字体转换工具、图像文字产生工具等多种其它产品上</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">FreeType&nbsp;<wbr>2<font FACE="宋体">的发行遵循两个开源许可：</FONT><font FACE="Arial">BSD</FONT><font FACE="宋体">样式的</FONT><font FACE="Arial">FreeType&nbsp;<wbr>License</FONT><font FACE="宋体">和</FONT><font FACE="Arial">GPL</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">它提供一个简单的、易用的并且统一的接口实现对多种字体文件的访问</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">尽管点阵字体在时间和空间性能上都有较佳的表现，但是由于缺乏灵活性，不便于改变字体的大小和风格</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">矢量字体不像点阵字体那样直接记录字符的字模数据，而是记录字体描述信息，其中最重要的两部分是<font FACE="Arial">outline</FONT><font FACE="宋体">和</FONT><font FACE="Arial">hint</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">outline(<font FACE="宋体">轮廓</FONT><font FACE="Arial">)</FONT><font FACE="宋体">：</FONT></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">这是用来描述字体的基本手段，它一般由直线和贝塞尔曲线组成。贝塞尔曲线是一条由三个点确定的曲线，假设这三点的坐标是<font FACE="Arial">(Ax,Ay)</FONT><font FACE="宋体">、</FONT><font FACE="Arial">(Bx,&nbsp;<wbr>By)&nbsp;<wbr></FONT><font FACE="宋体">和</FONT><font FACE="Arial">(Cx,&nbsp;<wbr>Cy)</FONT><font FACE="宋体">，那么曲线方程为：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">px&nbsp;<wbr>=&nbsp;<wbr>(1-t)2.Ax&nbsp;<wbr>+&nbsp;<wbr>2t(1-t).Bx&nbsp;<wbr>+&nbsp;<wbr>t2.Cx</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'"><br />
+</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>py&nbsp;<wbr>=&nbsp;<wbr>(1-t)2.Ay&nbsp;<wbr>+&nbsp;<wbr>2t(1-t).By&nbsp;<wbr>+&nbsp;<wbr>t2.Cy</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">hint(<font FACE="宋体">精调</FONT><font FACE="Arial">)</FONT><font FACE="宋体">：</FONT></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">Outline<font FACE="宋体">已经描述字体的表现形式，但是数学上的正确对人眼来说并不见得合适，特别是缩放到特定的大小和分辨率的时候，字体可能变得不好看，或者不清析。</FONT><font FACE="Arial">hint</FONT><font FACE="宋体">指的是一系列的技术，用来微调字体，让字体变得更美观，更清析</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">字符影射表<font FACE="Arial">(charmap)</FONT></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">:<font FACE="宋体">字符对应的字体数据称为</FONT><font FACE="Arial">glyph</FONT><font FACE="宋体">，字体文件中通常带有一个字符映射表，用来把字符映射到对应</FONT><font FACE="Arial">glyph</FONT><font FACE="宋体">的索引值</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">矢量字体有多种不同的格式，其中<font FACE="Arial">TrueType</FONT><font FACE="宋体">用得最为广泛，它的扩展名通常为</FONT><font FACE="Arial">OTF</FONT><font FACE="宋体">或者</FONT><font FACE="Arial">TTF</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">它的文件内容由几部分组成，文件头、表目录和表。文件头描述了版本号和表的数目等信息，表目录记录了表的偏移量和大小，表则是文件的实际数据</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">矢量字体的处理比较麻烦，即要进行矢量计算，又要进行精调处理，相对于点阵字体处理要慢</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+freetype2<font FACE="宋体">应用移植：</FONT></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+freetype-2.1.10<font FACE="宋体">下载地址：</FONT></SPAN></P>
+<p><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+<font STYLE="FonT-siZe: 24px"><a HREF="http://iask.sina.com.cn/u/2487717952/ish"></A><a HREF="http://iask.sina.com.cn/u/2487717952/ish">http://iask.sina.com.cn/u/</A><a HREF="http://iask.sina.com.cn/u/2487717952/ish">2487717952/</A><a HREF="http://iask.sina.com.cn/u/2487717952/ish">ish</A></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">或</SPAN><span><a HREF="http://savannah.nongnu.org/download/freetype/"><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,0,255); FonT-FAMiLY: 'Arial'; TexT-DeCorATion: underline; mso-spacerun: 'yes'"><font STYLE="FonT-siZe: 14px" COLOR="#6F3198">http://savannah.nongnu.org/download/freetype/</FONT></SPAN></A></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+编译配置：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>./configure&nbsp;<wbr>--host=arm-linux&nbsp;<wbr>--prefix=/xxx/xxx</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>make</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>make&nbsp;<wbr>install</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+应用程序的编写：</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+常用头文件包含：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>#include&nbsp;<wbr>&lt;ft2build.h&gt;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>#include&nbsp;<wbr>&lt;freetype/freetype.h&gt;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>#include&nbsp;<wbr>&lt;freetype/fttrigon.h&gt;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>#include&nbsp;<wbr>&lt;freetype/ftstroke.h&gt;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+应用程序编译：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>export&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>C_INCLUDE_PATH=/home/xiuhai/Desktop/libfree/include/:/home/xiuhai/Desktop/libfree/include/freetype2/</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>arm-linux-gcc&nbsp;<wbr>-L/home/xiuhai/Desktop/libfree/lib/&nbsp;<wbr>-lfreetype&nbsp;<wbr>-o&nbsp;<wbr>t&nbsp;<wbr>freetype_test.c</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+运行时要拷贝动态库到开发板<font FACE="Arial">lib</FONT><font FACE="宋体">下，</FONT><font FACE="Arial">TTY</FONT><font FACE="宋体">字体库可以拷贝到应用程序指定的位置</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+当新建一个<font FACE="Arial">face</FONT><font FACE="宋体">对象时，</FONT><font FACE="Arial">freetype2</FONT><font FACE="宋体">默认选择</FONT><font FACE="Arial">Unicode</FONT><font FACE="宋体">字符表</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+初始化<font FACE="Arial">freetype:&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>FT_Library&nbsp;<wbr>&nbsp;<wbr>library;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>FT_Init_FreeType(&nbsp;<wbr>&amp;library&nbsp;<wbr>);</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+加载字体创建<font FACE="Arial">face</FONT><font FACE="宋体">：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">FT_Face&nbsp;<wbr>face;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>FT_New_Face(library,"simfang.ttf",0,&nbsp;<wbr>&amp;face)</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+设置字体大小<font FACE="Arial">(</FONT><font FACE="宋体">宽</FONT><font FACE="Arial">/</FONT><font FACE="宋体">高</FONT><font FACE="Arial">)</FONT><font FACE="宋体">：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">FT_Set_Pixel_Sizes(face,&nbsp;<wbr>16,0)</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+根据目标编码获取字符在字库中的索引<font FACE="Arial">:&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>FT_UInt&nbsp;<wbr>glyph_index;</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">glyph_index&nbsp;<wbr>=&nbsp;<wbr>FT_Get_Char_Index(face,unicode);</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+按指定的大小加载字符的<font FACE="Arial">glyph:&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">FT_Load_Glyph(face,glyph_index,FT_LOAD_DEFAULT)</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+将指定的<font FACE="Arial">glyph</FONT><font FACE="宋体">转换成</FONT><font FACE="Arial">bitmap</FONT><font FACE="宋体">：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>FT_Render_Glyph(face</SPAN><span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">-</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&gt;glyph,FT_RENDER_MODE_MONO)</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+FT_GlyphSlot<font FACE="宋体">结构体部分成员信息：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap_left:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">距离左边的空余像素</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap_top:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>用于描述顶部空白区<font FACE="Arial">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>(bitmap.rows&nbsp;<wbr>-&nbsp;<wbr>bitmap_top)&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap.rows:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">字符所占的行数</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap.width:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">字符所占的列数</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap.pitch:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">绝对值表示一行所占字节数</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap.pixel_mode:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">像素模式，<font FACE="Arial">1</FONT><font FACE="宋体">指单色的，</FONT><font FACE="Arial">8</FONT><font FACE="宋体">表示反走样灰度值</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(204,0,0); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">bitmap.buffer:</SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">glyph<font FACE="宋体">的点阵位图内存绶冲区</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'"><a HREF="http://blog.sina.com.cn/s/blog_94479040010158ky.html" TARGET="_blank"><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'"><font COLOR="#FF7E00"><strong>源码实例</STRONG></FONT></SPAN></A><font FACE="Arial">(</FONT><font FACE="宋体">用到的字库可以到</FONT><font FACE="Arial">C:\WINDOWS\Fonts</FONT><font FACE="宋体">去拷贝</FONT><font FACE="Arial">)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+Freetype2<font FACE="宋体">其他应用：&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+指定字符编码集：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>FT_Select_Charmap(face,&nbsp;<wbr>FT_ENCODING_GB2312);</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+字形变换：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">仿射、旋转、文字渲染、缩放、自居调整等<font FACE="Arial">&nbsp;<wbr></FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 7.5pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 18pt; CoLor: rgb(51,51,255); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+7<font FACE="宋体">、多国语言开发</FONT><font FACE="Arial">:</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 7.5pt; FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+对于一个嵌入式产品多语言支持，一般分两部分：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">一是终端本地显示界面，如菜单、图标等</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">二是来自外部的文件，需要在终端上进行显示</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+针对上面两点，都离不开<font FACE="Arial">Codepage</FONT><font FACE="宋体">与</FONT><font FACE="Arial">Unicode</FONT><font FACE="宋体">，同时还要有支持各国语言的内码表及各国语言内码所对应的字库或</FONT><font FACE="Arial">Unicode</FONT><font FACE="宋体">字库</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">开发工作主要集中在编码转换和字库索引这块，编码转换方式多样，效率也会不同</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+对于字符显示的方案：&nbsp;<wbr></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">对于本地字符串显示，由于内容比较少，可以将字符串定义在头文件中，为了便于随时修改，也可以做成<font FACE="Arial">XML</FONT><font FACE="宋体">文件</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">字符串可以是文本也可以是内码<font FACE="Arial">(</FONT><font FACE="宋体">字符串内码数组</FONT><font FACE="Arial">)</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">可以采用各国内码字库，不过得熟悉其编码规则，所以不怎么采用</SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">一般采用<font FACE="Arial">Unicode</FONT><font FACE="宋体">字库，或</FONT><font FACE="Arial">TTY</FONT><font FACE="宋体">字库</FONT></SPAN></P>
+<p STYLE="MArGin-Top: 0pt; MArGin-BoTToM: 0pt; TexT-ALiGn: left">
+<span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(0,0,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">
+&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr></SPAN><span STYLE="FonT-WeiGHT: bold; FonT-siZe: 14pt; CoLor: rgb(51,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">&nbsp;<wbr></SPAN><span STYLE="FonT-siZe: 14pt; CoLor: rgb(0,51,153); FonT-FAMiLY: 'Arial'; mso-spacerun: 'yes'">Freetype2<font FACE="宋体">为多国语显示提供了很大方便，我们只需要佣用相应语言的</FONT><font FACE="Arial">TTY</FONT><font FACE="宋体">字库就可以方便的显示字符了</FONT></SPAN></P>
+</DIV>							
+		</div>
+						<!-- 正文结束 -->
+		<div id='share' class="shareUp">
+        	<div class="share SG_txtb">
+			分享： 
+			<div class="bshare-custom" style="display:inline;margin-left:5px;"><a title="分享到新浪微博" class="bshare-sinaminiblog" href="javascript:void(0);"></a><a title="分享到微信" class="bshare-weixin" href="javascript:void(0);"></a><a title="分享到QQ空间" class="bshare-qzone" href="javascript:void(0);"></a><a title="分享到豆瓣" class="bshare-douban" href="javascript:void(0);"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+			</div>
+			</div>
+            <div class="up">
+	        	<div title="喜欢后让更多人看到" id="dbox_94479040010159sq" class="upBox upBox_click" style="cursor: pointer;">
+	            	<p ti_title="字符编码、unicode、代码页、矢量字体及多国语开发___(续)" id="dbox2_94479040010159sq" class="count" ></p>
+	                <p class="link"><img width="15" height="15" align="absmiddle" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon34">喜欢</p>
+	            </div>
+<!--
+                <div class="upBox upBox_add">
+                    <p class="count">0</p>
+                    <p class="link"><img width="20" height="16" align="absmiddle" title="推荐" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon214">赠金笔</p>
+                </div>
+-->
+                                <div class="upBox upBox_add">
+                    <p class="count" id="goldPan-num">0</p>
+                    <p class="link" id="goldPan-give"><img class="SG_icon SG_icon214" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="20" height="16" title="赠金笔" align="absmiddle">赠金笔</p>
+                </div>
+                
+	        </div>
+            <div class="clearit"></div>
+		</div>
+		<div class="articalInfo">
+			<!-- 分享到微博 {$t_blog} -->
+			<div class="IL">
+				阅读<span id="r_94479040010159sq" class="SG_txtb"></span><em class="SG_txtb">┊</em> 
+				<a href="#commonComment">评论</a> <span id="c_94479040010159sq" class="SG_txtb"></span><em class="SG_txtb">┊</em>				<a href="javascript:;" onclick="$articleManage('94479040010159sq',5);return false;">收藏</a><span id="f_94479040010159sq"  class="SG_txtb"></span>
+				<em class="SG_txtb">┊</em><a href="#" id="quote_set_sign" onclick="return false ;">转载</a><a  href="#" id="z_94479040010159sq" onclick="return false ;" class="zznum"></a>				<span id="fn_字符编码、unicode、代码页、矢量字体及多国语开发___(续)" class="SG_txtb"></span><em class="SG_txtb">┊</em>
+				<a onclick="return false;" href="javascript:;" ><cite id="d1_digg_94479040010159sq">喜欢</cite></a><a id="d1_digg_down_94479040010159sq" href="javascript:;" ><b>▼</b></a>
+									<em class="SG_txtb">┊</em><a href="http://blog.sina.com.cn/main_v5/ria/print.html?blog_id=blog_94479040010159sq" target="_blank">打印</a><em class="SG_txtb">┊</em><a id="q_94479040010159sq" onclick="report('94479040010159sq');return false;" href="#">举报</a>
+											</div>
+			<div class="IR">
+				<table>
+					<tr>
+											<th class="SG_txtb" scope="row">已投稿到：</th>
+						<td>
+							<div class="IR_list">
+								<span><img class="SG_icon SG_icon36" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" title="排行榜" align="absmiddle" /> <a href="http://blog.sina.com.cn/lm/114/113/day.html" class="SG_linkb" target="_blank">排行榜</a></span>							</div>
+						</td>
+										</tr>
+									</table>
+			</div>
+		</div>
+		<div class="clearit"></div>
+		<div class="blogzz_zzlist borderc" id="blog_quote" style="display:none">加载中，请稍候......</div>
+		<div class="articalfrontback SG_j_linedot1 clearfix" id="new_nextprev_94479040010159sq">
+							<div><span class="SG_txtb">前一篇：</span><a href="http://blog.sina.com.cn/s/blog_94479040010159j7.html">unicode_17个面的字符编码</a></div>
+										<div><span class="SG_txtb">后一篇：</span><a href="http://blog.sina.com.cn/s/blog_94479040010159u9.html">iask爱问共享资料</a></div>
+					</div>
+		<div class="clearit"></div>
+							
+		<div id="loginFollow"></div>
+				<div class="allComm">
+			<div  class="allCommTit" >
+				<div class="SG_floatL">
+				    <strong>评论</strong>
+				    <span id="commAd_1" style="display:none;">
+				        <span style="margin-left:15px; width:220px; display:inline-block;"><a target="_blank" href="http://blog.sina.com.cn/lm/8/2009/0325/105340.html">重要提示：警惕虚假中奖信息</a></span>
+				    </span>
+				</div>
+				<div class="SG_floatR"><a class="CP_a_fuc" href="#post">[<cite>发评论</cite>]</a></div>
+			</div>
+			<ul id="article_comment_list" class="SG_cmp_revert"><!-- 循环始 --><li>评论加载中，请稍候...</li><!-- 循环终  --></ul>
+			<div class="clearit"></div>
+			<div class="myCommPages SG_j_linedot1">
+				<div class="SG_page" id="commentPaging" style="display:none;">
+					<ul class="SG_pages">
+					</ul>
+				</div>
+				<div class="clearit"></div>
+			</div>
+			<a name="post"></a>
+			<div class="writeComm">
+				<div class="allCommTit">
+					<div class="SG_floatL">
+					    <strong>发评论</strong>
+					    <span></span>
+					</div>
+					<div class="SG_floatR"></div>
+				</div>
+				<div class="wrCommTit">
+					<div class="SG_floatL" id="commentNick" style="display:none;"></div>
+				</div>
+				<div class="formTextarea">
+					<div style="float:left;" id="commonComment">
+					<iframe id="postCommentIframe"  frameborder="0" style="border:1px solid #C7C7C7;
+		height:158px;width:448px;maring-top:1px;background-color:white;" src="http://blog.sina.com.cn/main_v5/ria/blank2.html"></iframe>
+					<textarea id="commentArea" tabindex="1" style="display:none;"></textarea>
+					</div>
+					<div id="mobileComment" style="float:left;display:none;">
+						<textarea id="mbCommentTa" style="width:438px;height:150px;border:1px solid #C7C7C7;line-height:18px;padding:5px;"></textarea>
+					</div>
+					<div class="faceblk" id="faceWrap">
+						<div id="smilesSortShow" class="faceline1">
+						</div>
+						<ul id="smilesRecommended" class="faceline01"></ul>
+					</div>
+					<div class="clearit"></div>
+				</div>
+				<div class="formLogin">
+					<div class="SG_floatL"> 
+					<p id="commentlogin" style="display:none;"><span>登录名：</span><input type="text" style="width: 115px;" id="login_name" tabindex="2"/>   <span>密码：</span><input type="password" style="width: 115px;" id="login_pass" tabindex="3"/>   <a href="https://login.sina.com.cn/getpass.html" target="_blank">找回密码</a>   <a href="https://login.sina.com.cn/signup/signup.php?entry=blog&src=blogicp&srcuid=2487717952" target="_blank">注册</a>	<input type="checkbox" id="login_remember"/><label for="login_remember" style="display:inline-block;" title="建议在网吧/公用电脑上取消该选项">记住登录状态</label></p><p id="commentloginM" style="display:none;"><span>昵&nbsp;&nbsp;&nbsp;称：</span><input type="text" style="width: 115px;" id="comment_anonyous"  value="新浪网友"/ tabindex="2" disabled></p><p id="quote_comment_p"><!--<input type="checkbox" id="bb"> <label for="bb"><img height="18" align="absmiddle" width="18" title="" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon110">分享到微博 <img height="15" align="absmiddle" width="15" title="新" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon11"></label>&nbsp;&nbsp;&nbsp;--><input type="checkbox" id="cbCommentQuote" /><label for="cbCommentQuote">评论并转载此博文</label><img class="SG_icon SG_icon11" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" title="新" align="absmiddle" /></p>
+					<p id="geetest-box" ></p>
+					</div>
+
+					<span style="display: none; color: rgb(153, 153, 153); margin-left: 10px;" id="login_remember_caution"></span>
+
+											<!--<div class="SG_floatR" id="anonymity_cont"><input type="checkbox" id="anonymity"/><label for="anonymity">匿名评论</label></div>-->
+									</div>
+				<div class="formBtn">
+					<a href="javascript:;" onclick="return false;" class="SG_aBtn" tabindex="5"><cite id="postcommentid">发评论</cite></a>
+					<p class="SG_txtc">以上网友发言只代表其个人观点，不代表新浪网的观点或立场。</p>
+				</div>
+			</div>
+		</div>
+				<div class="clearit"></div>
+		
+				<div class="articalfrontback articalfrontback2 clearfix">
+						  <div class="SG_floatL"><span class="SG_txtb">&lt;&nbsp;前一篇</span><a href="http://blog.sina.com.cn/s/blog_94479040010159j7.html">unicode_17个面的字符编码</a></div>
+									  <div class="SG_floatR"><span class="SG_txtb">后一篇&nbsp;&gt;</span><a href="http://blog.sina.com.cn/s/blog_94479040010159u9.html">iask爱问共享资料</a></div>
+					</div>
+		<div class="clearit"></div>
+				
+	</div>
+	<!--博文正文 end -->
+		<script type="text/javascript">
+			var voteid="";
+		</script>
+
+            </div>       
+            <div class="SG_connFoot"></div>
+          </div>
+</div>
+	<!--第二列start-->
+	
+	<!--第三列start-->
+	<div id="column_3" class="SG_colWnone"><div style="width:0px;height:0.1px;margin:0px;">&nbsp;&nbsp;</div></div>
+	<!--第三列end-->
+
+	
+    </div>
+   <!--主题内容结束 -->
+  
+
+	<div id="diggerFla" style="position:absolute;left:0px;top:0px;width:0px"></div>
+    <div class="sinablogfooter" id="sinablogfooter"  style="position:relative;">
+      
+      <p class="SG_linka"><a href="http://help.sina.com.cn/" target="_blank">新浪BLOG意见反馈留言板</a>　电话：4006900000 提示音后按1键（按当地市话标准计费）　欢迎批评指正</p>
+   
+      <p class="SG_linka"><a href="http://corp.sina.com.cn/chn/" target="_blank">新浪简介</a> | <a href="http://corp.sina.com.cn/eng/" target="_blank">About Sina</a> | <a href="http://emarketing.sina.com.cn/" target="_blank">广告服务</a> | <a href="http://www.sina.com.cn/contactus.html" target="_blank">联系我们</a> | <a href="http://corp.sina.com.cn/chn/sina_job.html" target="_blank">招聘信息</a> | <a href="http://www.sina.com.cn/intro/lawfirm.shtml" target="_blank">网站律师</a> | <a href="http://english.sina.com" target="_blank">SINA English</a> | <a href="http://members.sina.com.cn/apply/" target="_blank">会员注册</a> | <a href="http://help.sina.com.cn/" target="_blank">产品答疑</a> </p>
+      <p class="copyright SG_linka"> Copyright &copy; 1996 - 2018 SINA Corporation,  All Rights Reserved</p>
+      <p class="SG_linka"> 新浪公司 <a href="http://www.sina.com.cn/intro/copyright.shtml" target="_blank">版权所有</a></p>
+	  <a href="http://www.bj.cyberpolice.cn/index.jsp"  target="_blank" class="gab_link"></a>
+    </div>
+  </div>
+</div>
+<div id="swfbox"></div>
+<script id="PVCOUNTER_FORIE" type="text/javascript"></script>
+</body>
+<script type="text/javascript">
+var scope = {
+    $newTray : 1,
+    $setDomain : true,
+    $uid : "2487717952",
+    $PRODUCT_NAME : "blog7",      //blog7photo,blog7icp
+    $pageid : "article",
+    $key :  "a37331cc2b033b5714d22791eb1c30d7",
+    $uhost : "123seasky",
+    $ownerWTtype :"",
+    $private: {"pageset":0,"tj":0,"adver":0,"sms":0,"ad":0,"blogsize":0,"cms":0,"hidecms":0,"top":0,"invitationset":0,"p4p":0,"spamcms":0,"init7":1,"quote":0,"foot":0,"isprivate":0,"headpic":1,"t_sina":"2487717952","oauth_token":1,"oauth_token_secret":1,"uname":"","p_push_t":1,"p_get_t":1,"medal7":1,"articleclass":"117"},
+    $summary: "...  (来自 @头条博客)",
+    $is_photo_vip:0,
+		 $nClass:0,
+		 $articleid:"94479040010159sq",
+		 $sort_id:113,
+		 $cate_id:"",
+		 $isCommentAllow:0,
+		 $album_pic:"",
+		 $pn_x_rank:0,
+		 $x_quote_c:"7",
+		 $flag2008:"",
+		     component_lists:{"2":{"size":730,"list":[920]},"1":{"size":210,"list":[901,903,904,47]}},
+    formatInfo:1,
+    UserPic:[{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":""},{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":""},{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":""}],
+    UserBabyPic:{"photoX":0,"photoY":0,"photoURL":null,"angle":0,"zoom":0,"maskX":0,"maskY":0,"maskURL":null,"frameURL":null},
+    UserColor:1,
+    backgroundcolor:"#bcd3e5",
+    tpl:"30_1",
+    reclist:0    };
+var $encrypt_code = "4cde2e3ef24598232467bc3f1939c6ae";
+</script>
+
+<script type="text/javascript" src="http://sjs.sinajs.cn/blog7common/js/boot.js"></script>
+<script type="text/javascript">__load_js();</script>
+<script type="text/javascript">__render_page();</script>
+
+
+<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=b436f96b-ce3c-469f-93ca-9c0c406fcf10&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+<script type="text/javascript" charset="utf-8">
+        bShare.addEntry({pic: "", title:"分享自修海  《字符编码、unicode、代码页、矢量字体及多国语开发___(续)》", summary:"...  (来自 @头条博客)"});
+     </script>
+
+<script type="text/javascript" src="http://sjs.sinajs.cn/xblogtheme/js/blog680-min.js"></script>
+<script type="text/javascript">
+        var slotArr = ['atcTitLi_SLOT_41', 'atcTitLi_SLOT_42','loginBarActivity']; //广告位id
+        var sourceArr = ['SLOT_41','SLOT_42','SLOT_43,SLOT_47,SLOT_48'];  //广告资源id
+        SinaBlog680.staticBox(slotArr, sourceArr);
+</script>
+</html>

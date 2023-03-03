@@ -1,0 +1,20 @@
+1,首先你的COM类对象要继承自
+public IDispEventSimpleImpl<13,CWordAddin,&__uuidof(MSWord::ApplicationEvents2)>, // 
+public IDispEventSimpleImpl<14,CWordAddin,&__uuidof(MSWord::ApplicationEvents2)>,
+2,然后定义
+typedef IDispEventSimpleImpl</*nID =*/ 13,CWordAddin, &__uuidof(MSWord::ApplicationEvents2)>   OpenDocment;  // 打开一个文档的事件
+typedef IDispEventSimpleImpl</*nID =*/ 14,CWordAddin, &__uuidof(MSWord::ApplicationEvents2)>	  CloseDocment; // 关闭文件的事件
+其它事件可类似
+3,添加连接点接口
+BEGIN_SINK_MAP(你的类名)
+SINK_ENTRY_INFO(13,__uuidof(MSWord::ApplicationEvents2),/*dispinterface*/0x00000004,OnOpenDocment, &OnOptionsAddPagesInfo)
+SINK_ENTRY_INFO(14,__uuidof(MSWord::ApplicationEvents2),/*dispinterface*/0x00000006,OnCloseDocment, &OnClickButtonInfo)
+END_SINK_MAP()
+
+4,实现
+void __stdcall OnCloseDocment	(IDispatch * /*MSWord::ApplicationEvents2*/ pDoc,VARIANT_BOOL * CancelDefault);
+void __stdcall OnOpenDocment	(IDispatch * /*MSWord::ApplicationEvents2*/ pDoc);
+5,然后和事件连接起来
+OpenDocment::CmdBtnEvent::DispEventAdvise((IDispatch*)m_spApp,&__uuido(MSWord::ApplicationEvents2));
+CloseDocment::CmdBtnEvent::DispEventAdvise((IDispatch*)m_spApp,&__uuid(MSWord::ApplicationEvents2));
+6,在关闭的时候断开事件就可以了.

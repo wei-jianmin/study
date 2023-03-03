@@ -1,0 +1,33 @@
+C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC>dia2dump
+usage: Dia2Dump.exe [ options ] <filename>
+  -?                : print this help
+  -all              : print all the debug info      //列出所有信息
+  -m                : print all the mods            //列出包含的obj文件和dll文件
+  -t                : print all the types           //列出所有的函数和变量的定义
+  -p                : print all the publics         //列出所有的公共符号（PublicSymbol）
+  -g                : print all the globals         //列出所有的全局符号（包括函数和变量）
+  -f                : print all the files           //对每个obj文件所处所有用到的文件（只是文件全路径名）
+  -sf               : dump all source files         //对每个obj文件所处所有用到的文件（只是文件全路径名）
+  -s                : print symbols                 //列出各obj模块及其相关信息（如其中包含的函数名、变量、链接时使用的命令行参数、对应源文件位置、pdb文件位置）
+  -type <symbolname>    : dump this type in detail                 //列出指定类的成员函数和成员变量
+  -lsrc  <file> [line]  : dump line numbers for this source file   //如果指定头文件，可以列出哪些obj包含了该头文件，如果是源文件，则列出每行代码在内存中占用的字节长度
+  -label <RVA>      : dump label at RVA
+  -dbg              : dump debug streams
+  -injsrc [file]    : dump injected source
+  -mapfromsrc <RVA> : dump image RVA for src RVA
+  -oem              : dump all OEM specific types
+  -c                : print section contribution info
+  -compiland [name] : dump symbols for this compiland
+  -maptosrc <RVA>   : dump src RVA for this image RVA
+  -lines <RVA>      : dump line numbers for this address
+  -annotations <RVA>: dump annotation symbol for this RVA
+  -lines <funcname> : dump line numbers for this function
+  -sym <symbolname> [childname] : dump child information of this symbol
+  -fpo [RVA]        : dump frame pointer omission information for a func addr
+  -l [RVA [bytes]]  : print line number info at RVA address in the bytes range
+  -fpo [symbolname] : dump frame pointer omission information for a func symbol
+  -sym <RVA> [childname]        : dump child information of symbol at this addr
+  -ps <RVA> [-n <number>]       : dump symbols after this address, default 16
+  -psr <RVA> [-n <number>]      : dump symbols before this address, default 16
+  
+  附注： RVA 是相对虚拟地址（Relative Virtual Address）的缩写，它是文件映射到内存中的“相对地址”

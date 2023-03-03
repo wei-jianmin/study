@@ -1,0 +1,34 @@
+BOOL CsealCtrl::PreCreateWindow(CREATESTRUCT& cs)
+{
+	cs.dwExStyle |= WS_EX_TRANSPARENT;	//为使控件透明，第一步
+	return COleControl::PreCreateWindow(cs);
+}
+void CsealCtrl::OnSetClientSite()
+{
+ 	m_bAutoClip=1;	//为使控件透明，第二步
+	COleControl::OnSetClientSite();
+}
+----------------------------
+BOOL COleControl::CreateControlWindow(HWND hWndParent, const CRect& rcPos,
+	LPCRECT prcClip)
+{
+	……
+	if ((!IsSubclassedControl() || m_bMsgReflect) && m_bAutoClip)
+	{
+		// Just create the control's window.
+		VERIFY(AfxDeferRegisterClass(AFX_WNDOLECONTROL_REG));
+		CreateEx(dwExStyle, AFX_WNDOLECONTROL, m_strText, dwStyle,
+			rcPos.left, rcPos.top, rcPos.Width(), rcPos.Height(),
+			hWndParent, 0);
+	}
+	……
+}
+这是一个虚函数，该函数可能的调用者：
+HRESULT 	COleControl::OnOpen(BOOL bTryInPlace, LPMSG pMsg)
+void 	COleControl::RecreateControlWindow()
+void 	COleControl::CreateWindowForSubclassedControl()
+
+
+
+
+

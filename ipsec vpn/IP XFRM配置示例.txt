@@ -1,0 +1,42 @@
+https://blog.csdn.net/sahusoft/article/details/8827362
+IP XFRM配置示例
+
+1、拓扑
+
+192.168.4.127 <=======> 192.168.3.171
+192.168.4.127 是 vmware虚拟机中的centos7.0
+192.168.3.171 是实体机中的centos7.0
+从 192.168.4.127 可以ping到192.168.3.171，反之不能，
+这是因为 192.168.4.127 使用nat方式连接，对外不可见
+
+2、配置192.168.4.127
+
+ip xfrm state add src 192.168.4.127 dst 192.168.3.171 proto esp spi 0x00000301 mode tunnel auth md5 0x96358c90783bbfa3d7b196ceabe0536b enc des3_ede 0xf6ddb555acfd9d77b03ea3843f2653255afe8eb5573965df
+ip xfrm state add src 192.168.3.171 dst 192.168.4.127 proto esp spi 0x00000302 mode tunnel auth md5 0x99358c90783bbfa3d7b196ceabe0536b enc des3_ede 0xffddb555acfd9d77b03ea3843f2653255afe8eb5573965df
+ip xfrm state get src 192.168.4.127 dst 192.168.3.171 proto esp spi 0x00000301
+
+ip xfrm policy add src 192.168.4.127 dst 192.168.3.171 dir out ptype main tmpl src 192.168.4.127 dst 192.168.3.171 proto esp mode tunnel
+ip xfrm policy add src 192.168.3.171 dst 192.168.4.127 dir in ptype main tmpl src 192.168.3.171 dst 192.168.4.127 proto esp mode tunnel
+ip xfrm policy ls
+ 
+3、配置192.168.3.171
+ip xfrm state add src 192.168.4.171 dst 192.168.3.127 proto esp spi 0x00000301 mode tunnel auth md5 0x96358c90783bbfa3d7b196ceabe0536b enc des3_ede 0xf6ddb555acfd9d77b03ea3843f2653255afe8eb5573965df
+ip xfrm state add src 192.168.3.127 dst 192.168.4.171 proto esp spi 0x00000302 mode tunnel auth md5 0x99358c90783bbfa3d7b196ceabe0536b enc des3_ede 0xffddb555acfd9d77b03ea3843f2653255afe8eb5573965df
+ip xfrm state get src 192.168.4.171 dst 192.168.3.127 proto esp spi 0x00000301
+
+ip xfrm policy add src 192.168.4.127 dst 192.168.3.171 dir in ptype main tmpl src 192.168.4.127 dst 192.168.3.171 proto esp mode tunnel
+ip xfrm policy add src 192.168.3.171 dst 192.168.4.127 dir out ptype main tmpl src 192.168.3.171 dst 192.168.4.127 proto esp mode tunnel
+ip xfrm policy ls
+
+4、在192.168.4.127上执行
+ping 192.168.3.171  
+执行结果：ping不通（进行如上配置之前能ping通）
+ping www.baidu.com
+执行结果：可以ping通
+
+5. 在192.168.4.127上用wireshark抓包
+从抓包结果可以看到，
+从 192.168.4.127 访问 192.168.3.171 的数据包是 ESP
+从 192.168.4.2 到 192.168.4.127 的数据包是 ICMP， 告知目标不可达
+结果分析：
+    nat穿越问题，详见：file://ipsec nat穿越.py

@@ -1,0 +1,133 @@
+#include "iostream"
+#include <windows.h>
+#include <tchar.h>
+
+using namespace std;
+
+LRESULT GetValue(HKEY hKey, LPCTSTR name, LPTSTR value, LPLONG size)
+{
+      return ::RegQueryValueEx(hKey, name, NULL, NULL, (LPBYTE)value, (LPDWORD)size);
+}
+void DumpSoftware(LPCTSTR szKey , HKEY hParent)
+{
+	LRESULT lr;
+    HKEY hKey;
+    LONG size;
+    TCHAR buffer[MAX_PATH] ;
+    lr = RegOpenKey(hParent, szKey, &hKey);
+//不能打开注册表
+    if(lr != ERROR_SUCCESS)
+    {
+        cout << _T("不能打开注册表！") << szKey << _T("(") << lr << _T(")") << endl;
+        return;
+    } 
+   
+    size = sizeof(buffer);
+    lr = GetValue(hKey, _T("DisplayName"), &buffer[0], &size);
+
+	//注册表打开成功
+    if(lr == ERROR_SUCCESS)
+    {
+         if(size > 0)
+         {
+              cout << _T("显示名字：" ) << buffer << endl;
+         }
+	}
+	else
+	{  
+		size = sizeof(buffer);
+		lr = GetValue(hKey, _T("QuietDisplayName"), &buffer[0], &size);
+		if(ERROR_SUCCESS== lr && size > 0 )
+		{
+			cout << _T("显示名字：" ) << buffer << endl;
+		}
+	}
+ 
+	
+	size = sizeof(buffer);
+	lr = GetValue(hKey, _T("DisplayVersion"), &buffer[0], &size);
+//获取软件版本号
+	if(ERROR_SUCCESS == lr && size > 0)
+	{
+		cout << _T("软件版本号：") << buffer << endl;
+	}
+
+	size = sizeof(buffer);
+	lr = GetValue(hKey, _T("Publisher"), &buffer[0], &size);
+
+	//软件开发商
+	if(ERROR_SUCCESS == lr && size > 0)
+	{
+		cout << _T("开发商：") << buffer << endl;
+	}
+
+	size = sizeof(buffer);
+	lr = GetValue(hKey, _T("InstallLocation"), &buffer[0], &size);
+
+	//获取安装路径
+	if(ERROR_SUCCESS == lr && size > 0)
+	{
+		cout << _T("安装路径：") << buffer << endl;
+	}
+     
+	size = sizeof(buffer);
+	lr = GetValue(hKey, _T("InstallSource"), &buffer[0], &size);
+
+	//获取安装源
+	if(ERROR_SUCCESS == lr && size > 0)
+	{
+		cout << _T("安装源：") << buffer << endl;
+	}
+ 
+     size = sizeof(buffer);
+     lr = GetValue(hKey, _T("UninstallPath"), &buffer[0], &size);
+//获取卸载路径
+     if(ERROR_SUCCESS == lr && size > 0)
+     {
+		 cout << _T("卸载路径：") << buffer << endl;
+     }
+ 
+	 size = sizeof(buffer);
+     lr = GetValue(hKey, _T("UninstallString"), &buffer[0], &size);
+
+	 //软件卸载命令
+     if(ERROR_SUCCESS == lr && size > 0)
+     {
+		 cout << _T("软件卸载命令：") << buffer << endl;
+     }
+     RegCloseKey(hKey);
+}
+int main(int argc, char* argv[])
+{
+	unsigned long index;
+    TCHAR buffer[MAX_PATH];
+    HKEY hKey;
+    LRESULT lr;
+    lr = RegOpenKey(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"), & hKey);
+    if(lr != ERROR_SUCCESS)
+    {
+		cout << _T("不能打开注册表！") << lr << endl;
+		return -1;
+    }
+  
+	for(index =0; ;index++)
+	{
+		lr = RegEnumKey(hKey, index, &buffer[0], sizeof(buffer));
+		switch(lr)
+		{
+		case ERROR_SUCCESS:
+			DumpSoftware(buffer,hKey);
+			break;
+		case ERROR_NO_MORE_ITEMS:
+			cout<<_T("完成软件搜索！") << endl;
+			RegCloseKey(hKey);
+			return 0;
+		default:
+			cout<<_T("未能完成软件搜索！") << lr << endl;
+			RegCloseKey(hKey);
+			return -2;
+		}
+	}
+	cout<<_T("完成软件搜索！") << endl;
+	RegCloseKey(hKey);
+	return 0;

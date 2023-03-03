@@ -1,0 +1,39 @@
+Bitmap转为iplimage代码 复制代码 收藏代码
+IplImage* BitmapToIplImage(HBITMAP hBmp)   
+{   
+    BITMAP bmp;       
+       
+    GetObject(hBmp, sizeof(BITMAP), &bmp);   
+    int depth     = (bmp.bmBitsPixel == 1) ? IPL_DEPTH_1U : IPL_DEPTH_8U;   
+    int nChannels = (bmp.bmBitsPixel == 1) ? 1 : bmp.bmBitsPixel/8;       
+       
+    IplImage* img = cvCreateImage(cvSize(bmp.bmWidth,bmp.bmHeight), depth, nChannels);     
+       
+    BYTE *pBuffer = new BYTE[bmp.bmHeight*bmp.bmWidth*nChannels];       
+    GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, pBuffer);   
+    memcpy(img->imageData, pBuffer, bmp.bmHeight*bmp.bmWidth*nChannels);      
+    delete pBuffer;   
+  
+    IplImage *dst = cvCreateImage(cvGetSize(img), img->depth,3);       
+    cvCvtColor(img, dst, CV_BGRA2BGR);      
+    cvReleaseImage(&img);      
+    return dst;   
+}  
+ 如果要从CBitmap转为IplImage，可以先将CBitmap转为BITMAP，再由BITMAP转为IplImage；
+
+Cbitmap 转为 bitmap代码 复制代码 收藏代码
+// CBitmap 转为 BITMAP   
+CBitmap bitmap；   
+bitmap.LoadBitmap(IDB_BITMAP);   
+BITMAP   bmp;   
+bitmap.GetBitmap(&bmp);   
+  
+// CBitmap与HBITMAP间的转换   
+// CBitmap转为HBITMAP   
+CBitmap bitmap;   
+bitmap.LoadBitmap(IDB_BITMAP);   
+HBITMAP bmp = HBITMAP(bitmap);   
+// HBITMAP转为CBitmap   
+HBITMAP  hbitmap；     
+CBitmap   bitmap;   
+bitmap.Attach(hbitmap);  

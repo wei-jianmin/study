@@ -1,0 +1,29 @@
+https://blog.csdn.net/DD_orz/article/details/100034049
+
+前言：
+    github.com前面是不带www的，www.baidu.com前面带www
+    www前缀意味着什么？
+
+相关概念：
+    A记录
+        A记录，即Address记录，它并不是一个IP或者一个域名，我们可以把它理解为一种指向关系：
+        域名 www.xx.com → 1.1.1.1
+        A记录存在于DNS服务器上，当你访问这些域名或者主机名的时候，
+        DNS服务器上会通过A记录会帮你解析出相应的IP地址，以达到后续访问目的。
+        所以A记录是IP解析，直接将域名或主机名指向某个IP。
+    CNAME
+        CNAME记录，也叫别名记录，相当于给A记录中的域名起个小名儿
+        比如www.xx.com的小名儿就叫www.yy.com好了，
+        然后CNAME记录也和A记录一样，是一种指向关系，
+        把小名儿www.yy.com指向了www.xx.com，
+        然后通过A记录，www.xx.com又指向了对应的IP：
+        www.yy.com → www.xx.com → 1.1.1.1
+
+CNAME存在的意义
+    假如我又想给原域名取几个小名儿，分别叫www.cc.com和www.kk.com那么存在下列指向关系：
+    www.yy.com → www.xx.com → 1.1.1.1
+    www.cc.com → www.xx.com → 1.1.1.1
+    www.kk.com → www.xx.com → 1.1.1.1
+    突然服务器的IP地址因为一些不可描述的原因要换了，不再是1.1.1.1了，换成了2.2.2.2
+    这时候你发现，只要把www.xx.com的指向修改一下即可：
+    域名 www.xx.com → 2.2.2.2

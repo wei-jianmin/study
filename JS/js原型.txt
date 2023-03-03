@@ -1,0 +1,112 @@
+this关键字：
+在 JavaScript 中 this 不是固定不变的，它会随着执行环境的改变而改变。
+● 函数为对象的数据的属性值时，this表所在的对象
+  var person = {
+    firstName: "John",
+    lastName : "Doe",
+    id       : 5566,
+    fullName : function() {
+      return this.firstName + " " + this.lastName;
+    }
+  };    
+  这里的this指person对象
+● this在全局函数中
+  fullName : function() {
+    return this.firstName + " " + this.lastName;
+  }
+  因为全局函数实际是Windows全局对象的属性值，所以这里的this指的是Windows全局对象（strict模式时，this将为undefined）
+● 直接使用this
+  var x = this;
+  这里的this指的是Window全局对象
+● 事件中的this
+  <button onclick="this.style.display='none'">  
+    点我后我就消失了
+  </button>
+  this 指向了接收事件的 HTML 元素
+  
+● 其它  
+  var f1 = function(){ this.name="aaa"; }
+  理解1： 
+      这里的this指的是Window全局对象，因为在执行该局时，Window全局对象会作为隐含参数，传给function函数
+      错误， 因为这里不是函数调用，因而不会传this指针给函数
+  理解2：
+      函数对象也是个对象，因此就会占用一块内存区域，而this就是指代该内存区域，而f1即是该内存区域的代号
+      错误，函数体内的this是通过参数隐含传进来的，而不是指代该函数对象所在的内存区域
+  正确的理解：
+      var o1 = new f1();
+      this指代o1，因为这个时候才是对函数[对象]的真正的调用，this也是在这时候才隐含的传入函数体中，
+      而o1就是传入f1中的隐含的this。
+  总结：之后在函数真正被调用时，函数体中的this开始获得真正的值。      
+  
+  
+==================================================================================================================  
+
+函数对象与普通对象相比，最明显的区别是，函数对象是可执行的。
+  
+==================================================================================================================  
+  
+var f1 = function(){ this.name="aaa"; }         //f1 是个函数对象
+function f2() { this.name = "bbb"; }            //f2 是个函数对象
+var f3 = new Function( "this.name = 'ccc'" );   //f3 是个函数对象
+var o1 = new f1();                              //o1 是函数对象的实例
+var o2 = f1();                                  //o2 是函数执行后的返回值
+
+函数对象内部有个prototype原型对象
+该对象只有函数对象有，普通对象没有
+
+prototype原型对象是个普通对象
+
+==================================================================================================================  
+
+c++中的函数对象：
+函数对象：  c++中，一个类如果重载了()运算符，则该类的实例就属于函数对象
+类的成员函数本质是全局函数，不过根据c++对函数的命名特点，成员函数和一般的全局函数的名字还是不一样的
+对于非静态的成员函数，在编译时，会为其添加一个隐含参数this，在调用时，如o.func(); 实际编译为：func(&o);
+函数对象的最大用处是，他在作为参数传递时，不但传递了算法，还携带数据。
+
+js中的函数对象：
+即使一个空函数，他也是一个函数对象，而且，js中所有的对象都默认最终继承自Object
+
+================================================================================================================== 
+
+js中，Object和Function是两个内置的函数对象（特点是支持括号运算）
+所有实例都有constructor属性（实际是__proto__的属性），该属性指向构造该实例的函数对象（完全相等===）
+实例对象都有个__proto__的基本属性，该属性即为（引用）该实例的原型对象，原型对象又有两个基本属性，即constructor和__proto__
+
+函数的原型是随函数对象一同创建出来的，之后用函数对象创建的一切实例，即使都是由<该函数对象随同创建出来的函数原型对象>衍生出来的,
+随同函数对象创建出来的这个函数原型对象，即这个函数对象的prototype属性。
+自定义函数的原型对象有两个默认属性：constructor和__proto__，constructor===函数对象，__proto__===Object函数对象
+由自定义函数对象创建的实例，有个__proto__属性，该属性===自定义函数对象.prototype
+自定义函数对象也有个__proto__属性，同理，该属性===Function.prototype
+Function函数对象的伴生原型对象（prototype属性）则具有多种内置属性，包括
+          apply,bind,call,caller,construct,length,name,toString,Symbol,
+          get arguments,set arguments,get caller,set caller,__proto__,
+          [[FunctionLocation]],[[Scopes]]
+Function函数对象的__proto__ === Function.prototype，说明Function函数对象是由Function函数对象自我创建的。
+总结：一切函数对象的__proto__ === 生成当前函数对象的函数对象的prototype，Function函数对象是该链的终点。
+下面来看原型对象的__proto__ ：
+注意，原型对象不是函数对象，所以它不会有prototype（伴生原型对象），但因为它是对象，所以就会有__proto__（原型），
+而根据前面的讲述，__proto__===生成该__proto__实例的函数对象的prototype，那么问题来了，伴生原型对象的生成函数是谁？
+因为伴生对象不是我们自主控制生成的，所以生成他的函数对象是不直观可见的。根据调试观察的结果，得出的结论是，所有的
+伴生原型对象都是由Object函数创建出来的，所以，prototype的__proto__，是Object函数的prototype。
+再来看下Object的__proto__，对比发现，Object.__proto__ === Function.prototype, 所以任何对象，最终也能调到函数对象提供的原型方法。
+最后，注意一点：Object.prototype.__proto__=== NULL，说明Object函数对象的原型对象“不基于”任何其它原型对象，是根的起点。
+
+================================================================================================================== 
+
+typeof Fucntion.prototype 为 function，其它任何对象的（普通对象 or 函数对象）的prototype，均为Object类型
+普通对象的__proto__ === Object.prototype,为Object类型
+函数对象的__proto__ === Function.prototype，支持函数的特有方法，如call、apply等，为function类型
+Function.prototype.__proto__ === Object.prototype, 从这句可以看出，Function.prototype和其它函数对象的prototype一样，也是Object的实例，
+但是因为他实现了call、apply等方法，同时有arguments等参数，所以表现得可以像函数那样使用了，所以才成为function类型
+
+判断题：
+普通对象的__proto__为function --- X , 普通对象的__proto__ === Object.prototype,为Object类型
+函数对象必然有prototype属性 --- X  ， Function.prototype就是函数对象，但它底下没有prototype属性
+只要有apply，call方法，就算得上是函数对象 --- ？
+函数对象在底下直接定义了call、apply等方法（而不是借助__proto__继承) --- X ，Function对象就是函数对象，但他底下也没直接实现call、appply方法
+Function.prototype.prototype === NULL ， Object.prototype.__proto__=== NULL ， Function.prototype.__proto__ === Object.prototype --- √
+如果一个对象底下有直接的arguments属性，则可认定它是个函数对象，因为普通对象用不到这样的属性  --- √
+从使用角度上将，普通方法不支持括号运算符，函数对象支持括号运算符 --- √
+
+

@@ -1,0 +1,21 @@
+IViewObject接口研究：
+MFC是基于消息的，但消息不是MFC特有的，而是Windows操作系统中普遍使用的概念，MFC只是可以利用WIN API发出和捕获消息而已。
+WM_PAINT消息是约定的窗口绘制的消息，CWnd会捕获该消息，并调用相应的On_Paint方法。
+在OnPaint中，用BeginPaint()获得绘制dc，并清除WM_PAINT消息，开始绘制，最后用EndPaint()结束绘制。
+UpdateWindow和RedrawWindow也是CWnd中的方法，MFC一般不直接向系统发送WM_PAINT消息，而是通过这两种函数间接完成系统的重绘。
+UpdateWindow会检查窗口的Update Region，当其不为空时才发送WM_PAINT消息；
+RedrawWindow则给我们更多的控制：是否重画非客户区和背景，是否总是发送WM_PAINT消息而不管Update Region是否为空等。
+这两个函数内部则会调用InvalidateRect或InvalidataRgn等方法。
+COleControl继承自CWnd，并除了包含自己的方法，响应系统的部分消息外，还实现了作为一个ActiveX嵌入对象，所应实现的所有接口。
+如果在类中实现了接口，则说明这个类是用于com对象的，这样的类一般名字中都有Ole。
+COleControl本身不捕获WM_PAINT消息。
+COleControl中就实现了IViewObject接口。
+IViewObject接口使得对象能够利用容器传来的DC完成自身在容器中的绘制，而不用把数据对象传给容器（来让容器绘制）。另外，该接口可以和容器中的接收器建立连接，依此来通知容器（控件界面发生了变化）。
+IViewObject和IDataObject有点相似，只是IViewObject是把要呈现的东西直接传递到设备环境上，而IDataObject则是把要呈现的东西放到传输媒介上。
+
+----------------------------------------
+在内部类中访问外部类的方法：
+使用METHOD_PROLOGUE(外部类名, 内部类名)，使用该宏，会声明一个 外部类 * pThis指针，该宏根据内部类对象的位置及其相对外部类对象的相对位置，计算得到外部类对象的地址，然后将该地址赋给pThis。
+----------------------------------------------------------------------------------------
+2016年10月10日：
+CDsoFramerControl::CreateNew：新建或打开指定的文档后，执行的第一个函数，参数传来要新建/打开的文档类的progid，对于新建wps文档，传来的是："WPS.Document.6"

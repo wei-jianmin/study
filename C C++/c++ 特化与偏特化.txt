@@ -1,0 +1,53 @@
+模板的特化与偏特化
+    举例说明：
+        template<typename T1,typename T2>
+        class A
+        {
+        public:
+            A() { puts("原始"); }
+        };
+        template<>
+        class A<char*,int>
+        {
+        public:
+            A() { puts("全特化"); }
+        };
+        template<typename T1>
+        class A<char*,T1>
+        {
+        public:
+            A() { puts("偏特化"); }
+        };
+
+模板的全特化与偏特化，是c++98就支持的。
+模板特化的匹配规则时，优先匹配全特化、再次匹配偏特化、最后匹配原始模板。
+注意 特化的模板类 和 原模板类 各有拥有成员函数，互相之间不共享
+
+不光模板类支持特化，模板函数也支持特化
+不过模板函数只支持全特化，不支持偏特化，如
+    template<typename T1, typename T2>
+    bool cmp(T1 &t1, T2 &t2) {
+        return t1 == t2;
+    }
+    template<>
+    bool cmp(char* p1,  char* p2) {
+        if(strcmp(p1,p2)==0)
+            return true;
+        return false;
+    }
+函数不支持偏特化，与函数支持函数重载有关。
+template <typename A, typename B>
+void f(A a, B b) {
+    std::cout << "Normal version." << std::endl;
+}
+//：错误的函数偏特化
+template <typename A>
+void f<A, int>(A a, int b) {
+    std::cout << "Partial version." << std::endl;
+}
+//：函数重载
+template <typename A>
+void f(A a, int b) {
+    std::cout << "Partial version." << std::endl;
+}
+        

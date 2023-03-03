@@ -1,0 +1,14 @@
+/MD  : _MT + _DLL
+/MDd : _MT + _DLL + _DEBUG
+/MT  : _MT
+/MTd : _MT + _DLL
+使用MD时，连接的是MSVCRT.lib(debug版用的是MSVCRTD.lib),
+而这个lib实际是动态库MSVCR80.dll的导出库。
+而使用MT时，连接的则是LIBCMT.lib(debug版用的是LIBCMTD.lib)，
+这是纯粹的静态库，链接时，把该lib库也链接到生成的文件中了。
+
+关于堆空间释放的问题：
+当A、B两个dll都使用MD时，使用的都是MSVCR80.dll，所以A申请的堆资源，在B中释放也是可以的，
+例如A返回个指向字符串的指针，B使用完该字符串后释放。
+但如果A、B两个dll都使用的是MT，因为他们静态连接的LIBCMT.lib，则这两个模块都自有一份C运行时库，
+因而这两个dll也会有各自的堆，A中申请了堆，将该堆指针传给B，B释放该堆指针就会崩溃，必须只能在A中释放。

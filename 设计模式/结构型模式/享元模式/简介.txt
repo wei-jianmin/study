@@ -1,0 +1,49 @@
+享元模式（FlyWeight pattern）
+从字面理解，享代表共享，元代表元数据，此处可理解为共有的数据
+使用享元类，意味着用户得到的类（一般是通过类厂），不是独享的，而可能被别的地方共享使用，
+如java的string类，就是使用了享元模式，享元工厂类一般是通过哈希数组存放用户创建的享元类，
+享元模式一般用户数据存储对象的管理
+
+
+
+
+
+举例：
+象棋游戏中，每类棋子都有一些公共数据，如走法规则，也有一些特定数据，如颜色、位置、生死，
+利用享元模式的思想，就可以建立一个类厂，在类厂中用一个哈希表来记录兵、马、象、车等角色，
+而通过与外部输入参数的组合，展现一个真正的角色
+
+class IChess
+{
+  void step(int manner,int &posx,int &posy,bool &alive,Color col);  //走法
+}
+class Guarder:public IChess //士
+{
+  //单例模式
+  IChess * GetInstance();
+  void step(int manner,int &posx,int &posy,bool &alive,Color col);
+}
+class Elephant:public IChess  //象
+{
+  //单例模式
+  IChess * GetInstance();
+  void step(int manner,int &posx,int &posy,bool &alive,Color col);
+}
+class Vehicle:public IChess //车
+{
+  //单例模式
+  IChess * GetInstance();
+  void step(int manner,int &posx,int &posy,bool &alive,Color col);
+}
+class Horse:public IChess //马
+{
+  //单例模式
+  IChess * GetInstance();
+  void step(int manner,int &posx,int &posy,bool &alive,Color col);
+}
+。。。
+class ChessFactory
+{
+  IChess * GetChess(string role);
+  HashMap map;
+}

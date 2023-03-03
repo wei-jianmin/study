@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/zhangxu365/article/details/7997229"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="$INSTDIR
+安装目录 ($INSTDIR 可以使用 StrCpy、 ReadRegStr、 
+ReadINIStr 等等来更改。例如在 .onInit 函数里可以用来做高级的检测安装定位)。
+注意在卸载程序代码里，$INSTDIR 为卸载程序所在的目录而不是在安装程序里所指定的目录。例如， 如果你把卸载程序放在 $WINDIR 里并且用户没有移动它，那么在卸载程序里 $INSTDIR" />
+    <meta name="keywords" content="windows,internet" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>NSIS 常用安装路径 - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-e128123d78.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9b39979775.min.css">
+
+    <script type="text/javascript">
+        var username = "zhangxu365";
+        var blog_address = "https://blog.csdn.net/zhangxu365";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/zhangxu365/article/details/7997229"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+        // 第四范式所需数据
+        var articleTitles = "NSIS 常用安装路径";
+        var articleID = "7997229";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+
+<script language="javascript" type="text/javascript" src="35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+hQGHuMEAyLn('.blog_ad,#layerd,iframe[src*="pos.baidu.com"],.append_mark_img,[class*="advert"],.mediav_ad');</script></head>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<body class="nodata"> 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<!-- <div id="breadcrumbs">
+			<span><a href="https://blog.csdn.net/">博客首页</a></span>
+			<i>></i>
+			<span><a href="https://blog.csdn.net/zhangxu365"></a></span>
+			<i>></i>
+			<span>NSIS 常用安装路径</span>
+		</div> -->
+		<div class="recommend-right">
+  <ul class="recommend-fixed-box">
+    
+  </ul>
+</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-2 float-left">转</span>				<h1 class="title-article">NSIS 常用安装路径</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top">
+																				<span class="time">2012年09月19日 17:48:35</span>
+					<a class="follow-nickName" href="https://me.csdn.net/zhangxu365" target="_blank">长虹小范</a>
+						<span class="read-count">阅读数：5024</span>
+												
+														<span class="tags-box artic-tag-box">
+								<span class="label">标签：</span>
+																<a data-track-click='{"mod":"popu_626","con":"windows"}' data-track-view='{"mod":"popu_626","con":"windows"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=windows&t=blog" target="_blank">windows																<a data-track-click='{"mod":"popu_626","con":"internet"}' data-track-view='{"mod":"popu_626","con":"internet"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=internet&t=blog" target="_blank">internet																<a data-track-click='{"mod":"popu_626","con":"resources"}' data-track-view='{"mod":"popu_626","con":"resources"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=resources&t=blog" target="_blank">resources																<a data-track-click='{"mod":"popu_626","con":"活动"}' data-track-view='{"mod":"popu_626","con":"活动"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=活动&t=blog" target="_blank">活动																<a data-track-click='{"mod":"popu_626","con":"xp"}' data-track-view='{"mod":"popu_626","con":"xp"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=xp&t=blog" target="_blank">xp																<a data-track-click='{"mod":"popu_626","con":"templates"}' data-track-view='{"mod":"popu_626","con":"templates"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=templates&t=blog" target="_blank">templates																</a>
+							</span>
+																					<div class="tags-box space">
+								<span class="label">个人分类：</span>
+																<a class="tag-link" href="https://blog.csdn.net/zhangxu365/article/category/1230225"  target="_blank">windows编程																</a>
+							</div>
+																								</div>
+				<div class="operating">
+														</div>
+			</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css" />
+						<div class="htmledit_views">
+                
+<p><strong>$INSTDIR</strong></p>
+<p>安装目录 ($INSTDIR 可以使用 <a href="" rel="nofollow">StrCpy</a>、 <a href="" rel="nofollow">ReadRegStr</a>、 <a href="" rel="nofollow">
+ReadINIStr</a> 等等来更改。例如在 <a href="" rel="nofollow">.onInit</a> 函数里可以用来做高级的检测安装定位)。</p>
+<p>注意在卸载程序代码里，$INSTDIR 为卸载程序所在的目录而<strong>不是</strong>在安装程序里所指定的目录。例如， 如果你把卸载程序放在 $WINDIR 里并且用户没有移动它，那么在卸载程序里 $INSTDIR 就等于 $WINDIR。如果你要把卸载程序放到另外的位置，那么你应该先把安装程序的 $INSTDIR 值写入注册表或者其它容易保存的地方，然后在卸载程序里读取该值并赋值给卸载程序里的 $INSTDIR。</p>
+<p><strong>$OUTDIR</strong></p>
+<p>当前输出目录 (通过 <a href="" rel="nofollow">SetOutPath</a> 或者通过 <a href="" rel="nofollow">StrCpy</a>、 <a href="" rel="nofollow">ReadRegStr</a>、
+<a href="" rel="nofollow">ReadINIStr</a> 等等)</p>
+<p><strong>$CMDLINE</strong></p>
+<p>安装程序命令行。命令行的格式可以是下列之一:</p>
+<ul><li>"完整路径\安装程序.exe" 参数1 参数2 参数3</li><li>安装程序.exe 参数1 参数2 参数3</li><li>对于解析“参数”部分，参阅 <a href="" rel="nofollow">GetParameters</a>。如果在命令行里指定了 /D= (用来跳过安装路径的选择)，那么 /D= 后面的参数将不会被保存在 $CMDLINE (前面的可以保存)。</li></ul><p><strong>$LANGUAGE</strong></p>
+<p>当前使用的语言标识符。例如，英语是 1033。你可以在 <a href="" rel="nofollow">.onInit</a> 里更改此变量。<br /><br /></p>
+<p>常量通常用在 <a href="" rel="nofollow">InstallDir</a> 属性里。</p>
+<p>需要注意的是一些新的常量并不是在所有的 OS 上都是正常的。例如, $CDBURN_AREA 仅在 Windows XP 及以上系统中才正常。 如果在 Windows 98 中使用,将会得到空值。除非特别提示，否则该常量都是在所有 OS 上有效的。</p>
+<p><strong>$PROGRAMFILES, $PROGRAMFILES32, $PROGRAMFILES64</strong></p>
+<p>程序文件目录 (通常为 <code>C:\Program Files</code> 但在运行时会检测)。在 Windows x64 操作系统中, $PROGRAMFILES 和 $PROGRAMFILES32 指向
+<code>C:\Program Files (x86)</code> 同时 $PROGRAMFILES64 指向 <code>C:\Program Files</code>。当安装 64 位应用程序时，使用 $PROGRAMFILES64。</p>
+<p><strong>$COMMONFILES, $COMMONFILES32, $COMMONFILES64</strong></p>
+<p>公用文件目录。这是应用程序共享组件的目录 (通常为 <code>C:\Program Files\Common Files</code> 但在运行时会检测)。在 Windows x64 操作系统中, $COMMONFILES 和 $COMMONFILES32 指向
+<code>C:\Program Files (x86)\Common Files</code> 同时 $COMMONFILES64 指向 <code>C:\Program Files\Common Files</code>。当安装 64 位应用程序时，使用 $COMMONFILES64。</p>
+<p><strong>$DESKTOP</strong></p>
+<p>Windows 桌面目录 (通常为 <code>C:\Windows\Desktop</code> 但在运行时会检测)。该常量的内容 (所有用户或者当前用户) 取决于
+<a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p><strong>$EXEDIR</strong></p>
+<p>可执行安装程序运行时所在目录 (从技术上来说你可以修改改变量，但并不是一个好方法)。</p>
+<p><strong>$EXEFILE</strong></p>
+<p>可执行安装程序的基本名字。</p>
+<p><strong>$EXEPATH</strong></p>
+<p>可执行安装程序的完整路径。</p>
+<p><strong>${NSISDIR}</strong></p>
+<p>包含 NSIS 安装目录的符号定义标记。常用于在你想调用在 NSIS 目录下的资源时。图标、界面等等。</p>
+<p>在 Windows 平台等于 makensis 所在的目录,而在其它平台则在编译时决定 (信息请看 INSTALL 文件)。你可以在编译前通过修改 NSISDIR 环境变量来改变默认的设置。更多信息请看
+<a href="" rel="nofollow">section 3.1.3</a>。</p>
+<p><strong>$WINDIR</strong></p>
+<p>Windows 目录 (通常为 <code>C:\Windows</code> 或者 <code>C:\WinNT</code> 但在运行时会检测)。</p>
+<p><strong>$SYSDIR</strong></p>
+<p>Windows 系统目录 (通常为 <code>C:\Windows\System</code> or <code>C:\WinNT\System32</code> 但在运行时会检测)。</p>
+<p><strong>$TEMP</strong></p>
+<p>系统临时目录 (通常为 <code>C:\Windows\Temp</code> 但在运行时会检测)。</p>
+<p><strong>$STARTMENU</strong></p>
+<p>开始菜单目录 (常用于添加一个开始菜单项，使用 <a href="" rel="nofollow">CreateShortCut</a>)。该常量的内容 (所有用户或者当前用户) 取决于
+<a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p><strong>$SMPROGRAMS</strong></p>
+<p>开始菜单程序目录 (当你想定位 $STARTMENU\程序 时可以使用它)。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p><strong>$SMSTARTUP</strong></p>
+<p>开始菜单程序/启动 目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p><strong>$QUICKLAUNCH</strong></p>
+<p>在 IE4 活动桌面及以上的快速启动目录。如果快速启动不可用，仅仅返回和 $TEMP 一样。</p>
+<p><strong>$DOCUMENTS</strong></p>
+<p>文档目录。一个当前用户典型的路径形如 <code>C:\Documents and Settings\Foo\My Documents</code>。该常量的内容 (所有用户或者当前用户) 取决于
+<a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p>该常量在 Windows 95 且 Internet Explorer 4 没有安装时无效。</p>
+<p><strong>$SENDTO</strong></p>
+<p>该目录包含了“发送到”菜单快捷项。</p>
+<p><strong>$RECENT</strong></p>
+<p>该目录包含了指向用户最近文档的快捷方式。</p>
+<p><strong>$FAVORITES</strong></p>
+<p>该目录包含了指向用户网络收藏夹、文档等的快捷方式。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p>该常量在 Windows 95 且 Internet Explorer 4 没有安装时无效。</p>
+<p><strong>$MUSIC</strong></p>
+<p>用户的音乐文件目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。默认为当前用户。</p>
+<p>该常量仅在 Windows XP, ME 及以上有效。</p>
+<p><strong>$PICTURES</strong></p>
+<p>用户的图片文件目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p>该常量仅在 Windows 2000, XP, ME 及以上有效。</p>
+<p><strong>$VIDEOS</strong></p>
+<p>用户的视频文件目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p>该常量仅在 Windows XP, ME 及以上有效。</p>
+<p><strong>$NETHOOD</strong></p>
+<p>该目录包含了可能存在于我的网络位置、网上邻居文件夹的链接对象。</p>
+<p>该常量在 Windows 95 且 Internet Explorer 4 和活动桌面没有安装时无效。</p>
+<p><strong>$FONTS</strong></p>
+<p>系统字体目录。</p>
+<p><strong>$TEMPLATES</strong></p>
+<p>文档模板目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p><strong>$APPDATA</strong></p>
+<p>应用程序数据目录。当前用户路径的检测需要 Internet Explorer 4 及以上。所有用户路径的检测需要 Internet Explorer 5 及以上。该常量的内容 (所有用户或者当前用户) 取决于
+<a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p>该常量在 Windows 95 且 Internet Explorer 4 和活动桌面没有安装时无效。</p>
+<p><strong>$LOCALAPPDATA</strong></p>
+<p>本机应用程序数据目录。</p>
+<p>该常量仅在 Windows 2000 及以上有效。</p>
+<p><strong>$PRINTHOOD</strong></p>
+<p>该目录包含了可能存在于打印机文件夹的链接对象。</p>
+<p>该常量在 Windows 95 和 Windows 98 上无效。</p>
+<p><strong>$INTERNET_CACHE</strong></p>
+<p>Internet Explorer 的临时文件目录。</p>
+<p>该常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活动桌面没有安装时无效。</p>
+<p><strong>$COOKIES</strong></p>
+<p>Internet Explorer 的 Cookies 目录。</p>
+<p>该常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活动桌面没有安装时无效。</p>
+<p><strong>$HISTORY</strong></p>
+<p>Internet Explorer 的历史记录目录。</p>
+<p>该常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活动桌面没有安装时无效。</p>
+<p><strong>$PROFILE</strong></p>
+<p>用户的个人配置目录。一个典型的路径如 <code>C:\Documents and Settings\Foo</code>。</p>
+<p>该常量仅在 Windows 2000 及以上有效。</p>
+<p><strong>$ADMINTOOLS</strong></p>
+<p>一个保存管理工具的目录。该常量的内容 (所有用户或者当前用户) 取决于 <a href="" rel="nofollow">SetShellVarContext</a> 设置。 默认为当前用户。</p>
+<p>该常量仅在 Windows 2000, ME 及以上有效。</p>
+<p><strong>$RESOURCES</strong></p>
+<p>本地的资源目录保存了主题和其他 Windows 资源 (通常为 <code>C:\Windows\Resources</code> 但在运行时会检测)。</p>
+<p>该常量仅在 Windows XP 及以上有效。</p>
+<p><strong>$RESOURCES_LOCALIZED</strong></p>
+<p>本地的资源目录保存了主题和其他 Windows 资源 (通常为 <code>C:\Windows\Resources\1033</code> 但在运行时会检测)。</p>
+<p>该常量仅在 Windows XP 及以上有效。</p>
+<p><strong>$CDBURN_AREA</strong></p>
+<p>一个在烧录 CD 时储存文件的目录。</p>
+<p>该常量仅在 Windows XP 及以上有效。</p>
+<p><strong>$HWNDPARENT</strong></p>
+<p>父窗口的十进制窗口句柄。</p>
+<p><strong>$PLUGINSDIR</strong></p>
+<p>该路径是一个临时目录，当第一次使用一个插件或一个调用 <a href="" rel="nofollow">InitPluginsDir</a> 时被创建。该文件夹当安装程序退出时会被自动删除。 这个文件夹的用意是用来保存给
+<a href="" rel="nofollow">InstallOptions</a> 使用的 INI 文件、启动画面位图或其他插件运行需要的文件。<br /><br />
+其它变量:<br />
+(每个文件名可以使用多次)<br /><strong>${__DATE__}</strong> 制作安装程序时的日期(YY-MM-DD).<br /><strong>${__TIME__}</strong> 制作安装程序时的时间,24时制,不能用于文件名.(HH:MM:SS)<br /><strong>${__TIMESTAMP__}</strong> 制作安装程序时的日期和时间,不能用于文件名.(YYYY年MM月DD日 HH:MM:SS)<br /><strong>${__FILE__}</strong>当前脚本名称</p>
+<p><strong>${__LINE__}</strong>当前行号<br /><strong>${__GLOBAL__}</strong>在全局范围内定义</p>
+<p><br /><strong>$$</strong></p>
+<p>转义，用来表示 $。</p>
+<p><strong>$\r</strong></p>
+<p>用来表示一个回车 (\r)。</p>
+<p><strong>$\n</strong></p>
+<p>用来表示新的一行 (\n)。</p>
+<p><strong>$\t</strong></p>
+<p>用来表示一个 Tab (\t)。</p>
+            </div>
+                </div>
+		<div class="hide-article-box text-center">
+			<a class="btn" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/zhangxu365/article/details/7997229,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/zhangxu365/article/details/7997229,"}'>阅读更多</a>
+			<!-- <a class="btn" href="https://passport.csdn.net/account/login?utm_source=csdn_blog_pc_more_login" target="_self" id="btn-lobinreadmore" data-track-view='{"mod":"popu_557","con":",https://blog.csdn.net/zhangxu365/article/details/7997229,"}' data-track-click='{"mod":"popu_557","con":",https://blog.csdn.net/zhangxu365/article/details/7997229,"}'>登录后自动展开</a> -->
+		</div>
+	</article>
+	
+</div>
+<script>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</script>
+
+<!-- 博客详情页PC增加广告系统刷量代码 -->
+<div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+<script id="adJs52b5334"></script>
+<script>document.getElementById("adJs52b5334").src = "https://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+</div>
+
+<script>
+	(function(){
+		function setArticleH(btnReadmore,posi){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*posi){
+				articleBox.css({
+					'height':winH*posi+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+		var btnReadmore = $("#btn-readmore");
+		console.log(currentUserName);
+		if(btnReadmore.length>0){
+			if(currentUserName){
+				setArticleH(btnReadmore,3);
+			}else{
+				setArticleH(btnReadmore,1.2);
+			}
+		}
+	})()
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/zhangxu365/article/details/7997229#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/xxhongdev/article/details/77720208,BlogCommendClickRateRank_0"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/xxhongdev/article/details/77720208,BlogCommendClickRateRank_0"}'>
+		<a href="https://blog.csdn.net/xxhongdev/article/details/77720208" target="_blank" title="NSIS 静默安装 以及 在安装软件时检测软件是否启动">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em> 静默安装 以及 在安装软件时检测软件是否启动				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/F/D/2/3_xxhongdev.jpg" alt="xxhongdev" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xxhongdev</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-30</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							368</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							NSIS 静默安装 以及 在安装软件时检测软件是否启动
+NSIS 静默安装vc++2013
+Section vc
+SetOutPath &quot;$INSTDIR&quot;
+ SetOverwrite on
+  Ex...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/ddjj_1980/article/details/7329517,BlogCommendClickRateRank_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/ddjj_1980/article/details/7329517,BlogCommendClickRateRank_1"}'>
+		<a href="https://blog.csdn.net/ddjj_1980/article/details/7329517" target="_blank" title="nsis打包所需要用到的安装包安装路径命令">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>nsis</em>打包所需要用到的安装包<em>安装路径</em>命令				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/5/0/6/3_ddjj_1980.jpg" alt="ddjj_1980" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ddjj_1980</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-07</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							2178</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							$INSTDIR=默认安装路径!
+$PROGRAMFILES=C:\Program Files!
+$TEMP=临时文件夹!
+$DESKTOP=桌面!
+$SYSDIR=C:\WINDOWS\sy...					</p>
+			</div>
+					</a>
+	</div>
+									<div class="recommend-item-box recommend-ad-box clearfix">
+					<script type="text/javascript" src="//rabc1.iteye.com/production/source/pc3553.js?pkcgstj=jm"></script>
+				</div>
+			
+					<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/wangkuiyun/article/details/39003107,BlogCommendClickRateRank_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/wangkuiyun/article/details/39003107,BlogCommendClickRateRank_2"}'>
+		<a href="https://blog.csdn.net/wangkuiyun/article/details/39003107" target="_blank" title="NSIS的一些变量">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>的一些变量				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/3/C/7/3_wangkuiyun.jpg" alt="wangkuiyun" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wangkuiyun</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-02</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							6380</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							$PROGRAMFILES
+
+程序文件目录(通常为 C:\Program Files 但是运行时会检测)。
+
+$COMMONFILES
+
+公用文件目录。这是应用程序共享组件的目录(通常为 ...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/mfkjq/article/details/53307987,BlogCommendClickRateRank_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/mfkjq/article/details/53307987,BlogCommendClickRateRank_3"}'>
+		<a href="https://blog.csdn.net/mfkjq/article/details/53307987" target="_blank" title="NSIS语法解析">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>语法解析				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/1/5/2/3_mfkjq.jpg" alt="mfkjq" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">mfkjq</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-23</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							3353</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							转自：http://www.cnblogs.com/yplong/p/3700817.html
+
+以下是代码及解析，其中有底色的部分为脚本内容。
+
+注释、!define、变量、!include...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/yulinxx/article/details/47953997,BlogCommendClickRateRank_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/yulinxx/article/details/47953997,BlogCommendClickRateRank_4"}'>
+		<a href="https://blog.csdn.net/yulinxx/article/details/47953997" target="_blank" title="使用 NSIS 制作软件安装包">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						使用 <em>NSIS</em> 制作软件安装包				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/4/8/1/3_yulinxx.jpg" alt="yulinxx" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">yulinxx</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-24</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							4053</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							NSIS软件封装					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lee353086/article/details/45919901,BlogCommendClickRateRank_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lee353086/article/details/45919901,BlogCommendClickRateRank_5"}'>
+		<a href="https://blog.csdn.net/lee353086/article/details/45919901" target="_blank" title="NSIS学习笔记">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>学习笔记				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/8/C/B/3_lee353086.jpg" alt="lee353086" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lee353086</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-22</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							6638</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							NSIS学习笔记
+Date:2015-05-20
+Author:kagula
+Env:VS2013Update4、nsis-2.46.5-Unicode-setup.exe、CoolSoft_NSIS...					</p>
+			</div>
+					</a>
+	</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'left',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 8,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/wangkuiyun/article/details/39003199,BlogCommendClickRateRank_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/wangkuiyun/article/details/39003199,BlogCommendClickRateRank_6"}'>
+		<a href="https://blog.csdn.net/wangkuiyun/article/details/39003199" target="_blank" title="NSIS详解">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>详解				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/3/C/7/3_wangkuiyun.jpg" alt="wangkuiyun" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wangkuiyun</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-02</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1.1万</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							NSIS特别说明:
+某些脚本需要额外的DLL支持,如MPC关联程序,就有可能需要InstallOptionsEx.dll,
+另外,可能需要编译语言头文件如:SimpChinese.nsh,可能需要...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lys07962000/article/details/39498829,BlogCommendClickRateRank_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lys07962000/article/details/39498829,BlogCommendClickRateRank_7"}'>
+		<a href="https://blog.csdn.net/lys07962000/article/details/39498829" target="_blank" title="NSIS打包--修改默认安装路径">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>打包--修改默认<em>安装路径</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/F/0/0/3_lys07962000.jpg" alt="lys07962000" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lys07962000</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-23</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							4235</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							﻿﻿
+InstallDir &quot;$PROGRAMFILES\CIOClient&quot;
+之前用这个路径打包的，在我的电脑已安装，
+InstallDir &quot;D:\Program Files\CTIClie...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/webouse/article/details/54410567,BlogCommendClickRateRank_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/webouse/article/details/54410567,BlogCommendClickRateRank_8"}'>
+		<a href="https://blog.csdn.net/webouse/article/details/54410567" target="_blank" title="NSIS实现自定义选择数据保存目录窗口">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>实现自定义选择数据保存目录窗口				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/B/7/B/3_webouse.jpg" alt="webouse" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">webouse</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-13</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1425</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							NSIS实现如下界面，选择数据保存目录，这个窗口将会在选择安装目录窗口后出现
+
+代码如下
+Var DataDir         ;定义数据目录位置
+
+!insertmacro MUI_PAGE_WE...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/ddjj_1980/article/details/7165591,BlogCommendClickRateRank_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/ddjj_1980/article/details/7165591,BlogCommendClickRateRank_9"}'>
+		<a href="https://blog.csdn.net/ddjj_1980/article/details/7165591" target="_blank" title="NSIS使用技巧集合">
+			<div class="content">
+				<h4 class="text-truncate oneline">
+						<em>NSIS</em>使用技巧集合				</h4>
+				<div class="info-box d-flex align-content-center">
+					<p class="avatar">
+							<img src="https://avatar.csdn.net/5/0/6/3_ddjj_1980.jpg" alt="ddjj_1980" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ddjj_1980</span>
+								<span class="triangle"></span>
+							</span>
+					</p>
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-30</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-yuedushu"></use>
+							</svg>
+							1.3万</span>
+						</p>
+					</div>
+					<p class="content oneline">
+							写的不错，转摘一下
+!define MUI_PAGE_CUSTOMFUNCTION_Pre ComponentsPre
+!insertmacro MUI_PAGE_COMPONENTS
+!insert...					</p>
+			</div>
+					</a>
+	</div>
+						<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/mfkjq/article/details/53307987" target="_blank">
+						nsis</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/arvin0/article/details/56482370" target="_blank">
+						nsis下</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/ddjj_1980/article/details/7843944" target="_blank">
+						nsis教程</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/tragicguy/article/details/49422429" target="_blank">
+						nsis数字证书</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/u014597198/article/details/52412261" target="_blank">
+						nsis多语种</a>
+					</span>
+								</div>
+			</div>
+					</div>
+	
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+	
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/zhangxu365">
+                <img src="https://avatar.csdn.net/7/6/6/3_zhangxu365.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/zhangxu365" target="_blank" class="" id="uid">长虹小范</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/zhangxu365/article/details/7997229" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="43">
+                        <dt><a href="https://blog.csdn.net/zhangxu365?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/zhangxu365?t=1"><span class="count">43</span></a></dd>
+                    </dl>
+        <dl class="text-center" title="34">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">34</span></dd>
+        </dl>
+        <dl class="text-center" title="6">
+            <dt>喜欢</dt>
+            <dd><span class="count">6</span></dd>
+        </dl>
+        <dl class="text-center" title="28">
+            <dt>评论</dt>
+            <dd><span class="count">28</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="6级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-6"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="378743">
+                37万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="5267">
+                5267            </dd>
+        </dl>
+        <dl title="7353">
+            <dt>排名：</dt>
+            <dd>7353</dd>
+        </dl>
+    </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-运维-300x250 -->
+                      <script>
+                          (function() {
+                          var s = "_" + Math.random().toString(36).slice(2);
+                          document.write("<div id=" + s + "></div>");
+                          (window.slotbydup=window.slotbydup || []).push({
+                          id: "5865577",
+                          container: s,
+                          size: "300,250",
+                          display: "inlay-fix"
+                              });
+                          })();
+                      </script>
+                      <script src="https://dup.baidustatic.com/js/os.js"></script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/zhangxu365/article/details/50425197" target="_blank">android assets</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/zhangxu365/article/details/48707831" target="_blank">armeabi-v7a</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/zhangxu365/article/details/47292635" target="_blank">java5 线程池</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/zhangxu365/article/details/47185845" target="_blank">android 时钟开发</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/zhangxu365/article/details/47005153" target="_blank">URLConnection 使用</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1105903">
+                    <span class="title oneline">androidAPI解析</span>
+                    <span class="count float-right">30篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1105904">
+                    <span class="title oneline">ubuntu</span>
+                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1105905">
+                    <span class="title oneline">java</span>
+                    <span class="count float-right">14篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1105907">
+                    <span class="title oneline">android-service</span>
+                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1230218">
+                    <span class="title oneline">程序员杂谈</span>
+                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1230225">
+                    <span class="title oneline">windows编程</span>
+                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1230872">
+                    <span class="title oneline">adroid-apk 开发</span>
+                    <span class="count float-right">129篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/1279788">
+                    <span class="title oneline">android系统编译烧写</span>
+                    <span class="count float-right">22篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/2220505">
+                    <span class="title oneline">android 网络</span>
+                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/zhangxu365/article/category/2309085">
+                    <span class="title oneline">文档</span>
+                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/12">
+                    2015年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/09">
+                    2015年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/08">
+                    2015年8月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/07">
+                    2015年7月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/06">
+                    2015年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/04">
+                    2015年4月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/03">
+                    2015年3月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2015/01">
+                    2015年1月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/12">
+                    2014年12月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/11">
+                    2014年11月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/07">
+                    2014年7月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/06">
+                    2014年6月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/04">
+                    2014年4月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/03">
+                    2014年3月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/02">
+                    2014年2月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2014/01">
+                    2014年1月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/12">
+                    2013年12月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/11">
+                    2013年11月                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/10">
+                    2013年10月                    <span class="count float-right">15篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/09">
+                    2013年9月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/08">
+                    2013年8月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/07">
+                    2013年7月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/06">
+                    2013年6月                    <span class="count float-right">28篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/05">
+                    2013年5月                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/04">
+                    2013年4月                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/03">
+                    2013年3月                    <span class="count float-right">18篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/02">
+                    2013年2月                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2013/01">
+                    2013年1月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/12">
+                    2012年12月                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/11">
+                    2012年11月                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/10">
+                    2012年10月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/09">
+                    2012年9月                    <span class="count float-right">54篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/08">
+                    2012年8月                    <span class="count float-right">21篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/07">
+                    2012年7月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/06">
+                    2012年6月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/05">
+                    2012年5月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/04">
+                    2012年4月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/03">
+                    2012年3月                    <span class="count float-right">24篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/02">
+                    2012年2月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2012/01">
+                    2012年1月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/12">
+                    2011年12月                    <span class="count float-right">42篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/11">
+                    2011年11月                    <span class="count float-right">12篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/10">
+                    2011年10月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/09">
+                    2011年9月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/08">
+                    2011年8月                    <span class="count float-right">17篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/zhangxu365/article/month/2011/07">
+                    2011年7月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/zhangxu365/article/details/7050251">android 焦点问题</a>
+					<p class="read">阅读量：<span>23915</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/zhangxu365/article/details/6680984">SWT 消息提示框  对话框</a>
+					<p class="read">阅读量：<span>10600</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/zhangxu365/article/details/6648549">取消 gridview 右边的滚动条－－－ 解决  Gallery 图片重叠</a>
+					<p class="read">阅读量：<span>10345</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/zhangxu365/article/details/7062429">android videoView 按不同比例缩放</a>
+					<p class="read">阅读量：<span>8399</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/zhangxu365/article/details/6883573">Java获取本机MAC地址/IP地址/主机名</a>
+					<p class="read">阅读量：<span>7603</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/zhangxu365/article/details/6883573#comments">Java获取本机MAC地址/IP地...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/lastkill" class="user-name" target="_blank">lastkill</a>：[reply]b2010happy[/reply]
+大概是因为windows系统是中文版                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/zhangxu365/article/details/7968211#comments">android jar 没有找到P...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/huyawenz" class="user-name" target="_blank">huyawenz</a>：想用的话怎么办？                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/zhangxu365/article/details/8636504#comments">android 获取当前正在使用的...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/Someday_spark" class="user-name" target="_blank">Someday_spark</a>：谢谢楼主！                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/zhangxu365/article/details/12955477#comments">android 待机 handle...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/csdn10135405" class="user-name" target="_blank">csdn10135405</a>：楼主你好，能给我一份demo吗？10135405@qq.com                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/zhangxu365/article/details/7062429#comments">android videoView...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/xhq456" class="user-name" target="_blank">xhq456</a>：按照你说的，我把onMeasure()中的的代码屏蔽掉，为什么视频还是按原有的视频比例播放，不能按...                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//rabc1.iteye.com/source/res/yn6yz.js?ojylrgb=yk"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+										<script>
+				(function() {
+					var s = "_" + Math.random().toString(36).slice(2);
+					document.write('<div id="baidufooter_0001"></div>');
+					(window.slotbydup=window.slotbydup || []).push({
+						id: '5851901',
+						container: 'baidufooter_0001',
+						size: '520,40',
+						display: 'inlay-fix'
+					});
+				})();
+				</script>
+				<script src="https://dup.baidustatic.com/js/os.js"></script>
+				<style>
+					#baidufooter_0001{
+						display: none !important;
+					}
+				</style>
+					
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                <a href="https://passport.csdn.net/account/login?utm_source=csdn_blog_pc_login" target="_self">登录</a>
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li class="btn-like-box ">
+			<button class=" low-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>0</p>
+			</button>
+		</li>
+		<li class="">
+						<a class="btn-comments long-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+						1				</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</button>
+		</li>
+							<li class="widescreen-hide">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/zhangxu365/article/details/7996811" title="NSIS 限制重复安装">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-shangyiye"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<li class="widescreen-hide">
+			<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/zhangxu365/article/details/8004040" title="使用 wrapper 把jar打包成windows服务">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-xiayiye"></use>
+				</svg>
+				<span class="hover-show text text3">下一篇</span>
+			</a>
+		</li>
+						<li class="bdsharebuttonbox _360_interactive"style="margin-top: 8px;">
+			<script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'click', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt="">
+		</li>
+	  
+		<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/zhangxu365/article/details/7996811" title="NSIS 限制重复安装">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-shangyiye"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+																<li class="widescreen-more">
+					<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/zhangxu365/article/details/8004040" title="使用 wrapper 把jar打包成windows服务">
+						<svg class="icon hover-hide" aria-hidden="true">
+							<use xlink:href="#csdnc-xiayiye"></use>
+						</svg>
+						<span class="hover-show text text3">下一篇</span>
+					</a>
+				</li>
+							</ul>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "NSIS 常用安装路径";
+    var ChannelId = 0;
+    var articleId = "7997229";
+    var commentscount = 1;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/zhangxu365/article/details/7997229";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "nsis+targetdir";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+    var highlight = ["nsis","\u5e38\u7528","\u5b89\u88c5\u8def\u5f84"];//高亮数组
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"NSIS 常用安装路径");
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-ffcd47990c.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-b6e0130bf3.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9376486353.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=nsis+targetdir"  type="text/javascript"></script>
+</body>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-676a063698.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

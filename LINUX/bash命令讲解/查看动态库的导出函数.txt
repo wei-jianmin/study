@@ -1,0 +1,6 @@
+思路：
+nm 查看导出符号
+cut 截取
+c++filter 翻译符号
+
+命令： nm test.so | cut -f3 -d\  | c++filter > test.funcs.txt

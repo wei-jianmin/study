@@ -1,0 +1,165 @@
+控件窗口的建立过程：
+STDMETHODIMP COleControl::XOleObject::DoVerb(LONG iVerb, LPMSG lpmsg,
+	LPOLECLIENTSITE pActiveSite, LONG lindex, HWND hwndParent,
+	LPCRECT lprcPosRect)
+{
+	//OLEIVERB_INPLACEACTIVATE:
+	pThis->OnActivateInPlace((iVerb != OLEIVERB_INPLACEACTIVATE), lpmsg);
+}
+HRESULT COleControl::OnActivateInPlace(BOOL bUIActivate, LPMSG pMsg)
+{
+	m_bInPlaceSiteEx = FALSE;
+	m_pInPlaceSite->OnInPlaceActivate();  //告诉容器要进行原地激活
+	m_pInPlaceSite->GetWindow(&hwndParent)；
+	m_pInPlaceSite->GetWindowContext(&m_pInPlaceFrame, &m_pInPlaceDoc,&m_rcPos, &rcClip, &m_frameInfo)；//获取容器实现IOleInPlaceFrame接口的对象
+	m_bInPlaceActive = CreateControlWindow(hwndParent, m_rcPos,rectClip);  //（1）
+	SendAdvise(OBJECTCODE_SHOWOBJECT); 	//（2）
+}
+（1）：
+BOOL COleControl::CreateControlWindow(HWND hWndParent, const CRect& rcPos,LPCRECT prcClip)
+{
+	dwStyle = WS_VISIBLE|WS_CHILD|WS_CLIPSIBLINGS|WS_CLIPCHILDREN;
+	dwExStyle = WS_EX_NOPARENTNOTIFY;
+	AfxDeferRegisterClass(AFX_WNDOLECONTROL_REG);	//注册窗口类，见注
+	CreateEx(dwExStyle, AFX_WNDOLECONTROL, m_strText, dwStyle,rcPos.left, rcPos.top, rcPos.Width(), rcPos.Height(),hWndParent, 0);  	//（1.1）
+	OnFontChanged(); 	// 设置新窗口字体（1.2）
+}
+（1.1）：
+BOOL CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName,
+	LPCTSTR lpszWindowName, DWORD dwStyle,
+	int x, int y, int nWidth, int nHeight,
+	HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam)
+{
+	PreCreateWindow(cs)；	//（1.1.1）
+	AfxHookWindowCreate(this);	//（1.1.2）
+	HWND hWnd = ::AfxCtxCreateWindowEx(cs.dwExStyle, cs.lpszClass,
+			cs.lpszName, cs.style, cs.x, cs.y, cs.cx, cs.cy,
+			cs.hwndParent, cs.hMenu, cs.hInstance, cs.lpCreateParams);
+}
+（1.1.1）：
+BOOL CWnd::PreCreateWindow(CREATESTRUCT& cs)
+{
+	// AfxDeferRegisterClass(AFX_WND_REG)；
+	return TURE;
+}
+（1.1.2）：
+void AFXAPI AfxHookWindowCreate(CWnd* pWnd)
+{
+	pThreadState->m_hHookOldCbtFilter = ::SetWindowsHookEx(WH_CBT, _AfxCbtFilterHook, NULL, ::GetCurrentThreadId());	//设置窗口钩子
+}
+LRESULT CALLBACK  _AfxCbtFilterHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	ASSERT(code == HCBT_CREATEWND);
+	CWnd* pWndInit = pThreadState->m_pWndInit;	//值为 {CTZWpsSignCtrl hWnd=0x00000000}
+	HWND hWnd = (HWND)wParam;
+	pWndInit->Attach(hWnd);
+	WNDPROC *pOldWndProc = pWndInit->GetSuperWndProcAddr();	//返回 &m_pfnSuper;
+	WNDPROC afxWndProc = AfxGetAfxWndProc();
+	oldWndProc = (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC, (DWORD_PTR)afxWndProc);	//再次设置窗口钩子
+	if (oldWndProc != afxWndProc)
+		*pOldWndProc = oldWndProc;
+	::UnhookWindowsHookEx(pThreadState->m_hHookOldCbtFilter);
+}
+WNDPROC AFXAPI AfxGetAfxWndProc()
+{
+	return &AfxWndProc;
+}
+LRESULT CALLBACK AfxWndProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	CWnd* pWnd = CWnd::FromHandlePermanent(hWnd);
+	if (pWnd == NULL || pWnd->m_hWnd != hWnd)
+		return ::DefWindowProc(hWnd, nMsg, wParam, lParam);
+	return AfxCallWndProc(pWnd, hWnd, nMsg, wParam, lParam);
+}
+LRESULT AFXAPI AfxCallWndProc(CWnd* pWnd, HWND hWnd, UINT nMsg, WPARAM wParam = 0, LPARAM lParam = 0)
+{
+	if ((nMsg == WM_DESTROY) && (pWnd->m_pCtrlCont != NULL))
+		pWnd->m_pCtrlCont->OnUIActivate(NULL);
+	dwStyle=0；		
+	if (nMsg == WM_INITDIALOG)
+		_AfxPreInitDialog(pWnd, &rectOld, &dwStyle);
+	lResult = pWnd->WindowProc(nMsg, wParam, lParam);	//该函数中负责处理映射表中的消息
+	if (nMsg == WM_INITDIALOG)
+		_AfxPostInitDialog(pWnd, rectOld, dwStyle);
+	return lResult;
+}
+（1.2）：
+void COleControl::OnFontChanged()
+{
+	InvalidateControl();
+}
+void COleControl::InvalidateControl(LPCRECT lpRect, BOOL bErase)
+{
+	SendAdvise(OBJECTCODE_VIEWCHANGED);	（1.2.1）
+	SendAdvise(OBJECTCODE_DATACHANGED);   	（1.2.2）
+}
+（1.2.1）：
+void COleControl::SendAdvise(UINT uCode)
+{
+	//COleControl类内嵌的实现IViewObjectEx接口的对象，见注2
+	m_xViewObject.GetAdvise(&aspects, &advf, &pAdvSink);  
+	pAdvSink->OnViewChange(DVASPECT_CONTENT, -1);
+}
+STDMETHODIMP COleControl::XViewObject::GetAdvise(DWORD* pAspects, DWORD* pAdvf,
+	LPADVISESINK* ppAdvSink)
+{
+	_AFXCTL_ADVISE_INFO* pAdviseInfo = pThis->m_pAdviseInfo;
+	*pAspects = pAdviseInfo->m_dwAspects;   	 //DWORD类型
+	*pAdvf = pAdviseInfo->m_dwAdvf;		//DWORD类型
+	*ppAdvSink = pAdviseInfo->m_pAdvSink;	//IAdviseSink*类型
+	
+}
+（1.2.2）：
+void COleControl::SendAdvise(UINT uCode)
+{	
+	//m_pDataAdviseHolder为IDataAdviseHolder * 类型
+	m_pDataAdviseHolder->SendOnDataChange(&m_xDataObject, 0, 0);
+}
+（2）：
+void COleControl::SendAdvise(UINT uCode)
+{	
+	m_pClientSite->ShowObject();
+}
+注：
+#define AfxDeferRegisterClass(fClass) AfxEndDeferRegisterClass(fClass)
+BOOL AFXAPI AfxEndDeferRegisterClass(LONG fToRegister)
+{
+	wndcls.lpfnWndProc = DefWindowProc; 	//（b）
+	wndcls.hInstance = AfxGetInstanceHandle();
+	wndcls.hCursor = afxData.hcurArrow;
+	if (fToRegister & AFX_WNDOLECONTROL_REG)
+	{
+		// OLE Control windows - use parent DC for speed
+		wndcls.style |= CS_PARENTDC | CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
+		wndcls.lpszClassName = _afxWndOleControl;	//变量值为 "AfxOleControl80sd"
+		if (AfxRegisterClass(&wndcls))		//（a）
+			fRegisteredClasses |= AFX_WNDOLECONTROL_REG;
+	}
+}
+（a）：
+BOOL AFXAPI AfxRegisterClass(WNDCLASS* lpWndClass)
+{
+	AfxCtxGetClassInfo(lpWndClass->hInstance, lpWndClass->lpszClassName, &wndcls)；
+	::AfxCtxRegisterClass(lpWndClass)；
+}
+（b）:
+LRESULT COleControl::DefWindowProc(UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (m_hWnd != NULL)
+		return CWnd::DefWindowProc(nMsg, wParam, lParam);
+}
+LRESULT CWnd::DefWindowProc(UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (m_pfnSuper != NULL)
+		return ::CallWindowProc(m_pfnSuper, m_hWnd, nMsg, wParam, lParam);
+
+	WNDPROC pfnWndProc;
+	if ((pfnWndProc = *GetSuperWndProcAddr()) == NULL)
+		return ::DefWindowProc(m_hWnd, nMsg, wParam, lParam);
+	else
+		return ::CallWindowProc(pfnWndProc, m_hWnd, nMsg, wParam, lParam);
+}
+注2：
+m_xViewObject是COleControl类内嵌的实现IViewObjectEx接口的对象，该接口有个draw方法，
+容器调用该方法，把容器的绘图环境传进来，这样，控件就能在容器提供的绘图环境中进行绘制了。
+	

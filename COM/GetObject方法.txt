@@ -1,0 +1,19 @@
+Your implementation of IOleItemContainer::GetObject should first determine whether pszItem is a valid name for one of the container's objects. If not, you should return MK_E_NOOBJECT.
+你对GetObject的实现，首先应检查pszItem参数是否是一个有效的名字———容器中的一个对象。如果不是，就直接返回无此对象的错误就行了。
+
+If pszItem names an embedded or linked object, your implementation must check the value of the dwSpeedNeeded parameter. If the value is BINDSPEED_IMMEDIATE and the object is not yet loaded, you should return MK_E_EXCEEDEDDEADLINE.
+如果pszItem参数指定了一个嵌入或链接的对象，你对该方法的实现必须检查dwSpeedNeeded设定的时间限制。如果dwSpeedNeeded指明为立即，而要请求的对象没有被加载，你应该返回超时错误。
+
+If the object is loaded, your implementation should determine whether the object is running (for example, by calling the OleIsRunning function). 
+如果对象已经加载了，你就检查该对象是否处于激活状态
+
+If it is not running and the dwSpeedNeeded value is BINDSPEED_MODERATE, your implementation should return MK_E_EXCEEDEDDEADLINE.
+如果不是激活状态，而dwSpeedNeeded有是moderate，则你的实现方法应该返回超时错误。
+
+If the object is not running and dwSpeedNeeded is BINDSPEED_INDEFINITE, your implementation should call the OleRun function to put the object in the running state. Then it can query the object for the requested interface. Note that it is important the object be running before you query for the interface.
+如果对象不在激活状态，而dwSpeedNeeded有是无时限的，你的实现应该调用OleRun方法吧对象激活，然后就可向对象请求某接口了。注意，在请求对象接口时，一定要保证对象是激活的。
+
+If pszItem names a pseudo-object, your implementation can ignore the dwSpeedNeeded parameter because a pseudo-object is running whenever its container is running. In this case, your implementation can simply query for the requested interface.
+如果pszItem指明了一个假的对象(?),你的实现应该忽略dwSpeedNeeded参数，因为一个pseudo对象在容器中始终是处于激活态的。此种情况下，你的实现只管请求接口就行了。
+
+If you want more specific information about the time limit than is given by dwSpeedNeeded, you can call IBindCtx::GetBindOptions on the pbc parameter to get the actual deadline parameter. 

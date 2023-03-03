@@ -1,0 +1,117 @@
+body {
+	background: url("images/bg.png");
+}
+body header {
+	background: url("images/bg-title.png?v3") no-repeat center / 1920px auto;
+}
+body header .container {
+	height: 100px; box-sizing: border-box; -webkit-box-sizing: border-box;
+}
+aside {
+	float: left;
+}
+aside div.aside-box a {
+	color: rgb(200, 131, 38);
+}
+aside div.aside-box a:hover {
+	color: rgb(238, 102, 51);
+}
+aside div.aside-box .btn-link-blue {
+	color: rgb(200, 131, 38) !important;
+}
+aside div.aside-box .btn-link-blue:hover {
+	color: rgb(238, 102, 51) !important;
+}
+aside div.aside-box h3.aside-title {
+	background: rgb(245, 245, 245); padding: 0px 16px; height: 38px; color: rgb(61, 61, 61); line-height: 38px; font-size: 12px;
+}
+aside div.aside-box h3.aside-title::before {
+	display: none;
+}
+aside #asideCategory ul li a {
+	color: rgb(200, 131, 38);
+}
+aside #asideArchive ul li a {
+	color: rgb(200, 131, 38);
+}
+aside #asideNewArticle ul li a {
+	color: rgb(200, 131, 38);
+}
+aside #asideCategory ul li a:hover {
+	color: rgb(238, 102, 51);
+}
+aside #asideArchive ul li a:hover {
+	color: rgb(238, 102, 51);
+}
+aside #asideNewArticle ul li a:hover {
+	color: rgb(238, 102, 51);
+}
+aside #asideColumn ul.column-box li div.img-box {
+	position: relative;
+}
+aside #asideColumn ul.column-box li div.img-box::before {
+	border: 1px solid rgb(224, 224, 224); left: 0px; top: 0px; right: 0px; bottom: 0px; position: absolute; content: "";
+}
+aside #asideFooter .right_box h3.feed_new_tit {
+	background: rgb(245, 245, 245); margin: -16px -16px 16px; padding: 0px 16px; height: 38px; line-height: 38px; font-size: 12px;
+}
+aside #asideFooter .right_box h3.feed_new_tit span.line {
+	display: none;
+}
+aside #asideFooter .right_box h3.feed_new_tit span.txt {
+	font-size: 12px;
+}
+main {
+	float: right;
+}
+main div.blog-content-box .related-article a:hover {
+	color: rgb(238, 102, 51) !important;
+}
+main div.blog-content-box .related-article a:hover span {
+	border-color: rgb(238, 102, 51) !important; color: rgb(238, 102, 51) !important;
+}
+main div.blog-content-box div.article-info-box div.article-bar-top a.href-article-edit {
+	color: rgb(200, 131, 38);
+}
+main div.blog-content-box div.article-info-box div.article-bar-top a.href-article-edit:hover {
+	color: rgb(238, 102, 51);
+}
+main div.blog-content-box div.article-bar-bottom a.tag-link {
+	color: rgb(200, 131, 38);
+}
+main div.blog-content-box div.article-bar-bottom a.tag-link:hover {
+	color: rgb(238, 102, 51);
+}
+.article-item-box h4 > a:hover {
+	color: rgb(238, 102, 51) !important;
+}
+.article-item-box div.opt-box .btn-opt {
+	color: rgb(200, 131, 38) !important;
+}
+.article-item-box div.opt-box .btn-opt:hover {
+	color: rgb(238, 102, 51) !important;
+}
+.article-item-box div.opt-box [data-type='delete'].btn-opt {
+	color: rgb(202, 12, 22) !important;
+}
+.article-item-box div.opt-box [data-type='delete'].btn-opt:hover {
+	color: rgb(182, 11, 20) !important;
+}
+.comment-box .comment-list-container > .opt-box .btn-opt {
+	color: rgb(200, 131, 38) !important;
+}
+.comment-box .comment-list-container > .opt-box .btn-opt:hover {
+	color: rgb(238, 102, 51) !important;
+}
+.comment-box .comment-list-container .comment-list-box ul.comment-list li.comment-line-box div.opt-box a.btn {
+	color: rgb(200, 131, 38) !important;
+}
+.comment-box .comment-list-container .comment-list-box ul.comment-list li.comment-line-box div.opt-box a.btn:hover {
+	color: rgb(238, 102, 51) !important;
+}
+.recommend-end-box a.c-blue {
+	color: rgb(200, 131, 38) !important;
+}
+.recommend-end-box a.c-blue:hover {
+	color: rgb(238, 102, 51) !important;
+}

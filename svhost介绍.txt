@@ -1,0 +1,30 @@
+参：https://www.cnblogs.com/godjiahui/archive/2008/04/05/1138099.html
+windows系统进程分为独立进程和共享进程两种，“svchost.exe”文件存在于“%systemroot% system32”目录下，它属于共享进程
+着windows系统服务不断增多，为了节省系统资源，微软把很多服务做成共享方式，交由 svchost.exe进程来启动
+但svchost进程只作为服务宿主，并不能实现任何服务功能，即它只能提供条件让其他服务在这里被启动，而它自己却不能给用户提供任何服务
+
+这些服务是如何实现的呢？
+原来这些系统服务是以动态链接库（dll）形式实现的，它们把可执行程序指向 svchost，由svchost调用相应服务的动态链接库来启动服务
+那svchost又怎么知道某个系统服务该调用哪个动态链接库呢？这是通过系统服务在注册表中设置的参数来实现
+
+下面就以rpcss（remote procedure call）服务为例，进行讲解：
+“开始”/“运行”，输入“services.msc”命令，弹出服务对话框，然后打开“remote procedure call”属性对话框
+可以看到rpcss服务的可执行文件的路径为“c:\windows\system32\svchost -k rpcss”
+这说明rpcss服务是依靠svchost调用“rpcss”参数来实现的，而参数的内容则是存放在系统注册表中的。
+hkey_local_machine/system/currentcontrolset/services/rpcss
+找到类型为“reg_expand_sz”的键“magepath”，其键值为“%systemroot%system32svchost -k rpcss”
+另外在“parameters”子项中有个名为“servicedll”的键，其值为“% systemroot%system32rpcss.dll”
+当启动rpcss服务时，svchost就会调用rpcss.dll，并且执行其ServiceMain()函数执行具体服务
+
+既然这些服务是使用共享进程方式由svchost启动的，为什么系统中会有多个svchost进程呢？
+ms把这些服务分为几组，同组服务共享一个svchost进程，不同组服务使用多个svchost进程，组的区别是由服务的可执行程序后边的参数决定的。
+svchost的所有组和组内的所有服务都在注册表的如下位置： HKEY_LOCAL_MACHINESOFTWAREMicrosoftWindows NTCurrentVersionSvchost
+
+安装服务与设置
+    要通过svchost调用来启动的服务，就一定要在HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/NTCurrentVersionSvchost下有该服务名
+     (???注册表中没找到)
+
+DLL服务实现
+　　DLL程序的编写比较简单，只要实现一个ServiceMain()函数和一个服务控制程序，
+    在ServiceMain()函数里用RegisterServiceCtrlHandler()注册服务控制程序，并设置服务的运行状态就可以了。
+　　另外，因为此种服务的安装除了正常的CreateService()之外，还要进行其他设置，因此最好实现安装和卸载函数。

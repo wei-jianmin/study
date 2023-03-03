@@ -1,0 +1,298 @@
+https://blog.csdn.net/bytxl/article/details/48525279
+https://blog.csdn.net/sinat_20184565/article/details/90381986
+
+在Linux2.6内核中自带了PF_KEY协议族的实现
+ 
+内核中PF_KEY实现要完成的功能是实现维护内核的安全联盟(SA)和安全策略(SP)数据库, 以及和用户空间的接口。
+
+PF_KEY相关代码在net/key/目录下，定义了内核中PF_KEY与用户空间的接口，
+这个接口是RFC定义的，因此各种实现都基本类似
+但具体关于SA和SP的内部的实现和管理则是与实现相关的，各种实现各自不同
+在linux内核是使用xfrm库来实现的，代码在net/xfrm/目录下定义
+
+关于SA和SP的数据结构已经在RFC2367中定义, 头文件为include/linux/pfkeyv2.h
+这些是用户空间和内核空间共享的，只是作为接口的数据结构；
+而内核中具体使用的数据结构为xfrm定义的结构，在include/net/xfrm.h中定义。
+
+PF_KEY类型的sock
+    // 比普通sock添加两个参数
+    struct pfkey_sock {
+         struct sock sk;
+         int  registered;  // 是否进行登记
+         int  promisc;     // 是否是混杂模式
+    };
+    
+关于SA的内核结构（xfrm_state）和SP的内核结构（xfrm_policy），参 file://xfrm.txt
+
+事件
+    struct km_event
+    {
+         union {
+              u32 hard;
+              u32 proto;
+              u32 byid;
+              u32 aevent;
+              u32 type;
+         } data;
+         u32 seq;
+         u32 pid;
+         u32 event;
+    };
+    
+初始化
+    /* net/key/af_key.c */
+    static int __init ipsec_pfkey_init(void)
+    {
+        // 登记key_proto结构, 该结构定义如下:
+        // static struct proto key_proto = {
+        //  .name     = "KEY",
+        //  .owner    = THIS_MODULE,
+        //  .obj_size = sizeof(struct pfkey_sock),
+        //};
+        // 最后一个参数为0, 表示不进行slab的分配, 只是简单的将key_proto结构
+        // 挂接到系统的网络协议链表中,这个结构最主要是告知了pfkey sock结构的大小
+        int err = proto_register(&key_proto, 0);
+        if (err != 0)
+            goto out;
+        // 登记pfkey协议族的的操作结构
+        err = sock_register(&pfkey_family_ops);
+        if (err != 0)
+            goto out_unregister_key_proto;
+        #ifdef CONFIG_PROC_FS
+            err = -ENOMEM;
+            // 建立只读的pfkey的PROC文件: /proc/net/pfkey
+            if (create_proc_read_entry("net/pfkey", 0, NULL, pfkey_read_proc, NULL) == NULL)
+                goto out_sock_unregister;
+        #endif
+        // 登记通知(notify)处理pfkeyv2_mgr
+        err = xfrm_register_km(&pfkeyv2_mgr);
+        if (err != 0)
+            goto out_remove_proc_entry;
+            
+        out:
+        return err;
+            
+        out_remove_proc_entry:
+        #ifdef CONFIG_PROC_FS
+        remove_proc_entry("net/pfkey", NULL);
+        out_sock_unregister:
+        #endif
+        sock_unregister(PF_KEY);
+        
+        out_unregister_key_proto:
+        proto_unregister(&key_proto);
+        goto out;
+    }
+    pfkeyv2_mgr主要用于向应用层管理程序发送相关通知
+    static struct xfrm_mgr pfkeyv2_mgr =
+    {
+        .notify     = pfkey_send_notify,
+        .acquire    = pfkey_send_acquire,
+        .compile_policy = pfkey_compile_policy,
+        .new_mapping    = pfkey_send_new_mapping,
+        .notify_policy  = pfkey_send_policy_notify,
+        .migrate    = pfkey_send_migrate,
+        .is_alive   = pfkey_is_alive,
+    };
+pfkey套接口操作
+    建立套接口
+        pfkey协议族操作, 在用户程序使用socket打开pfkey类型的socket时调用,
+        相应的create函数在__sock_create(net/socket.c)函数中调用:
+        在用户空间每次打开pfkey socket时都会调用此函数:
+        static int pfkey_create(struct socket *sock, int protocol)
+        {
+            struct sock *sk;
+            int err;
+            // 建立PFKEY的socket必须有ROOT权限
+            if (!capable(CAP_NET_ADMIN))
+                return -EPERM;
+            // socket类型必须是RAW, 协议为PF_KEY_V2
+            if (sock->type != SOCK_RAW)
+                return -ESOCKTNOSUPPORT;
+            if (protocol != PF_KEY_V2)
+                return -EPROTONOSUPPORT;
+            err = -ENOMEM;
+            // 分配sock结构, 并清零
+            sk = sk_alloc(PF_KEY, GFP_KERNEL, &key_proto, 1);
+            if (sk == NULL)
+                goto out;
+            // PFKEY类型socket的操作
+            sock->ops = &pfkey_ops;
+            // 初始化socket参数
+            sock_init_data(sock, sk);
+            // 初始化sock的族类型和释放函数
+            sk->sk_family = PF_KEY;
+            sk->sk_destruct = pfkey_sock_destruct;
+            // 增加使用数
+            atomic_inc(&pfkey_socks_nr);
+            // 将sock挂接到系统的sock链表
+            pfkey_insert(sk);
+            return 0;
+            out:
+            return err;
+        }
+    操作套接口    
+        static const struct proto_ops pfkey_ops = {
+            .family     = PF_KEY,
+            .owner      = THIS_MODULE,
+            /* Operations that make no sense on pfkey sockets. */
+            .bind       = sock_no_bind,
+            .connect    = sock_no_connect,
+            .socketpair = sock_no_socketpair,
+            .accept     = sock_no_accept,
+            .getname    = sock_no_getname,
+            .ioctl      = sock_no_ioctl,
+            .listen     = sock_no_listen,
+            .shutdown   = sock_no_shutdown,
+            .setsockopt = sock_no_setsockopt,
+            .getsockopt = sock_no_getsockopt,
+            .mmap       = sock_no_mmap,
+            .sendpage   = sock_no_sendpage,
+            /* Now the operations that really occur. */
+            .release    = pfkey_release,
+            .poll       = datagram_poll,
+            .sendmsg    = pfkey_sendmsg,
+            .recvmsg    = pfkey_recvmsg,
+        };
+        PF_KEY类型的sock中大多数操作都没有定义, 
+        这是因为 PF_KEY的数据都是本机内的内核空间与用户空间的交换, 
+        因此实际和网络相关的操作都不用定义, 
+        所谓发送和接收数据也只是内核与用户空间之间的通信
+    释放套接口
+        static int pfkey_release(struct socket *sock)
+        {
+            // 从socket到sock结构转换
+            struct sock *sk = sock->sk;
+            if (!sk)
+                return 0;
+            // 将sock从系统的sock链表断开
+            pfkey_remove(sk);
+            // 设置sock状态为DEAD, 清空sock中的socket和sleep指针
+            sock_orphan(sk);
+            sock->sk = NULL;
+            // 清除当前数据队列
+            skb_queue_purge(&sk->sk_write_queue);
+            // 释放sock
+            sock_put(sk);
+            return 0;
+        }
+    发送数据
+        函数pfkey_sendmsg负责接收应用层发送的数据。其处理逻辑简单，
+        首先函数 pfkey_get_base_msg 做一些简单的合法性检查：
+            例如数据长度必须大于sadb_msg结构体长度；
+            sadb消息的版本必须为 PF_KEY_V2；
+            sadb_msg消息的保留字段必须为零；
+            消息类型SADB_RESERVED（0）和SADB_MAX（24）之间。
+        如果所有检查都通过，将SKB中的数据转换为sadb_msg结构返回。
+        实际是将数据从用户空间发送给内核空间的程序:
+        tatic int pfkey_sendmsg(struct kiocb *kiocb,struct socket *sock, 
+                                struct msghdr *msg, size_t len)
+        {
+            struct sock *sk = sock->sk;
+            struct sk_buff *skb = NULL;
+            struct sadb_msg *hdr = NULL;
+            int err;
+            err = -EOPNOTSUPP;
+            // PF_KEY不支持MSG_OOB标志
+            if (msg->msg_flags & MSG_OOB)
+                goto out;
+            err = -EMSGSIZE;
+            // 一次发送的数据长度不能太大
+            if ((unsigned)len > sk->sk_sndbuf - 32)
+                goto out;
+            err = -ENOBUFS;
+            // 获取一个空闲的skbuff
+            skb = alloc_skb(len, GFP_KERNEL);
+            if (skb == NULL)
+                goto out;
+            err = -EFAULT;
+            // 从缓冲区中拷贝数据到skbuff中
+            if (memcpy_fromiovec(skb_put(skb,len), msg->msg_iov, len))
+                goto out;
+            // 获取SADB数据头的指针
+            hdr = pfkey_get_base_msg(skb, &err);
+            if (!hdr)
+                goto out;
+            mutex_lock(&xfrm_cfg_mutex);
+            // 处理PFKEY数据的发送
+            err = pfkey_process(sk, skb, hdr);
+            mutex_unlock(&xfrm_cfg_mutex);
+            out:
+            if (err && hdr && pfkey_error(hdr, err, sk) == 0)
+                err = 0;
+            if (skb)
+                kfree_skb(skb);
+            return err ? : len;
+        }
+        消息处理函数pfkey_process如下。
+        首先，将接收到的sadb消息尝试在当前网络命名空间中的所有PF_KEY套接口上广播，
+        广播对象BROADCAST_PROMISC_ONLY，所以只向设置了混杂模式的套接口发送此消息。
+        之后将看到套接口通告sadb的消息类型SADB_X_PROMISC控制混杂模式。
+        最后，根据消息类型调用相应的处理函数，两者之间的对应关系保存在全局变量pfkey_funcs中
+        static int pfkey_process(struct sock *sk, struct sk_buff *skb, struct sadb_msg *hdr)
+        {
+            void *ext_hdrs[SADB_EXT_MAX];
+            int err;
+            // 向混杂模式的sock发送SA消息
+            pfkey_broadcast(skb_clone(skb, GFP_KERNEL), GFP_KERNEL,
+                            BROADCAST_PROMISC_ONLY, NULL);
+            memset(ext_hdrs, 0, sizeof(ext_hdrs));
+            // 解析SADB数据头中的消息类型
+            err = parse_exthdrs(skb, hdr, ext_hdrs);
+            if (!err) {
+                err = -EOPNOTSUPP;
+            // 根据消息类型调用相关的处理函数进行处理
+            if (pfkey_funcs[hdr->sadb_msg_type])
+                err = pfkey_funcs[hdr->sadb_msg_type](sk, skb, hdr, ext_hdrs);
+            }
+            return err;
+        }
+    接收数据
+        实际是将数据从内核空间发送给用户空间:
+        static int pfkey_recvmsg(struct kiocb *kiocb,struct socket *sock, 
+                                 struct msghdr *msg, size_t len, int flags)
+        {
+            struct sock *sk = sock->sk;
+            struct sk_buff *skb;
+            int copied, err;
+            err = -EINVAL;
+            // 只支持4类标志
+            if (flags & ~(MSG_PEEK|MSG_DONTWAIT|MSG_TRUNC|MSG_CMSG_COMPAT))
+                goto out;
+            msg->msg_namelen = 0;
+            // 接收数据包
+            skb = skb_recv_datagram(sk, flags, flags & MSG_DONTWAIT, &err);
+            if (skb == NULL)
+                goto out;
+            copied = skb->len;
+            // 接收到的数据超过了接收缓冲区长度, 设置截断标志
+            if (copied > len) {
+                msg->msg_flags |= MSG_TRUNC;
+                copied = len;
+            }
+            skb->h.raw = skb->data;
+            // 将数据包中信息拷贝到接收缓冲区
+            err = skb_copy_datagram_iovec(skb, 0, msg->msg_iov, copied);
+            if (err)
+                goto out_free;
+            // 设置时间戳
+            sock_recv_timestamp(msg, sk, skb);
+            err = (flags & MSG_TRUNC) ? skb->len : copied;
+            out_free:
+            skb_free_datagram(sk, skb);
+            out:
+            return err;
+        }
+    广播
+            pfkey广播是将内核到用户空间的回应信息, 
+            所有打开了PF_KEY类型socket的用户空间程序都可以收到, 
+            所以用户空间程序在收到消息的时候要判断是否该消息是给自己的, 
+            不是就忽略掉，这和netlink的广播比较类似。
+            /* Send SKB to all pfkey sockets matching selected criteria.  */
+            #define BROADCAST_ALL  0
+            #define BROADCAST_ONE  1
+            #define BROADCAST_REGISTERED 2
+            #define BROADCAST_PROMISC_ONLY 4
+            static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+                                       int broadcast_flags, struct sock *one_sk)
+            { 略 }

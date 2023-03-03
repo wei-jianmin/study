@@ -1,0 +1,41 @@
+#pragma region 动态库调用辅助宏
+/*  使用说明
+	0.将本段代码拷贝到要使用该辅助宏的cpp文件中,使用时所有的宏末尾都不带分号
+	1.先手动用typedef定义要调用的函数指针类型，名字必须为："lp动态库中的函数名"
+	2.使用AX_LoadLibrary完成动态库的加载
+	3.使用AX_GetProcAddress完成函数的加载（必须配合AX_LoadLibrary使用）
+	4.手动完成动态库函数的调用，函数名与原来dll中的一致
+	使用举例：
+	typedef int (*lpMyFunc)();
+	AX_LoadLibrary("F:\\MyDll.dll")	//注意句尾不带分号
+	AX_GetProcAddress(MyFunc)		//注意宏参数不带引号，句尾不带分号
+	MyFunc();
+	AX_FreeLibrary
+*/
+//加载动态库
+#define AX_LoadLibrary(DllName) \
+	HINSTANCE ax_hdll; \
+	ax_hdll=LoadLibrary(_T(DllName)); \
+	DWORD ax_errNo=GetLastError(); \
+	if(NULL==ax_hdll) \
+{ \
+	CString str; \
+	str.Format(_T("dll加载失败,错误代号%d"),ax_errNo); \
+	AfxMessageBox(str); \
+	return ; \
+}
+#define AX_FreeLibrary FreeLibrary(ax_hdll);
+//加载动态库中的函数
+#define AX_GetProcAddress(FuncName) \
+	lp##FuncName FuncName=(lp##FuncName)GetProcAddress(ax_hdll,#FuncName); \
+	ax_errNo=GetLastError(); \
+	if(FuncName == NULL) \
+{ \
+	CString str,str2; \
+	str.Format(_T("%s函数调用失败"),_T(#FuncName)); \
+	str2.Format(_T(",错误代号%d"),ax_errNo); \
+	str+=str2; \
+	AfxMessageBox(str); \
+	return ; \
+}
+#pragma endregion

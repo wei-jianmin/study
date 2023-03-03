@@ -1,0 +1,43 @@
+void ClogTestDlg::OnBnClickedButton2()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	log.setIndentStrategy(true);
+	logw(>第一层函数)
+	logw(asdfasdfasdfasd)
+	logw(asdfdffesssssssssssfea)
+	logw(>第二层函数)
+	logw(1234132421341231)
+	logw(1233433333333333333)
+	logw(>第三层函数)
+	logw(撒旦法冲啊嫩撒撒扥发送的是)
+	logw(三扥三大撒扥份额分额阿萨德份额)
+	logw(<第三层函数)
+	logw(1234132421341231)
+	logw(1233433333333333333)
+	logw(<第二层函数)
+	logw(asdfasdfasdfasd)
+	logw(asdfdffesssssssssssfea)
+	logw(<第一层函数)
+}
+
+void ClogTestDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	log.setIndentStrategy(false);
+	logw(>第一层函数)
+	logw(asdfasdfasdfasd)
+	logw(asdfdffesssssssssssfea)
+	logw(>第二层函数)
+	logw(1234132421341231)
+	logw(1233433333333333333)
+	logw(>第三层函数)
+	logw(撒旦法冲啊嫩撒撒扥发送的是)
+	logw(三扥三大撒扥份额分额阿萨德份额)
+	logw(<第三层函数)
+	logw(1234132421341231)
+	logw(1233433333333333333)
+	logw(<第二层函数)
+	logw(asdfasdfasdfasd)
+	logw(asdfdffesssssssssssfea)
+	logw(<第一层函数)
+}

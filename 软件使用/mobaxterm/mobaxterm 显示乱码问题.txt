@@ -1,0 +1,25 @@
+在Linux中执行 echo $LANG,  看到是 utf8编码
+在Mobaxterm中执行 echo $LANG , 看到是 GBK编码
+在Mobaxterm中设置 LANG=utf8编码， 乱码问题解决
+
+https://blog.csdn.net/fz13768884254/article/details/85158513
+
+在左侧的session列表，右键编辑/SSH/Terminal settiongs/Terminal funt settings/Charset UTF-8(Unicode)
+然后打开远程，输入 locale，会显示：
+LANG=zh_CN.UTF-8
+LANGUAGE=zh_CN:zh
+LC_CTYPE="zh_CN.UTF-8"
+LC_NUMERIC="zh_CN.UTF-8"
+LC_TIME="zh_CN.UTF-8"
+LC_COLLATE="zh_CN.UTF-8"
+LC_MONETARY="zh_CN.UTF-8"
+LC_MESSAGES="zh_CN.UTF-8"
+LC_PAPER="zh_CN.UTF-8"
+LC_NAME="zh_CN.UTF-8"
+LC_ADDRESS="zh_CN.UTF-8"
+LC_TELEPHONE="zh_CN.UTF-8"
+LC_MEASUREMENT="zh_CN.UTF-8"
+LC_IDENTIFICATION="zh_CN.UTF-8"
+LC_ALL=
+
+可以修改LANG的值，如果普通用户设置了不管用，就用管理员root设置

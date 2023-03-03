@@ -1,0 +1,28 @@
+http://blog.sina.com.cn/s/blog_6a820b3c0100lbyl.html
+_CrtMemBlockHeader (2010-08-24 08:40:18)
+  前两天写程序的时候，一不小心引发了Heap Corruption，但是只是找出了引起问题的代码，并写进行了修正，没有时间去深入的探索一番，在博客上写了篇随笔，有些朋友留了些评论，让我颇感惭愧，这样一个问题为何不去深入探索一番呢，不能让它继续作为一个模糊的概念存在我的脑子里了，故而今天研究了一下，有些收获，拿出来分享。
+
+        首先说明一下什么是Heap Corruption。当输入超出了预分配的空间大小，就会覆盖该空间之后的一段存储区域，这就叫Heap Corruption。这通常也被用作黑客攻击的一种手段，因为如果在该空间之后的那段存储区域如果是比较重要的数据，就可以利用Heap Corruption来把这些数据修改掉了，后果当然可想而知了。
+
+        在VC里面，用release模式编译运行程序的时候，堆分配（Heap allocation）的时候调用的是malloc，如果你要分配10byte的空间，那么就会只分配10byte空间，而用debug模式的时候，堆分配调用的是_malloc_dbg，如果你只要分配10byte的空间，那么它会分配出除了你要的10byte之外，还要多出约36byte空间，用于存储一些薄记信息，debug堆分配出来之后就会按顺序连成一个链。
+
+        那么我们再来看看薄记信息中有些什么。还是上面10byte分配空间的例子，那么分配出的10byte空间的前面会有一个32byte的附加信息，存储的是一个_CrtMemBlockHeader结构，可以在DBGINT.H中找到该结构的定义：
+
+typedef struct _CrtMemBlockHeader
+{
+// Pointer to the block allocated just before this one:
+   struct _CrtMemBlockHeader *pBlockHeaderNext;
+// Pointer to the block allocated just after this one:
+   struct _CrtMemBlockHeader *pBlockHeaderPrev;
+   char *szFileName;    // File name
+   int nLine;                  // Line number
+   size_t nDataSize;      // Size of user block
+   int nBlockUse;         // Type of block
+   long lRequest;          // Allocation number
+// Buffer just before (lower than) the user's memory:
+   unsigned char gap[nNoMansLandSize];
+} _CrtMemBlockHeader;
+
+  
+
+结构中的_CrtMemBlockHeader结构两个指针就不用解释是干嘛的了，szFileName是存储的发起分配操作的那行代码所在的文件的路径和名称，而nLine则是行号。nDataSize是请求分配的大小，我们的例子里当然就是10了，nBlockUse是类型，而lRequest是请求号。最后一项gap，又称NoMansLand，是4byte（nNoMansLandSize=4）大小的一段区域，注意看最后几行注释就明白了，在这个结构后面跟的是用户真正需要的10byte数据区域，而其后还跟了一个4byte的Gap，那么也就是说用户申请分配的区域是被一个头结构，和一个4byte的gap包起来的。在释放这10byte空间的时候，会检查这些信息。Gap被分配之后会被以0xFD填充。检查中如果gap中的值变化了，就会以Assert fail的方式报错。不过vc6中提示的比较难懂，DAMAGE ：after Normal block（#dd） at 0xhhhhhhhh，而vs2005里面会提示Heap Corruption Detected!而如果你是release版本，那么这个错误就会潜伏直到它的破坏力发生作用。也许其后的区域存储着一个除数，而你的heap corruption把它改写成了0，那么会怎么样呢？

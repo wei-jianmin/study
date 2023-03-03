@@ -1,0 +1,68 @@
+所谓原型模式(克隆模式)，就是让类提供clone()方法
+
+如果一个类的构造函数比较复杂或费时，可以考虑使用该模式，从而更高效的得到该对象的副本
+
+如：
+class Pen
+{
+public:
+    Pen()
+    {
+       通过读配置文件获取成员变量的默认值
+    }
+    virtual Pen* clone()
+    {
+        Pen* pen = new Pen;
+        pen.line_style = line_style;
+        pen.line_width = line_width;
+        pen.r = r;
+        pen.g = g;
+        pen.b = b;
+        return pen;
+    }
+    virtual void set_color(unsigned char r,unsigned char g,unsigned b);
+    virtual void set_line_style(int l);
+    virtual void set_line_width(int w);
+    virtual void draw_line(Point pt1,Point pt2);
+private:
+    int line_style,line_width;
+    unsigned char r,g,b;
+}
+
+如上的例子，如果使用拷贝构造函数，也可以完成同样的功能，
+但使用clone方法有时能做的更多，
+
+如 ： 
+class SnowBrush : public Pen { ... }
+class SolidBrush : public Pen { ... }
+class ArticBrush : public Pen { ... }
+假设这三个类都重载了Pen中的各个方法，包括clone方法
+另有：
+void draw_line20(const Pen const* pen)
+{
+    Pen *pen2 = pen->clone();
+    pen2->set_width(20);  //设置了pen2的宽度，而对外部没有影响
+    pen2->draw_line(Point(0,0),Point(15,15));
+    delete pen2;
+}
+draw_line20函数中实现的功能，如果换用拷贝构造函数，则不容易实现。
+
+总结而言，使用clone()的优势就是：
+即使只拿到该对象的指针或其父类的指针，也能方便生成该对象的副本。
+
+虽然引用也能实现类的多态，
+但它有许多限制，
+如 可以从子类的引用使用dynamic_cast<>()，得到父类的引用，但过来却不行，编译失败，
+但指针却没有这方面的限制。  
+----   注：这句时错的，引用和指针一样，既可以向父类转换，也可以像子类转换，
+       但是要注意，子类或父类必须是多态（有虚函数）才行，
+       如果是空的接口类，可以声明虚析构函数。
+再如，类的成员变量可以声明为类指针类型，但不适合声明为类引用类型
+诸如此类的原因，所以在将类对象作为函数参数传递的场合，
+有时需要将参数类型声明为类指针，而不是类引用。
+
+其实不管参数是类指针也好，还是类引用也好，
+有时需要在函数中得到该参数所代表的对象的副本，但又不能确定该对象的真正类型，
+此时，可以考虑用原型模式实现。
+
+注：用typeid().name()或decltype等方法不管用，得到的仍是基类类型。

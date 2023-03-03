@@ -1,0 +1,28 @@
+C运行时库：
+/MD			MSVCRT.LIB		多线程DLL的Release版本
+/MDd		MSVCRTD.LIB		多线程DLL的Debug版本
+/MT			LIBCMT.LIB		多线程静态链接的Release版本
+/MTd		LIBCMTD.LIB		多线程静态链接的Debug版本
+/clr		MSVCMRT.LIB		托管代码和非托管代码混合
+/clr:pure	MSVCURT.LIB		纯托管代码
+
+C++标准库：
+/MD			MSVCPRT.LIB		多线程DLL的Release版本
+/MDd		MSVCPRTD.LIB	多线程DLL的Debug版本
+/MT			LIBCPMT.LIB		多线程静态链接的Release版本
+/MTd		LIBCPMTD.LIB	多线程静态链接的Debug版本
+
+一个工程如果引用别的静态库，应保证引用的静态库的编译选项与当前工程一致
+否则会提示 error LINK2005:...已经在...中定义
+
+静态库命名时，推荐根据编译选项命名：
+mt表示多线程，sgd中的s表示runtime 是static，gd表示debug版(?__cdecl调用约定)
+如：libboost_filesystem-vc90-mt-sgd-1_61.lib(dll名—vs版本-编译选项-版本号.lib)
+
+一般输出的静态库包括如下可能：
+按编码分：		多字节的	宽字节的
+按生成方式分：	debug的		Release的
+按连接方式分：	静态链接的	动态连接的
+按调用约定分：	__cdecl的	__stdcall的
+？：			静态库		动态库的导出库
+按编译器分：	vs2005、08、10、13、16等

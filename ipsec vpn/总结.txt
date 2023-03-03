@@ -1,0 +1,84 @@
+问题：
+    charon、strongswan、netlink、pfkey、xfrm、ipsec、AH、ESP、SPI、SA、IKE、ISAKMP、CHILD_SA 之间的关系
+问题：
+    kernel-netlink/kernel-pfkey 用于与内核通信，应用在什么场合、完成什么功能？
+    
+知识点：  
+    strongswan、ipsec
+        strongswan是linux平台下的一款ipsec开源工具，和openswan一样都是基于freeswan项目
+        不过strongswan更侧重于ikev2协议的实现
+        ipsec是协议层面的，strongswan是代码实现层面的
+        
+    ipsec、ike、AH、ESP、SA
+        ipsec是协议簇，IPSec主要由以下协议组成：
+            一、认证头（AH），为IP数据报提供无连接数据完整性、消息认证以及防重放攻击保护；
+            二、封装安全载荷（ESP），提供机密性、数据源认证、无连接完整性、防重放和有限的传输流（traffic-flow）机密性；
+            三、安全关联（SA），提供算法和数据包，提供AH、ESP操作所需的参数。
+            四、密钥协议（IKE），提供对称密码的钥匙的生存和交换。
+        AH 和 ESP 用来对数据进行验证、加密
+            AH只能用来验证，没有加密的功能，而ESP同时具有加密和验证的功能
+            AH协议在每个数据包的标准IP报文头后面添加一个AH报文头，AH协议对报文的完整性校验的范围是整个IP报文。
+            图：file://imgs/ipsec vpn传输模式封装策略.png
+            图：file://imgs/ipsec vpn隧道模式封装策略.png
+        使用ike建立SA之后，通信双方才能按照约定的信息，进行AH/ESP通信
+    
+    ike、isakmp
+        IKE是一种混合型协议，由RFC2409定义，包含了3个不同协议的有关部分：ISAKMP、Oakley和SKEME
+        也就是说，IKE借鉴/引用的ISAKMP、Oakley和SKEME三种协议的部分内容，整合出了一个新的协议
+        ISAKMP定义了协商、建立、修改和删除SA的过程和包格式
+        ISAKMP没有定义任何密钥交换协议的细节，也没有定义任何具体的加密算法、密钥生成技术或者认证机制。
+        这个通用的框架是与密钥交换独立的，可以被不同的密钥交换协议使用。
+    
+    strongswan中有两类plugins。一类是libstrongswan的plugin，一类是libcharon的plugin
+    
+    ike、CHILD_SA
+        IKE协议的角度上，有两个SA，一个叫IKE_SA，一个叫CHILD_SA（即ipsec sa）
+        child sa 是 ikev2 中的概念，在 ikev1 中，它叫 ipsec sa
+        CHILD_SA在strongswan的框架里，主要存在于两个部分：IKE协商过程和IPsec隧道建立过程
+        key有两个key，IKE sa的key和child sa（ipsec sa）的key
+        
+    xfrm、strongswan
+        xfrm是IPsec协议的内核实现框架 ?
+        StrongSwan使用了Linux内核中的XFRM框架进行报文接收发送
+        XFRM框架支持网络命名空间，这使得一个或者一组进程拥有属于自己的网络栈
+        IPsec中有两个重要概念：安全关联(Security Association)和安全策略(Security Policy)，
+        这两类信息都需要存放在内核XFRM中（使用netns_xfrm这个结构来组织这些信息）
+        Linux内核2.5引入了XFRM框架，XFRM是一种协议族独立（即不与特定的协议挂钩）的基本框架，
+        这意味着对于IPv4和IPv6而言存在一个通用的部分，这部分位于net/xfrm之中
+        IPv4和IPv6拥有各自的ESP、AH和IPCOMP实现，
+        例如IPv4 ESP模块位于net/ipv4/esp4.c，IPv6 ESP模块在net/ipv6/esp6.c中
+        除此之外，IPv4和IPv6为支持XFRM基本框架还实现了一些与各自协议相关的一些模块，
+        比如net/ipv4/xfrm4_policy.c或者net/ipv6/xfrm6_policy.c。
+
+    netlink、pfkey、xfrm
+        xfrm是内核中的实现，用户程序要想和xfrm通信，需借助netlink框架或pfkey框架
+        strongswan是目前使用两种方式与内核进行ipsec的配置交互，分别为netlink和pfkey
+        如官方文档所述，netlink是strongswan默认启用的，变成stable的接口方式
+        strongswan通过netlink框架，与xfrm通信，完成添加sa、添加policy等操作（类似 ip xfrm 操作）
+        
+    kernel-netlink、kernel-pfkey、netlink、pfkey、xfrm
+        kernel-netlink：使用netlink接口与linux kernel的xfrm模块交互。目前输出稳定使用阶段，默认首选。
+        kernel-pfkey：使用pkkey接口与linux kernel的xfrm模块进行交互，高实验性阶段。  
+    
+    charon、strongswan
+        charon守护程序是从头开始构建的，用于实现 strongSwan 项目的 IKEv2 协议
+        strongswan有两类plugins，一类是libstrongswan的plugin，一类是libcharon的plugin
+        libstrongswan的plugin主要提供加密，认证，数据库相关的功能。
+        libcharon 带有大量非常专业的插件以满足特定需求，sa下发相关的plugin都在libcharon这一类里
+        如：kernel-libipsec、kernel-netlink、kernel-pfkey、kernel-iph、kernel-wfp
+        详细内容参： file://strongswan详解.py
+        https://docs.strongswan.org/docs/5.9/plugins/plugins.html
+        
+    SPI
+        安全关联的索引（security parameters index）
+        在进行ah/esp封装的时候，会携带spi
+        根据当前IP报文的目的地址、SPI值及协议这个三元组（即SAID）唯一确定一个安全关联
+        
+知识点：
+    strongswan的两个默认插件
+        socket-default ：该插件是IKE报文的socket backend。
+        kernel-netlink ：该插件是IPSEC 数通backend
+        
+问题：ike 和 AH、ESP 的关系
+解答：通过ikev1或ikev2，建立IKE SA和IPSEC SA / CHILD_SA
+      AH 和 ESP 通信的相关约定，会参考 IPSEC SA / CHILD_SA

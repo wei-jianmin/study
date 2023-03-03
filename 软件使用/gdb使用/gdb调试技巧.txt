@@ -1,0 +1,2 @@
+在 ~/.gdbinit中写 source gdb_print_helper.txt
+即可实现 标准库：std::string、std::list、std::map等对象值的打印，也支持打印QString

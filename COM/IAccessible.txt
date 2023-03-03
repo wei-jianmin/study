@@ -1,0 +1,34 @@
+IAccessible
+The IAccessible interface is the heart of Microsoft Active Accessibility. Applications implement this Component Object Model (COM) interface to represent their custom user interface elements, which can include their client area as accessible objects, if necessary. Client applications call IAccessible methods and properties to obtain information about an application's user interface and data.
+IAccessible接口是Microsoft Active Accessibility的核心。应用程序实现此组件对象模型（COM）接口以表明其自定义用户界面元素，如果需要，可将其客户区域包括为可访问对象。客户端应用程序调用IAccessible方法和属性来获取有关应用程序的用户界面和数据的信息。
+
+The documentation for the IAccessible interface uses the standard COM parameter attributes [in], [out], [in/out], and [out, retval] to identify the direction of the flow of information to and from a function and to specify whether the caller or callee is responsible for allocating memory. If you are unfamiliar with these attributes, see Definitions of Parameter Attributes before reading about the IAccessible interface.
+IAccessible接口的文档使用标准COM参数属性[in]，[out]，[in / out]和[out，retval]来标识信息流向和来自函数的方向，调用者或被调用者负责分配存储器。如果您不熟悉这些属性，请在阅读IAccessible接口之前参阅参数属性的定义。
+
+As with any COM interface, the system file initguid.h should be included in any source code that requires Active Accessibility.
+与任何COM接口一样，系统文件initguid.h应包含在需要Active Accessibility的任何源代码中。
+
+For more information about the IAccessible interface, see the following topics: 
+有关IAccessible接口的更多信息，请参阅下列主题：
+-------------------------------------------------------------------------------
+
+http://www.cnblogs.com/GnagWang/archive/2010/04/20/1716006.html
+MSAA简介
+MSAA的全称是Microsoft Active Accessibility。这是类似DCOM技术。技术模型是这样的，UI程序可以暴露出一个Interface，方便另一个程序对其进行控制。 MSAA技术的初衷是为了方便残疾人使用Windows 程序。比如盲人看不到窗口，但是盲人可以通过一个USB读屏器连接到电脑上， 读屏器通过UI程序暴露出来的这个Interface，就可以获取程序信息，通过盲文或者其它形式传递给盲人。
+MSAA提供了如此方便的功能， UI自动化测试自然可以借用这项技术。MSAA暴露出来的Interface叫做 IAccessible。测试程序和目标UI程序互操作流程如下：
+1. 测试程序调用Windows API： AccessibleObjectFromWindow，传入目标UI程序HWND。
+2. AccessibleObjectFromWindow函数向UI程序发送WM_GETOBJECT消息。
+3. UI程序创建实现了IAccessible的内部类，然后通过LResultFromObject API把IAccessible 接口返回给测试程序。
+4. 测试程序拿到IAccessible接口，开始调用IAccessible接口函数操作测试目标。
+IAccessible接口里面的几个关键函数是：
+IAccessible::get_accChild/ IAccessible::get_accParent通过这两个函数，调用者可以浏览目标程序的窗口关系树，定位到UI元素。
+IAccessible::accLocation/I Accessible::accHitTest读取和分辨目标元素的屏幕位置。
+IAccessible::accName/ I Accessible:: accSelect读取元素的名字，对UI元素进行指定的操作，比如选取Listbox里面的某一项等等。
+IAccessible::accValue 开发人员可以自定义value属性的实现。比如针对折线图控件，开发人员可以在accValue中返回折线的坐标数列。
+
+MSAA的理念 类似于test hook。 通过主动让UI程序暴露一个接口来让调用者控制。 在具体使用中，测试人员往往是结合MSAA和Win32 API操作，取长补短。
+一方面对于UI元素丰富的属性，比如style，钩选状态，是否最大化和模拟用户输入等，继续采用Win32 API。 
+另一方面用MSAA的优势来弥补Win32 API的一些不足，比如：
+由于MSAA有自己的get_accChild方法，使其控件树关系并不一定要和Win32 HWNDd关系对应一致。对于自绘窗口，虽然说只有一个HWND， 但是开发人员可以通过实现IAccessible接口来实现逻辑上的层次关系。比如Excel中就可以通过IAccessible把多个cell的子 IAccessible接口暴露给调用者。
+IAccessible的实现是由开发者提供， 开发者可以灵活地根据实际情况决定方法的实现。比如前面提到了折线图控件可以返回坐标数列。对于.NET WinForm， 微软在Framework中就提供了IAccessible的默认实现，这样在具体实现中，就可以处理.NET动态维护HWND的细节等
+

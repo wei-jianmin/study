@@ -1,0 +1,27 @@
+https://blog.csdn.net/qq_33795447/article/details/100936686
+https://www.cnblogs.com/ahuo/p/11286843.html
+    运行 rm config.cache来删除缓存的配置
+https://www.jianshu.com/p/bf9cd84b5309
+    error: 'mfhc1' was not declared in this scope
+https://blog.csdn.net/u010168781/article/details/78447116
+    error: GL/gl.h: 没有那个文件或目录
+https://blog.csdn.net/JC_gogo/article/details/108837184
+    qt不支持https/ssl,编译报错
+https://blog.csdn.net/u010168781/article/details/85632637
+    qt不支持https/ssl,编译报错
+https://blog.csdn.net/u013052326/article/details/111713932
+    qt不支持https/ssl,编译报错
+    Qt自从5.12.4版本所使用的OpenSSL库的版本是1.1.x，而在这之下的Qt使用的版本是1.0.2系列
+    最大的区别是什么？就是OpenSSL从1.0.2升级成了1.1.x之后，整个动态库的名字都发生了改变，
+    经典的libeay32.dll和ssleay32.dll摇身一变改名libcrypto-1_1.dll 和libssl-1_1.dll。
+    其次就算是Qt 5.12.4以下支持的1.0.2系列库也并不相同，因为1.0.2包含从a~u这么多版本，
+    如果你带入错误的1.0.2库，轻则导致https请求不同，重则程序直接崩溃（亲身经历）
+https://blog.csdn.net/androiddeveloper_lee/article/details/32136261
+    make j* make j4 make j8 区别
+https://blog.csdn.net/zyex1108/article/details/71487809
+    QT All Modules QT所有模块
+qt编译后，程序界面上不能显示文字
+    没安装qt文字库的问题 ，./configure的时候有相关选项控制
+    也可以通过指定使用第三方字体文件来解决此问题
+
+

@@ -1,0 +1,50 @@
+LoadFile:
+把文件读到buf中
+处理，将buf中的#13#10（回车换行）都替换成#10
+LoadFile的第二个参数指定encoding，默认为TIXML_ENCODING_UNKNOWN
+然后对buf进行Parse，返回的是具体类型的节点对象   （1）
+然后再调用返回节点对象的parse（2）
+（1）
+检查buf的前三个字符中是否有"？",如果有，则：encoding = TIXML_ENCODING_UTF8;
+	useMicrosoftBOM = true;
+略过buf前面的空白
+验证buf的第一个非空字符是否为"<",如果不是，则产生错误信息，函数返回0
+xmlHeader = { "<?xml" };
+
+commentHeader = { "<!--" };
+cdataHeader = { "<![CDATA[" };
+dtdHeader = { "<!" };
+
+依次看buf属于以上哪种，如果属于以上任何一种，则
+returnNode = new TiXmlDeclaration()
+returnNode = new TiXmlComment()
+returnNode = new TiXmlText("")
+returnNode = new TiXmlUnknown()
+如果都不是，但buf的第二个字符是否是字符（值<127）或下划线,如果是，则
+returnNode = TiXmlText("")
+如果以上都不是，则
+returnNode = new TiXmlUnknown();
+然后设置returnNode的parent为this（TiXmlDocument对象自身），
+然后返回returnNode
+==================================
+总结：
+LoadFile应该是根据文档内容，通过分析后，在内存中创建好xml模型，创建好的模型是一个由不同节点类型对象组成的关系树
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

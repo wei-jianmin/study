@@ -1,0 +1,56 @@
+枚举类型的定义
+enum abc { a=1,b=3,c=5 };
+
+枚举变量在编译时完成转换(在编译后，就把枚举值转为具体值)，同时会检查值类型，把一个枚举值赋给另一个枚举变量，需要进行强制转换
+
+枚举类型在类中定义，则使用枚举值时，要在前面加上类名，如:
+class A
+{
+public:
+	enum x
+	{
+		x1=1,
+		x2=3,
+		x3=5,
+		x4=7,
+		x5=9
+	};
+	void func(enum x v);
+};
+
+void A::func(enum x v)
+{
+	printf("%d\n",v);
+}
+
+class B
+{
+public:
+	enum x
+	{
+		x1=2,
+		x2=4,
+		x3=6,
+		x4=8,
+		x5=10
+	};
+	void func(enum x v);
+};
+
+void B::func(enum x v)
+{
+	printf("%d\n",v);
+}
+
+int main()
+{
+	A a;
+	B b;
+	A::x ax = A::x1;
+	B::x bx = B::x1;
+
+	a.func(ax);
+	b.func(bx);
+	getchar();
+	return 0;
+}
