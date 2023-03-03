@@ -349,8 +349,10 @@ log命令
        git remote add 只是修改了local配置文件，为git远程仓库的url地址起了个短名而已
        可使用 git remote rename <oldshortname> <newshortname> 重命名该短名
     4. 推送到远程仓库
-       git push <remote> <branch>  推送到远程仓库
+       git push -u <remote> <branch>  推送到远程仓库
            remote 可为短名，也可为git远程仓库的url地址
+           加了参数-u后，以后即可直接用git push代替git push origin master
+           意思就是我们不用在后面加 origin + 要提交的分支名 ，直接 git push 即可
     5. 获取远程仓库的更新
        git fetch + git merge
            git fetch <remote> <branch>
