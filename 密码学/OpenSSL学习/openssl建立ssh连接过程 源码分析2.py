@@ -51,10 +51,24 @@ pre_work(SSL *s, WORK_STATE wst) &<pre_work1>
             return WORK_FINISHED_CONTINUE
 
 construct_message(SSL *s) &<ossl_statem_client_construct_message>
-
+    switch (st->hand_state)
+        case TLS_ST_CW_CLNT_HELLO:
+            return tls_construct_client_hello(s);  @tls_construct_client_hello
     
 transition &<transition1>           
     switch (st->hand_state)
         case TLS_ST_BEFORE:
             st->hand_state = TLS_ST_CW_CLNT_HELLO;
             return WRITE_TRAN_CONTINUE;
+            
+tls_construct_client_hello(SSL *s) &<tls_construct_client_hello>
+    ssl_set_client_hello_version
+        SSL_SESSION *sess = s->session
+        s->client_version = s->version;
+    ssl_get_new_session
+        s->session = SSL_SESSION_new
+        设置 s->session 的成员初始值
+    ssl_fill_hello_random
+        为 s->s3->client_random 设置随机值
+    ssl_handshake_start
+        

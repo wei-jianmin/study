@@ -31,6 +31,7 @@ Openssl为什么需要状态机
         控制权转交给消息流状态机，由消息流状态机决定下个操作。
         SUB_STATE_END_HANDSHAKE则向消息流状态机表示握手已经完满成功。
         
+        写状态机的控制条件：
         WRITE_STATE_TRANSITION决定ssl握手的下一步状态。
         WRITE_STATE_PRE_WORK和WRITE_STATE_POST_WORK
         则会根据ssl握手的当前状态，进行相对应的操作。
@@ -57,6 +58,9 @@ Openssl为什么需要状态机
         │     WRITE_STATE_POST_WORK
         │            │
         └────────────┘
+        WRITE_STATE_PRE_WORK ： 完成数据发送前的握手功能
+        WRITE_STATE_SEND ： 完成数据的发送功能
+        WRITE_STATE_POST_WORK ： 删除数据发送后的工作
         
     2.3、读状态机
         READ_STATE_HEADER ←──┐←─────────────┐
