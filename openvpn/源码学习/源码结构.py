@@ -1,4 +1,19 @@
+相关文件：
+    file://add_option函数.py
+    file://openvpn_help.txt
 wmain
+    /*
+     * 该函数包含两个外层循环，其结构如下
+     *     每个进程一次的初始化
+     *     外层循环（启动时或SIGHUP后执行） //file://SIGHUP信号.py
+     *         level 1 初始化
+     *         内层循环（启动时或SIGUSR1后执行） //file://SIGUSR1信号.py
+     *             基于客户端模式/服务端模式，调用事件循环函数
+     *                 tunnel_point_to_point()  //点对点模式
+     *                 tunnel_server()   //客户端-服务器模式
+     *         level 1 清理
+     *     每进程一次的清理
+     */
     openvpn_main
         struct context c;
         init_static
@@ -45,7 +60,7 @@ wmain
             list链表占用的内存，通过gc管理并释放
         Windows下，set_win_sys_path_via_env(c.es)
             获取 "SystemRoot" 环境变量的值，存给 c.es
-        init_management
+        init_management  &<init_management>
             init.c中的方法
                 management = management_init();  management 为全局变量
                     struct management *man;
@@ -483,11 +498,12 @@ wmain
                 否则
                     输出错误提示，return false
         如果上面函数执行成功，程序退出
-        options_postprocess(&c.options);
-            options_postprocess_mutate(options);
+        options_postprocess(&c.options);  //对选项的后处理
+            options_postprocess_mutate(options);  //处理配置变动
                 helper_client_server(o);
                     作为客户端/服务端时，检查配置项配置是否正确，并根据已有配置项进行处理
                     if(dev == DEV_TYPE_TUN)  //根据当前配置，dev==DEV_TYPE_TUN
+                        //相关参考：file://openvpn网络拓扑.py
                         if (topology == TOP_NET30 || topology == TOP_P2P) //根据当前配置，topology==TOP_NET30
                             helper_add_route(o->server_network, o->server_netmask, o)
                             push_option(o, print_opt_route(o->server_network + 1, 0, &o->gc), M_USAGE);
@@ -506,6 +522,8 @@ wmain
                         o->sockflags |= SF_TCP_NODELAY;
                         if (o->mode == MODE_SERVER)
                             push "socket-flags TCP_NODELAY"
+                                TCP_NODELAY选项是用来控制是否开启Nagle算法，
+                                该算法是为了提高较慢的广域网传输效率
                 options_postprocess_cipher(o);
                     if (!o->pull && !(o->mode == MODE_SERVER))  //o->pull:控制从对端接收配置选项，根据当前配置，该值为false
                         当为非SERVER时，才会执行该条件下面的语句

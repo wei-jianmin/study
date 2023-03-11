@@ -128,6 +128,7 @@ Tunnel Options:
 --keepalive n m : Helper option for setting timeouts in server mode.  Send
                   ping once every n seconds, restart if ping not received
                   for m seconds.
+                  每10秒ping一次，120秒后没收到ping就说明对方挂了
 --inactive n [bytes] : Exit after n seconds of activity on tun/tap device
                   produces a combined in/out byte count < bytes.
 --ping-exit n   : Exit if n seconds pass without reception of remote ping.
@@ -138,6 +139,7 @@ Tunnel Options:
 --fast-io       : (experimental) Optimize TUN/TAP/UDP writes.
 --remap-usr1 s  : On SIGUSR1 signals, remap signal (s='SIGHUP' or 'SIGTERM').
 --persist-tun   : Keep tun/tap device open across SIGUSR1 or --ping-restart.
+                  通过ping得知超时时，当重启vpn后将使用同一个密钥文件以及保持tun连接状态
 --persist-remote-ip : Keep remote IP address across SIGUSR1 or --ping-restart.
 --persist-local-ip  : Keep local IP address across SIGUSR1 or --ping-restart.
 --persist-key   : Don't re-read key files across SIGUSR1 or --ping-restart.
@@ -206,15 +208,23 @@ Tunnel Options:
                        and received from TCP/UDP (caps) or tun/tap (lc)
                 : 6 to 11 -- debug messages of increasing verbosity
 --mute n        : Log at most n consecutive messages in the same category.
+                  沉默的重复信息。最多20条相同消息类别的连续消息将输出到日志
 --status file n : Write operational status to file every n seconds.
+                  在文件中输出当前的连接信息，每分钟截断并重写一次该文件
 --status-version [n] : Choose the status file format version number.
                   Currently, n can be 1, 2, or 3 (default=1).
 --disable-occ   : Disable options consistency check between peers.
 --gremlin mask  : Special stress testing mode (for debugging only).
 --compress alg  : Use compression algorithm alg
+                  openvpn 2.4版本的vpn才能设置此选项。
+                  表示服务端启用lz4的压缩功能，传输数据给客户端时会压缩数据包。
+                  Push后在客户端也配置启用lz4的压缩功能，向服务端发数据时也会压缩。
+                  如果是2.4版本以下的老版本，则使用用comp-lzo指令
 --allow-compression: Specify whether compression should be allowed
 --comp-lzo      : Use LZO compression -- may add up to 1 byte per
                   packet for incompressible data.
+                  启用lzo数据压缩格式。此指令用于低于2.4版本的老版本。
+                  且如果服务端配置了该指令，客户端也必须要配置  
 --comp-noadapt  : Don't use adaptive compression when --comp-lzo
                   is specified.
 --management ip port [pass] : Enable a TCP server on ip:port to handle
@@ -247,11 +257,21 @@ Tunnel Options:
 
 Multi-Client Server options (when --mode server is used):
 --server network netmask : Helper option to easily configure server mode.
+                           vpn服务端为自己和客户端分配IP的地址池。
+                           服务端自己获取网段的第一个地址(此处为10.8.0.1)，
+                           后为客户端分配其他的可用地址。
+                           以后客户端就可以和10.8.0.1进行通信。
+                           注意：该网段地址池不要和已有网段冲突或重复。
+                           其实一般来说是不用改的。
+                           除非当前内网使用了10.8.0.0/24的网段。
 --server-ipv6 network/bits : Configure IPv6 server mode.
 --server-bridge [IP netmask pool-start-IP pool-end-IP] : Helper option to
                     easily configure ethernet bridging server mode.
+                    使用tap模式的时候考虑此选项。
 --push "option" : Push a config file option back to the peer for remote
                   execution.  Peer must specify --pull in its config file.
+                  vpn服务端向客户端推送vpn服务端内网网段的路由配置，
+                  以便让客户端能够找到服务端内网。多条路由就写多个Push指令
 --push-reset    : Don't inherit global push list for specific
                   client instance.
 --ifconfig-pool start-IP end-IP [netmask] : Set aside a pool of subnets
@@ -259,6 +279,9 @@ Multi-Client Server options (when --mode server is used):
 --ifconfig-pool-persist file [seconds] : Persist/unpersist ifconfig-pool
                   data to file, at seconds intervals (default=600).
                   If seconds=0, file will be treated as read-only.
+                  使用一个文件记录已分配虚拟IP的客户端和虚拟IP的对应关系，
+                  以后openvpn重启时，将可以按照此文件继续为对应的客户端分配
+                  此前相同的IP。也就是自动续借IP的意思。
 --ifconfig-ipv6-pool base-IP/bits : set aside an IPv6 network block
                   to be dynamically allocated to connecting clients.
 --ifconfig-push local remote-netmask : Push an ifconfig option to remote,
@@ -297,6 +320,8 @@ Multi-Client Server options (when --mode server is used):
 --client-to-client : Internally route client-to-client traffic.
 --duplicate-cn  : Allow multiple clients with the same common name to
                   concurrently connect.
+                  允许多个客户端使用同一个VPN帐号连接服务端
+                  默认是注释的，不支持多个客户登录一个账号
 --client-connect cmd : Run command cmd on client connection.
 --client-disconnect cmd : Run command cmd on client disconnection.
 --client-config-dir dir : Directory for custom client config files.
@@ -311,6 +336,7 @@ Multi-Client Server options (when --mode server is used):
 --learn-address cmd : Run command cmd to validate client virtual addresses.
 --connect-freq n s : Allow a maximum of n new connections per s seconds.
 --max-clients n : Allow a maximum of n simultaneously connected clients.
+                  并发客户端的连接数
 --max-routes-per-client n : Allow a maximum of n internal routes per client.
 --stale-routes-check n [t] : Remove routes with a last activity timestamp
                              older than n seconds. Run this check every t
@@ -318,7 +344,8 @@ Multi-Client Server options (when --mode server is used):
 --explicit-exit-notify [n] : In UDP server mode send [RESTART] command on exit/restart to connected
                              clients. n = 1 - reconnect to same server,
                              2 - advance to next server, default=1.
-
+                             当服务器重新启动时，通知客户端，以便它可以自动重新连接。
+                             仅在UDP协议是可用
 Client options (when connecting to a multi-client server):
 --client         : Helper option to easily configure client mode.
 --auth-user-pass [up] : Authenticate with server using username/password.
@@ -361,6 +388,9 @@ Data Channel Encryption Options (must be compatible between peers):
 --cipher alg    : Encrypt packets with cipher algorithm alg
                   (default=(null)).
                   Set alg=none to disable encryption.
+                  择一个密码。如果在服务器上使用了cipher选项，
+                  那么您也必须在这里指定它。
+                  注意，v2.4客户端/服务器将在TLS模式下自动协商AES-256-GCM。
 --data-ciphers list : List of ciphers that are allowed to be negotiated.
 --ncp-disable   : (DEPRECATED) Disable cipher negotiation.
 --prng alg [nsl] : For PRNG, use digest algorithm alg, and
@@ -394,6 +424,7 @@ TLS Key Negotiation Options:
                   by a Certificate Authority in --ca file.
 --extra-certs file : one or more PEM certs that complete the cert chain.
 --key file      : Local private key in .pem format.
+ca证书、服务端证书、服务端密钥和密钥交换文件,如果与配置文件在同一目录，可不写绝对路径
 --tls-version-min <version> ['or-highest'] : sets the minimum TLS version we
     will accept from the peer.  If version is unrecognized and 'or-highest'
     is specified, require max TLS version supported by SSL implementation.
@@ -428,6 +459,13 @@ TLS Key Negotiation Options:
                   f (required) is a shared-secret key file.
                   The optional d parameter controls key directionality,
                   see --secret option for more info.
+                  加强认证方式，防攻击。
+                  如果配置文件中启用此项(默认是启用的)
+                  需要执行openvpn --genkey --secret ta.key，
+                  并把ta.key放到/etc/openvpn/server目录
+                  服务端第二个参数为0；
+                  同时客户端也要有此文件，
+                  且client.conf中此指令的第二个参数需要为1。
 --tls-crypt key : Add an additional layer of authenticated encryption on top
                   of the TLS control channel to hide the TLS certificate,
                   provide basic post-quantum security and protect against

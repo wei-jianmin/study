@@ -1,6 +1,5 @@
-file://D:\workspace\projects\baseroot\base\depts\jc1\private\zhouping
-         \学习笔记\密码行业规范\已整理\GMT 0024-2014 SSL VPN 技术规范.PDF
-         
+file://../../引用文件/GM T 0024-2014 SSL VPN 技术规范.PDF       
+
 从证书请求协议的结构来看，
 该协议区别于rfc5246(tslv2)，
 与rfc4346(tlsv1)或rfc8446(tslv3)一致
@@ -200,7 +199,15 @@ file://D:\workspace\projects\baseroot\base\depts\jc1\private\zhouping
             } Finished;
     
     
-    
+记录层协议
+    分段
+        struct {
+            ContentType type;
+            ProtocolVersion version;
+            uint16 length;
+            opaque fragment[TLSPlaintext.length];
+        }
+
 相关参考：
     SSL通信过程的官方规范是 RFC5246，其中文翻译参看如下贴：
     https://blog.csdn.net/PiPiQ_Blog/article/details/117910810

@@ -49,7 +49,7 @@ struct context_0
 struct context_1
 {
     struct link_socket_addr link_socket_addr;    /** 本地或外网地址 */
-    struct key_schedule ks;                     //隧道的会话密钥
+    struct key_schedule ks;                     //密钥协商：隧道的会话密钥
     struct cached_dns_entry *dns_cache;         //预处理的或缓存的host names
     struct packet_id_persist pid_persist;       //将加密序列号保存到文件/从文件中获取
     struct tuntap *tuntap;                      /** tun/tap虚拟网络接口  */
