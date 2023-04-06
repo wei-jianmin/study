@@ -22,6 +22,7 @@ int tun_alloc(int flags)
     memset(&ifr, 0, sizeof(ifr));
     ifr.ifr_flags = flags;
 
+    //set interface flags
     if ((err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0) {
         close(fd);
         return err;

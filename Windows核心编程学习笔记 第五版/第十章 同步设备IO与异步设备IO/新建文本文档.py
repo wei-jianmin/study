@@ -188,7 +188,7 @@ CreateFile函数详解
         struct OVERLAPPED ：
             [out] DWORD Internal;           //返回错误码
             [out] DWORD InternalHigh;       //返回读写了多少字节
-            [in]  DWORD Offset;             //异步读写位置（异步读写使用改指针，而忽略文件指针）
+            [in]  DWORD Offset;             //异步读写位置（异步读写使用该指针，而忽略文件指针）
             [in]  DWORD OffsetHigh;         //异步读写位置（对于非文件设备，应该将这两个值设为0）
             [in]  HANDLE hEvent;
         当读写函数返回时，会先将Internal的值设为STATUS_PENDING（pend：悬挂、等候的意思）。

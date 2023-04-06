@@ -264,6 +264,7 @@ Multi-Client Server options (when --mode server is used):
                            注意：该网段地址池不要和已有网段冲突或重复。
                            其实一般来说是不用改的。
                            除非当前内网使用了10.8.0.0/24的网段。
+                           如果有此选项，则认为是服务端，否则认为是客户端
 --server-ipv6 network/bits : Configure IPv6 server mode.
 --server-bridge [IP netmask pool-start-IP pool-end-IP] : Helper option to
                     easily configure ethernet bridging server mode.

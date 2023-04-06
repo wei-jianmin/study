@@ -1,9 +1,11 @@
 https://blog.csdn.net/WoTrusCA/article/details/109839209
 
-自SSL3以来，协议核心并没有大幅改变
-    规范：rcf 6101
+SSL（Secure Socket Layer，SSL）
+    SSL是Netscape于1994年开发的，后来成为了世界上最著名的web安全机制，所有主要的浏览器都支持SSL协议
+    目前有三个版本：2、3、3.1，最常用的是第3版，是1995年发布的。
+    自SSL3以来，协议核心并没有大幅改变  规范：rcf 6101
     
-TLS1.0为了迎合使用另一个名称进行了有限的改变
+TLS1.0为了迎合使用另一个名称进行了有限的改变（Transport Layer Security）
     1）这是定义基于标准HMAC的PRF的第一个版本。它将PRF以HMAC-MD5和HMAC-SHA的结合(XOR)实现；
     2）生成主密钥使用PRF，而不是定制的构造方法；
     3）verify_data的值基于PRF，而不是定制的构造方法；
@@ -12,7 +14,7 @@ TLS1.0为了迎合使用另一个名称进行了有限的改变
     6）去掉了 FORTEZZA套件。
     规范：rfc 2246
     
-LS1.1的首要目标是为了解决几个安全性问题
+TLS1.1的首要目标是为了解决几个安全性问题
     1）CBC加密使用包含在每个TLS记录中的显式Ⅳ。这弥补了Ⅳ可预测的弱点，不然这个弱点后面会被BEAST攻击所利用；
     2）为了抵抗填充攻击，要求实现使用bad_record_mac警报作为填充问题的响应。不再赞成使用decryption_failed警报。
     3）这个版本引用包含了TLS扩展(RFC3546)。
@@ -39,3 +41,27 @@ TLS1.3是目前最新协议，有望成为有史以来最安全版本。
     5）不再允许对加密报文进行压缩、不再允许双方发起重协商；
     6）DSA证书不再允许在TLS 1.3中使用
     规范：rfc 8446
+
+以上是协议，下面是库实现
+
+openssl
+    Versions 1.1.0, 1.0.1, 1.0.0 and 0.9.8 不再被支持。
+    Version 1.0.2 不再被支持。 提供收费的扩展支持，提供安全补丁。
+    Version 1.1.1 被支持到 2023-09-11 (LTS)。
+    OpenSSL 最新的稳定版本是 3.0.0。
+    
+gmssl    
+    GmSSL (http://gmssl.org) 是支持国密算法和标准的OpenSSL分支，
+    是一个提供了丰富密码学功能和安全功能的开源软件包。
+    在保持OpenSSL原有功能并实现和OpenSSL API兼容的基础上，
+    GmSSL新增多种密码算法、标准和协议
+    
+OpenSSL已经支持SM了：
+    SM2椭圆曲线: openssl/openssl#4793SM3
+    哈希摘要: openssl/openssl#4616SM4
+    对称加密: openssl/openssl#4552
+    OpenSSL 1.1.1 pre1：支持SM3、SM4;
+    OpenSSL 1.1.1 pre3: 支持SM2、SM3、SM4。
+    
+    
+gmssl3.1    
