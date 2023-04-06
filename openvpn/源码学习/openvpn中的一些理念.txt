@@ -1,0 +1,5 @@
+一个活动的openvpn拥有3(TM_SIZE)个tls_session对象：
+    第一个(TM_ACTIVE)是当前的，tls认证过的
+    第二个(TM_UNTRUSTED)拥有处理新客户端的连接请求，如果认证成功，则篡夺当前session
+    第三个(TM_LAME_DUCK)是一个仓库：主session因为错误而重置，而Lame duck keys还没过期
+        Lame duck keys用于保持在保持key被重新协商时，数据通道连接的持续性

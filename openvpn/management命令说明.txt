@@ -1,0 +1,277 @@
+管理协议是明文的，所以建议，要么使用linux的域套接字，要么使用127.0.0.1，要是使用本地vpn地址
+
+配置文件中使用 --management 启用管理接口
+
+你可以Telnet到vpn 
+
+命令： bytecount n
+    bytecount命令用于请求实时通知OpenVPN带宽利用率。后面的参数n，指定每n秒自动通知
+    vpn作为客户端时：
+        收到的信息格式： >BYTECOUNT:{BYTES_IN},{BYTES_OUT}
+        BYTES_IN ： 客户端从 server 接收的字节数
+        BYTES_OUT ： 客户端发给 server 的字节数
+    vpn作为服务端时：
+        收到的信息格式：>BYTECOUNT_CLI:{CID},{BYTES_IN},{BYTES_OUT}
+        CID ： 客户端的id
+        BYTES_IN ： 从客户端接收到的字节数
+        BYTES_OUT ： 发给客户端的字节数
+命令： echo
+    echo on ： 打开 echo 消息的实时通知
+    echo off ： 关闭 echo 消息的实时通知
+    echo all ：打印 echo 历史记录
+    echo on all : 打开 echo 消息的实时通知，并显示之前的历史记录
+    例如：
+        服务端配置了命令：push "echo forget-passwords"
+        客户端通过命令：echo all，将收到如下信息：
+        1101519562,forget-passwords
+        END
+        因为 echo all 允许收到的信息是多行的，所以总以 END 结尾
+        历史消息最大记录100行
+        而实时消息是单行的，如：
+        >ECHO:1101519562,forget-passwords
+    本质上，通过echo命令，允许vpn服务器给客户端传信息，继而再传给管理接口
+    前面的那个大数，是一个 unix date/time
+命令： exit, quit
+    关闭管理会话
+    当前，vpn只支持同时一个会话的连接
+命令： hold   
+    操作hold标记，或释放hold状态的vpn
+    如果在初始启动或重启时，设置了hold标记，则OpenVPN将在初始化之前休眠隧道
+    （知道管理接口收到 "hold release" 命令）
+    --management-hold 命令可用于在启动vpn时，设置hold标记
+    hold标记是保持的，重启vpn也不会自动改变该标记
+    vpn将会发送一个 real-time 通知给管理接口客户端，告知自己处于保持状态：
+    >HOLD:Waiting for hold release:10
+    后面的10，表明无果没有UI，vpn将等待多久
+    发送命令举例：
+      hold         -- 显示 hold 标记, 0=off, 1=on.
+      hold on      -- 打开 hold 标记，之后重启时，将会 hold.
+      hold off     -- 关闭 hold 标记，之后重启时，将不会 hold.
+      hold release -- 离开 hold 状态并启动 vpn, 但不改变 hol d标记的值
+命令： kill
+    用于server关闭特定的客户端
+    例：
+    kill Test-Client  关闭具有 common name 为 “Test-Client” 的客户端
+    kill 1.2.3.4:4000  通过 ip: 端口，关闭客户端
+命令： log
+    显示 vpn 日志文件内容。之后最近的 n 行日志被缓存
+    这里的 n 的值，通过 -management-log-cache 指令控制
+    举例：
+      log on     -- 启动实时日志
+      log off    -- 关闭实时日志.
+      log all    -- 显示缓存的日志历史
+      log on all -- 显示缓存的日志历史，并启动实时日志
+      log 20     -- 显示最近的20条历史日志
+    实时日志返回的信息格式：
+      >LOG: uinx时间, 0或多个的标志，消息文本
+      标志：
+        I ： 信息
+        F ： 致命错误
+        N ： 非致命错误
+        W ： 警告
+        D ： 调试信息
+命令： mute
+    改变 vpn 的 --mute 参数，该参数用户静默重复消息
+    举例：
+    mute 40 ： 设置mute为40
+    mute ： 显示当前的mute设置
+命令： net
+    只在Windows下有用
+    等同于vpn的 --show-net 命令
+    输出包括系统网络适配器列表和路由表信息（基于win api的返回值）
+命令： pid
+    显示当前vpn进程的pid
+命令： password and username
+    用于传递 passwords 给vpn
+    如果vpn使用 --management-query-passwords 启动
+    他将查询管理接口，以获取 rsa 私钥密码 和 --auth-user-pass 用户名/密码
+    当vpn需要从管理接口获取密码，他将产生： >PASSWORD: 实时消息
+    例：
+    >PASSWORD:Need 'Private Key' password  
+        表明vpn需要私钥密码
+    >PASSWORD:Need 'Auth' username/password
+        表明需要用户名，密码，此时管理接口客户端应该发送：
+        username "Auth" foo
+        password "Auth" bar
+        用户名/密码可以在引号中，并支持\转义符
+    >PASSWORD:Verification Failed: 'Private Key'
+        表明私钥密码错误，vpn退出
+    >PASSWORD:Verification Failed: 'Auth'
+        表明用户名密码错误
+        如果vpn使用了 --auth-retry none 配置，则将导致vpn退出
+    >PASSWORD:Verification Failed: 'custom server-generated string'
+        用户名密码错误
+        后面的信息
+    。。。
+命令： forget-passwords
+    让守护程序忘记会话期间的密码
+命令： signal
+    发送一个信号给vpn守护程序
+    信号可以是：SIGHUP, SIGTERM, SIGUSR1, or SIGUSR2.
+    例：
+    signal SIGUSR1 -- 发送 SIGUSR1 信号给守护程序
+命令； state
+    显示当前vpn状态，显示状态历史，或允许状态转换的实时通知
+    vpn状态包括：
+        CONNECTING    -- OpenVPN's 初始化状态
+        WAIT          -- (Client only) 等待服务端的初始回应
+        AUTH          -- (Client only) 使用服务器进行身份验证。
+        GET_CONFIG    -- (Client only) 正从服务端下载配置信息
+        ASSIGN_IP     -- Assigning IP address to virtual network
+                         interface.
+        ADD_ROUTES    -- 给系统添加路由.
+        CONNECTED     -- 初始化序列完成.
+        RECONNECTING  -- 发生重启
+        EXITING       -- 合理的重启
+        RESOLVE       -- (Client only) DNS lookup
+        TCP_CONNECT   -- (Client only) Connecting to TCP server
+        AUTH_PENDING  -- (Client only) Authentication pending
+    命令举例：
+      state        -- 打印当前vpn状态
+      state on     -- 开启状态改变实时通知
+      state off    -- 关闭状态改变实时通知
+      state all    -- 打印当前状态历史
+      state 3      -- 打印最近的3条状态转变
+      state on all -- 显示状态历史并启动状态改变实时通知
+    返回的信息包括9个部分，用逗号分隔：
+      (1) date/time,
+      (2) the state name
+      (3) 可选的描述信息 (通常在 RECONNECTING 和 EXITING 状态时显示断开连接原因),
+      (4) 可选的 TUN/TAP 本地 IPv4 地址
+      (5) 可选的远端服务器地址,
+      (6) 可选的远端服务器端口,
+      (7) 可选的本地地址,
+      (8) 可选的本地端口
+      (9) 可选的 TUN/TAP 本地 IPv6 地址.   
+      注：
+      (5) - (8) 用于 CONNECTED 状态时显示
+      (4) 和 (9) 用于 ASSIGN_IP 和 CONNECTED 状态时显示
+      (5) 在 vpn 2.1 之后开始支持
+      (6) - (9) 在 vpn 2.4 之后开始支持
+      对于 AUTH_PENDING， 如果 (3) 存在，将会被视作  "timeout number"，
+      这个 number 是认证超时秒数（无符号整数）
+    实时的 state 通知消息，将有一个 ">STATE:" 前缀
+命令： status
+    当前守护程序的状态信息，通 vpn 的 --status 指令
+    例：
+    status   -- 使用默认格式显示状态信息
+    status 3 -- 使用 --status-version 3 格式显示状态信息
+命令： username
+    参上面的的 password 命令
+命令： verb
+    改变vpn的 --verb 参数值，该参数控制输出详细程序，从0到15
+    举例：
+    verb 4  -- 改变 verb 参数值为 4
+    verb    -- 显示当前 verb 值
+命令： auth-retry
+    设置 --auth-retry， 以控制vpn对用户名密码错误的响应
+    举例：
+    auth-retry interact   ： 用户名密码错误时，不要退出，而是查询新的输入并重试
+命令： needok
+    需要 vpn 2.1 版本或更高
+    用户回应 ">NEED-OK" 实时消息
+    通常用于vpn阻塞等待一个特定的用户动作
+    例如：
+        >NEED-OK:Need 'token-insertion-request' confirmation MSG:Please insert your cryptographic token
+        表明vpn需要用户插入一个密码令牌
+        上句中，MGS之后的信息，可以给gui终端在弹框中显示提示信息用
+        当用户点了确认或取消按钮后，管理接口回复：
+        needok token-insertion-request ok/cancel
+命令： needstr 
+    用户回应一个 ">NEED-STR" 实时消息，通常用于 vpn 阻塞并等待特定的用户输入
+    例：
+        >NEED-STR:Need 'name' input MSG:Please specify your name
+        表明vpn需要用户指定一些输入，
+        如果是gui，可弹出一个输入框，提示信息显示上句 MSG 之后的内容
+        之后管理客户端可回复如下消息：
+        needstr name "John"
+命令： client-auth
+    授权>CLIENT:CONNECT" or ">CLIENT:REAUTH" 请求，并在后续文本块中指定"client-connect"配置指令。
+    vpn需要以 --management-client-auth 命令启动，从而要求管理接口验证其客户端连接
+    发送的命令格式：
+      client-auth {CID} {KID}
+      line_1
+      line_2
+      ...
+      line_n
+      END
+      CID,KID -- client ID and Key ID  
+      line_1 to line_n  "客户端连接",配置文本块,由client-connect脚本返回
+      该文本块可能是空的，直接带 END 结束标记
+      一个 client-connect 配置文本块，包含将要应用到新连接的客户实例的vpn指令
+    注： vpn配置项： --client-connect cmd  //在vpn连接时，执行脚本
+命令： client-auth-nt
+    认证一个 ">CLIENT:CONNECT" or ">CLIENT:REAUTH" 请求，而不用描述一个 client-connect 配置文本
+    要求vpn服务器使用 --management-client-auth 启动
+    命令： client-auth-nt {CID} {KID}
+命令： client-pending-auth
+    vpn 2.5 版本或更高
+    指示OpenVPN服务器发送AUTH_PENDING和INFO_PRE消息，向客户发出待认证的信号。
+    一个待定的认证意味着连接需要额外的认证，如一次性密码或通过网络单点登录。
+    。。。
+  
+返回信息格式：
+    (1) 命令执行成功/失败： "SUCCESS: [text]" or  "ERROR: [text]".
+    (2) 如果有多行输出的，最后一行是 "END"
+    (3) 实时消息格式 ">[source]:[text]",
+        source 的可能值： 
+            "CLIENT", "ECHO", "FATAL", "HOLD", "INFO", 
+            "LOG", "NEED-OK", "PASSWORD", "STATE".
+
+实时消息格式
+    vpn管理接口返回两种输出格式：
+    1. 一个命令的输出
+    2. 异步的实时输出，任何时候都可能产生
+    实时消息以 '>' 开始，并之后紧跟'消息类型'
+        BYTECOUNT -- 实时带宽使用消息，对应vpn客户端
+        BYTECOUNT_CLI -- 每个客户端的实时带宽使用信息, 对应vpn服务端	         
+        CLIENT   -- 当客户端连接或与服务端断开后提示
+                    需要 vpn 使用 --management-client-auth 启动
+                    CLIENT 消息可能是多行的
+        ECHO     -- 显示通过 "echo" 命令控制的消息
+        FATAL    --  A fatal error which is output to the log file just
+                    prior to OpenVPN exiting.
+        HOLD     -- 标记vpn在hold状态， 在收到 "hold release" 前，不会启动           
+        INFO     -- 通知消息（像如欢迎信息）
+        LOG      -- 并"log"命令控制的日志消息
+        NEED-OK  -- 需要用户做某些事，像如插入密码令牌
+                    可用 "needok" 命令告知vpn继续
+        NEED-STR -- vpn需要从终端获取信息，像如要使用的证书
+                    可用 "needstr" 命令告知vpn继续
+        PASSWORD -- 告知管理接口客户端，vpn需要密码
+                    也可标记一个密码认证失败
+        STATE    -- 显示当前的vpn状态，被 "state" 命令控制
+        INFOMSG  -- 从服务端来的，认证相关的信息，像如：CR_TEXT or OPEN_URL
+                    参 client-pending-auth
+
+CLIENT 消息
+    ">CLIENT:" 通知需要vpn以 --management-client-auth 命令运行，
+    从而允许管理接口客户端在客户端证书认证成功后继续其它的认证
+    客户端认证可以有多行，对于给定的客户端认证序列，
+    其关联的变量，和终止行 ">CLIENT:ENV,END" 是原子执行的
+    。。。
+    
+挑战应答协议
+    vpn挑战应答协议允许vpn服务端生成挑战提问并显示给用户
+    然后基于用户的回复，vpn允许或拒绝访问
+    该协议可以用户实现多重因素的认证，因为用户必须输入额外的信息
+    （作为用户名密码的附加），以通过认证
+
+    In multi-factor authentication, this information is used to prove
+    that the user possesses a certain key-like device such as
+    cryptographic token or a particular mobile phone.
+
+    Two variations on the challenge/response protocol are supported:
+    the "static" and "dynamic" protocols:
+
+     * The static protocol uses OpenVPN's "--static-challenge" option.
+
+     * The dynamic protocol does not involve special OpenVPN options
+       or actions. It is an agreement between the auth-user-pass
+       verification process on the server and the management interface
+       client to use custom strings that begin with "['CRV1" in
+       "Verification Failed" messages. (The "[" character and a matching
+       "]" character at the end of the message are added by the client
+       OpenVPN program, and are not present in the string generated by the
+       auth-user-pass verification process or in the string sent by the
+       server.)    

@@ -1,0 +1,2521 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://community.openvpn.net/openvpn/wiki/BridgingAndRouting
+Subject: =?utf-8?Q?BridgingAndRouting=20=E2=80=93=20OpenVPN=20Community?=
+Date: Mon, 13 Mar 2023 06:32:41 -0000
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----"
+
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/html
+Content-ID: <frame-F153E05BE0181CD0757267F323CE06A5@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://community.openvpn.net/openvpn/wiki/BridgingAndRouting
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org=
+/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns=3D"http://www.w3.org/1999/xht=
+ml"><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/css" href=3D"cid:css-82320d=
+6f-927f-44c3-a121-1c12876cb314@mhtml.blink" /><link rel=3D"stylesheet" type=
+=3D"text/css" href=3D"cid:css-1d592eef-8e0f-4504-a27f-0e4ef2bdf8f6@mhtml.bl=
+ink" /><link rel=3D"stylesheet" type=3D"text/css" href=3D"cid:css-c6608a78-=
+1fe7-43bc-9276-2f24201f44fa@mhtml.blink" />
+    <title>
+      BridgingAndRouting =E2=80=93 OpenVPN Community
+    </title>
+     =20
+      <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+    <!--[if IE]><script type=3D"text/javascript">
+      if (/^#__msie303:/.test(window.location.hash))
+        window.location.replace(window.location.hash.replace(/^#__msie303:/=
+, '#'));
+    </script><![endif]-->
+          <link rel=3D"search" href=3D"https://community.openvpn.net/openvp=
+n/search">
+          <link rel=3D"help" href=3D"https://community.openvpn.net/openvpn/=
+wiki/TracGuide">
+          <link rel=3D"alternate" href=3D"https://community.openvpn.net/ope=
+nvpn/wiki/BridgingAndRouting?format=3Dtxt" type=3D"text/x-trac-wiki" title=
+=3D"Plain Text">
+          <link rel=3D"start" href=3D"https://community.openvpn.net/openvpn=
+/wiki">
+          <link rel=3D"stylesheet" href=3D"https://community.openvpn.net/op=
+envpn/chrome/common/css/trac.css" type=3D"text/css">
+          <link rel=3D"stylesheet" href=3D"https://community.openvpn.net/op=
+envpn/chrome/common/css/wiki.css" type=3D"text/css">
+          <link rel=3D"icon" href=3D"https://community.openvpn.net/openvpn/=
+chrome/site/favicon.ico" type=3D"image/x-icon">
+   =20
+      <link type=3D"application/opensearchdescription+xml" rel=3D"search" h=
+ref=3D"https://community.openvpn.net/openvpn/search/opensearch" title=3D"Se=
+arch OpenVPN Community">
+     =20
+     =20
+     =20
+     =20
+     =20
+     =20
+   =20
+   =20
+    <link rel=3D"stylesheet" type=3D"text/css" href=3D"https://community.op=
+envpn.net/openvpn/chrome/site/openvpn.css">
+  </head>
+  <body inmaintabuse=3D"1">
+    <div id=3D"banner">
+      <div id=3D"header">
+        <a id=3D"logo" href=3D"https://openvpn.net/"><img src=3D"https://co=
+mmunity.openvpn.net/openvpn/chrome/site/ovpnlogo-com.png" alt=3D"OpenVPN lo=
+go" height=3D"54" width=3D"450"></a>
+      </div>
+      <form id=3D"search" action=3D"https://community.openvpn.net/openvpn/s=
+earch" method=3D"get">
+        <div>
+          <label for=3D"proj-search">Search:</label>
+          <input type=3D"text" id=3D"proj-search" name=3D"q" size=3D"18" va=
+lue=3D"">
+          <input type=3D"submit" value=3D"Search">
+        </div>
+      </form>
+      <div id=3D"metanav" class=3D"nav">
+    <ul>
+      <li class=3D"first"><a href=3D"https://community.openvpn.net/openvpn/=
+login">Login</a></li><li><a href=3D"https://community.openvpn.net/account">=
+Account</a></li><li><a href=3D"https://community.openvpn.net/register">Regi=
+ster</a></li><li><a href=3D"https://community.openvpn.net/openvpn/prefs">Pr=
+eferences</a></li><li><a href=3D"https://openvpn.net/legal/">Terms of use</=
+a></li><li class=3D"last"><a href=3D"https://openvpn.net/privacy-policy/">P=
+rivacy policy</a></li>
+    </ul>
+  </div>
+    </div>
+    <div id=3D"mainnav" class=3D"nav">
+    <ul>
+      <li class=3D"first"><a href=3D"https://openvpn.net/">Commercial Produ=
+cts</a></li><li class=3D"active"><a href=3D"https://community.openvpn.net/o=
+penvpn/wiki">Wiki</a></li><li><a href=3D"https://forums.openvpn.net/">Forum=
+s</a></li><li><a href=3D"https://github.com/OpenVPN">Source</a></li><li><a =
+href=3D"https://community.openvpn.net/openvpn/report">Old Bugs</a></li><li>=
+<a href=3D"https://github.com/OpenVPN/openvpn/issues">New Bugs</a></li><li>=
+<a href=3D"https://community.openvpn.net/openvpn/search">Search</a></li><li=
+ class=3D"last"><a href=3D"https://community.openvpn.net/openvpn/wiki/Downl=
+oads">Downloads</a></li>
+    </ul>
+  </div>
+    <div id=3D"main">
+      <div id=3D"pagepath" class=3D"noprint">
+  <a class=3D"pathentry first" title=3D"View WikiStart" href=3D"https://com=
+munity.openvpn.net/openvpn/wiki">wiki:</a><a class=3D"pathentry" href=3D"ht=
+tps://community.openvpn.net/openvpn/wiki/BridgingAndRouting" title=3D"View =
+BridgingAndRouting">BridgingAndRouting</a>
+</div>
+      <div id=3D"ctxtnav" class=3D"nav">
+        <h2>Context Navigation</h2>
+        <ul>
+          <li class=3D"first"><a href=3D"https://community.openvpn.net/open=
+vpn/wiki/WikiStart">Start Page</a></li><li><a href=3D"https://community.ope=
+nvpn.net/openvpn/wiki/TitleIndex">Index</a></li><li class=3D"last"><a href=
+=3D"https://community.openvpn.net/openvpn/wiki/BridgingAndRouting?action=3D=
+history">History</a></li>
+        </ul>
+        <hr>
+      </div>
+    <div id=3D"content" class=3D"wiki">
+      <div class=3D"wikipage searchable">
+       =20
+          <div id=3D"wikipage" class=3D"trac-content"><h1 id=3D"Introductio=
+n">Introduction<a class=3D"anchor" href=3D"https://community.openvpn.net/op=
+envpn/wiki/BridgingAndRouting#Introduction" title=3D"Link to this section">=
+ =C2=B6</a></h1>
+<p>
+For a brief introduction on bridging and routing, look at these links:
+</p>
+<ul><li><a class=3D"ext-link" href=3D"http://openvpn.net/index.php/open-sou=
+rce/documentation/howto.html#vpntype"><span class=3D"icon">=E2=80=8B</span>=
+Determining whether to use a routed or bridged VPN</a> (in OpenVPN HOWTO)
+</li><li><a class=3D"ext-link" href=3D"http://openvpn.net/index.php/open-so=
+urce/faq/75-general/311-what-are-the-fundamental-differences-between-bridgi=
+ng-and-routing-in-terms-of-configuration.html"><span class=3D"icon">=E2=80=
+=8B</span>What are the fundamental differences between bridging and routing=
+ in terms of configuration?</a> (in OpenVPN FAQ)
+</li><li><a class=3D"ext-link" href=3D"http://www.secure-computing.net/wiki=
+/index.php/OpenVPN/Routing"><span class=3D"icon">=E2=80=8B</span>OpenVPN Ro=
+uting</a> (in Secure-Computing Wiki)
+</li></ul><p>
+<strong>NOTE:</strong> The remaining sections are mostly based on <a class=
+=3D"ext-link" href=3D"http://thread.gmane.org/gmane.network.openvpn.user/32=
+935/"><span class=3D"icon">=E2=80=8B</span>this email for dazo</a>.
+</p>
+<h1 id=3D"Bridgingvs.routing">Bridging vs. routing<a class=3D"anchor" href=
+=3D"https://community.openvpn.net/openvpn/wiki/BridgingAndRouting#Bridgingv=
+s.routing" title=3D"Link to this section"> =C2=B6</a></h1>
+<p>
+This discussion needs to start with TAP vs TUN devices.  You want TAP if:
+</p>
+<ul><li>You want to transport non-IP based traffic, or IPv6 traffic on Open=
+VPN 2.2 or older releases
+</li><li>You want to bridge
+</li></ul><p>
+And you want to bridge if:
+</p>
+<ul><li>You want your LAN and VPN clients to be in the same broadcast domai=
+n
+</li><li>You want your LAN DHCP server to provide DHCP addresses to your VP=
+N client
+</li><li>You have Windows server(s) you want to access and require network =
+neighbourhood discovery to work via VPN <strong>and</strong> WINS is not an=
+ option to implement.  If you have WINS, you don't want bridging.  Really.
+</li></ul><p>
+It might be a few more reasons, but these are the most typical ones.  And a=
+s you see, TAP is a requirement for bridging.  TUN devices cannot be used f=
+or bridges and non-IP traffic.
+</p>
+<p>
+Bridging looks easier at first glance, but it brings a completely different=
+ can of worms.  Make no mistake: <strong>There are no shortcuts in making n=
+etworking easier</strong> - except learning how to do it properly.
+</p>
+<p>
+Now lets see benefits and drawbacks of TAP vs TUN.
+</p>
+<p>
+TAP benefits:
+</p>
+<ul><li>behaves like a real network adapter (except it is a virtual network=
+ adapter)
+</li><li>can transport any network protocols (IPv4, IPv6, Netalk, IPX, etc,=
+ etc)
+</li><li>Works in layer 2, meaning Ethernet frames are passed over the VPN =
+tunnel
+</li><li><em>Can</em> be used in bridges
+</li></ul><p>
+TAP drawbacks
+</p>
+<ul><li>causes much more broadcast overhead on the VPN tunnel
+</li><li>adds the overhead of Ethernet headers on all packets transported o=
+ver the VPN tunnel
+</li><li>scales poorly
+</li><li>can not be used with Android or iOS devices
+</li></ul><p>
+TUN benefits:
+</p>
+<ul><li>A lower traffic overhead, transports only traffic which is destined=
+ for the VPN client
+</li><li>Transports only layer 3 IP packets
+</li></ul><p>
+TUN drawbacks:
+</p>
+<ul><li>Broadcast traffic is not normally transported
+</li><li>Can only transport IPv4 (OpenVPN 2.3 adds IPv6)
+</li><li><strong>Cannot</strong> be used in bridges
+</li></ul><p>
+Please understand that in both setups, <strong>basic networking knowledge i=
+s a must</strong>.  You do need to understand basic network <em>routing</em=
+> and <em>firewalling</em>, no matter if you use routing, bridging, TUN or =
+TAP.  Both TUN and TAP devices supports traditional network routing, so you=
+ are not required to use bridging with TAP.  But using bridges, you need in=
+ addition to know how bridges work and how this changes your firewalling.  =
+To say it simple: Bridging will complicate your setup further.  Of course, =
+there are scenarios where bridging really is the right solution.  But in mo=
+st cases you will most likely solve your VPN setup with basic routing.
+</p>
+<p>
+For more information about TCP/IP networking, the <a class=3D"ext-link" hre=
+f=3D"http://www.redbooks.ibm.com/redbooks/pdfs/gg243376.pdf"><span class=3D=
+"icon">=E2=80=8B</span>TCP/IP Tutorial and Technical Overview</a> (IBM Red =
+Book) is recommended reading, especially chapter 3.1.
+</p>
+<h1 id=3D"Usingrouting">Using routing<a class=3D"anchor" href=3D"https://co=
+mmunity.openvpn.net/openvpn/wiki/BridgingAndRouting#Usingrouting" title=3D"=
+Link to this section"> =C2=B6</a></h1>
+<pre class=3D"wiki">&lt;disclaimer&gt;
+  NONE OF THIS IS TESTED.  But this is the basic theory behind it.
+  It might be syntax errors here, or other stupid mistakes.
+&lt;/disclaimer&gt;
+</pre><p>
+To set up a TUN setup with routing and masquerading for the VPN subnet, one=
+ approach could be something like this.  This example is based on a pretty =
+standard network with a single Linux based firewall with two Ethernet cards=
+:
+</p>
+<pre class=3D"wiki">                         +-----------------------------=
+---+
+                         |            FIREWALL            |
+              (public IP)|                                |192.168.0.1
+ {INTERNET}=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D{eth1                 =
+       eth0}=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D&lt;internal network / 1=
+92.168.0.0/24&gt;
+                         |   \                        /   |
+                         |    +----------------------+    |
+                         |    | iptables and         |    |
+                         |    | routing engine       |    |
+                         |    +--+----------------+--+    |
+                         |       |*1              |*2     |
+                         |     (openvpn)-------{tun0}     |
+                         |                    10.8.0.1    |
+                         +--------------------------------+
+
+   *1 Only encrypted traffic will pass here, over UDP or TCP and only to th=
+e remote OpenVPN client
+   *2 The unencrypted traffic will pass here.  This is the exit/entry point=
+ for the VPN tunnel.
+</pre><p>
+Here tun0 is configured as 10.8.0.1 as a VPN, with the whole VPN network co=
+nfigured as 10.8.0.0/24. =20
+</p>
+<p>
+What happens with OpenVPN is that<mark id=3D"bbf8b4e8-71d5-4317-8248-1e065d=
+de2c4c" data-private-id=3D"d098e015-191b-4f84-88bf-defd73f833f8" class=3D"f=
+cb5281e-e0ee-474f-88c2-c768b23abdbd b6a84e91-dc6e-492d-a4b3-56924ed57dfa de=
+fault-orange-da01945e-1964-4d27-8a6c-3331e1fe7f14" tabindex=3D"0"> it accep=
+ts OpenVPN clients from eth1, OpenVPN will decrypt the data and put it to t=
+he tun0 interface, and the iptables and routing engine will pick up that tr=
+affic again, filter/masquerade it and send it further to eth0 or eth1, depe=
+nding on the routing table</mark>.  <mark id=3D"dfe399bb-3e4b-4de8-b45d-2d9=
+2ce07ffff" data-private-id=3D"fb87ed35-fb06-4838-a51a-287f5468c374" class=
+=3D"fcb5281e-e0ee-474f-88c2-c768b23abdbd b6a84e91-dc6e-492d-a4b3-56924ed57d=
+fa default-green-c4d41e0a-e40f-4c3f-91ad-2d66481614c2" tabindex=3D"0">When =
+the routing engine sends traffic destined for the tun0 network, OpenVPN wil=
+l pick it up, encrypt it and send it out on eth1, towards the proper OpenVP=
+N clie</mark>nt.
+</p>
+<p>
+First we need to be sure that IP forwarding is enabled.  Very often this is=
+ disabled by default.  This is done by running the following command line a=
+s root:
+</p>
+<pre class=3D"wiki">    [root@host ~] # sysctl -w net.ipv4.ip_forward=3D1
+    net.ipv4.ip_forward =3D 1
+    [root@host ~] #
+</pre><p>
+This change is only temporary, so if you reboot your box this will be reset=
+ back to the default value.  To make this change persistent you need to mod=
+ify <em>/etc/sysctl.conf</em>.  In this file you should have a line stating=
+:
+</p>
+<pre class=3D"wiki">    net.ipv4.ip_forward =3D 1
+</pre><p>
+So, lets look at the iptables rules required for this to work.
+</p>
+<pre class=3D"wiki">    # Allow traffic initiated from VPN to access LAN
+    iptables -I FORWARD -i tun0 -o eth0 \
+         -s 10.8.0.0/24 -d 192.168.0.0/24 \
+         -m conntrack --ctstate NEW -j ACCEPT
+
+    # Allow traffic initiated from VPN to access "the world"
+    iptables -I FORWARD -i tun0 -o eth1 \
+         -s 10.8.0.0/24 -m conntrack --ctstate NEW -j ACCEPT
+
+    # Allow traffic initiated from LAN to access "the world"
+    iptables -I FORWARD -i eth0 -o eth1 \
+         -s 192.168.0.0/24 -m conntrack --ctstate NEW -j ACCEPT
+
+    # Allow established traffic to pass back and forth
+    iptables -I FORWARD -m conntrack --ctstate RELATED,ESTABLISHED \
+         -j ACCEPT
+
+    # Notice that -I is used, so when listing it (iptables -vxnL) it
+    # will be reversed.  This is intentional in this demonstration.
+
+    # Masquerade traffic from VPN to "the world" -- done in the nat table
+    iptables -t nat -I POSTROUTING -o eth1 \
+          -s 10.8.0.0/24 -j MASQUERADE
+
+    # Masquerade traffic from LAN to "the world"
+    iptables -t nat -I POSTROUTING -o eth1 \
+          -s 192.168.0.0/24 -j MASQUERADE
+
+</pre><p>
+Again, these changes are only temporary.  If you reboot your box, these rul=
+es will be cleared out.  Please read the documentation to your distribution=
+ on how to save the iptables configuration.  In worst case you can also use=
+ <em>iptables-save</em> and <em>iptables-restore</em> to dump and restore t=
+he iptables configuration to/from a file.
+</p>
+<pre class=3D"wiki">    # Save the iptables setup
+    [root@host ~] # iptables-save &gt; iptables-dump.ipt
+
+    # Restore the iptables setup
+    [root@host ~] # iptables-restore &lt; iptables-dump.ipt
+</pre><p>
+<em>(This iptables dump can also easily be edited manually if you want to d=
+o bigger changes in one go.  Just use iptables-restore on the modified file=
+ to activate your new iptables configuration.)</em>
+</p>
+<p>
+In the openvpn server config you will need these lines:
+</p>
+<pre class=3D"wiki">    dev tun
+    topology subnet
+    server 10.8.0.0 255.255.255.0
+    push "route 192.168.0.0 255.255.255.0"
+</pre><p>
+<em>(this is not a complete configuration file, but it should cover the net=
+work part of the configuration)</em>
+</p>
+<p>
+<mark id=3D"df71924c-543f-49a1-be52-643225b51433" data-private-id=3D"e7f5a8=
+cc-e987-455a-85dc-193c21bb885c" class=3D"fcb5281e-e0ee-474f-88c2-c768b23abd=
+bd b6a84e91-dc6e-492d-a4b3-56924ed57dfa d8f13145-257a-4c83-93ee-aaed9eb6bfc=
+2" tabindex=3D"0">This will provide the needed route for all VPN clients to=
+ the internal LAN.</mark>  If you want to all your VPN clients to send all =
+the internet traffic via the VPN as well (so it looks like they sit behind =
+the LAN when surfing the net), you need this line in addition:
+</p>
+<pre class=3D"wiki">    push "redirect-gateway def1"
+</pre><p>
+And that's basically it.  Not much more extra trickery.  Routing setups are=
+ often much easier than people generally believe.  The firewall is generall=
+y a bit more tricky, but bridging doesn't make that easier.
+</p>
+<h1 id=3D"UsingroutingandOpenVPNnotrunningonthedefaultgateway">U<mark id=3D=
+"b90f6482-12b2-45de-bfac-3759c78287f8" data-private-id=3D"dc41db34-a02c-4ee=
+d-b0ff-cf45dc17be48" data-next-private-id=3D"c8998017-b202-4fa5-a5e1-c1e304=
+7124aa" class=3D"fcb5281e-e0ee-474f-88c2-c768b23abdbd b6a84e91-dc6e-492d-a4=
+b3-56924ed57dfa default-red-aa94e3d5-ab2f-4205-b74e-18ce31c7c0ce" tabindex=
+=3D"0">sing routing and OpenVPN not running on the default gateway</mark><a=
+ class=3D"anchor" href=3D"https://community.openvpn.net/openvpn/wiki/Bridgi=
+ngAndRouting#UsingroutingandOpenVPNnotrunningonthedefaultgateway" title=3D"=
+Link to this section"><mark data-private-id=3D"c8998017-b202-4fa5-a5e1-c1e3=
+047124aa" data-first-mark-id=3D"b90f6482-12b2-45de-bfac-3759c78287f8" class=
+=3D"fcb5281e-e0ee-474f-88c2-c768b23abdbd b6a84e91-dc6e-492d-a4b3-56924ed57d=
+fa default-red-aa94e3d5-ab2f-4205-b74e-18ce31c7c0ce"> </mark>=C2=B6</a></h1=
+>
+<p>
+This setup have much of the same requirements as the previous example.  But=
+ there are a few minor modifications you need to make.=20
+</p>
+<pre class=3D"wiki">                          +-------------------------+
+               (public IP)|                         |
+  {INTERNET}=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D{     Router         =
+     |
+                          |                         |
+                          |         LAN switch      |
+                          +------------+------------+
+                                       | (192.168.0.1)
+                                       |
+                                       |              +--------------------=
+---+
+                                       |              |                    =
+   |
+                                       |              |        OpenVPN     =
+   |  eth0: 192.168.0.10/24
+                                       +--------------{eth0    server      =
+   |  tun0: 10.8.0.1/24
+                                       |              |                    =
+   |
+                                       |              |           {tun0}   =
+   |
+                                       |              +--------------------=
+---+
+                                       |
+                              +--------+-----------+
+                              |                    |
+                              |  Other LAN clients |
+                              |                    |
+                              |   192.168.0.0/24   |
+                              |   (internal net)   |
+                              +--------------------+
+         =20
+</pre><p>
+The Router needs to have a port forwarding for the port you want to use for=
+ OpenVPN and forward that port to 192.168.0.10, which is the IP address of =
+the OpenVPN on the internal network.
+</p>
+<p>
+The next thing you need to do on the router is to add a route for your VPN =
+subnet.  In the routing table on your router, add 10.8.0.0/24 to be sent vi=
+a 192.168.0.10.  This is needed for the traffic from your LAN clients to be=
+ able to find their way back to the VPN clients.  If this is not possible, =
+you need add such routes explicitly on all the LAN clients you want to acce=
+ss via the VPN.
+</p>
+<p>
+The firewall rules will also need to be different, and less extensive.  Her=
+e you just need to add rules which opens up traffic from the VPN subnet and=
+ into your local LAN.
+</p>
+<pre class=3D"wiki">    # Allow traffic initiated from VPN to access LAN
+    iptables -I FORWARD -i tun0 -o eth0 \
+         -s 10.8.0.0/24 -d 192.168.0.0/24 \
+         -m conntrack --ctstate NEW -j ACCEPT
+
+    # Allow established traffic to pass back and forth
+    iptables -I FORWARD -m conntrack --ctstate RELATED,ESTABLISHED \
+         -j ACCEPT
+</pre><p>
+If you also want your VPN clients to access the complete Internet, just rem=
+ove the <em>-d 192.168.0.0/24</em> part from the first iptables example abo=
+ve.
+</p>
+<p>
+In some situations it is not possible to modify the routing table on the ma=
+in router or on each client.  Then the alternative is to masquerade all VPN=
+ clients as coming from 192.168.0.10.  The drawback of this approach is tha=
+t all VPN clients looks like coming from the VPN server itself - you will <=
+strong>not</strong> see the IP address of the VPN client at all.  This appr=
+oach is generally considered as a last option if proper routing is not feas=
+ible.
+</p>
+<pre class=3D"wiki">    # Masquerade all traffic from VPN clients -- done i=
+n the nat table=20
+    iptables -t nat -I POSTROUTING -o eth0 \
+          -s 10.8.0.0/24 -j MASQUERADE
+</pre><p>
+The rest of the configuration will be as the very first routing example.  Y=
+ou need to set net.ipv4.ip_forward=3D1 and you need the extracts for the Op=
+enVPN configuration as indicated.
+</p>
+<p>
+<em>(If others see obvious mistakes, typos, or there are important details =
+which are missing, please correct my errors.)</em>
+</p>
+</div>
+         =20
+          <div class=3D"trac-modifiedby">
+            <span><a href=3D"https://community.openvpn.net/openvpn/wiki/Bri=
+dgingAndRouting?action=3Ddiff&amp;version=3D20" title=3D"Version 20 by Davi=
+d Sommerseth: Clarify the masquerading of VPN clients further">Last modifie=
+d</a> <a class=3D"timeline" href=3D"https://community.openvpn.net/openvpn/t=
+imeline?from=3D2016-04-01T19%3A25%3A29Z&amp;precision=3Dsecond" title=3D"Se=
+e timeline at 04/01/16 19:25:29">7 years ago</a></span>
+            <span class=3D"trac-print">Last modified on 04/01/16 19:25:29</=
+span>
+          </div>
+       =20
+       =20
+      </div>
+     =20
+
+    </div>
+    <div id=3D"altlinks">
+      <h3>Download in other formats:</h3>
+      <ul>
+        <li class=3D"last first">
+          <a rel=3D"nofollow" href=3D"https://community.openvpn.net/openvpn=
+/wiki/BridgingAndRouting?format=3Dtxt">Plain Text</a>
+        </li>
+      </ul>
+    </div>
+    </div>
+    <div id=3D"footer" lang=3D"en" xml:lang=3D"en"><hr>
+      <a id=3D"tracpowered" href=3D"http://trac.edgewall.org/"><img src=3D"=
+https://community.openvpn.net/openvpn/chrome/common/trac_logo_mini.png" hei=
+ght=3D"30" width=3D"107" alt=3D"Trac Powered"></a>
+      <p class=3D"left">Powered by <a href=3D"https://community.openvpn.net=
+/openvpn/about"><strong>Trac 1.2.3.dev0</strong></a><br>
+        By <a href=3D"http://www.edgewall.org/">Edgewall Software</a>.</p>
+      <p class=3D"right">Visit the Trac open source project at<br><a href=
+=3D"http://trac.edgewall.org/">http://trac.edgewall.org/</a></p>
+    </div>
+ =20
+</body></html>
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-82320d6f-927f-44c3-a121-1c12876cb314@mhtml.blink
+
+@charset "utf-8";
+
+div.h5-ext-layer, txpdiv[data-role=3D"hd-ad-adapter-interactivelayer"], div=
+.m-video-play.js-play > a.m-video-bannerTitle.js-video-bannerTitle, div#sli=
+de_ad, div#HMcoupletDivleft, div#HMRichBox, div#HMcoupletDivright, #Ad_wind=
+ows, #ChapterView > .slide-baidu, #J_sideFooter.side_footer, #Layeraa1, #La=
+yeraa2, #MsnDialog.ad, #MyMoveAd, #QEff1, #QEff2, #QQ_Full, #ZAML, #\31 280=
+_adv, #\31 x1_container.float-banner-footer { display: none !important; }
+
+#__long_gg_container, #aafoot.top_box, #aafoot[class^=3D"top_box"], #aahead=
+top, #aatop.top_box, #aatop[class^=3D"top_box"], #ad > #h2_player_prevideo,=
+ #ad > .pre-img, #ad-SNSSplashAd, #ad1[onclick=3D"window.open(this.url)"], =
+#ad1[style^=3D"position:"], #adBody07, #adLeftFloat, #adRightFloat, #adUrl,=
+ #ad_box1, #ad_box2, #ad_full, #ad_globle_div, #ad_headerbanner { display: =
+none !important; }
+
+#adad, #adrights14, #ads.row, #ads_c_tpc, #ads_in_video, #ads_top_video, #a=
+dtop1, #adv-2, #adv-3, #adv_wrap_hh, #adx_cggp, #app > .publicAllContentBg =
+> .bigBannerBg, #appad.cate, #arBRyGHxuDYU, #asdw, #asdw2, #asdw2 + img, #a=
+side_cat_ad_bottom, #bfad, #bfad1 { display: none !important; }
+
+#bfad2, #bfad3, #bfad4, #bfad5, #bfad6, #bl_mobile_float, #body > #left-pro=
+motion, #body > #right-promotion, #bottom-gg1, #bottomAD, #bottomNavad, #bo=
+ttombanner, #breadCrumb + .c + .t[style=3D"margin-top:8px"], #breadCrumb + =
+.t[style=3D"margin-top:8px"], #cat_intro_first_ad, #cat_intro_second_ad, #c=
+omic_reader + #adDisabledBtn, #comiis_xizi_gg02, #container > .sectionBanne=
+r, #crazy_ad_float { display: none !important; }
+
+#crazy_ad_layer, #cs_left_couplet, #cs_right_couplet, #dbgg, #dgf_pc, #duil=
+ian_left, #duilian_right, #dy_card_dy, #eis_pad1, #eis_pad2, #everydayadv_m=
+ask, #fc_foot > #f_skyf, #fixed-bottom-modal[style^=3D"right:"][style$=3D"p=
+x; display: block;"], #fk_faiVisitStateAd, #floatAd, #floatad-winpop, #fnbt=
+, #footer_fix_ggw, #frameS8CyqB, #fuo_top_float { display: none !important;=
+ }
+
+#fwin_popad_7ree, #fwin_popad_7ree + #fwin_dialog, #gg1, #gg300, #gg_url, #=
+googleAD1, #googleAD2, #googleAD3, #googleAdIndexTop, #haoetv, #haoetv1, #h=
+aoxinqing_me_img, #header > a[target=3D"_blank"] > img[style=3D"width:100%;=
+height:60px;margin-bottom:2px;"], #header-top + .advertisement, #header_glo=
+bal_ad, #hellobox > .mylist, #hengfu > #jiukan, #hengfu1.banner, #hengfu2.b=
+anner, #hfad { display: none !important; }
+
+#hj-right-aside[style=3D"float: right;"], #imgad, #imgs5[height=3D"60px"], =
+#index_aside_ad, #index_content_ad, #js-ad-map, #js-ysjpp, #js_ads_banner_t=
+op, #js_ads_banner_top_slide, #kfivtwin, #kfpopupDiv, #ks > .DaKuang, #ldgi=
+ndexbuttom, #leftCouple, #leftCouple1, #leftCouplet, #leftFloat + #rightFlo=
+at, #leftFloat1 + #rightFloat1, #leftFloat[style=3D"z-index: 999; position:=
+ fixed; left: 0px; bottom: 0px;"], #left_couple { display: none !important;=
+ }
+
+#left_couplet.close_discor, #left_down_float_ad, #left_float + #right_float=
+, #left_float.close_discor, #left_up_float_ad, #lefttd.lefttd, #ljPz, #love=
+xin1, #lovexin11, #lovexin12, #lovexin121, #lovexin13, #lovexin14, #lovexin=
+2, #lt-ad-radio, #magneturlpost + .movie + .movie[style=3D"padding:12px; ma=
+rgin-top:15px"], #mainbody:nth-child(5) > .mylist, #menu + #topBox, #menu +=
+ script + #topBox, #miaov_float_layer { display: none !important; }
+
+#micast_ads, #modalgg, #movieInfoRight, #movietp > .movietp, #mui-player + =
+#player_pic, #mv_ad_dom, #mv_float_layer, #my-adsFPR, #nav + .slider-spons,=
+ #nav-home > .coment-bottom, #navcontainer + .moneyarea, #netease_mail_foot=
+er, #news_top_advert, #olfullad, #overture_ads_bottom_td, #overture_ads_top=
+_td, #photo--content-title-bottomx--foot, #piao_div_0[style*=3D"width:140px=
+;"], #piao_div_1[style*=3D"width:140px;"], #piao_div_2[style*=3D"width:140p=
+x;"] { display: none !important; }
+
+#piao_div_3[style*=3D"width:140px;"], #piao_div_4[style*=3D"width:140px;"],=
+ #piao_div_5[style*=3D"width:140px;"], #player > #ADtip, #player-bottom-ads=
+, #playerAdvLayer, #player_banner[style*=3D"fixed;"], #player_pause > .tip =
++ a[target=3D"_blank"], #player_pause[style^=3D"position"] > a[target=3D"_b=
+lank"], #popup.t, #pp-modal-id, #projectpostbody > a[target=3D"_blank"], #p=
+ropagandaInsert[style=3D"display: flex;"], #ptcmsad1, #qj960a, #qj960b, #re=
+portPop, #results.content-main > .eLeft, #rightCouple, #rightCouple + #left=
+Float { display: none !important; }
+
+#rightCouple1, #rightCouple1 + #leftFloat1, #rightCouplet, #rightCouplet + =
+#leftFloat, #right_couple, #right_couple + #left_float, #right_couplet.clos=
+e_discor, #right_down_float_ad, #right_float.close_discor, #right_up_float_=
+ad, #rightd.rightd, #rip[href*=3D".taobao.com"], #rm-float3, #search > a[hr=
+ef=3D"/top1.html"], #sitefocus.focus, #snActive-wrap, #sponsorAdDiv2, #swtl=
+eft[style^=3D"position:fixed;"], #syad.visible-xs, #syad1 { display: none !=
+important; }
+
+#syad2, #syad3, #syad4, #syad5, #syad6, #table1[width=3D"468"][height=3D"50=
+"], #table1[width=3D"794"][height=3D"60"], #table1[width=3D"812"][height=3D=
+"50"], #table1[width=3D"812"][height=3D"60"], #tanx-con-1, #tanx-fold-main,=
+ #taotaole, #td_tpc > .ads, #test333, #textggs, #timedfuo, #top-gg-containe=
+r, #topNavad, #top_ads0, #top_box > a[onclick^=3D"javascript"] { display: n=
+one !important; }
+
+#toperAd2, #toptd.toptd, #tr_ad1, #tr_ad10, #tr_ad11, #tr_ad2, #tr_ad3, #tr=
+_ad4, #tr_ad5, #tr_ad6, #tr_ad7, #tr_ad8, #tr_ad9, #tripadvisor-ad, #undert=
+d.undertd, #videoADPIC, #widget-quan, #wp > .V-videoFloat, #wrapper > .topa=
+d, #xinnxi { display: none !important; }
+
+#xqad, #xqad1, #xqad2, #xqad3, #xqad[style=3D"margin-bottom: 5px;"], .AD_TA=
+C_BOX, .Flagrow-Ads-under-header, .MacPlayer > #play-pause, .RMss1, .Text-A=
+dvertising, ._cggp, ._ggs, ._popIn_recommend_article_ad, ._popIn_recommend_=
+article_ad_reserved, .a_2mu, .a_cn, .a_fl, .a_fr, .a_mu, .a_oscar1 { displa=
+y: none !important; }
+
+.a_pb, .a_pr, .a_pt, .a_ssk_cn, .a_sxc, .a_xsfl, .aab-post, .aasd-text, .aa=
+sdwa, .ad-above-footer, .ad-below-adjacent-post, .ad-below-header-menu, .ad=
+-below-post-title, .ad-below-related-post, .ad-couplet-common, .ad-left-dow=
+n, .ad-right-down, .ad-right-top, .ad-shine-panel, .ad-site { display: none=
+ !important; }
+
+.ad.mi_btcon, .ad250left, .ad250right, .ad300left, .ad336left, .ad990x130, =
+.ad990x90, .adContainer[style=3D"margin-top: -5px"], .adHF, .adHF3, .adHF6,=
+ .ad_content_mask, .ad_couplebanner, .ad_footerbanner, .ad_headerbanner, .a=
+d_hf, .ad_right_1, .ad_right_2, .ad_sd #a_d1, .ad_sd #ad1 { display: none !=
+important; }
+
+.ad_sd > .container > a > img[src*=3D".qhimg.com"], .ad_thread, .adbox-bg.a=
+dscounter, .add-gg, .addddddwarp, .ads > a > img[src*=3D".sinaimg."], .ads-=
+after-content, .ads-after-header, .ads-all, .ads-before-content, .ads_all >=
+ .ads_w, .ads_desktop, .ads_mobile, .adsense160, .adsense200, .adsoho, .adv=
+-g1, .advInfoElem, .advertising_lightbox, .afc_popup { display: none !impor=
+tant; }
+
+.anniversary-wrap-2018, .appdownload_ad + .hider, .archive > a[ontouchstart=
+=3D"this.click();"], .area > .tuiguang, .artad, .article-pop-up-ad, .articl=
+e_ad_top, .asb-index, .asb-post, .assort-ad, .aub-post, .ayx[style=3D"displ=
+ay:block;"], .ayx[style^=3D"position: fixed;bottom"], .baiduad, .banner-ad-=
+section, .banner-cctv-A2, .banner-cctv-Topping, .bannerliststyle[style^=3D"=
+min-height"], .bdyp-sygg-ul, .below_ads { display: none !important; }
+
+.bjxhf, .bm.a_c, .bn728-100, .bn728-93, .bottomSponsor, .bottom_fixed > #im=
+gs_link4, .bottom_mengcheng_ad_wrap, .bottomads + .leftd, .bottomd > .close=
+box2, .broadcastMe[style=3D"width: 1200px;"], .btn.btn-success.text-white[h=
+ref*=3D".com:"], .bus_adsbox, .cari-ads, .cfa_popup, .chat-ad, .chat-right-=
+ad, .chat-sysbroadcast-ad, .chat-top-ad, .clearfix.col5.row > #listBox, .co=
+l-md-10 > .banner-table-block { display: none !important; }
+
+.comiis_ad, .comiis_adbox, .comiis_guanggao, .comiis_guanggao_tit, .common-=
+topad, .common_ad, .con_ad, .con_search + #carousel-example-generic[style^=
+=3D"max-width: 1170px;"], .con_section > .da, .conch-ads-box, .container > =
+.index-ad, .container > .slide-baidu, .container > a[href^=3D"http"] > .ads=
+, .containeradvertising, .content > a > .topline, .content-video > .ads, .c=
+ontent-video > .ads-player, .content_ad_300, .corner-gg, .couplet_9cb0d { d=
+isplay: none !important; }
+
+.ctm_ad, .cui-pt-item[data-qhb], .d_banner_inner, .davwheat-ad, .dipiao, .d=
+iv-search-box.col-lg-offset-2.col-lg-8 > a[href^=3D"http"][target=3D"_blank=
+"], .duilian > .leftd, .ec-ad, .edtj, .eis_muad, .error > #qqs, .event_full=
+screen_gg_modal, .f-sign-cont[data-dysign-adid], .fed-part-case > .ads-img,=
+ .ff-ads, .flex-row > #propagandaLeft, .flex-row > #propagandaRight, .float=
+-adv-left-bottom, .float-adv-left-top, .float-adv-right-bottom { display: n=
+one !important; }
+
+.float-adv-right-top, .floatAd, .float_bot_right, .fnwehjnc12, .frAd, .fron=
+tpageAdvM, .full-ads, .full.banners12, .g1_wz > .g1_tp, .getads, .gg-box, .=
+gg-one, .gg1000, .gg430, .gg_300, .gg_728, .gg_950, .gg_960, .gg_canvas, .g=
+g_full { display: none !important; }
+
+.gg_pc, .gg_tp, .ggad, .ggbox, .gggpost-above, .gglist, .ggpost-below, .ggt=
+op, .ggw, .global_video_bottom_dbtc, .google-ad2_fixed, .google_adsense2, .=
+gpost-below, .gpt_ads_box, .guanggaoBox, .guruin-ads, .hao123-unionad-pic, =
+.hbp > .wp_banner, .headxx11xiaoapp, .heg > .div-list { display: none !impo=
+rtant; }
+
+.his-sign-cont[data-dysign-adid], .hlol_ad, .hongbao_hd, .hzxld, .iHead960x=
+90, .ibtad, .imgBox > div[class^=3D"ad"], .index-top-aassd, .index-top-ad, =
+.index-top-gg, .index-wz-ad, .index_alert_gg, .indexad2, .indexad3, .indexa=
+d4, .indexnews-ad, .inner-advertise, .itopbar + .container, .jav-nav + .bcp=
+ic, .jingqun_tu { display: none !important; }
+
+.jq_infoflow_ad_wrap, .jq_mediav_ad_report, .jqrp_infoflow_ad, .js-cui-pt-i=
+tem[data-qhb], .jsv > .mobile-adv, .ka-flo, .kjk-flo, .ksads, .kuandu > .bo=
+ttommob, .leftadv, .leftd + .rightd, .leo-container .ssr1, .link > .image[s=
+rc*=3D".qhimg.com/"], .listok > a > img[src*=3D".alicdn.com"][width=3D"980"=
+][height=3D"80"], .listok > a > img[style^=3D"width:980px;height:"], .loc-h=
+ome-top-adv-new, .lol-ad, .lol_ad, .lyzm-prevent, .m1938-container { displa=
+y: none !important; }
+
+.m_acmsd, .m_hot_rec_box_base[id^=3D"right"], .main-ad-l, .main-ad-r, .main=
+-ad-r + .topad, .main-content > .a2b3, .main[style=3D"border:#7D8C8E solid =
+1px;height: 23px;"], .mainbg > #s11navtop, .maomi-content > #main-container=
+ > .row.mob40 + .row, .maomi-content > .section-banner, .maomi-content > .s=
+ection-menu > .row > a[target=3D"_blank"], .maomi-content > a[target=3D"_bl=
+ank"], .mbads, .mediav-newsfeed-listitem-type-1, .mediavAd_report, .mediavf=
+eed-newsitem, .menutab_ad, .ml_ad1, .ml_ad3, .ml_ad5 { display: none !impor=
+tant; }
+
+.mlad, .mobadsq, .mod + #bottomBox, .module-adslist, .module-adslists, .my-=
+cat.my-cat-header, .mylist + #topthree, .mylist > a > img[width^=3D"9"][hei=
+ght=3D"80"], .myui-extra + .noticetext, .nQIAj, .nQIAj1, .nav-area + .wrapp=
+er .tuiguang, .newstyle > .container > a[target=3D"_blank"], .newstyle > a =
+> img[src*=3D"img.com/i/"], .no-mobile[style=3D"position: fixed;right:0px;b=
+ottom: 0px;"], .opt > a[target=3D"_blank"] > img[src*=3D".360buyimg.com"], =
+.orbui-post, .overBanner.dowloadBtn, .page-wwads, .pagead_3 { display: none=
+ !important; }
+
+.pagecon + .ad1, .partialViewSlider-outerwrapper, .pasuAD, .pc_acmsd, .pcd_=
+ad, .pcgg, .photo-two > a[onclick^=3D"_czc."], .player + .sponsor, .player-=
+bottom-gg, .player-info > .recommend-two.recommend-list, .player-rm > a[hre=
+f*=3D"/ad.html?url=3D"], .player-rm > a[target=3D"_blank"], .player-rm-floa=
+t, .player_ggw, .playtop.col-pd, .plc > .a_p, .pop[style=3D"right: 10px;"],=
+ .popup + .shortcuts-m-overlay, .privilege-promote, .propa_bottom { display=
+: none !important; }
+
+.pure-g[onclick*=3D"float"], .qpdb + a[href], .qzdhf, .qzhfaaa, .readmidad,=
+ .right > .content > .ads, .room-ad-bottom, .room-ad-top, .room-ad-video-do=
+wn, .rotate-adv, .row > .gao-bg, .rtcenter_game, .scupioadslot, .self-gg, .=
+spon-img[src*=3D".alicdn."], .spot_nav_under_ad, .static-a2d, .subject_link=
+[href$=3D"/thread-index-fid-1-tid-12848.htm"], .svg-icon + #player_pause, .=
+sxAdBox { display: none !important; }
+
+.t5[style=3D"border:1px solid #a6cbe7;"] + .t[style=3D"margin-top:8px"], .t=
+ab-content + .col-pd, .textadlist, .theme_custom_slidebox-ad-below, .title =
+> .gg, .tmall_ad_container, .tmall_bg15, .tooltip > #tp, .top > a > .toplin=
+e[src^=3D"/photo/"], .top-gg, .top-read-ad, .topSponsor, .top_ad_ban, .top_=
+box > #foot, .top_box > #indextop, .top_box > #news, .top_box > li > a[href=
+^=3D"/js/app.htm?"], .top_func_ad, .topbanner + .nav + .banner, .toy52_oute=
+r { display: none !important; }
+
+.toy52apparel_ALL, .trad3, .twavt-ads, .txp_ad[data-role=3D"txpad-interact-=
+pause"], .txtguanggao, .uk-width-1-1.adbox, .video-holder > a[target=3D"_bl=
+ank"] > img[src*=3D".360buyimg.com"], .video-item-ads, .video_details > .ba=
+nner, .w100b > .m_adv, .wbalist_thumb[style*=3D"/upload/site/"], .wemziguan=
+ggao, .wf_ad_block, .widget-qianhuiji, .widget-topadding, .widget-xlxba, .w=
+idget_adbox, .widget_ui_ads, .widget_ui_asb, .widget_ui_aub { display: none=
+ !important; }
+
+.widget_ui_textasb, .widget_ui_textaub, .wordurl[style=3D"   width: 42%; fl=
+oat:left; text-align: center;"], .wp > .ad-box, .wp.a2_h, .wp.a_f, .wp.a_h,=
+ .wp.a_t, .wp_headline + .ad1, .wrap.mt10.clearfix > .box.top_box, .wrapper=
+ > a[target=3D"_blank"] > .ads, .wumii-bottom-popup, .wumii-widget-ad, .wwa=
+ds-cn, .wzad, .xstui-content__acc, .xzbox-gh, .y.mtw[style=3D"padding: 0px =
+10px;"], .zhanzhang_tuijian_btn, .zhedangceng_ggg { display: none !importan=
+t; }
+
+.zone_wap_banner2, a[href*=3D".com/?Agent=3D"], a[href=3D"http://t.cn/A6hQC=
+Vsv"], a[href=3D"https://s.click.taobao.com/cTAwFvu"], a[href^=3D"/e/public=
+/ClickAd?adid=3D"], a > img[src*=3D".sinaimg."][src$=3D".gif"][style*=3D"wi=
+dth:960"], a > img[width=3D"960"][src*=3D".alicdn.com/"], a > img[width=3D"=
+960"][src*=3D".sinaimg."], a > img[width=3D"980"][src*=3D".sinaimg."], a#wr=
+apper_left_bg[target=3D"_blank"], a#wrapper_right_bg[target=3D"_blank"], a.=
+ad_links, a[href*=3D".com/?Extend=3D"], a[href*=3D".com/Register.aspx?aid=
+=3D"], a[href*=3D".com/Register/?a=3D"], a[href*=3D".com?aff=3D"], a[href*=
+=3D".com?intr=3D"], a[href*=3D".umeng.com"]:not([href=3D"http://www.umeng.c=
+om/"]) > img, a[href*=3D".xyz:"] > img[src*=3D".qlogo.cn"], a[href*=3D"/23.=
+224.188."] { display: none !important; }
+
+a[href*=3D"/?INTR=3D"], a[href*=3D"/?Intr=3D"], a[href*=3D"/?aff=3D"][targe=
+t=3D"_blank"], a[href*=3D"/?intr=3D"], a[href*=3D"/PageRegister?Agent=3D"][=
+target=3D"_blank"], a[href*=3D"/Register?a=3D"], a[href*=3D"/ads/adscenter.=
+"], a[href*=3D"/auth/register?code=3D"] > img, a[href*=3D"/register/?i_code=
+=3D"] > img, a[href*=3D"://2"] > img[src*=3D".qlogo.cn"], a[href*=3D"://4"]=
+[href*=3D"/vod."], a[href*=3D":10443/"] > img[src$=3D"gif"], a[href*=3D":78=
+88/?register=3D"], a[href*=3D":8701/?register=3D"], a[href*=3D"?channelCode=
+=3D"] > img[src*=3D".com"], a[href*=3D"?invite_code=3D"] > img[src*=3D".com=
+"], a[href*=3D"?register=3D"] > img[src*=3D".douyinpic.com"], a[href*=3D"?r=
+egister=3D"] > img[width=3D"100%"], a[href=3D"/e/member/register/index.php?=
+tobind=3D0&groupid=3D1"], a[href=3D"/gghtml/tyc.html"] { display: none !imp=
+ortant; }
+
+a[href=3D"/goto.php?url=3Dhth"], a[href=3D"/static/xzgg/index.html"], a[hre=
+f=3D"javascript:GoGd();"], a[href=3D"javascript:GoTp();"], a[href=3D"javasc=
+ript:window.GoTp();"], a[href^=3D"/ad/"] > img[id][src*=3D"hdslb.com"], a[h=
+ref^=3D"/hy-"][ontouchstart], a[href^=3D"http"] > img[src*=3D"pic.rmb.bdsta=
+tic.com/"][src$=3D".gif"], a[href^=3D"http://ad.moemoe."], a[href^=3D"javas=
+cript:GoDb"], a[href^=3D"javascript:gl012"], a[href^=3D"javascript:gl012"] =
++ img, a[id][href*=3D"/?aff=3D"], a[id][href*=3D"/?register=3D"], a[onclick=
+*=3D"open"] > img[src*=3D".dailygn.com/"], a[onclick^=3D"_czc."] > .add, a[=
+onclick^=3D"_czc."] > .ads, a[onclick^=3D"_czc.push(['_trackEvent', '=E5=B9=
+=BF=E5=91=8A"], a[onclick^=3D"javascript:pc_"] > img[src*=3D".alicdn.com"],=
+ a[style$=3D"2147483647;"][ontouchstart] { display: none !important; }
+
+a[target=3D"_bank"] > img[src*=3D".360buyimg.com"][style=3D"width:100%;heig=
+ht:auto;"], a[target=3D"_blank"] > img.king, a[target=3D"_blank"] > img[hei=
+ght=3D"120px"][src*=3D".c-ctrip.com"][src$=3D".gif"], a[target=3D"_blank"] =
+> img[height=3D"120px"][src*=3D".meituan.net"][src$=3D".gif"], a[target=3D"=
+_blank"] > img[height=3D"120px"][src*=3D".tripcdn.com"][src$=3D".gif"], a[t=
+arget=3D"_blank"] > img[height=3D"120px"][src*=3D"qlogo.cn"][src$=3D".png"]=
+, a[target=3D"_blank"] > img[height=3D"60"][src*=3D".360buyimg.com"][src$=
+=3D".gif"], a[target=3D"_blank"] > img[height=3D"60px"][src*=3D".126.net"][=
+src$=3D".gif"], a[target=3D"_blank"] > img[height=3D"60px"][src*=3D".360buy=
+img.com"][src$=3D".gif"], a[target=3D"_blank"] > img[height=3D"60px"][src*=
+=3D".alicdn.com"][src$=3D".gif"], a[target=3D"_blank"] > img[height=3D"60px=
+"][src*=3D".c-ctrip.com"][src$=3D".gif"], a[target=3D"_blank"] > img[height=
+=3D"60px"][src*=3D".lenovo.com"][src$=3D".png"], a[target=3D"_blank"] > img=
+[height=3D"60px"][src*=3D".meituan.net"][src$=3D".gif"], a[target=3D"_blank=
+"] > img[height=3D"60px"][src*=3D".tripcdn.com"][src$=3D".gif"], a[target=
+=3D"_blank"] > img[height=3D"60px"][src*=3D"qlogo.cn"][src$=3D".png"], a[ta=
+rget=3D"_blank"] > img[src*=3D".bitautoimg.com/"][src$=3D".gif"], a[target=
+=3D"_blank"] > img[src*=3D".ikstatic.cn"][style=3D"width:100%;height:100%"]=
+, a[target=3D"_blank"] > img[src*=3D"hitv.com"], a[target=3D"_blank"][oncli=
+ck*=3D"=E5=B9=BF=E5=91=8A=E7=82=B9=E5=87=BB"], body .has-ad { display: none=
+ !important; }
+
+body[onload*=3D"u()"] > #x, center > a[target=3D"_blank"] > img[style=3D"pa=
+dding- bottom:5px;width:960px;height:120px;"], center > a[target=3D"_blank"=
+] > img[style=3D"padding- bottom:5px;width:960px;height:60px;"], div#ad_id,=
+ div#xinxi, div[bannerlist], div[class^=3D"ADTOPLB_"], div[class^=3D"is_"] =
+> a > img[referrerpolicy=3D"no-referrer"], div[class^=3D"ps_"][value=3D"20"=
+], div[id][style=3D"position: fixed; bottom: 40%; z-index: 19999 !important=
+; right: 2px;"], div[id^=3D"a"] > a[target=3D"_blank"][style=3D"margin-top:=
+3px;"], div[id^=3D"a-loading-"] > span, div[id^=3D"ad_thread"], div[id^=3D"=
+adv-"].adv, div[id^=3D"em"] > a[onclick^=3D"em"][max-width], div[id^=3D"pho=
+to-header-title-content-text-dall"], div[onclick*=3D".open"][onclick*=3D"le=
+yu"], div[onclick*=3D"?i_code=3D"], div[style=3D" max-width:985px;  margin:=
+0 auto;"] > a > img[height=3D"60px"], div[style=3D" max-width:988px;  margi=
+n:0 auto;"] > a > img[height=3D"120px"] { display: none !important; }
+
+div[style=3D"position: fixed;top: 60px;right:0;z-index:999;width:250px"], d=
+iv[style^=3D"position"][onclick^=3D"window.open"], dl#listwoBox, img#adv1, =
+img[data-link][data-src*=3D"/u/"]:not([data-link*=3D"/i/"]), img[data-src*=
+=3D".alicdn.com/img/ibank/"][src=3D"/static/images/loadingerror.gif"], img[=
+onclick*=3D".qq.com/doc/"], img[onclick*=3D"/statics/js/"], img[onclick=3D"=
+window.open(this.url)"][src*=3D"qq.com"], img[onclick^=3D"window.open"][src=
+*=3D".360buyimg.com"], img[onclick^=3D"window.open"][src*=3D"pc.qq.com"], i=
+mg[src$=3D".gif"][style=3D"width:100%;max-width: 960px;height:45px;margin-b=
+ottom:2px;"], img[src$=3D"/img/tianbo.gif"], img[src*=3D".c-ctrip.com"][sty=
+le=3D"width:100%;height:70px;"], img[src*=3D".jd.com"][style=3D"width:100%;=
+height:70px;"], img[src*=3D".meituan.net"][style=3D"width:100%;height:70px;=
+"], img[src*=3D".qpic.cn"][width=3D"980"][height=3D"80"], img[src*=3D".sina=
+img."][style=3D"width:1025px;height:80px"], img[src*=3D".sinaimg."][style=
+=3D"width:150px;height:300px"], p[style^=3D"width: 100% !important; margin:=
+ 0px !important; padding: 0px !important; display: flex !important; flex-fl=
+ow: row wrap !important; background:"] { display: none !important; }
+
+script + #coupletBox, script + #rbbox, script + a[href] > img[src*=3D"lbsug=
+c.cdn.bcebos.com"], script + a[href^=3D"https://l.hyenadata.com/"], script =
++ a[target=3D"_bank"] > img[src*=3D".c-ctrip.com"][style=3D"width:100%;heig=
+ht:auto;"], script + div[id^=3D"a-loading-"], script + div[style=3D"width:3=
+00px;height:300px;position:fixed;bottom:0;left:0;z-index:2147483647;"], scr=
+ipt[src=3D"/js/sy2.js"] + div[align=3D"center"], script[src=3D"/template/ku=
+hei2/skin/base.js"] + #couplet, span[title=3D"neteasefooter"], style + .a-l=
+oading, style + .need_grid_img, style + .vdgdo, table[style=3D"border:#7D8C=
+8E solid 1px;height: 30px;text-align: center;"], ul[style=3D"margin: 0px; p=
+adding: 0px; font-size: 0px; display: flex;"], a[href*=3D".aff007.pro"], a[=
+href*=3D".app003.biz"], a[href*=3D".app003.cc"], a[href*=3D".cvezsacxz.com/=
+"], a[href*=3D".impactyu.com/"] { display: none !important; }
+
+a[href*=3D"/265201.com:"], a[href*=3D"/296256.com:"], a[href*=3D"/2996m.com=
+:"], a[href*=3D"/326519.com:"], a[href*=3D"/331.run"], a[href*=3D"/55915v.c=
+om:"], a[href*=3D"/595tz483.cc"], a[href*=3D"/7727ky.com:"], a[href*=3D"/77=
+56ky.com:"], a[href*=3D"/7757ky.com:"], a[href*=3D"/832106.top"], a[href*=
+=3D"/979155.com"], a[href*=3D"/bli2a.com/"], a[href*=3D"/g3656.com:"], a[hr=
+ef*=3D"/hhybd.wiki"], a[href*=3D"/k023055.com"], a[href*=3D"/ky0001.vip"], =
+a[href*=3D"/ky0777.cn"], a[href*=3D"/ky53362.com"], a[href*=3D"/lm63m.vip"]=
+ { display: none !important; }
+
+a[href*=3D"/sm003r.tv"], a[href*=3D"/sm033v.tv"], a[href*=3D"/sm27z.net"], =
+a[href*=3D"/smch7.com"], a[href*=3D"/x7458.cc"], a[href*=3D"/x7673.cc"], a[=
+href*=3D"/x8345.cc"], a[href*=3D"/x9658.cc"], div[onclick*=3D"/ky0777.cn"],=
+ div[onclick*=3D"ky55003.com"], .btn[href*=3D"/viphktv.com/"], [class][oncl=
+ick*=3D".ununxsxs.top"], a[href$=3D".120ydrayy.com"], a[href$=3D".anwangdao=
+hang.com"], a[href$=3D"/1c626.com"], a[href$=3D"/77adc.com"], a[href$=3D"/a=
+a8a1j.com"], a[href$=3D"/ky6y.com"], a[href$=3D"/liyusheng.com"], a[href$=
+=3D"/q522p.com"] { display: none !important; }
+
+a[href$=3D"/tv826.com"], a[href$=3D"/xh8k.vip"], a[href$=3D"/xhg23.com"], a=
+[href$=3D"ky9402.com"], a[href*=3D".05bq.com/"], a[href*=3D".08an.com/"], a=
+[href*=3D".123ch.cn"], a[href*=3D".1956hl.com/"], a[href*=3D".3366722.com"]=
+, a[href*=3D".51gogogou.com"], a[href*=3D".5250.cn"], a[href*=3D".5599722.c=
+om"], a[href*=3D".613639.com/"], a[href*=3D".7wkw.com"], a[href*=3D".832103=
+.top"], a[href*=3D".832112.top"], a[href*=3D".9xiazaiqi.com"], a[href*=3D".=
+ad222.xyz"], a[href*=3D".ahhxwavi.cn"], a[href*=3D".aiyou305.com/"] { displ=
+ay: none !important; }
+
+a[href*=3D".aiyouxi31.com"], a[href*=3D".aiyouxi56.com"], a[href*=3D".apple=
+1818.net"], a[href*=3D".asada-kairyo.com/"], a[href*=3D".ax10a.com/"], a[hr=
+ef*=3D".ayx300.com/"], a[href*=3D".beiren.cc"], a[href*=3D".bet365.gdn"], a=
+[href*=3D".bet927.bet"], a[href*=3D".bfq04.com/"], a[href*=3D".birthcaker.c=
+n"], a[href*=3D".bj-lingan.com/"], a[href*=3D".blueyoko.com/"], a[href*=3D"=
+.buscandolaidea.com/"], a[href*=3D".c43066a9.com"], a[href*=3D".cangpie.com=
+/"], a[href*=3D".caohang.com.cn/"], a[href*=3D".celadonstyle.com/"], a[href=
+*=3D".cgn8j9f4j3g.com:"], a[href*=3D".chicagospy.com/"] { display: none !im=
+portant; }
+
+a[href*=3D".covasco.com/"], a[href*=3D".d2mzb.com"], a[href*=3D".dajiang99.=
+com"], a[href*=3D".dbrows.com/"], a[href*=3D".dearcabbage.top"], a[href*=3D=
+".demobbe.com/"], a[href*=3D".dongtaisteel.com/"], a[href*=3D".downok.com"]=
+, a[href*=3D".dpcpfw.com/"], a[href*=3D".dztjy.com/"], a[href*=3D".eampakt.=
+com/"], a[href*=3D".erolabs.cloud"], a[href*=3D".etao1.com/"], a[href*=3D".=
+etechedge.com/"], a[href*=3D".ex068.com"], a[href*=3D".fllkf.com/"], a[href=
+*=3D".gghktv.com/"], a[href*=3D".glolhw.com/"], a[href*=3D".gnn8lgui.com/"]=
+, a[href*=3D".gongnou.com/"] { display: none !important; }
+
+a[href*=3D".greatnff.com/"], a[href*=3D".gsxzq.com/"], a[href*=3D".guzaosf.=
+com/"], a[href*=3D".gzwtgm.com/"], a[href*=3D".hbjimin.com/"], a[href*=3D".=
+hgty127.bet"], a[href*=3D".hgty411.bet"], a[href*=3D".hhjs20.com"], a[href*=
+=3D".hjikv.cc/"], a[href*=3D".hldbld.com/"], a[href*=3D".hmwang.cc"], a[hre=
+f*=3D".hndazhan.com/"], a[href*=3D".hth379.com/"], a[href*=3D".hth399.com"]=
+, a[href*=3D".hth401.com"], a[href*=3D".hth402.com"], a[href*=3D".hthbet34.=
+com"], a[href*=3D".hthbet35.com"], a[href*=3D".hthbet49.com"], a[href*=3D".=
+hthty24.app"] { display: none !important; }
+
+a[href*=3D".hthty25.app"], a[href*=3D".hthty26.app"], a[href*=3D".hthty27.a=
+pp"], a[href*=3D".hthvip20.com"], a[href*=3D".hthvip22.com"], a[href*=3D".h=
+thvip23.com"], a[href*=3D".hthvip34.com"], a[href*=3D".hthvip36.com"], a[hr=
+ef*=3D".htvip24.app"], a[href*=3D".htvip27.app"], a[href*=3D".hxctiao.com:"=
+], a[href*=3D".hxsp331.com"], a[href*=3D".icekingshop.com/"], a[href*=3D".i=
+eeod0.com/"], a[href*=3D".impreshunz.com/"], a[href*=3D".iziyo.com/"], a[hr=
+ef*=3D".jgg18.me"], a[href*=3D".jingjiezhenkong.com/"], a[href*=3D".jiq339.=
+com/"], a[href*=3D".kefuyuming.vip"] { display: none !important; }
+
+a[href*=3D".kluvcc.com/"], a[href*=3D".ktvxn.com/"], a[href*=3D".las8888999=
+9.com:"], a[href*=3D".meta-hh.com/"], a[href*=3D".meta-jt.com/"], a[href*=
+=3D".meta-kp.com/"], a[href*=3D".meta-wg.com/"], a[href*=3D".mieseng.com/"]=
+, a[href*=3D".nffhome.com/"], a[href*=3D".nfkonline.com/"], a[href*=3D".nfq=
+tech.com/"], a[href*=3D".nfylife.com/"], a[href*=3D".nktxv.com/"], a[href*=
+=3D".ohakaguide.com/"], a[href*=3D".onazs.com/"], a[href*=3D".open0317.top/=
+"], a[href*=3D".pesqfmu.cn"], a[href*=3D".picoville.com/"], a[href*=3D".qil=
+insb.com/"], a[href*=3D".qtj5.com/"] { display: none !important; }
+
+a[href*=3D".quankan.tv"], a[href*=3D".rookiego.com"], a[href*=3D".rrrmrm.co=
+m/"], a[href*=3D".saeilkorea.com/"], a[href*=3D".sandebg.com/"], a[href*=3D=
+".sjzbqnxx.com/"], a[href*=3D".sky1818.net"], a[href*=3D".snmlyshj.com/"], =
+a[href*=3D".supernfp.com/"], a[href*=3D".tea123.me"], a[href*=3D".thejierou=
+.net"], a[href*=3D".tholikiranam.com/"], a[href*=3D".topnfb.com/"], a[href*=
+=3D".trustarticle.com/"], a[href*=3D".tsguozikeji.cn"], a[href*=3D".ttz5.cn=
+"], a[href*=3D".tv688.cc"], a[href*=3D".tv699.cc"], a[href*=3D".umtrack.com=
+/"], a[href*=3D".uqubsb.com/"] { display: none !important; }
+
+a[href*=3D".urfatek.com/"], a[href*=3D".usharecloud.com/"], a[href*=3D".uxf=
+qh.com/"], a[href*=3D".vldbd.com/"], a[href*=3D".vloua.com/"], a[href*=3D".=
+vxzmok.com"], a[href*=3D".wenpie.com/"], a[href*=3D".wjLkj.com/"], a[href*=
+=3D".woyicanyin.com"], a[href*=3D".wpwpquse.cn/"], a[href*=3D".xacg.info/"]=
+, a[href*=3D".xinghuolm.top"], a[href*=3D".xingxingdm.com:"], a[href*=3D".x=
+lddz.net/"], a[href*=3D".xlgqy.com/"], a[href*=3D".xmluodi.com/"], a[href*=
+=3D".xrzzk.com/"], a[href*=3D".xxgxqscl.com/"], a[href*=3D".xyanovo.com/"],=
+ a[href*=3D".yabo414.com"] { display: none !important; }
+
+a[href*=3D".yabo816.com"], a[href*=3D".yabo824.com"], a[href*=3D".yabo858.c=
+om"], a[href*=3D".yabovip113.com"], a[href*=3D".yabovip2027.com/"], a[href*=
+=3D".yb2843.vip"], a[href*=3D".ybvip5741.vip"], a[href*=3D".ygx2.com/"], a[=
+href*=3D".yixing-hb.com"], a[href*=3D".youxi126.com"], a[href*=3D".youxi141=
+.com"], a[href*=3D".youxi142.com"], a[href*=3D".yyk2.com/"], a[href*=3D".yy=
+pls.com/"], a[href*=3D"/10093813.com"], a[href*=3D"/1266p.com:"], a[href*=
+=3D"/136ayx.vip"], a[href*=3D"/1560045.cc"], a[href*=3D"/1651n.com:"], a[hr=
+ef*=3D"/170hth.com/"] { display: none !important; }
+
+a[href*=3D"/171hth.com/"], a[href*=3D"/182hth.com"], a[href*=3D"/2141t.com:=
+"], a[href*=3D"/2486090.com/"], a[href*=3D"/2e9c9aa9.com/"], a[href*=3D"/33=
+3663.xyz"], a[href*=3D"/3337818.com/"], a[href*=3D"/33966676.com/"], a[href=
+*=3D"/33hth.cn"], a[href*=3D"/3400com-o15.com/"], a[href*=3D"/3970t.com:"],=
+ a[href*=3D"/3kmg.top"], a[href*=3D"/445.ee/"], a[href*=3D"/51236.cc"], a[h=
+ref*=3D"/602034.com"], a[href*=3D"/6298crsyzh.com:"], a[href*=3D"/682kg.com=
+"], a[href*=3D"/7267224.com/"], a[href*=3D"/7699j.com:"], a[href*=3D"/77633=
+49.com/"] { display: none !important; }
+
+a[href*=3D"/7900y.com?"], a[href*=3D"/84992020.xyz"], a[href*=3D"/84992323.=
+xyz"], a[href*=3D"/8616.tech"], a[href*=3D"/9716t.com"], a[href*=3D"/aiyoub=
+et178.com/"], a[href*=3D"/akmh047.vip"], a[href*=3D"/av888822.vip/"], a[hre=
+f*=3D"/ayx600.com/"], a[href*=3D"/ayxbet846.vip"], a[href*=3D"/b6314.com:"]=
+, a[href*=3D"/bibo149.com:"], a[href*=3D"/blfanss.com"], a[href*=3D"/bucd.i=
+cu/"], a[href*=3D"/cslpldyc.me"], a[href*=3D"/ctyitopo17.com"], a[href*=3D"=
+/d27.tv"], a[href*=3D"/ddtz5.com"], a[href*=3D"/ftyvrfy05.com"], a[href*=3D=
+"/h91.tv"] { display: none !important; }
+
+a[href*=3D"/htbet1536.com"], a[href*=3D"/hth104.com/"], a[href*=3D"/hth107.=
+com/"], a[href*=3D"/hth377.com/"], a[href*=3D"/hth567.cn"], a[href*=3D"/hth=
+678.cn"], a[href*=3D"/hth907.com"], a[href*=3D"/hth908.com"], a[href*=3D"/h=
+thty21.app"], a[href*=3D"/htvip21.app"], a[href*=3D"/huojugg.com"], a[href*=
+=3D"/hxzfcz.com/"], a[href*=3D"/ihezu.run"], a[href*=3D"/industrialproducts=
+find.com"], a[href*=3D"/jdr29jlir.com"], a[href*=3D"/jianjianjiao.top"], a[=
+href*=3D"/kanxiuren.com/?"], a[href*=3D"/kanxiuren.com?"], a[href*=3D"/kk53=
+77.com:"], a[href*=3D"/kk80.cc"] { display: none !important; }
+
+a[href*=3D"/kk9915.com:"], a[href*=3D"/ksbz1017.com"], a[href*=3D"/kt169.co=
+m"], a[href*=3D"/ky010.vip"], a[href*=3D"/ky0666.cn"], a[href*=3D"/ky1010.c=
+n"], a[href*=3D"/ky9897.cn"], a[href*=3D"/kyky199.com"], a[href*=3D"/l1y5.c=
+om"], a[href*=3D"/l1y9.com"], a[href*=3D"/leyu178.ee"], a[href*=3D"/mda1.si=
+te/"], a[href*=3D"/mdapp2.cc/"], a[href*=3D"/mt86k.xyz"], a[href*=3D"/nf.br=
+ushshopy.com"], a[href*=3D"/odnb.vip"], a[href*=3D"/ppffj.me/"], a[href*=3D=
+"/shishangta.cn"], a[href*=3D"/t4078.com:"], a[href*=3D"/t4741.com"] { disp=
+lay: none !important; }
+
+a[href*=3D"/tg.602.com/"], a[href*=3D"/tv668.cc"], a[href*=3D"/tv688.cc"], =
+a[href*=3D"/ty523.com/"], a[href*=3D"/uu5566.cn.com/"], a[href*=3D"/v9038.c=
+om:"], a[href*=3D"/wns8499608.xyz"], a[href*=3D"/x5092.com"], a[href*=3D"/x=
+5123.cc"], a[href*=3D"/xapps5.xyz"], a[href*=3D"/xchina.fun/redirect/ad"], =
+a[href*=3D"/yb6277.vip"], a[href*=3D"/ybhth689.com"], a[href*=3D"/yigeyumin=
+g3880.top"], a[href*=3D"/yyds101.com"], a[href*=3D"/yyh.net/"], a[href*=3D"=
+https://www.zhidmai.com"], a[href*=3D"nnqp.vip"], a[href=3D"http://hqbet219=
+1.com"], a[href=3D"http://www.tw787.com/"] { display: none !important; }
+
+a[href=3D"http://www.yabovip5.cc/"], a[href=3D"https://368259.com"], a[href=
+=3D"https://guapitv.app/"], a[href=3D"https://www.ledlandi.com"], a[href=3D=
+"https://www.ybvip1879.vip"], a[href=3D"https://xq97.com"], a[href^=3D"http=
+://go.gotourl.xyz/"], a[href^=3D"http://pic.gunqiu.com/"], a[href^=3D"http:=
+//www.upupoo.com"], a[onclick*=3D".lyty665.com"], a[style*=3D".e-years.net/=
+"], a[style*=3D".misigl.com/"], button[onclick*=3D".xacg.info/"], div[oncli=
+ck*=3D".8tse9.com"], div[onclick*=3D".lyty49.com"], div[onclick*=3D".rwnyou=
+.com"], div[onclick*=3D".yyav5.top"], div[onclick*=3D"bdtz5.com"], div[oncl=
+ick*=3D"kiropa.com"], div[onclick*=3D"ky0222.cn"] { display: none !importan=
+t; }
+
+div[onclick*=3D"ky165.cn"], img[onclick*=3D".5408h.cn"], img[onclick*=3D".a=
+iyou305.com/"], img[onclick*=3D".gghktv.com/"], img[onclick*=3D".hth390.com=
+"], img[onclick*=3D"/2e9c9aa9.com"], img[onclick*=3D"/3kmg.top"], img[oncli=
+ck*=3D"/60hthty.vip"], img[onclick*=3D"/682kg.com"], img[onclick*=3D"/789ht=
+bet.vip"], img[onclick*=3D"/ayx600.com/"], img[onclick*=3D"/ayx700.com/"], =
+img[onclick*=3D"/c7.net/"], img[onclick*=3D"/kk80.cc"], img[src*=3D".hecan1=
+23.top"], .col-lg-3.col-xs-6 > .well, .thumb-overlay-albums > .col-xs-12[st=
+yle=3D"display: flex;justify-content: center;"], #guanggao1[style^=3D"posit=
+ion"], #guanggao2[style^=3D"position"], .btn-outline-primary[href*=3D".com:=
+"] { display: none !important; }
+
+header + #main:nth-child(n+3) > .container-fluid.mb-0.p-0, header + #main:n=
+th-child(n+3) > .container-fluid.mb-0.p-0 + .jsv-g1, header + #main:nth-chi=
+ld(n+3) > .jsv.jsv-g1.mb-0 + .container-fluid.mb-3.p-0, header + #main:nth-=
+child(n+3) > .jsv.jsv-g1.mb-0 > .container-fluid.mb-3.p-0, [style=3D"displa=
+y:none"] + iframe[scrolling=3D"no"][src*=3D"//"][src*=3D"?"][src*=3D"=3D"][=
+src*=3D"&"][width][height][frameborder=3D"0"], div:not(#video)[style^=3D"wi=
+dth: 100%;"][style$=3D"display: block;"] iframe[scrolling=3D"no"][src*=3D"/=
+/"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][frameborder=3D"0"]=
+, div[style^=3D"width: 100%;"][style$=3D"margin: 0px;"] iframe[scrolling=3D=
+"no"][src*=3D"//"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][fra=
+meborder=3D"0"], div[style^=3D"width: 100%;"][style$=3D"opacity: 100;"] ifr=
+ame[scrolling=3D"no"][src*=3D"//"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][wi=
+dth][height][frameborder=3D"0"], div[style^=3D"width: 100%;"][style$=3D"ove=
+rflow: hidden;"] iframe[scrolling=3D"no"][src*=3D"//"][src*=3D"?"][src*=3D"=
+=3D"][src*=3D"&"][width][height][frameborder=3D"0"], div[style^=3D"width: 1=
+00%;"][style$=3D"visibility: visible;"] iframe[scrolling=3D"no"][src*=3D"//=
+"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][frameborder=3D"0"],=
+ div[style^=3D"width: 100%;"][style$=3D"z-index: inherit;"] iframe[scrollin=
+g=3D"no"][src*=3D"//"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height]=
+[frameborder=3D"0"], #app.app > .topic-big, #bd-hl-content, #container > .i=
+tem.title_normal, #container > .item.title_top, #container > .wrapper > .fl=
+, #container > a.block, #container.container > a.item, #cpro_container, #im=
+g-txt-wrapper > #title_desc_div { display: none !important; }
+
+#wrapper > div[style=3D"padding:3px;"] > #pic, .container > a.mid-wrapper, =
+a[href*=3D"/cpro."], a[href*=3D"/cpro/"], a[href*=3D"/mobads.php?"], body >=
+ div[style=3D"display:none;"] + div[style=3D"display:none;"] + div[id][clas=
+s][style^=3D"background-color:"], div[class][id][style] > .pic_container, d=
+iv[id][style=3D"width: 100%;"] > div > div > iframe[scrolling=3D"no"][src^=
+=3D"http"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][frameborder=
+=3D"0"], div[id][style=3D"width: 100%;"] > div > iframe[scrolling=3D"no"][s=
+rc^=3D"http"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][framebor=
+der=3D"0"], div[id][style=3D"width: 100%;"] > iframe[scrolling=3D"no"][src^=
+=3D"http"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][frameborder=
+=3D"0"], div[style=3D"display:none;"] + script + #container.container, div[=
+style=3D"position: fixed; top: 0px; overflow: hidden; z-index: 2147483647; =
+background-color: rgba(0, 0, 0, 0.5); height: 110%;"], div[style=3D"width: =
+100%;"]:not([id]):not([class]) > iframe[scrolling=3D"no"][src*=3D"//"][src*=
+=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][frameborder=3D"0"], div[st=
+yle^=3D"width: 100%;"]:not([id]):not([class]) > iframe[scrolling=3D"no"][sr=
+c^=3D"http"][src*=3D"?"][src*=3D"=3D"][src*=3D"&"][width][height][framebord=
+er=3D"0"]:not([allowfullscreen]), a[href^=3D"http://yunbofangbt."], div[ali=
+gn=3D"center"] > a[href^=3D"/url/"] > img[src*=3D".alicdn.com"], div[align=
+=3D"center"] > a[href^=3D"/url/"] > img[src*=3D".qpic.cn"], vg-pause-ads, .=
+cc5278_banner_ad, center > p > a[target=3D"_blank"] > img[width=3D"728px"][=
+height=3D"90px"] { display: none !important; }
+
+.bottomd + .leftd, .recommended-grids > .file[style=3D"margin: 5px 2px 5px =
+2px;"], .vodads, a[onclick^=3D"gtag"] > .add, style + .topd, style + .topd =
++ .bottomd, #appss[style=3D"padding:15px;"], #asdw3, #asdw3 + img + :not(di=
+v), #chaptername + div > div[style=3D"padding:10px;border-radius:10px;backg=
+round-color:green;"], #downdiv > .downcode, #gudingweiDiv, #my_dp_a, #my_gd=
+_a, .appguide-wrap[onclick*=3D"bcebos.com"], .box_con[style=3D"border-radiu=
+s:10px;background-color:#ff0000;padding:15px;"], .callApp_fl_btn[onclick^=
+=3D"open_app"], .downcode[style^=3D"position:fixed;z-index:1000;top:200px;"=
+], .look_more_a[onclick^=3D"open_app"], .nr_all > .m_f_a.sw_sp { display: n=
+one !important; }
+
+.readerListADbox, [class][onclick=3D"window.location.href=3D'/api/goapp/'"]=
+, [class][onclick=3D"window.location.href=3D'https://www.suyuexs.com'"], [c=
+lass][onclick=3D"window.location.href=3D'https://www.tsqcy.cn'"], [class][o=
+nclick^=3D"window.location.href"][onclick*=3D"%AF%B4.apk"], [class][onclick=
+^=3D"window.location.href"][onclick*=3D".bcebos."], [class][onclick^=3D"win=
+dow.location.href"][onclick*=3D".pypyj.com"], [class][onclick^=3D"window.lo=
+cation.href"][onclick*=3D".yueshuapp.com"], a[href*=3D".516624.com/"], a[hr=
+ef*=3D".com/tg.html?id=3D"], a[href*=3D".ssmh"][href*=3D"?u=3D"], a[href*=
+=3D".xxmh"][href*=3D"?u=3D"], a[href*=3D"://mgzs.cdn.bcebos.com/"], a[href=
+=3D"/ad2.html"], a[href^=3D"http"][onclick^=3D"setCookie"][style^=3D"width:=
+100%;height:100"], body > div[style=3D"width: 100% !important; margin: 0px =
+!important; padding: 0px !important; display: flex !important; flex-flow: r=
+ow wrap !important; background: rgb(255, 255, 255) !important; color: trans=
+parent !important; font-size: 0px !important; text-indent: -10000px !import=
+ant; line-height: 0px !important;"], dd[style=3D"padding:16px 16px 20px;mar=
+gin: 15px;border-radius:50%;background-color:green;"], div[onclick^=3D"wind=
+ow.location.href"][onclick*=3D".bcebos."], div[onclick^=3D"window.location.=
+href"][onclick*=3D".haoyundm.com"], div[style=3D"border-radius:8px;backgrou=
+nd-color:#005737;padding:6px;"] { display: none !important; }
+
+div[style=3D"box-sizing:border-box;padding:20px 16px;border-radius:8px;widt=
+h:90%;margin:0 auto;"], iframe[src*=3D".xxmh"][src*=3D"?u=3D"], script + #s=
+trl, script + #strl + div[style], script + [id][style=3D"width:100%;height:=
+auto;min-height:120px;position:relative;display:block;"], #Video-Shunt-Box =
++ .container, .leftd1 + .rightd1, .rightd + .leftd1, .smcms-wrap > .group-b=
+ox > a[target=3D"_blank"] > img, .smcms-wrap > a[target=3D"_blank"] > img, =
+div[style=3D"display: flex;flex-wrap: wrap;margin-right: 5px;margin-left: 5=
+px;"] + style + .container, .txp_ad_center, #asx_text, #wp > .V-video-float=
+s, .b_oscar1, .b_pr, .b_sxc, .b_sxp, .b_sxp + .zxy, .float-left12 > .div-li=
+st { display: none !important; }
+
+.wrapper > #asxv, a[onclick*=3D"/dasp.php?a=3D"], #j-new-ad, .a_sxfl, .a_sx=
+mu, .a_sxp, .a_sxpb, .heg > .partner-list, a[href^=3D"/dasp.php?a=3D"], #he=
+ader + #topBox, .col5 > dl#randomBox, .search + #midBox, .wrap + #btmBox, .=
+wrap + #midBox, body[ontouchstart] > #topBox, script[src$=3D"/base.js"] + #=
+couplet, #toptb + div[align=3D"center"], .it618_firstad_flex, table[style=
+=3D"border:#e8e8e8 1px solid;"] + div[style=3D"margin-top:5px"] > table[sty=
+le=3D"width:100%;"][cellspacing=3D"0"][cellpadding=3D"1"][bordercolor=3D"#2=
+2222"][border=3D"1"], #__ads_dp { display: none !important; }
+
+#video_playr_side.video_playr_sider.videoplayerside, .nordvpn-popup + .side=
+bar-vpn { display: none !important; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-1d592eef-8e0f-4504-a27f-0e4ef2bdf8f6@mhtml.blink
+
+@charset "utf-8";
+
+#_copy { align-items: center; background: rgb(68, 148, 213); border-radius:=
+ 3px; color: rgb(255, 255, 255); cursor: pointer; display: flex; font-size:=
+ 13px; height: 30px; justify-content: center; position: absolute; width: 60=
+px; z-index: 1000; }
+
+#select-tooltip, #sfModal, .modal-backdrop, div[id^=3D"reader-helper"] { di=
+splay: none !important; }
+
+.modal-open { overflow: auto !important; }
+
+._sf_adjust_body { padding-right: 0px !important; }
+
+.enable_copy_btns_div { position: fixed; width: 154px; left: 10px; top: 45%=
+; background: rgb(231, 241, 255); border: 2px solid rgb(69, 149, 213); font=
+-weight: 600; border-radius: 2px; font-family: -apple-system, BlinkMacSyste=
+mFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "H=
+elvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe U=
+I Emoji", "Segoe UI Symbol"; z-index: 5000; }
+
+.enable_copy_btns_logo { width: 100%; background: rgb(69, 149, 213); text-a=
+lign: center; font-size: 12px; color: rgb(231, 241, 255); line-height: 30px=
+; height: 30px; }
+
+.enable_copy_btns_btn { display: block; width: 128px; height: 28px; backgro=
+und: rgb(127, 87, 17); border-radius: 4px; color: rgb(255, 255, 255); font-=
+size: 12px; border: 0px; outline: 0px; margin: 8px auto; font-weight: 700; =
+cursor: pointer; opacity: 0.9; }
+
+.enable_copy_btns_btn:hover { opacity: 0.8; }
+
+.enable_copy_btns_btn:active { opacity: 1; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-c6608a78-1fe7-43bc-9276-2f24201f44fa@mhtml.blink
+
+@charset "utf-8";
+
+.b6a84e91-dc6e-492d-a4b3-56924ed57dfa { position: relative !important; bord=
+er-radius: 0.2em !important; padding: 0px !important; margin: 0px !importan=
+t; }
+
+.fcb5281e-e0ee-474f-88c2-c768b23abdbd .ssh-close { position: absolute; left=
+: -8px; top: -8px; width: 16px; height: 16px; z-index: 999; border: none; b=
+ackground: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAA=
+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
+NGpVYJkfGwAAAABJRU5ErkJggg=3D=3D") no-repeat border-box border-box; animati=
+on-duration: 275ms; animation-timing-function: ease-out; box-shadow: none; =
+animation-name: cba6cfbb-6100-40de-ba8b-0bd7a4e6c963; }
+
+.fcb5281e-e0ee-474f-88c2-c768b23abdbd .ssh-close:hover, .fcb5281e-e0ee-474f=
+-88c2-c768b23abdbd .ssh-close:focus { background-image: url("data:image/png=
+;base64,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"); }
+
+@media print {
+  .fcb5281e-e0ee-474f-88c2-c768b23abdbd { box-shadow: unset !important; -we=
+bkit-print-color-adjust: exact !important; }
+}
+
+@keyframes cba6cfbb-6100-40de-ba8b-0bd7a4e6c963 {=20
+  0% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes c0005b22-6c39-41fb-999d-4b91f6094a48 {=20
+  100% { opacity: 0; transform: scale(0.3); }
+}
+
+.fcb5281e-e0ee-474f-88c2-c768b23abdbd { background-color: rgba(238, 238, 23=
+8, 0.8); color: rgb(170, 170, 170); font: inherit; box-shadow: rgb(238, 238=
+, 238) 0px 0px 0.35em; text-shadow: none !important; }
+
+.default-red-aa94e3d5-ab2f-4205-b74e-18ce31c7c0ce { box-shadow: rgb(255, 12=
+8, 128) 0px 0px 0.35em; background-color: rgba(255, 128, 128, 0.8) !importa=
+nt; color: rgb(0, 0, 0) !important; }
+
+.default-orange-da01945e-1964-4d27-8a6c-3331e1fe7f14 { box-shadow: rgb(255,=
+ 210, 170) 0px 0px 0.35em; background-color: rgba(255, 210, 170, 0.8) !impo=
+rtant; color: rgb(0, 0, 0) !important; }
+
+.default-yellow-aaddcf5c-0e41-4f83-8a64-58c91f7c6250 { box-shadow: rgb(255,=
+ 255, 170) 0px 0px 0.35em; background-color: rgba(255, 255, 170, 0.8) !impo=
+rtant; color: rgb(0, 0, 0) !important; }
+
+.default-green-c4d41e0a-e40f-4c3f-91ad-2d66481614c2 { box-shadow: rgb(170, =
+255, 170) 0px 0px 0.35em; background-color: rgba(170, 255, 170, 0.8) !impor=
+tant; color: rgb(0, 0, 0) !important; }
+
+.default-cyan-f88e8827-e652-4d79-a9d9-f6c8b8ec9e2b { box-shadow: rgb(170, 2=
+55, 255) 0px 0px 0.35em; background-color: rgba(170, 255, 255, 0.8) !import=
+ant; color: rgb(0, 0, 0) !important; }
+
+.default-purple-c472dcdb-f2b8-41ab-bb1e-2fb293df172a { box-shadow: rgb(255,=
+ 170, 255) 0px 0px 0.35em; background-color: rgba(255, 170, 255, 0.8) !impo=
+rtant; color: rgb(0, 0, 0) !important; }
+
+.default-grey-da7cb902-89c6-46fe-b0e7-d3b35aaf237a { box-shadow: rgb(119, 1=
+19, 119) 0px 0px 0.35em; background-color: rgba(119, 119, 119, 0.8) !import=
+ant; color: rgb(255, 255, 255) !important; }
+
+.d8f13145-257a-4c83-93ee-aaed9eb6bfc2 { box-shadow: rgb(0, 255, 0) 0px 0px =
+0.35em; background-color: rgba(0, 255, 0, 0.8) !important; color: rgb(0, 0,=
+ 0) !important; }
+
+.c90407cc-1195-40d6-a70e-3778e240ddb0 { box-shadow: rgb(0, 128, 0) 0px 0px =
+0.35em; background-color: rgba(0, 128, 0, 0.8) !important; color: rgb(0, 0,=
+ 0) !important; }
+
+.badf8580-d31b-46f9-b5ea-b9324f2ea5fe { box-shadow: rgb(201, 110, 110) 0px =
+0px 0.35em; background-color: rgba(201, 110, 110, 0.8) !important; color: r=
+gb(0, 0, 0) !important; }
+
+.b931a957-3fe6-41b3-844d-b273c596186d { box-shadow: rgb(189, 151, 247) 0px =
+0px 0.35em; background-color: rgba(189, 151, 247, 0.8) !important; color: r=
+gb(0, 0, 0) !important; }
+
+.c9e0c379-b74a-48c2-9679-f1b916d15df4 { box-shadow: rgb(255, 255, 0) 0px 0p=
+x 0.35em; background-color: rgba(255, 255, 0, 0.8) !important; color: rgb(0=
+, 0, 0) !important; }
+
+.e69fb97c-0389-44f5-a9d6-e0579439d5a9 { box-shadow: rgb(245, 98, 0) 0px 0px=
+ 0.35em; background-color: rgba(245, 98, 0, 0.8) !important; color: rgb(0, =
+0, 0) !important; }
+
+.c53ed0e3-0850-4a2b-a140-811a68ff7097 { box-shadow: rgb(248, 84, 242) 0px 0=
+px 0.35em; background-color: rgba(248, 84, 242, 0.8) !important; color: rgb=
+(0, 0, 0) !important; }
+
+.b80a6974-eeab-4a84-8e33-c029b93f828f { box-shadow: rgb(0, 255, 255) 0px 0p=
+x 0.35em; background-color: rgba(0, 255, 255, 0.8) !important; color: rgb(0=
+, 0, 0) !important; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/css/trac.css
+
+@charset "utf-8";
+
+html { overflow-y: scroll; }
+
+body { background: rgb(255, 255, 255); color: rgb(0, 0, 0); margin: 10px; p=
+adding: 0px; }
+
+body, th, tr { font: 13px Verdana, Arial, "Bitstream Vera Sans", Helvetica,=
+ sans-serif; }
+
+h1, h2, h3, h4 { font-family: Arial, Verdana, "Bitstream Vera Sans", Helvet=
+ica, sans-serif; font-weight: bold; letter-spacing: -0.018em; break-after: =
+avoid; }
+
+h1 { font-size: 19px; margin: 0.15em 1em 0.5em 0px; }
+
+h2 { font-size: 16px; }
+
+h3 { font-size: 14px; }
+
+hr { border-right: none; border-bottom: none; border-left: none; border-ima=
+ge: initial; border-top: 1px solid rgb(204, 204, 187); margin: 2em 0px; }
+
+address { font-style: normal; }
+
+img { border: none; }
+
+.underline { text-decoration: underline; }
+
+ol.loweralpha { list-style-type: lower-alpha; }
+
+ol.upperalpha { list-style-type: upper-alpha; }
+
+ol.lowerroman { list-style-type: lower-roman; }
+
+ol.upperroman { list-style-type: upper-roman; }
+
+ol.arabic { list-style-type: decimal; }
+
+:link, :visited { text-decoration: none; color: rgb(187, 0, 0); border-bott=
+om: 1px dotted rgb(187, 187, 187); }
+
+:link:hover, :visited:hover { background-color: rgb(238, 238, 238); color: =
+rgb(85, 85, 85); }
+
+h1 :link, h1 :visited, h2 :link, h2 :visited, h3 :link, h3 :visited, h4 :li=
+nk, h4 :visited, h5 :link, h5 :visited, h6 :link, h6 :visited { color: inhe=
+rit; }
+
+.anchor:link, .anchor:visited { border: none; color: rgb(215, 215, 215); fo=
+nt-size: 0.8em; vertical-align: text-top; }
+
+* > .anchor:link, * > .anchor:visited { visibility: hidden; }
+
+h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor, h5:=
+hover .anchor, h6:hover .anchor, span:hover .anchor { visibility: visible; =
+}
+
+h1:target, h2:target, h3:target, h4:target, h5:target, h6:target, span:targ=
+et { background: rgb(255, 255, 187); box-shadow: rgb(221, 221, 170) 0.1em 0=
+.1em 0.4em 0.1em; border-radius: 0.2em; }
+
+.tracini table.wiki tbody tr:target { background: rgb(255, 255, 187); }
+
+.tracini .tracini-option { border: none; position: relative; }
+
+.tracini .tracini-option:link:hover, .tracini .tracini-option:visited:hover=
+ { background-color: transparent; }
+
+.tracini tr[id]:hover .tracini-option::before { content: "=C2=B6"; position=
+: absolute; display: block; left: -1em; width: 1em; color: rgb(215, 215, 21=
+5); z-index: 1; }
+
+@media screen {
+  a.ext-link .icon { background: url("../extlink.gif") left center no-repea=
+t; padding-left: 15px; }
+  a.mail-link .icon { background: url("../envelope.png") left center no-rep=
+eat; padding-left: 16px; }
+  a.trac-rawlink, a.trac-ziplink { background: url("../download.png") right=
+ center no-repeat; padding-right: 16px; border-bottom: none; }
+}
+
+input, textarea, select, .trac-button { margin: 2px; }
+
+input, select, button { font-family: Arial, Verdana, "Bitstream Vera Sans",=
+ Helvetica, sans-serif; font-size: 100%; }
+
+textarea { white-space: pre-wrap; }
+
+input, select, .trac-button { vertical-align: middle; }
+
+input[type=3D"button"], input[type=3D"submit"], input[type=3D"reset"], .tra=
+c-button { background: rgb(238, 238, 238); color: rgb(34, 34, 34); border: =
+1px outset rgb(238, 238, 238); border-radius: 0.3em; box-shadow: rgb(136, 1=
+36, 136) 0.1em 0.1em 0.4em 0px; padding: 0.1em 0.5em 0.2em; text-shadow: rg=
+b(221, 221, 221) 0.04em 0.04em; cursor: pointer; }
+
+input[type=3D"button"]:hover, input[type=3D"submit"]:hover, input[type=3D"r=
+eset"]:hover, .trac-button:hover { background: rgb(246, 246, 246); box-shad=
+ow: rgb(153, 153, 153) 0.1em 0.1em 0.6em 0px; text-shadow: rgb(252, 252, 25=
+2) 0.04em 0.04em; }
+
+input[type=3D"button"]:active, input[type=3D"submit"]:active, input[type=3D=
+"reset"]:active, .trac-button:active, .inlinebuttons a:active { position: r=
+elative; top: 0.1em; left: 0.1em; }
+
+input[type=3D"button"][disabled], input[type=3D"submit"][disabled], input[t=
+ype=3D"reset"][disabled], .trac-button[disabled] { background: rgb(246, 246=
+, 246); border-style: solid; color: rgb(153, 153, 153); }
+
+input[type=3D"text"], input.textwidget, textarea { border: 1px solid rgb(21=
+5, 215, 215); border-radius: 0.3em; }
+
+input[type=3D"text"], input.textwidget { padding: 0.25em 0.5em; }
+
+input[type=3D"text"]:focus, input.textwidget:focus, textarea:focus { border=
+: 1px solid rgb(136, 136, 102); }
+
+option { border-bottom: 1px dotted rgb(215, 215, 215); }
+
+fieldset { border: 1px solid rgb(215, 215, 215); border-radius: 0.4em; marg=
+in: 1em 0px; background: rgb(247, 247, 240); box-shadow: rgb(231, 231, 231)=
+ 0.1em 0.1em 1em 0px inset; padding: 1em; }
+
+p.hint, span.hint, span.trac-datetimehint { color: rgb(102, 102, 102); font=
+-size: 85%; font-style: italic; margin: 0.5em 0px; padding-left: 1em; }
+
+span.hint { vertical-align: middle; }
+
+p.help { color: rgb(102, 102, 102); font-size: 90%; margin: 1em 0.5em 0.5em=
+; }
+
+legend { color: rgb(153, 153, 153); margin-left: 0.6em; padding: 0px 0.25em=
+; font-size: 90%; font-weight: bold; }
+
+label.disabled, .disabled span.hint, .disabled p.help, .disabled legend, .d=
+isabled input, .disabled select, .readonly span.hint, .readonly p.help { co=
+lor: rgb(215, 215, 215); }
+
+.buttons { margin: 0.5em 0.5em 0.5em 0px; }
+
+.buttons form, .buttons form div { display: inline; }
+
+.buttons input { margin: 1em 0.5em 0.1em 0px; }
+
+.inlinebuttons input, .inlinebuttons .trac-button, .inlinebuttons a { borde=
+r: 1px solid rgb(221, 221, 221); border-radius: 1em; height: 1.6em; padding=
+: 0px 0.4em 0.1em; font-size: 70%; box-shadow: none; margin: 0px 0.1em 0.1e=
+m; background: none; color: rgb(128, 128, 128); cursor: pointer; }
+
+.uisymbols .inlinebuttons input[type=3D"button"], .uisymbols .inlinebuttons=
+ input[type=3D"submit"], .uisymbols .inlinebuttons .trac-button, .uisymbols=
+ .inlinebuttons a { font-size: 100%; }
+
+.inlinebuttons input[type=3D"button"]:hover, .inlinebuttons input[type=3D"s=
+ubmit"]:hover, .inlinebuttons .trac-button:hover, .inlinebuttons a:hover { =
+background: rgb(246, 246, 246); color: rgb(51, 51, 51); text-shadow: rgb(25=
+2, 252, 252) 0.04em 0.04em; box-shadow: rgb(153, 153, 153) 0.1em 0.1em 0.6e=
+m 0px; }
+
+input[type=3D"button"].trac-delete, input[type=3D"submit"].trac-delete, .tr=
+ac-button.trac-delete { color: rgb(211, 19, 19); }
+
+input[type=3D"button"].trac-delete:hover, input[type=3D"submit"].trac-delet=
+e:hover, .trac-button.trac-delete:hover { color: rgb(227, 19, 19); }
+
+textarea.trac-fullwidth, input.trac-fullwidth, button.trac-fullwidth { box-=
+sizing: border-box; margin-left: 0px; margin-right: 0px; width: 100%; }
+
+textarea.trac-fullwidth { padding: 2px; }
+
+form.mod { margin: 1em 0px; }
+
+form.mod .field { margin: 0.5em 0px; }
+
+form.mod .field.description { margin-top: 1em; }
+
+form.mod .field label { padding-left: 0.2em; }
+
+form.mod #changeinfo .field { margin: 0.25em 0px 0.75em; }
+
+form.mod #changeinfo .options { padding: 0px 0px 0.5em 1em; }
+
+#header hr { display: none; }
+
+#header h1 { margin: 1.5em 0px -1.5em; padding: 0px; }
+
+#header img { border: none; margin: 0px 0px -3em; }
+
+#header :link, #header :visited, #header :link:hover, #header :visited:hove=
+r { background: transparent; color: rgb(85, 85, 85); margin-bottom: 2px; bo=
+rder: none; padding: 0px; }
+
+#header h1 :link:hover, #header h1 :visited:hover { color: rgb(0, 0, 0); }
+
+#search { clear: both; font-size: 10px; height: 2.2em; margin: 0px 0px 1em;=
+ text-align: right; }
+
+#search input { font-size: 10px; }
+
+#search label { display: none; }
+
+.nav h2, .nav hr { display: none; }
+
+.nav ul { font-size: 10px; list-style: none; margin: 0px; padding: 0px; tex=
+t-align: right; }
+
+.nav li { border-right: 1px solid rgb(215, 215, 215); display: inline-block=
+; padding: 0px 0.75em; white-space: nowrap; }
+
+.nav li.last { border-right: none; }
+
+#metanav { padding-top: 0.3em; }
+
+#metanav form.trac-logout { display: inline; margin: 0px; padding: 0px; }
+
+#metanav form.trac-logout button { margin: 0px; padding: 0px; border-width:=
+ 0px 0px 1px; border-top-style: initial; border-right-style: initial; borde=
+r-left-style: initial; border-top-color: initial; border-right-color: initi=
+al; border-left-color: initial; border-image: initial; outline: 0px; backgr=
+ound: transparent; font-family: inherit; font-size: 100%; color: rgb(187, 0=
+, 0); border-bottom-style: dotted; border-bottom-color: rgb(187, 187, 187);=
+ cursor: pointer; }
+
+#metanav form.trac-logout button:hover { background-color: rgb(238, 238, 23=
+8); color: rgb(85, 85, 85); }
+
+#metanav form.trac-logout button:active { position: static; }
+
+#mainnav { font: 10px verdana, "Bitstream Vera Sans", helvetica, arial, san=
+s-serif; box-shadow: rgb(238, 238, 238) 0px 0.5em 1.5em; border: 1px solid =
+rgb(228, 228, 228); border-radius: 0.5em; margin: 0.66em 0px 0.33em; }
+
+#mainnav li { background: url("../topbar_gradient.png") 0px 0px white; bord=
+er: 1px solid rgb(228, 228, 228); margin: -1px 0.3em 0px -0.4em; padding: 0=
+.3em 0px; }
+
+#mainnav .first, #mainnav .first :link { border-top-left-radius: 0.5em; bor=
+der-bottom-left-radius: 0.5em; }
+
+#mainnav .last, #mainnav .last :link { border-top-right-radius: 0.5em; bord=
+er-bottom-right-radius: 0.5em; margin-right: 0px; }
+
+#mainnav :link, #mainnav :visited { border-bottom: none; box-shadow: rgb(15=
+3, 153, 153) 0px 0.1em 0.3em 0px; color: rgb(0, 0, 0); padding: 0.3em 20px;=
+ }
+
+#mainnav li:hover { border: 1px solid rgb(102, 102, 102); }
+
+#mainnav :link:hover, #mainnav :visited:hover { background: url("../topbar_=
+gradient2.png") 0px 0px repeat-x rgb(0, 0, 0); color: rgb(238, 238, 238); b=
+ox-shadow: rgb(102, 102, 102) 0px 0.1em 0.6em 0px; }
+
+#mainnav .active { border: 1px solid rgb(102, 102, 102); }
+
+#mainnav .active :link, #mainnav .active :visited { background: url("../top=
+bar_gradient2.png") 0px 0px repeat-x rgb(0, 0, 0); color: rgb(238, 238, 238=
+); text-shadow: rgb(238, 238, 238) 1px 0px; }
+
+#ctxtnav { min-height: 1em; padding: 0.4em 0px; }
+
+#ctxtnav li ul { background: rgb(247, 247, 247); color: rgb(204, 204, 204);=
+ border: 1px solid; padding: 0px; display: inline; margin: 0px; }
+
+#ctxtnav li li { padding: 0px; }
+
+#ctxtnav li li :link, #ctxtnav li li :visited { padding: 0px 1em; }
+
+#ctxtnav li li :link:hover, #ctxtnav li li :visited:hover { background: rgb=
+(187, 187, 170); color: rgb(255, 255, 255); }
+
+.trac-nav, .trac-topnav { float: right; font-size: 80%; }
+
+.trac-topnav { margin-top: 14px; }
+
+#altlinks { clear: both; margin-top: 0.4em; text-align: center; }
+
+#altlinks h3 { font-size: 12px; letter-spacing: normal; margin: 0px; }
+
+#altlinks ul { list-style: none; margin: 0px; padding: 0px; }
+
+#altlinks li { border-right: 1px solid rgb(215, 215, 215); display: inline;=
+ font-size: 11px; line-height: 1.5; padding: 0px 1em; white-space: nowrap; =
+}
+
+#altlinks li.last { border-right: none; }
+
+#altlinks li :link, #altlinks li :visited { background-repeat: no-repeat; c=
+olor: rgb(102, 102, 102); border: none; padding: 0px 0px 2px; }
+
+#altlinks li a.ics { background: url("../ics.png") left center no-repeat; p=
+adding-left: 22px; }
+
+#altlinks li a.rss { background: url("../feed.png") left center no-repeat; =
+padding-left: 20px; }
+
+#footer { clear: both; color: rgb(187, 187, 187); font-size: 10px; height: =
+31px; padding: 0.25em 0px; }
+
+#footer :link, #footer :visited { color: rgb(187, 187, 187); }
+
+#footer hr { display: none; }
+
+#footer #tracpowered { border: 0px; float: left; }
+
+#footer #tracpowered:hover { background: transparent; }
+
+#footer p { margin: 0px; }
+
+#footer p.left { float: left; margin-left: 1em; padding: 0px 1em; border-le=
+ft: 1px solid rgb(215, 215, 215); border-right: 1px solid rgb(215, 215, 215=
+); }
+
+#footer p.right { float: right; text-align: right; }
+
+#content { position: relative; }
+
+div.trac-content { padding: 0.5em 1em; margin: 0.3em auto; border: 1px soli=
+d rgb(228, 228, 228); border-radius: 0.5em; box-shadow: rgb(238, 238, 238) =
+0.2em 0.3em 1.5em; }
+
+.trac-author-anonymous, .trac-author-none { font-style: italic; }
+
+.trac-author-user { font-weight: bold; color: rgb(102, 102, 102); }
+
+.uinohelp #help { display: none; }
+
+#help { clear: both; color: rgb(153, 153, 153); font-size: 90%; margin: 1em=
+; text-align: right; }
+
+#help :link, #help :visited { cursor: help; }
+
+#help hr { display: none; }
+
+.trac-nodatetimehint .trac-datetimehint { display: none; }
+
+.foldable :link, .foldable :visited { background: url("../expanded.png") 4p=
+x 50% no-repeat; border: none; border-radius: 0.3em; box-shadow: rgb(187, 1=
+87, 187) 0.1em 0.1em 0.3em 0px; color: rgb(34, 34, 34); text-shadow: rgb(25=
+2, 252, 252) 0.04em 0.04em; padding: 0.3em 0.5em 0.3em 20px; }
+
+.foldable :link:hover, .foldable :visited:hover { background-color: transpa=
+rent; }
+
+.collapsed > .foldable :link, .collapsed > .foldable :visited { background-=
+image: url("../collapsed.png"); }
+
+.collapsed > div, .collapsed > table, .collapsed > ul, .collapsed > dl { di=
+splay: none; }
+
+fieldset > legend.foldable :link, fieldset > legend.foldable :visited { col=
+or: rgb(102, 102, 102); font-size: 110%; text-shadow: rgb(221, 221, 221) 0.=
+04em 0.04em; }
+
+.collapsed legend.foldable { background: white; }
+
+.expander { background: url("../expander_normal.png") 0px 50% no-repeat; cu=
+rsor: pointer; padding-left: 8px; margin-left: 4px; }
+
+.expander:hover { background: url("../expander_normal_hover.png") 0px 50% n=
+o-repeat; }
+
+.expander.expanded { background: url("../expander_open.png") 0px 50% no-rep=
+eat; padding-left: 12px; margin-left: 0px; }
+
+.expander.expanded:hover { background: url("../expander_open_hover.png") 0p=
+x 50% no-repeat; }
+
+h2 .trac-count, h3 .trac-count { margin-left: 0.2em; vertical-align: baseli=
+ne; color: rgb(153, 153, 153); font-size: 90%; font-weight: normal; }
+
+#prefs { background: rgb(247, 247, 240); border: 1px outset rgb(238, 238, 2=
+38); border-radius: 1em; box-shadow: rgb(119, 119, 119) 0.2em 0.2em 0.7em 0=
+px; float: right; font-size: 9px; padding: 0.8em; position: relative; margi=
+n: 0px 1em 1em; }
+
+#prefs input, #prefs select { font-size: 9px; vertical-align: middle; }
+
+#prefs fieldset { background: transparent; border: none; box-shadow: none; =
+margin: 0.5em; padding: 0px; }
+
+#prefs fieldset legend { background: transparent; color: rgb(0, 0, 0); font=
+-size: 9px; font-weight: normal; margin: 0px 0px 0px -1.5em; padding: 0px; =
+}
+
+#prefs .buttons { text-align: right; }
+
+#info { margin: 1em 0px 0px; background: rgb(247, 247, 240); border: 1px so=
+lid rgb(215, 215, 215); border-collapse: collapse; border-spacing: 0px; cle=
+ar: both; width: 100%; }
+
+#info th, #info td { font-size: 85%; padding: 2px 0.5em; vertical-align: to=
+p; }
+
+#info th { font-weight: bold; text-align: left; }
+
+#info td.message { width: 100%; }
+
+#info .message ul { padding: 0px; margin: 0px 2em; }
+
+#info .message p { margin: 0px; padding: 0px; }
+
+a.trac-diff::after { content: "=E2=88=86"; }
+
+.wikipage { padding-left: 18px; }
+
+.wikipage h1, .wikipage h2, .wikipage h3 { margin-left: -18px; }
+
+.wikipage table h1, .wikipage table h2, .wikipage table h3 { margin-left: 0=
+px; }
+
+div.compact > p:first-child { margin-top: 0px; }
+
+div.compact > p:last-child { margin-bottom: 0px; }
+
+#delete-confirm li { list-style-type: square; }
+
+.rtl { direction: rtl; }
+
+.rtl div.wiki-toc { float: left; }
+
+.rtl .wiki-toc ul ul, .wiki-toc ol ol { padding-right: 1.2em; }
+
+a.missing:link, a.missing:visited, a.missing, span.missing, a.forbidden, sp=
+an.forbidden { color: rgb(153, 153, 136); }
+
+a.missing:hover { color: rgb(0, 0, 0); }
+
+a.closed:link, a.closed:visited, span.closed { text-decoration: line-throug=
+h; }
+
+.important { background: rgb(255, 204, 187); border: 1px dotted rgb(221, 0,=
+ 0); color: rgb(85, 0, 0); padding: 0px 0.5em; margin: 0.5em; }
+
+dl.wiki dt { font-weight: bold; }
+
+dl.compact dt { float: left; padding-right: 0.5em; }
+
+dl.compact dd { margin: 0px; padding: 0px; }
+
+pre.wiki, pre.literal-block { background: rgb(247, 247, 247); border: 1px s=
+olid rgb(215, 215, 215); box-shadow: rgb(238, 238, 238) 0px 0px 1em; border=
+-radius: 0.3em; margin: 1em 1.75em; padding: 0.25em; overflow: auto; }
+
+div.wiki-code { margin: 1em 1.75em; }
+
+code, tt { color: rgb(102, 0, 0); border: 1px solid rgb(238, 221, 204); bor=
+der-radius: 0.25em; padding: 0px 0.3em; background: rgb(250, 250, 250); }
+
+blockquote.citation { margin: -0.6em 0px 0px; border-style: solid; border-w=
+idth: 0px 0px 0px 2px; padding-left: 0.5em; border-color: rgb(187, 68, 68);=
+ }
+
+.citation blockquote.citation { border-color: rgb(68, 187, 68); }
+
+.citation .citation blockquote.citation { border-color: rgb(68, 68, 187); }
+
+.citation .citation .citation blockquote.citation { border-color: rgb(204, =
+85, 85); }
+
+table.wiki { border: 1px solid rgb(204, 204, 204); border-collapse: collaps=
+e; border-spacing: 0px; box-shadow: rgb(238, 238, 238) 0px 0px 1em; }
+
+table.wiki td { border: 1px solid rgb(204, 204, 204); padding: 0.1em 0.25em=
+; }
+
+table.wiki th { border: 1px solid rgb(187, 187, 187); padding: 0.1em 0.25em=
+; background-color: rgb(247, 247, 247); }
+
+table.wiki tbody tr.even { background-color: rgb(252, 252, 252); }
+
+table.wiki tbody tr.odd { background-color: rgb(247, 247, 247); }
+
+.wikitoolbar { margin-top: 0.3em; border-style: solid; border-color: rgb(21=
+5, 215, 215); border-image: initial; border-width: 1px 1px 1px 0px; height:=
+ 18px; width: 234px; }
+
+.wikitoolbar :link, .wikitoolbar :visited { background: url("../edit_toolba=
+r.png") no-repeat transparent; border-width: 1px; border-style: solid; bord=
+er-color: rgb(255, 255, 255) rgb(255, 255, 255) rgb(255, 255, 255) rgb(215,=
+ 215, 215); border-image: initial; cursor: default; display: block; float: =
+left; width: 24px; height: 16px; }
+
+.wikitoolbar :link:hover, .wikitoolbar :visited:hover { background-color: t=
+ransparent; border: 1px solid rgb(255, 187, 34); }
+
+.wikitoolbar a#em { background-position: 0px 0px; }
+
+.wikitoolbar a#strong { background-position: 0px -16px; }
+
+.wikitoolbar a#heading { background-position: 0px -32px; }
+
+.wikitoolbar a#link { background-position: 0px -48px; }
+
+.wikitoolbar a#code { background-position: 0px -64px; }
+
+.wikitoolbar a#hr { background-position: 0px -80px; }
+
+.wikitoolbar a#np { background-position: 0px -96px; }
+
+.wikitoolbar a#br { background-position: 0px -112px; }
+
+.wikitoolbar a#img { background-position: 0px -128px; }
+
+div.trac-resizable { display: inline-table; width: 100%; }
+
+div.trac-resizable > div { display: table-cell; }
+
+div.trac-resizable textarea { display: block; margin-bottom: 0px; }
+
+div.trac-grip { height: 5px; overflow: hidden; background: url("../grip.png=
+") center 1px no-repeat rgb(238, 238, 238); border-width: 0px 1px 1px; bord=
+er-style: solid; border-color: rgb(221, 221, 221); border-image: initial; c=
+ursor: s-resize; }
+
+#attachments > div.attachments { padding: 0px 0px 1em 1em; }
+
+#attachments dl.attachments { margin-left: 2em; padding: 0px; }
+
+#attachments dt { display: list-item; list-style: square; }
+
+#attachments dd { font-style: italic; margin-left: 0px; padding-left: 0px; =
+}
+
+#attachments p { margin-left: 2em; font-size: 90%; color: rgb(102, 102, 102=
+); }
+
+#attachments > div.attachments > p { float: right; margin: 0.4em 0px; }
+
+#attachments span.trac-author { font-style: italic; }
+
+.attachment #preview { margin-top: 1em; }
+
+table.listing { clear: both; border-bottom: 1px solid rgb(215, 215, 215); b=
+order-collapse: collapse; border-spacing: 0px; box-shadow: rgb(238, 238, 23=
+8) 0.2em 0.3em 1.5em; margin-top: 1em; width: 100%; }
+
+table.listing th { text-align: left; padding: 0px 1em 0.1em 0px; font-size:=
+ 12px; }
+
+table.listing th.sel, table.listing td.sel { text-align: center; width: 1%;=
+ }
+
+table.listing thead tr { background: rgb(247, 247, 240); }
+
+table.listing thead th { border-width: 1px; border-style: solid; border-col=
+or: rgb(215, 215, 215) rgb(215, 215, 215) rgb(153, 153, 153); border-image:=
+ initial; font-size: 11px; font-weight: bold; padding: 2px 0.5em; vertical-=
+align: bottom; white-space: nowrap; }
+
+table.listing thead th :link:hover, table.listing thead th :visited:hover {=
+ background-color: transparent; }
+
+table.listing thead th a { border: none; padding-right: 12px; }
+
+table.listing th.asc a, table.listing th.desc a { font-weight: bold; backgr=
+ound-position: 100% 50%; background-repeat: no-repeat; }
+
+table.listing th.asc a { background-image: url("../asc.png"); }
+
+table.listing th.desc a { background-image: url("../desc.png"); }
+
+table.listing tbody td, table.listing tbody th { border: 1px dotted rgb(221=
+, 221, 221); padding: 0.3em 0.5em; vertical-align: top; }
+
+table.listing tbody td a:hover, table.listing tbody th a:hover { background=
+-color: transparent; }
+
+table.listing tbody tr { border-top: 1px solid rgb(221, 221, 221); }
+
+table.listing tbody tr.even { background-color: rgb(252, 252, 252); }
+
+table.listing tbody tr.odd { background-color: rgb(247, 247, 247); }
+
+table.listing tbody tr:hover td { background: rgb(238, 238, 221) !important=
+; }
+
+table.listing tbody tr.focus { background: rgb(221, 221, 255) !important; }
+
+table.listing pre { white-space: pre-wrap; }
+
+#fieldhist td { padding: 0px 0.5em; }
+
+#fieldhist td.date, #fieldhist td.diff, #fieldhist td.version, #fieldhist t=
+d.author { white-space: nowrap; }
+
+#fieldhist td.version { text-align: center; }
+
+#fieldhist td.comment { width: 100%; }
+
+#fieldhist .inlinebuttons { display: none; float: right; }
+
+.uisymbols #fieldhist .inlinebuttons a { font-size: 85%; }
+
+.suggestions { background: rgb(255, 255, 255); border: 1px solid rgb(136, 1=
+36, 102); color: rgb(34, 34, 34); }
+
+.suggestions ul { font-family: sans-serif; max-height: 20em; min-height: 3e=
+m; list-style: none; margin: 0px; overflow: auto; padding: 0px; width: 440p=
+x; }
+
+* html .suggestions ul { height: 10em; }
+
+.suggestions li { background: rgb(255, 255, 255); cursor: pointer; padding:=
+ 2px 5px; }
+
+.suggestions li.selected { background: rgb(185, 185, 185); }
+
+#content.error .message, div.system-message { background: rgb(255, 221, 204=
+); border: 2px solid rgb(221, 0, 0); color: rgb(85, 0, 0); padding: 0.5em; =
+margin: 1em 0px; }
+
+#content.error div.message pre, div.system-message pre { margin-left: 1em; =
+overflow: hidden; white-space: pre-wrap; }
+
+div.system-message p { margin: 0px; }
+
+div.system-message p.system-message-title { font-weight: bold; }
+
+span.system-message { float: left; background: rgb(255, 221, 204); padding:=
+ 0.2em; margin: 1px; border-radius: 0.25em; }
+
+div.system-message { border-radius: 0.5em; box-shadow: rgb(119, 119, 119) 0=
+.2em 0.2em 0.7em 0px; }
+
+#warning.system-message, .warning.system-message { background: rgb(255, 255=
+, 187); border: 1px solid rgb(85, 0, 0); }
+
+#warning.system-message li { list-style-type: square; }
+
+#notice.system-message, .notice.system-message { background: rgb(221, 255, =
+221); border: 1px solid rgb(85, 0, 0); }
+
+#notice.system-message li { list-style-type: square; }
+
+div.system-message .trac-close-msg { display: none; float: right; font-size=
+: 80%; border: 1px solid rgb(221, 221, 221); border-radius: 1em; padding: 0=
+px 0.4em 0.1em; box-shadow: none; margin: 0px 0.1em 0.1em 0px; background: =
+none; color: rgb(211, 19, 19); height: 1.4em; }
+
+div.system-message .trac-close-msg:hover { background: rgb(246, 246, 246); =
+color: rgb(51, 51, 51); text-shadow: rgb(252, 252, 252) 0.04em 0.04em; box-=
+shadow: rgb(153, 153, 153) 0.1em 0.1em 0.6em 0px; }
+
+.uisymbols div.system-message .trac-close-msg > span { display: none; }
+
+.uisymbols div.system-message .trac-close-msg::after { content: "x"; }
+
+#content.error form.newticket { display: inline; }
+
+#content.error form.newticket textarea { display: none; }
+
+#content.error #traceback { margin-left: 1em; }
+
+#content.error #traceback :link, #content.error #traceback :visited { borde=
+r: none; }
+
+#content.error #tbtoggle { font-size: 80%; }
+
+#content.error #traceback div { margin-left: 1em; }
+
+#content.error #traceback h3 { font-size: 95%; margin: 0.5em 0px 0px; }
+
+#content.error #traceback :link var, #content.error #traceback :visited var=
+ { font-family: monospace; font-style: normal; font-weight: bold; }
+
+#content.error #traceback span.file { color: rgb(102, 102, 102); font-size:=
+ 85%; }
+
+#content.error #traceback ul { list-style: none; margin: 0.5em 0px; padding=
+: 0px; }
+
+#content.error #traceback table.code td { white-space: pre; font-size: 90%;=
+ }
+
+#content.error #traceback table.code tr.current td { background: rgb(230, 2=
+30, 230); }
+
+#content.error #traceback table { margin: 0.5em 0px 1em; }
+
+#content.error #traceback th, #content.error #traceback td { font-size: 85%=
+; padding: 1px; }
+
+#content.error #traceback th var { font-family: monospace; font-style: norm=
+al; }
+
+#content.error #traceback td code { white-space: pre; }
+
+#content.error #traceback pre { font-size: 95%; }
+
+#content .paging { margin: 0px 0px 2em; padding: 0.5em 0px 0px; font-size: =
+85%; line-height: 2em; text-align: center; }
+
+#content .paging .current { padding: 0.1em 0.3em; border: 1px solid rgb(51,=
+ 51, 51); background: rgb(153, 153, 153); color: rgb(255, 255, 255); }
+
+#content .paging :link, #content .paging :visited { padding: 0.1em 0.3em; b=
+order: 1px solid rgb(102, 102, 102); background: transparent; color: rgb(10=
+2, 102, 102); }
+
+#content .paging :link:hover, #content .paging :visited:hover { background:=
+ rgb(153, 153, 153); color: rgb(255, 255, 255); border-color: rgb(51, 51, 5=
+1); }
+
+#content .paging .previous a, #content .paging .next a { font-size: 150%; f=
+ont-weight: bold; border: none; }
+
+#content .paging .previous a:hover, #content .paging .next a:hover { backgr=
+ound: transparent; color: rgb(102, 102, 102); }
+
+#content h2 .numresults { color: rgb(102, 102, 102); font-size: 90%; }
+
+#content.about a.logo { border: none; float: right; margin-left: 2em; }
+
+#content.about a.logo img { display: block; }
+
+#content.about #python-logo img { width: 140px; height: 56px; }
+
+#content.about p.copyright { color: rgb(153, 153, 153); font-size: 90%; }
+
+#environmentinfo h2 { margin-top: 2em; }
+
+#environmentinfo table { margin: 1em; width: auto; }
+
+#environmentinfo table th, #environmentinfo table td { border: 1px solid rg=
+b(221, 221, 221); font-size: 90%; }
+
+#environmentinfo table th { background: rgb(247, 247, 247); font-weight: bo=
+ld; white-space: nowrap; }
+
+#environmentinfo table td.file { color: rgb(102, 102, 102); }
+
+#environmentinfo table tr.disabled th, #environmentinfo table tr.disabled t=
+d { color: rgb(153, 153, 153); }
+
+#environmentinfo #config th, #content.about #config td { padding: 3px; }
+
+#environmentinfo #config tr.modified { background: rgb(255, 255, 221); }
+
+#environmentinfo #config tr.modified td.value { font-style: italic; }
+
+#environmentinfo #config td.doc { padding: 3px 1em; }
+
+.trac-placeholder { background: rgb(238, 238, 221); }
+
+@media screen {
+  .searchword0 { background: rgb(255, 255, 153); }
+  .searchword1 { background: rgb(204, 255, 204); }
+  .searchword2 { background: rgb(204, 255, 255); }
+  .searchword3 { background: rgb(204, 204, 255); }
+  .searchword4 { background: rgb(255, 204, 255); }
+}
+
+@media print {
+  #header, #altlinks, #footer, #help, #warning, #notice { display: none; }
+  .nav, form, .buttons form, form .buttons, form .inlinebuttons, .noprint, =
+.trac-nav, .trac-topnav, #attachments > div.attachments > p { display: none=
+; }
+  form.printableform { display: block; }
+  div.code pre { white-space: pre-wrap; }
+  :link, :visited { border-bottom: none; }
+  div.trac-content { box-shadow: none; }
+  .foldable :link, .foldable :visited { text-shadow: none; box-shadow: none=
+; }
+}
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/gif
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/extlink.gif
+
+R0lGODlhDQAHAMIEAJiolKKmkrm8rdLXv////////////////yH5BAEAAAQALAAAAAANAAcAAAMf
+OBIsQwRAIiYMEEiCrdUcNGhk2XmZVFkdSChM4GRTAgA7
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/topbar_gradient.png
+
+iVBORw0KGgoAAAANSUhEUgAAAIAAAAAgCAQAAABwK7iuAAAAX0lEQVR42u3YgQmAMAxE0RQRRBCh
++2/nIg7yX0Z4NJeja+Kz5q0DPHWAqw5w1gGOOMC36y9grAAAADLAC1CEVOEswA0AgAxwBfQATdAK
+CMEqQP5bfAMAAEAIOoOKUHV+w/kCCR02PQUAAAAASUVORK5CYII=
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/topbar_gradient2.png
+
+iVBORw0KGgoAAAANSUhEUgAAAQAAAAAgCAMAAADKd1bWAAAAUVBMVEXi69jk7eTk7dvm79bm5t7o
+8ODr8t3m7ODm7Nrj7t7j6d7m8Nzj597o8dvl7tzn79vn69/o8Nzl6eHo7uHn7eHm7OHn6eTo7ePm
+6eTm6+Hm6ORUY53BAAAAG3RSTlMaHBwfHyEmKSkuLjM2ODtAQEJFTFRcXmNmcHBPAHuPAAAAgElE
+QVR4AeXBQQ7CMBAEwY7V8AT+/844u+YCko/ciDRVvvga7AY/aDbFZrFbbBYfzQ14TP5lcAMSTsI5
+yCbhJJwU0aSJZl9Es4toLrJJOBlEk4NoHhJNJJp9Es0qonlNojkX0aSJZpHNIps20Xw00Xw20RxN
+NM+LaPYkmhTRJNwbvLkiXLDsH/AAAAAASUVORK5CYII=
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/css/wiki.css
+
+@charset "utf-8";
+
+@import url("code.css");
+
+#info { margin: 0px 0px 1em; }
+
+#wikipage { clear: both; }
+
+.wikipage h2 { border-bottom: 1px solid rgb(221, 221, 221); box-shadow: rgb=
+(242, 242, 242) 0.1em 0.4em 0.7em 0px; padding: 0.2em 0.3em 0.1em; }
+
+@media print {
+  .wikipage h2 { box-shadow: none; }
+}
+
+.wikipage h3 { border-bottom: 1px dashed rgb(221, 221, 221); padding: 0.2em=
+ 0.3em 0.1em; }
+
+.wikipage .trac-content { margin-left: -18px; padding-left: 28px; }
+
+#pagepath { font-size: 10px; float: left; padding: 0.4em 0px; }
+
+#pagepath :link, #pagepath :visited { margin: 0px 0.2em; }
+
+#pagepath .first:link, #pagepath .first:visited { color: rgb(153, 153, 136)=
+; }
+
+#pagepath .sep { color: rgb(102, 102, 102); padding: 0px 0.1em; }
+
+#pagepath .pathentry { float: left; }
+
+.create #modifypage input { margin: 2px; }
+
+.preview-right { float: right; width: 50%; display: block; margin: 0px 0px =
+0px 1em; }
+
+.sidebyside > h2 { margin: 0.4em 0px; }
+
+.sidebyside #preview { margin: 0px; }
+
+.sidebyside #text { overflow: hidden; }
+
+#edit { margin-top: 0.5em; }
+
+#edit #rows { float: right; font-size: 80%; margin: 0.4em 0px 0px; }
+
+#edit #rows select { font-size: 90%; }
+
+#edit fieldset { margin-left: 1px; margin-right: 1px; }
+
+#edit #text { clear: both; min-height: 10em; resize: vertical; }
+
+#edit .wikitoolbar { float: left; }
+
+#edit div.trac-resizable { clear: both; }
+
+#edit + #info { margin-top: 1em; }
+
+#edit + #attachments { margin-top: 1.5em; }
+
+#delete, #rename, #save { margin-left: 3em; }
+
+#preview { background: url("../draft.png") rgb(248, 248, 248); margin: 1em =
+0px 2em; overflow: auto; }
+
+#overview .multi { color: rgb(153, 153, 153); }
+
+#overview .ipnr { color: rgb(153, 153, 153); font-size: 80%; }
+
+#overview .comment { padding: 1em 0px 0px; }
+
+@media print {
+  th.diff, td.diff { display: none; }
+}
+
+.wiki-toc { padding: 0.5em 1em; margin: 0px 0px 2em 1em; float: right; clea=
+r: right; border: 1px outset rgb(221, 221, 204); background: rgb(255, 255, =
+221); font-size: 85%; position: relative; }
+
+.wiki-toc h4 { font-size: 12px; margin: 0px; }
+
+.wiki-toc ul, .wiki-toc ol { list-style: none; padding: 0px; margin: 0px; }
+
+.wiki-toc ul ul, .wiki-toc ol ol { padding-left: 1.2em; }
+
+.wiki-toc li { margin: 0px; padding: 0px; }
+
+.wiki-toc .active { background: rgb(255, 255, 153); position: relative; }
+
+.wiki-toc-un ul, .wiki-toc-un ol { list-style: none; }
+
+div.trac-modifiedby { margin: 0.3em 0.5em; color: rgb(136, 136, 136); font-=
+size: 80%; font-style: italic; text-align: right; float: right; }
+
+div.trac-modifiedby :link, div.trac-modifiedby :visited { color: inherit; }
+
+div.trac-modifiedby span.trac-print { display: none; }
+
+@media print {
+  div.trac-modifiedby span { display: none; }
+  div.trac-modifiedby span.trac-print { display: block; }
+}
+
+div.tracini td.default { font-size: 90%; }
+
+div.tracini td.nodefault { color: rgb(119, 119, 119); font-size: 85%; font-=
+style: italic; white-space: nowrap; }
+
+div.tracini td > p:first-child { margin-top: 0px; }
+
+div.tracini td > p:last-child { margin-bottom: 0px; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/css/code.css
+
+@charset "utf-8";
+
+div.code { background: rgb(247, 247, 247); border: 1px solid rgb(215, 215, =
+215); border-radius: 0.3em; padding: 0.25em; overflow: auto; }
+
+div.code pre { margin: 0px; overflow: auto; }
+
+table.code { border-width: 0px 1px 1px; border-right-style: solid; border-b=
+ottom-style: solid; border-left-style: solid; border-right-color: rgb(221, =
+221, 221); border-bottom-color: rgb(221, 221, 221); border-left-color: rgb(=
+221, 221, 221); border-image: initial; border-spacing: 0px; border-top-styl=
+e: initial; border-top-color: initial; border-collapse: collapse; empty-cel=
+ls: show; font-size: 12px; line-height: 130%; padding: 0px; margin: 0px aut=
+o; table-layout: fixed; width: 100%; }
+
+table.code th { border-right: 1px solid rgb(215, 215, 215); border-bottom: =
+1px solid rgb(153, 153, 136); font-size: 11px; }
+
+table.code th.lineno { width: 4em; }
+
+table.code thead th { background: rgb(238, 238, 238); border-top: 1px solid=
+ rgb(215, 215, 215); color: rgb(153, 153, 153); padding: 0px 0.25em; text-a=
+lign: center; white-space: nowrap; }
+
+table.code thead th.content { text-align: left; }
+
+table.code thead th.content span.recover { background: rgb(247, 247, 247); =
+border-left: 1px solid; border-right: 1px solid; cursor: pointer; margin: 0=
+px 1em 0px 0px; padding: 0px 0.5em; }
+
+table.code tbody th { background: rgb(238, 238, 221); color: rgb(136, 136, =
+102); font-weight: normal; padding: 0px 0.5em; text-align: right; vertical-=
+align: top; }
+
+table.code tbody th :link, table.code tbody th :visited { border: none; col=
+or: rgb(136, 136, 102); text-decoration: none; }
+
+table.code tbody th :link:hover, table.code tbody th :visited:hover { color=
+: rgb(0, 0, 0); }
+
+table.code tbody tr:hover td { background: rgb(238, 238, 221); }
+
+table.code td { font: 11px monospace; overflow: hidden; padding: 1px 2px; v=
+ertical-align: top; }
+
+table.code tr.hilite th { background: rgb(204, 204, 255); }
+
+table.code tr.hilite td { background: rgb(221, 221, 255); }
+
+.image-file { background: rgb(238, 238, 238); padding: 0.3em; }
+
+.image-file img { background: url("../imggrid.png"); }
+
+.code-block span { font-family: monospace; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://community.openvpn.net/openvpn/chrome/site/openvpn.css
+
+@charset "utf-8";
+
+body { background: url("/openvpn/chrome/site/bg-wholepage3.png") center top=
+ repeat-x scroll rgb(218, 227, 243); color: rgb(0, 0, 0); margin: 0px auto;=
+ padding: 0px; width: 85%; }
+
+#content { background: white; margin-top: 10px; padding: 10px; position: re=
+lative; }
+
+#pagepath { padding: 0px !important; }
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/site/bg-wholepage3.png
+
+iVBORw0KGgoAAAANSUhEUgAAADIAAAISCAYAAACODJyuAAAAAXNSR0IArs4c6QAAAyVJREFUeNrt
+3OtJxGAQheFJiIpgF9Zib1brj5XFGyRiA8nCEsyeeb4OXs5l5ktChq/vn9cKONOyVMSZ5hCSaUkB
+oYiwU0RGZIQiMhKlyJwBMlbIkREZocgWSErYl9lkl5GdFAnJSNl+ZURGutzZgcgIRVrMkZIRGZGR
+HjfEpbxWkBEZ6bH9lozICEVWjjdWMkKRNgPRDVFGKNJDkXJDlBGKmOwUkRGK+MpURmSkS0aCBmLJ
+iIzISI87e8mIjMhIkzu7jMgIa8mIjLAWRbyxkhGKGIgUkZHrFPEF3bGON1YyQpE2kz0l7DIiIxTp
+cWcf3k7njD8wv58/M6x1ygH5KNY6UtiH55eI3prq/inDWsP0GAJy9xAy2acQkKGGEJAMjj8QisgI
+a63WL2sJu4xsWIsiMrJP/RqIrGUgtlAk5/W0sJsjFLH9UgSIgWgg2n4pIiOWRtZiLfUrI+4jF9Wv
+1nIfUb8mO0XMEXPE9ksRrcVa6tdAFHYDkSIyclH9ysihTs5TlHG0NLKWOdJhjvgWRUbUL2tRRP1S
+RP1SREYaWatY63DWooj61Vo9lsaRIlrLHDFHzBHbr4xoLSCs1UUR9SsjFLE0UuSf6tfTeNba43gc
+ZLJTxByRERkBwlrqd8/6tf3KiNYyEFnL9qt+ZYQiMrJx/PHMHJGRLtYy2U12imzVL0VkhCKsRRH1
+a2m0NGotirS5s7PWsY4/nrGWsNt+bb+spX5drGTErqW1KKJ+WUv9UkRGellr9A6RtUz2VRCfcJgj
+MmL7vTVrhSjiA2atJeysRRH1ayBqLYqo363jMydzxBwxR9QvRWTE35xYiyLq19JoadRaeXd21lK/
+lkZL4w0dD+hsvxTx8IG1WMv2a/s1EPesX63FWsKufmVE/cqIpfFwJ+ZxEBAgQIAAAQIECBAgQIAA
+AQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIE
+CBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECJCeII7jOI5zzfkF
+jZNAkosYv18AAAAASUVORK5CYII=
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/site/ovpnlogo-com.png
+
+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
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN----
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: https://community.openvpn.net/openvpn/chrome/common/trac_logo_mini.png
+
+iVBORw0KGgoAAAANSUhEUgAAAGsAAAAeCAMAAAAcjhBMAAAAPFBMVEX9//z////v5eTOzs7Rysfk
+uLfcpKWrq6vUjIqXmZaHh4fGZGRdX12tJSQ+Pz0xMzApKigbHRoQEg8AAQBdU8X1AAAAAXRSTlMA
+QObYZgAAAilJREFUeNq9louyqyAMRSEnWFKCL/7/X+8IBPGJnWkvM60aW5c72Ykqdbk6UP9teX8S
+BGL6CcvsQziGEPgHrM4fkkjhqyxwN2X6Mst4V3R5uyVxv7BGZkZmZlJA/UzxxDhPfVVJ4n6aBya8
+1yWszvsdjENZqXAQv2ku4T7lhCYJNHxkjI2ecAtrKZmBK1YMMK3hMO5+12gb65MBI8p3ShVxNWsI
+IaS7ZwhhYCIWIcKeQpgb3oiIwrJVnwEmbyAi9PmCA5PKVcEISJswLdlDbMuKclIOjVLOnfiwz5rU
+eh9JT1I/PZo5ieVkJxbwijVKi/NqD5weeKJ4PuuBlekuWHSoYwj4xBMyb50I6yLS5ExeszJqHqM4
+eszyToGT5HXO5FTaG1YUMhPkWNKFD1jO58u7NbJnDVsWl72hdF7oH5VLdWZjB5dtudo6Jmhllb2s
+iHcOvfdhVmE6C5klf4RUmWHEna6JMA8mhOTJmZnHRt2KjAwxm6k4iNtWVj2iYqwOYHtsmOJ9UNBV
+j0w8spSMkFli1TCmNqu0svdu+3CWTB37a0CUGEhvT9TM4cJyXpbdvQcQ4a4MgGchao3DlDsro1da
+LS7993p/tl5/WrdgUFK4Yb3eb611vEraaPno9Xtz8Lpnxe4yFcpsWAWQNrrw6nPloMkqD2XvrK3e
+SCtde9aJrscsX0+Lna73ta6S2E9Yy4Pk0PMV6623l9d1Yj+pV/TsyXT5vg9/t/4BvsJA9HIlsw8A
+AAAASUVORK5CYII=
+
+------MultipartBoundary--TQhRpE6niVlunlca3mC97SJ6FD1G4NFaMyMoiEs5YN------

@@ -1,0 +1,8 @@
+pf : packet filter
+ps : port share
+perf : performance（性能）
+occ : OpenVPN Configuration Control
+ntlm : 基于ntlm的认证方式,主要用在早期的windows工作组环境中,认证的过程也相对比较简单
+mtu : ip最大传输单元（一般是1500）
+mss ： tcp最大发送大小（与mtu对应，=1500-tcp头）
+lladdr : link layer address

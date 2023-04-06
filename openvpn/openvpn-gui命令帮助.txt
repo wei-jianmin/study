@@ -1,0 +1,41 @@
+--help			: 显示此信息。
+--connect cnn 		: 启动时连接至 "cnn"。
+			   例如: openvpn-gui --connect office.ovpn
+--command cmd [args]	: 发送命令到运行中的实例
+支持的命令:
+    connect cnn            	: 连接配置"cnn"
+    disconnect cnn         	: 断开连接配置"cnn"
+    reconnect cnn          	: 重新连接配置"cnn"
+    disconnect_all         	: 断开所有连接
+    exit                 		: 退出所有运行中的实例 (可能需要确认)
+    status cnn           		: 如果已连接,显示配置"cnn"的状态
+    silent_connection [0|1]	: 设置静默连接开启 (1) 或者关闭 (0)
+    import path          		: Import the config file pointed to by path
+			例如: openvpn-gui.exe --command disconnect myconfig
+
+可覆盖系统注册表设定的选项:
+--exe_path		: openvpn.exe 的路径。
+--config_dir		: 要寻找连接配置文件的文件夹路径。
+--ext_string		: 连接配置文件的扩展名。
+--log_dir			: 储存日志文件的文件夹路径。
+--priority_string		: 优先权字符串（请参考 install.txt 获得更多信息）。
+--append_string		: 1=追加到现有日志文件、0=连接时清空日志。
+--log_viewer		: 日志文件查看器路径。
+--editor			: 连接配置文件编辑器路径。
+--allow_edit		: 1=显示「编辑连接配置文件」选项。
+--allow_service		: 1=显示「服务控制」选项。
+--allow_password		: 1=显示「变更密码」选项。
+--allow_proxy		: 1=显示「代理设置」选项。
+--show_balloon		: 0=永不、1=首次连接时、2=每次重新连接时显示通知。
+--service_only		: 1=启动「仅系统服务」模式。
+--silent_connection		: 1=连接时，不显示状态窗口。
+--show_script_window	: 0=隐藏脚本执行窗口、1=显示。
+--passphrase_attempts	: 允许尝试输入密码次数。
+--connectscript_timeout	: 等待连接脚本执行的时间。
+--disconnectscript_timeout	: 等待断开连接脚本执行的时间。
+--preconnectscript_timeout	: Time to wait for preconnect script to finish.
+--iservice_admin		: 0=Do not use interactive service when started as admin (default is 1 for Windows 7 and newer)
+--disable_popup_messages	: Do not popup (i.e., show) the echo message window. Default is to show.
+--popup_mute_interval	: Time in hours for which a previously shown echo message is not re-displayed. Default=24 hours.
+--management_port_offset	: Offset value added to config index to determine the management port for a connection.
+			 Must be in the range 1 to 61000. Maximum number of configs is limited by 65536 minus this value. Default=25340.
