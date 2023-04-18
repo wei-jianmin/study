@@ -1,0 +1,34 @@
+1.生成私钥文件
+    openssl genrsa -des3 -out privkey.pem 2048
+    这个命令会生成一个2048位的密钥，同时有一个des3方法加密的密码
+    如果你不想要每次都输入密码，可以改成：
+    openssl genrsa -out privkey.pem 2048
+    生成的私钥文件名：privkey.pem
+
+2.生成证书文件
+    openssl req -new -key privkey.pem -out cert.csr
+    这个命令将会生成一个证书请求，当然，用到了前面生成的密钥privkey.pem文件
+    这里将生成一个新的文件cert.csr，即一个证书请求文件，
+    你可以拿着这个文件去数字证书颁发机构（即CA）申请一个数字证书。
+    CA会给你一个新的文件cacert.pem，那才是你的数字证书。
+
+    如果是自己做测试，那么证书的申请机构和颁发机构都是自己。就可以用下面这个命令来生成证书：
+    openssl req -new -x509 -key privkey.pem -out cacert.pem -days 3650
+    这个命令将用上面生成的密钥privkey.pem生成一个数字证书cacert.pem,有效期为3650天
+
+3.生成公钥文件
+    openssl rsa -in privkey.pem -inform pem -pubout -out pubkey.pem
+    生成的公钥文件pubkey.pem
+
+4.查看密钥信息
+    openssl rsa -noout -text -in privkey.pem
+
+证书格式转换：
+    PEM转换为DER
+        openssl x509 -in myserver.pem -outform der -out myserver.[der|crt]    
+    DER转换为PEM
+        openssl x509 -inform der -in myserver.[cer|crt] -out myserver.pem
+    PEM证书生成公钥文件
+        openssl x509 -outform PEM -in cert.pem -pubkey -out pub.key
+        (打印出来的是公钥，可以粘贴出来；生成的pub.key不是公钥，而是证书。)
+        检查PEM公钥格式，公钥前缀后缀

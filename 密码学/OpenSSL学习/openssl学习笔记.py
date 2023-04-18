@@ -1728,6 +1728,7 @@ openssl源代码
             ENGINE_LOAD_KEY_PTR load_privkey;
             ENGINE_LOAD_KEY_PTR load_pubkey;
             /* 其他项 */
+            int struct_ref;
             CRYPTO_EX_DATA ex_data;
             struct engine_st *prev;
             struct engine_st *next;
@@ -1752,6 +1753,7 @@ openssl源代码
             ctrl：       控制函数；
             load_privkey：加载私钥函数；
             load_pubkey：加载公钥函数；
+            struct_ref： 引用计数
             ex_data：    扩展数据结构，可用来存放用户数据；
             prev/next：  用于构建Engine链表，openssl中的硬件Engine可能不止一个。
             上述这些函数，用户根据应用的需求来实现其中的一种或多种。
@@ -1771,7 +1773,7 @@ openssl源代码
             源码位于demos/engines目录下，供用户学习参考。
         4） 分散于其他各个运算模块用于支持Engine
             各个运算模块都支持Engine，当提供了Engine时，将会采用Engine中的算法。
-    Engine函数
+    Engine函数(包括定义、实现、使用各方面)
         主要函数如下：
         1)  ENGINE_add
             将Engine加入全局到链表中。
@@ -1843,7 +1845,7 @@ openssl源代码
         以下的示例演示了采用Engine机制，来改变openssl的各种运算行为。
         实现的Engine方法有：随机数方法、对称算法、摘要算法以及RSA运算算法。
         其中，RSA计算中，密钥ID存放在Engine的扩展数据结构中。
-        file://Openssl引擎示例D.c
+        file://Openssl引擎示例.c
     引擎编写
         https://blog.csdn.net/cqwei1987/article/details/107423111
         OpenSSL引擎分为两类：动态引擎，Version => 0.9.7、静态引擎，0.9.7 <= Version < 1.1.0

@@ -1,0 +1,23 @@
+1.  make-cadir cert  //创建并初始化cert目录
+2.  cd cert
+3.  vim vars
+4.  ./easyrsa init-pki  //创建并初始化pki目录
+5.  ./easyrsa build-ca nopass  //在pki目录中生成ca证书
+6.  ./easyrsa gen-req server nopass  //生成服务器密钥对
+7.  ./easyrsa sign server server  //生成服务器签名证书
+8.  ./easyrsa gen-dh  //在pki目录下生成dh.pem
+9.  cd ..
+
+10. make-cadir cert1  //创建并初始化cert1目录
+11. cp cert/vars cert1/
+12. cd cert1
+13. ./easyrsa init-pki
+14. ./easyrsa gen-req client1 nopass  //生产客户端密钥和证书请求
+15. cd ..
+
+16. cd cert
+17. ./easyrsa import-req ../cert1/pki/reqs/client1.req client1  //导入证书请求
+18. ./eqsyrsa sign-req client client1	 //生成客户端证书
+19. cd ..
+
+

@@ -1,0 +1,874 @@
+2023-04-07 08:40:25 us=185185 DEPRECATED OPTION: --cipher set to 'SMS4-CBC' but missing in --data-ciphers (SMS4:AES-25                                                                          6-GCM:AES-128-GCM). Future OpenVPN version will ignore --cipher for cipher negotiations. Add 'SMS4-CBC' to --data-ciph                                                                          ers or change --cipher 'SMS4-CBC' to --data-ciphers-fallback 'SMS4-CBC' to silence this warning.
+2023-04-07 08:40:25 us=185344 WARNING: Using --management on a TCP port WITHOUT passwords is STRONGLY discouraged and                                                                           considered insecure
+2023-04-07 08:40:25 us=185396 Current Parameter Settings:
+2023-04-07 08:40:25 us=185410   config = 'server.conf'
+2023-04-07 08:40:25 us=185423   mode = 1
+2023-04-07 08:40:25 us=185435   persist_config = DISABLED
+2023-04-07 08:40:25 us=185447   persist_mode = 1
+2023-04-07 08:40:25 us=185458   show_ciphers = DISABLED
+2023-04-07 08:40:25 us=185470   show_digests = DISABLED
+2023-04-07 08:40:25 us=185481   show_engines = DISABLED
+2023-04-07 08:40:25 us=185492   genkey = DISABLED
+2023-04-07 08:40:25 us=185504   genkey_filename = '[UNDEF]'
+2023-04-07 08:40:25 us=185515   key_pass_file = '[UNDEF]'
+2023-04-07 08:40:25 us=185527   show_tls_ciphers = DISABLED
+2023-04-07 08:40:25 us=185538   connect_retry_max = 0
+2023-04-07 08:40:25 us=185550 Connection profiles [0]:
+2023-04-07 08:40:25 us=185561   proto = udp
+2023-04-07 08:40:25 us=185573   local = '[UNDEF]'
+2023-04-07 08:40:25 us=185584   local_port = '1194'
+2023-04-07 08:40:25 us=185595   remote = '[UNDEF]'
+2023-04-07 08:40:25 us=185606   remote_port = '1194'
+2023-04-07 08:40:25 us=185618   remote_float = DISABLED
+2023-04-07 08:40:25 us=185629   bind_defined = DISABLED
+2023-04-07 08:40:25 us=185639   bind_local = ENABLED
+2023-04-07 08:40:25 us=185648   bind_ipv6_only = DISABLED
+2023-04-07 08:40:25 us=185659   connect_retry_seconds = 5
+2023-04-07 08:40:25 us=185671   connect_timeout = 120
+2023-04-07 08:40:25 us=185682   socks_proxy_server = '[UNDEF]'
+2023-04-07 08:40:25 us=185693   socks_proxy_port = '[UNDEF]'
+2023-04-07 08:40:25 us=185705   tun_mtu = 1500
+2023-04-07 08:40:25 us=185716   tun_mtu_defined = ENABLED
+2023-04-07 08:40:25 us=185727   link_mtu = 1500
+2023-04-07 08:40:25 us=185738   link_mtu_defined = DISABLED
+2023-04-07 08:40:25 us=185749   tun_mtu_extra = 0
+2023-04-07 08:40:25 us=185760   tun_mtu_extra_defined = DISABLED
+2023-04-07 08:40:25 us=185772   mtu_discover_type = -1
+2023-04-07 08:40:25 us=185783   fragment = 0
+2023-04-07 08:40:25 us=185794   mssfix = 1450
+2023-04-07 08:40:25 us=185806   explicit_exit_notification = 1
+2023-04-07 08:40:25 us=185817   tls_auth_file = '[UNDEF]'
+2023-04-07 08:40:25 us=185828   key_direction = not set
+2023-04-07 08:40:25 us=185840   tls_crypt_file = '[UNDEF]'
+2023-04-07 08:40:25 us=185851   tls_crypt_v2_file = '[UNDEF]'
+2023-04-07 08:40:25 us=185862 Connection profiles END
+2023-04-07 08:40:25 us=185873   remote_random = DISABLED
+2023-04-07 08:40:25 us=185884   ipchange = '[UNDEF]'
+2023-04-07 08:40:25 us=185896   dev = 'tun'
+2023-04-07 08:40:25 us=185907   dev_type = '[UNDEF]'
+2023-04-07 08:40:25 us=185918   dev_node = '[UNDEF]'
+2023-04-07 08:40:25 us=185929   lladdr = '[UNDEF]'
+2023-04-07 08:40:25 us=185940   topology = 3
+2023-04-07 08:40:25 us=185951   ifconfig_local = '10.8.0.1'
+2023-04-07 08:40:25 us=185962   ifconfig_remote_netmask = '255.255.255.0'
+2023-04-07 08:40:25 us=185974   ifconfig_noexec = DISABLED
+2023-04-07 08:40:25 us=185985   ifconfig_nowarn = DISABLED
+2023-04-07 08:40:25 us=185996   ifconfig_ipv6_local = '[UNDEF]'
+2023-04-07 08:40:25 us=186007   ifconfig_ipv6_netbits = 0
+2023-04-07 08:40:25 us=186018   ifconfig_ipv6_remote = '[UNDEF]'
+2023-04-07 08:40:25 us=186030   shaper = 0
+2023-04-07 08:40:25 us=186041   mtu_test = 0
+2023-04-07 08:40:25 us=186052   mlock = DISABLED
+2023-04-07 08:40:25 us=186063   keepalive_ping = 10
+2023-04-07 08:40:25 us=186074   keepalive_timeout = 120
+2023-04-07 08:40:25 us=186085   inactivity_timeout = 0
+2023-04-07 08:40:25 us=186096   ping_send_timeout = 10
+2023-04-07 08:40:25 us=186108   ping_rec_timeout = 240
+2023-04-07 08:40:25 us=186119   ping_rec_timeout_action = 2
+2023-04-07 08:40:25 us=186129   ping_timer_remote = DISABLED
+2023-04-07 08:40:25 us=186141   remap_sigusr1 = 0
+2023-04-07 08:40:25 us=186152   persist_tun = ENABLED
+2023-04-07 08:40:25 us=186163   persist_local_ip = DISABLED
+2023-04-07 08:40:25 us=186174   persist_remote_ip = DISABLED
+2023-04-07 08:40:25 us=186187   persist_key = ENABLED
+2023-04-07 08:40:25 us=186198   passtos = DISABLED
+2023-04-07 08:40:25 us=186209   resolve_retry_seconds = 1000000000
+2023-04-07 08:40:25 us=186220   resolve_in_advance = DISABLED
+2023-04-07 08:40:25 us=186231   username = '[UNDEF]'
+2023-04-07 08:40:25 us=186242   groupname = '[UNDEF]'
+2023-04-07 08:40:25 us=186253   chroot_dir = '[UNDEF]'
+2023-04-07 08:40:25 us=186264   cd_dir = '[UNDEF]'
+2023-04-07 08:40:25 us=186275   writepid = '/var/log/openvpn/server.pid'
+2023-04-07 08:40:25 us=186287   up_script = '[UNDEF]'
+2023-04-07 08:40:25 us=186298   down_script = '[UNDEF]'
+2023-04-07 08:40:25 us=186309   down_pre = DISABLED
+2023-04-07 08:40:25 us=186321   up_restart = DISABLED
+2023-04-07 08:40:25 us=186332   up_delay = DISABLED
+2023-04-07 08:40:25 us=186343   daemon = DISABLED
+2023-04-07 08:40:25 us=186354   inetd = 0
+2023-04-07 08:40:25 us=186365   log = DISABLED
+2023-04-07 08:40:25 us=186376   suppress_timestamps = DISABLED
+2023-04-07 08:40:25 us=186387   machine_readable_output = DISABLED
+2023-04-07 08:40:25 us=186398   nice = 0
+2023-04-07 08:40:25 us=186410   verbosity = 4
+2023-04-07 08:40:25 us=186421   mute = 0
+2023-04-07 08:40:25 us=186432   gremlin = 0
+2023-04-07 08:40:25 us=186443   status_file = '/var/log/openvpn/openvpn-status.log'
+2023-04-07 08:40:25 us=186455   status_file_version = 1
+2023-04-07 08:40:25 us=186466   status_file_update_freq = 60
+2023-04-07 08:40:25 us=186477   occ = ENABLED
+2023-04-07 08:40:25 us=186488   rcvbuf = 0
+2023-04-07 08:40:25 us=186500   sndbuf = 0
+2023-04-07 08:40:25 us=186511   mark = 0
+2023-04-07 08:40:25 us=186522   sockflags = 0
+2023-04-07 08:40:25 us=186532   fast_io = DISABLED
+2023-04-07 08:40:25 us=186543   comp.alg = 0
+2023-04-07 08:40:25 us=186555   comp.flags = 0
+2023-04-07 08:40:25 us=186565   route_script = '[UNDEF]'
+2023-04-07 08:40:25 us=186577   route_default_gateway = '10.8.0.2'
+2023-04-07 08:40:25 us=186588   route_default_metric = 0
+2023-04-07 08:40:25 us=186599   route_noexec = DISABLED
+2023-04-07 08:40:25 us=186611   route_delay = 0
+2023-04-07 08:40:25 us=186622   route_delay_window = 30
+2023-04-07 08:40:25 us=186632   route_delay_defined = DISABLED
+2023-04-07 08:40:25 us=186642   route_nopull = DISABLED
+2023-04-07 08:40:25 us=186652   route_gateway_via_dhcp = DISABLED
+2023-04-07 08:40:25 us=186664   allow_pull_fqdn = DISABLED
+2023-04-07 08:40:25 us=186674   management_addr = '127.0.0.1'
+2023-04-07 08:40:25 us=186685   management_port = '1190'
+2023-04-07 08:40:25 us=186696   management_user_pass = '[UNDEF]'
+2023-04-07 08:40:25 us=186708   management_log_history_cache = 250
+2023-04-07 08:40:25 us=186719   management_echo_buffer_size = 100
+2023-04-07 08:40:25 us=186731   management_write_peer_info_file = '[UNDEF]'
+2023-04-07 08:40:25 us=186742   management_client_user = '[UNDEF]'
+2023-04-07 08:40:25 us=186754   management_client_group = '[UNDEF]'
+2023-04-07 08:40:25 us=186765   management_flags = 0
+2023-04-07 08:40:25 us=186776   shared_secret_file = '[UNDEF]'
+2023-04-07 08:40:25 us=186787   key_direction = not set
+2023-04-07 08:40:25 us=186799   ciphername = 'SMS4-CBC'
+2023-04-07 08:40:25 us=186810   ncp_enabled = ENABLED
+2023-04-07 08:40:25 us=186821   ncp_ciphers = 'SMS4-CBC:AES-256-GCM:AES-128-GCM:SMS4-CBC'
+2023-04-07 08:40:25 us=186833   authname = 'SM3'
+2023-04-07 08:40:25 us=186844   prng_hash = 'SM3'
+2023-04-07 08:40:25 us=186856   prng_nonce_secret_len = 16
+2023-04-07 08:40:25 us=186867   keysize = 0
+2023-04-07 08:40:25 us=186878   engine = DISABLED
+2023-04-07 08:40:25 us=186889   replay = ENABLED
+2023-04-07 08:40:25 us=186900   mute_replay_warnings = DISABLED
+2023-04-07 08:40:25 us=186912   replay_window = 64
+2023-04-07 08:40:25 us=186923   replay_time = 15
+2023-04-07 08:40:25 us=186934   packet_id_file = '[UNDEF]'
+2023-04-07 08:40:25 us=186945   test_crypto = DISABLED
+2023-04-07 08:40:25 us=186957   tls_server = ENABLED
+2023-04-07 08:40:25 us=186968   tls_client = DISABLED
+2023-04-07 08:40:25 us=186979   ca_file = 'ca.pem'
+2023-04-07 08:40:25 us=186990   ca_path = '[UNDEF]'
+2023-04-07 08:40:25 us=187001   dh_file = 'dh2048.pem'
+2023-04-07 08:40:25 us=187012   cert_file = 'eccsignsite.pem'
+2023-04-07 08:40:25 us=187024   enc_cert_file = 'eccencsite.pem'
+2023-04-07 08:40:25 us=187035   extra_certs_file = '[UNDEF]'
+2023-04-07 08:40:25 us=187046   priv_key_file = 'eccsignsitekey.pem'
+2023-04-07 08:40:25 us=187058   pkcs12_file = '[UNDEF]'
+2023-04-07 08:40:25 us=187069   cipher_list = '[UNDEF]'
+2023-04-07 08:40:25 us=187080   cipher_list_tls13 = '[UNDEF]'
+2023-04-07 08:40:25 us=187091   tls_cert_profile = '[UNDEF]'
+2023-04-07 08:40:25 us=187102   tls_verify = '[UNDEF]'
+2023-04-07 08:40:25 us=187113   tls_export_cert = '[UNDEF]'
+2023-04-07 08:40:25 us=187125   verify_x509_type = 0
+2023-04-07 08:40:25 us=187136   verify_x509_name = '[UNDEF]'
+2023-04-07 08:40:25 us=187147   crl_file = '/etc/openvpn/server/crl/'
+2023-04-07 08:40:25 us=187158   ns_cert_type = 0
+2023-04-07 08:40:25 us=187170   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187181   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187192   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187203   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187214   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187225   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187236   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187247   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187258   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187269   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187280   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187291   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187303   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187314   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187325   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187336   remote_cert_ku[i] = 0
+2023-04-07 08:40:25 us=187347   remote_cert_eku = '[UNDEF]'
+2023-04-07 08:40:25 us=187359   ssl_flags = 36
+2023-04-07 08:40:25 us=187370   tls_timeout = 2
+2023-04-07 08:40:25 us=187381   renegotiate_bytes = -1
+2023-04-07 08:40:25 us=187392   renegotiate_packets = 0
+2023-04-07 08:40:25 us=187403   renegotiate_seconds = 3600
+2023-04-07 08:40:25 us=187415   handshake_window = 60
+2023-04-07 08:40:25 us=187426   transition_window = 3600
+2023-04-07 08:40:25 us=187437   single_session = DISABLED
+2023-04-07 08:40:25 us=187448   push_peer_info = DISABLED
+2023-04-07 08:40:25 us=187460   tls_exit = DISABLED
+2023-04-07 08:40:25 us=187471   tls_crypt_v2_metadata = '[UNDEF]'
+2023-04-07 08:40:25 us=187482   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187494   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187505   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187516   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187527   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187539   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187550   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187561   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187572   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187584   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187595   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187607   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187619   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187632   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187643   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187654   pkcs11_protected_authentication = DISABLED
+2023-04-07 08:40:25 us=187666   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187677   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187689   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187700   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187711   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187722   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187734   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187745   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187756   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187767   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187778   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187789   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187800   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187812   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187823   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187834   pkcs11_private_mode = 00000000
+2023-04-07 08:40:25 us=187845   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187856   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187867   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187878   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187889   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187900   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187911   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187922   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187933   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187944   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187955   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187966   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187978   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=187989   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=188000   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=188010   pkcs11_cert_private = DISABLED
+2023-04-07 08:40:25 us=188042   pkcs11_pin_cache_period = -1
+2023-04-07 08:40:25 us=188054   pkcs11_id = '[UNDEF]'
+2023-04-07 08:40:25 us=188065   pkcs11_id_management = DISABLED
+2023-04-07 08:40:25 us=188078   server_network = 10.8.0.0
+2023-04-07 08:40:25 us=188091   server_netmask = 255.255.255.0
+2023-04-07 08:40:25 us=188106   server_network_ipv6 = ::
+2023-04-07 08:40:25 us=188118   server_netbits_ipv6 = 0
+2023-04-07 08:40:25 us=188130   server_bridge_ip = 0.0.0.0
+2023-04-07 08:40:25 us=188143   server_bridge_netmask = 0.0.0.0
+2023-04-07 08:40:25 us=188155   server_bridge_pool_start = 0.0.0.0
+2023-04-07 08:40:25 us=188167   server_bridge_pool_end = 0.0.0.0
+2023-04-07 08:40:25 us=188179   push_entry = 'route-gateway 10.8.0.1'
+2023-04-07 08:40:25 us=188190   push_entry = 'topology subnet'
+2023-04-07 08:40:25 us=188202   push_entry = 'ping 10'
+2023-04-07 08:40:25 us=188213   push_entry = 'ping-restart 120'
+2023-04-07 08:40:25 us=188224   ifconfig_pool_defined = ENABLED
+2023-04-07 08:40:25 us=188236   ifconfig_pool_start = 10.8.0.2
+2023-04-07 08:40:25 us=188248   ifconfig_pool_end = 10.8.0.253
+2023-04-07 08:40:25 us=188260   ifconfig_pool_netmask = 255.255.255.0
+2023-04-07 08:40:25 us=188272   ifconfig_pool_persist_filename = '/var/log/openvpn/ipp.txt'
+2023-04-07 08:40:25 us=188284   ifconfig_pool_persist_refresh_freq = 600
+2023-04-07 08:40:25 us=188295   ifconfig_ipv6_pool_defined = DISABLED
+2023-04-07 08:40:25 us=188307   ifconfig_ipv6_pool_base = ::
+2023-04-07 08:40:25 us=188318   ifconfig_ipv6_pool_netbits = 0
+2023-04-07 08:40:25 us=188330   n_bcast_buf = 256
+2023-04-07 08:40:25 us=188341   tcp_queue_limit = 64
+2023-04-07 08:40:25 us=188352   real_hash_size = 256
+2023-04-07 08:40:25 us=188364   virtual_hash_size = 256
+2023-04-07 08:40:25 us=188375   client_connect_script = './connect.py'
+2023-04-07 08:40:25 us=188386   learn_address_script = './learn-address.py'
+2023-04-07 08:40:25 us=188398   client_disconnect_script = './disconnect.py'
+2023-04-07 08:40:25 us=188409   client_config_dir = 'ccd'
+2023-04-07 08:40:25 us=188420   ccd_exclusive = DISABLED
+2023-04-07 08:40:25 us=188432   tmp_dir = '/tmp'
+2023-04-07 08:40:25 us=188443   push_ifconfig_defined = DISABLED
+2023-04-07 08:40:25 us=188455   push_ifconfig_local = 0.0.0.0
+2023-04-07 08:40:25 us=188468   push_ifconfig_remote_netmask = 0.0.0.0
+2023-04-07 08:40:25 us=188479   push_ifconfig_ipv6_defined = DISABLED
+2023-04-07 08:40:25 us=188491   push_ifconfig_ipv6_local = ::/0
+2023-04-07 08:40:25 us=188503   push_ifconfig_ipv6_remote = ::
+2023-04-07 08:40:25 us=188514   enable_c2c = DISABLED
+2023-04-07 08:40:25 us=188526   duplicate_cn = DISABLED
+2023-04-07 08:40:25 us=188537   cf_max = 0
+2023-04-07 08:40:25 us=188548   cf_per = 0
+2023-04-07 08:40:25 us=188559   max_clients = 1024
+2023-04-07 08:40:25 us=188571   max_routes_per_client = 256
+2023-04-07 08:40:25 us=188582   auth_user_pass_verify_script = './checkpsw.py'
+2023-04-07 08:40:25 us=188593   auth_user_pass_verify_script_via_file = DISABLED
+2023-04-07 08:40:25 us=188604   auth_token_generate = ENABLED
+2023-04-07 08:40:25 us=188616   auth_token_lifetime = 0
+2023-04-07 08:40:25 us=188627   auth_token_secret_file = '[UNDEF]'
+2023-04-07 08:40:25 us=188638   port_share_host = '[UNDEF]'
+2023-04-07 08:40:25 us=188650   port_share_port = '[UNDEF]'
+2023-04-07 08:40:25 us=188661   vlan_tagging = DISABLED
+2023-04-07 08:40:25 us=188672   vlan_accept = all
+2023-04-07 08:40:25 us=188683   vlan_pvid = 1
+2023-04-07 08:40:25 us=188694   client = DISABLED
+2023-04-07 08:40:25 us=188706   pull = DISABLED
+2023-04-07 08:40:25 us=188716   auth_user_pass_file = '[UNDEF]'
+2023-04-07 08:40:25 us=188730 OpenVPN 2.5.4 aarch64-unknown-linux-gnu [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [PKCS11] [MH                                                                          /PKTINFO] [AEAD] built on Apr  6 2023
+2023-04-07 08:40:25 us=188750 library versions: GmSSL 2.5.4 - OpenSSL 1.1.0d  19 Jun 2019, LZO 2.10
+2023-04-07 08:40:25 us=189111 MANAGEMENT: TCP Socket listening on [AF_INET]127.0.0.1:1190
+2023-04-07 08:40:25 us=189283 net_route_v4_best_gw query: dst 0.0.0.0
+2023-04-07 08:40:25 us=189393 net_route_v4_best_gw result: via 172.16.250.3 dev enaftgm1i0
+2023-04-07 08:40:25 us=189471 NOTE: the current --script-security setting may allow this configuration to call user-de                                                                          fined scripts
+2023-04-07 08:40:25 us=190062 Diffie-Hellman initialized with 2048 bit key
+[GMTLS_DEBUG] set sm2 signing certificate
+[GMTLS_DEBUG] set sm2 signing private key
+[GMTLS_DEBUG] set sm2 encryption certificate
+[GMTLS_DEBUG] set sm2 decryption private key
+2023-04-07 08:40:25 us=191031 Using random OpenVPN auth-token server key.
+2023-04-07 08:40:25 us=191240 auth-token secret: Using 256 bit message hash 'SM3' for HMAC authentication
+2023-04-07 08:40:25 us=191267 TLS-Auth MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 08:40:25 us=191712 TUN/TAP device tun0 opened
+2023-04-07 08:40:25 us=191738 do_ifconfig, ipv4=1, ipv6=0
+2023-04-07 08:40:25 us=191770 net_iface_mtu_set: mtu 1500 for tun0
+2023-04-07 08:40:25 us=191816 net_iface_up: set tun0 up
+2023-04-07 08:40:25 us=191932 net_addr_v4_add: 10.8.0.1/24 dev tun0
+2023-04-07 08:40:25 us=192250 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 08:40:25 us=192274 Could not determine IPv4/IPv6 protocol. Using AF_INET
+2023-04-07 08:40:25 us=192830 Socket Buffers: R=[2097152->2097152] S=[212992->212992]
+2023-04-07 08:40:25 us=192864 UDPv4 link local (bound): [AF_INET][undef]:1194
+2023-04-07 08:40:25 us=192880 UDPv4 link remote: [AF_UNSPEC]
+2023-04-07 08:40:25 us=192899 MULTI: multi_init called, r=256 v=256
+2023-04-07 08:40:25 us=192938 IFCONFIG POOL IPv4: base=10.8.0.2 size=252
+2023-04-07 08:40:25 us=192965 ifconfig_pool_read(), in='yonghu,10.8.0.2,'
+2023-04-07 08:40:25 us=192985 succeeded -> ifconfig_pool_set(hand=0)
+2023-04-07 08:40:25 us=193001 ifconfig_pool_read(), in='yh2,10.8.0.3,'
+2023-04-07 08:40:25 us=193015 succeeded -> ifconfig_pool_set(hand=1)
+2023-04-07 08:40:25 us=193030 ifconfig_pool_read(), in='222,10.8.0.4,'
+2023-04-07 08:40:25 us=193044 succeeded -> ifconfig_pool_set(hand=2)
+2023-04-07 08:40:25 us=193058 ifconfig_pool_read(), in='yy,10.8.0.8,'
+2023-04-07 08:40:25 us=193073 succeeded -> ifconfig_pool_set(hand=6)
+2023-04-07 08:40:25 us=193087 ifconfig_pool_read(), in='adf,10.8.0.12,'
+2023-04-07 08:40:25 us=193101 succeeded -> ifconfig_pool_set(hand=10)
+2023-04-07 08:40:25 us=193115 ifconfig_pool_read(), in='yy11,10.8.0.16,'
+2023-04-07 08:40:25 us=193128 succeeded -> ifconfig_pool_set(hand=14)
+2023-04-07 08:40:25 us=193142 ifconfig_pool_read(), in='yy1,10.8.0.20,'
+2023-04-07 08:40:25 us=193157 succeeded -> ifconfig_pool_set(hand=18)
+2023-04-07 08:40:25 us=193173 ifconfig_pool_read(), in='12fas,10.8.0.24,'
+2023-04-07 08:40:25 us=193187 succeeded -> ifconfig_pool_set(hand=22)
+2023-04-07 08:40:25 us=193201 ifconfig_pool_read(), in='@yy1,10.8.0.28,'
+2023-04-07 08:40:25 us=193215 succeeded -> ifconfig_pool_set(hand=26)
+2023-04-07 08:40:25 us=193229 IFCONFIG POOL LIST
+2023-04-07 08:40:25 us=193243 yonghu,10.8.0.2,
+2023-04-07 08:40:25 us=193257 yh2,10.8.0.3,
+2023-04-07 08:40:25 us=193270 222,10.8.0.4,
+2023-04-07 08:40:25 us=193283 yy,10.8.0.8,
+2023-04-07 08:40:25 us=193296 adf,10.8.0.12,
+2023-04-07 08:40:25 us=193308 yy11,10.8.0.16,
+2023-04-07 08:40:25 us=193321 yy1,10.8.0.20,
+2023-04-07 08:40:25 us=193334 12fas,10.8.0.24,
+2023-04-07 08:40:25 us=193347 @yy1,10.8.0.28,
+2023-04-07 08:40:25 us=193382 Initialization Sequence Completed
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+2023-04-07 08:46:20 us=806138 MULTI: multi_create_instance called
+2023-04-07 08:46:20 us=806225 192.168.3.160:59661 Re-using SSL/TLS context
+2023-04-07 08:46:20 us=806385 192.168.3.160:59661 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 08:46:20 us=806406 192.168.3.160:59661 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 08:46:20 us=806455 192.168.3.160:59661 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mt                                                                          u 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 08:46:20 us=806471 192.168.3.160:59661 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1                                                                          569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 08:46:20 us=806518 192.168.3.160:59661 TLS: Initial packet from [AF_INET]192.168.3.160:59661, sid=07b86dac                                                                           91306d00
+2023-04-07 08:46:20 us=825102 192.168.3.160:59661 VERIFY OK: depth=3, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:46:20 us=825970 192.168.3.160:59661 VERIFY OK: depth=2, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:46:20 us=826829 192.168.3.160:59661 VERIFY OK: depth=1, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:46:20 us=827696 192.168.3.160:59661 VERIFY OK: depth=0, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+ssl_get_algorithm2=bac26b8008x
+2023-04-07 08:46:20 us=832139 192.168.3.160:59661 peer info: IV_VER=2.5.4
+2023-04-07 08:46:20 us=832161 192.168.3.160:59661 peer info: IV_PLAT=win
+2023-04-07 08:46:20 us=832177 192.168.3.160:59661 peer info: IV_PROTO=6
+2023-04-07 08:46:20 us=832192 192.168.3.160:59661 peer info: IV_NCP=2
+2023-04-07 08:46:20 us=832209 192.168.3.160:59661 peer info: IV_CIPHERS=SMS4-CBC:AES-256-GCM:AES-128-GCM:BF-CBC
+2023-04-07 08:46:20 us=832224 192.168.3.160:59661 peer info: IV_LZ4=1
+2023-04-07 08:46:20 us=832239 192.168.3.160:59661 peer info: IV_LZ4v2=1
+2023-04-07 08:46:20 us=832254 192.168.3.160:59661 peer info: IV_LZO=1
+2023-04-07 08:46:20 us=832269 192.168.3.160:59661 peer info: IV_COMP_STUB=1
+2023-04-07 08:46:20 us=832284 192.168.3.160:59661 peer info: IV_COMP_STUBv2=1
+2023-04-07 08:46:20 us=832299 192.168.3.160:59661 peer info: IV_TCPNL=1
+2023-04-07 08:46:20 us=962642 192.168.3.160:59661 WARNING: Failed running command (--auth-user-pass-verify): external                                                                           program exited with error status: 2
+2023-04-07 08:46:20 us=962711 192.168.3.160:59661 TLS Auth Error: Auth Username/Password verification failed for peer
+2023-04-07 08:46:20 us=962755 192.168.3.160:59661 WARNING: 'link-mtu' is used inconsistently, local='link-mtu 1569', r                                                                          emote='link-mtu 1553'
+2023-04-07 08:46:20 us=964789 192.168.3.160:59661 Control Channel: GMTLSv1.1, cipher GMTLSv1.1 SM2-WITH-SMS4-SM3, peer                                                                           certificate: 256 bit EC, curve sm2p256v1, signature: SM2Sign-with-SM3
+2023-04-07 08:46:20 us=964836 192.168.3.160:59661 [安全认证网关客户端] Peer Connection Initiated with [AF_INET]192.168                                                                          .3.160:59661
+2023-04-07 08:46:22 us=115896 192.168.3.160:59661 PUSH: Received control message: 'PUSH_REQUEST'
+2023-04-07 08:46:22 us=115940 192.168.3.160:59661 Delayed exit in 5 seconds
+2023-04-07 08:46:22 us=115990 192.168.3.160:59661 SENT CONTROL [安全认证网关客户端]: 'AUTH_FAILED' (status=1)
+2023-04-07 08:46:27 us=535632 192.168.3.160:59661 SIGTERM[soft,delayed-exit] received, client-instance exiting
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+2023-04-07 08:48:42 us=858193 MULTI: multi_create_instance called
+2023-04-07 08:48:42 us=858267 192.168.3.160:54460 Re-using SSL/TLS context
+2023-04-07 08:48:42 us=858356 192.168.3.160:54460 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 08:48:42 us=858376 192.168.3.160:54460 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 08:48:42 us=858419 192.168.3.160:54460 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mt                                                                          u 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 08:48:42 us=858434 192.168.3.160:54460 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1                                                                          569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 08:48:42 us=858476 192.168.3.160:54460 TLS: Initial packet from [AF_INET]192.168.3.160:54460, sid=81111e2e                                                                           f97bc727
+2023-04-07 08:48:42 us=876179 192.168.3.160:54460 VERIFY OK: depth=3, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:48:42 us=877035 192.168.3.160:54460 VERIFY OK: depth=2, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:48:42 us=877873 192.168.3.160:54460 VERIFY OK: depth=1, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+2023-04-07 08:48:42 us=878740 192.168.3.160:54460 VERIFY OK: depth=0, ST=山东, CN=安全认证网关客户端, L=济南, O=同智伟                                                                          业软件股份有限公司
+ssl_get_algorithm2=bac26b8008x
+2023-04-07 08:48:42 us=883078 192.168.3.160:54460 peer info: IV_VER=2.5.4
+2023-04-07 08:48:42 us=883098 192.168.3.160:54460 peer info: IV_PLAT=win
+2023-04-07 08:48:42 us=883114 192.168.3.160:54460 peer info: IV_PROTO=6
+2023-04-07 08:48:42 us=883129 192.168.3.160:54460 peer info: IV_NCP=2
+2023-04-07 08:48:42 us=883145 192.168.3.160:54460 peer info: IV_CIPHERS=SMS4-CBC:AES-256-GCM:AES-128-GCM:BF-CBC
+2023-04-07 08:48:42 us=883160 192.168.3.160:54460 peer info: IV_LZ4=1
+2023-04-07 08:48:42 us=883174 192.168.3.160:54460 peer info: IV_LZ4v2=1
+2023-04-07 08:48:42 us=883187 192.168.3.160:54460 peer info: IV_LZO=1
+2023-04-07 08:48:42 us=883202 192.168.3.160:54460 peer info: IV_COMP_STUB=1
+2023-04-07 08:48:42 us=883217 192.168.3.160:54460 peer info: IV_COMP_STUBv2=1
+2023-04-07 08:48:42 us=883234 192.168.3.160:54460 peer info: IV_TCPNL=1
+2023-04-07 08:48:42 us=996080 192.168.3.160:54460 TLS: Username/Password authentication succeeded for username 'yonghu                                                                          ' [CN SET]
+2023-04-07 08:48:42 us=996160 192.168.3.160:54460 WARNING: 'link-mtu' is used inconsistently, local='link-mtu 1569', r                                                                          emote='link-mtu 1553'
+2023-04-07 08:48:42 us=998126 192.168.3.160:54460 Control Channel: GMTLSv1.1, cipher GMTLSv1.1 SM2-WITH-SMS4-SM3, peer                                                                           certificate: 256 bit EC, curve sm2p256v1, signature: SM2Sign-with-SM3
+2023-04-07 08:48:42 us=998168 192.168.3.160:54460 [yonghu] Peer Connection Initiated with [AF_INET]192.168.3.160:54460
+2023-04-07 08:48:42 us=998208 yonghu/192.168.3.160:54460 MULTI_sva: pool returned IPv4=10.8.0.2, IPv6=(Not enabled)
+2023-04-07 08:48:42 us=998285 yonghu/192.168.3.160:54460 OPTIONS IMPORT: reading client specific options from: ccd/yon                                                                          ghu
+2023-04-07 08:48:43 us=99688 yonghu/192.168.3.160:54460 OPTIONS IMPORT: reading client specific options from: /tmp/ope                                                                          nvpn_cc_4955539de6bbc1d87d1ec4465c37bf2.tmp
+2023-04-07 08:48:43 us=276240 yonghu/192.168.3.160:54460 MULTI: Learn: 10.8.0.2 -> yonghu/192.168.3.160:54460
+2023-04-07 08:48:43 us=276304 yonghu/192.168.3.160:54460 MULTI: primary virtual IP for yonghu/192.168.3.160:54460: 10.                                                                          8.0.2
+2023-04-07 08:48:43 us=276454 yonghu/192.168.3.160:54460 Outgoing Data Channel: Cipher 'SMS4-CBC' initialized with 128                                                                           bit key
+2023-04-07 08:48:43 us=276482 yonghu/192.168.3.160:54460 Outgoing Data Channel: Using 256 bit message hash 'SM3' for H                                                                          MAC authentication
+2023-04-07 08:48:43 us=276502 yonghu/192.168.3.160:54460 Incoming Data Channel: Cipher 'SMS4-CBC' initialized with 128                                                                           bit key
+2023-04-07 08:48:43 us=276520 yonghu/192.168.3.160:54460 Incoming Data Channel: Using 256 bit message hash 'SM3' for H                                                                          MAC authentication
+2023-04-07 08:48:43 us=276631 yonghu/192.168.3.160:54460 SENT CONTROL [yonghu]: 'PUSH_REPLY,route-gateway 10.8.0.1,top                                                                          ology subnet,ping 10,ping-restart 120,route 192.168.3.146 255.255.255.255,ifconfig 10.8.0.2 255.255.255.0,peer-id 0,au                                                                          th-tokenSESS_ID,cipher SMS4-CBC' (status=1)
+2023-04-07 08:48:43 us=349730 yonghu/192.168.3.160:54460 PUSH: Received control message: 'PUSH_REQUEST'
+2023-04-07 08:48:43 us=609226 yonghu/192.168.3.160:54460 MULTI: bad source address from client [::], packet dropped
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+
+Your system is not activated. Please activate as soon as possible for normal use.
+
+2023-04-07 09:14:22 us=13606 MULTI: multi_create_instance called
+2023-04-07 09:14:22 us=13683 192.168.3.44:55042 Re-using SSL/TLS context
+2023-04-07 09:14:22 us=13811 192.168.3.44:55042 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:14:22 us=13831 192.168.3.44:55042 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:14:22 us=13878 192.168.3.44:55042 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:14:22 us=13894 192.168.3.44:55042 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:14:22 us=13938 192.168.3.44:55042 TLS: Initial packet from [AF_INET]192.168.3.44:55042, sid=fa814f22 ac6a6ee3
+2023-04-07 09:14:47 us=300133 MULTI: multi_create_instance called
+2023-04-07 09:14:47 us=300201 192.168.3.44:55043 Re-using SSL/TLS context
+2023-04-07 09:14:47 us=300318 192.168.3.44:55043 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:14:47 us=300338 192.168.3.44:55043 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:14:47 us=300386 192.168.3.44:55043 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:14:47 us=300402 192.168.3.44:55043 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:14:47 us=300445 192.168.3.44:55043 TLS: Initial packet from [AF_INET]192.168.3.44:55043, sid=5a3f6b4c 955f859c
+2023-04-07 09:15:01 us=929299 MULTI: multi_create_instance called
+2023-04-07 09:15:01 us=929365 192.168.3.44:61787 Re-using SSL/TLS context
+2023-04-07 09:15:01 us=929474 192.168.3.44:61787 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:15:01 us=929494 192.168.3.44:61787 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:15:01 us=929541 192.168.3.44:61787 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:15:01 us=929557 192.168.3.44:61787 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:15:01 us=929594 192.168.3.44:61787 TLS: Initial packet from [AF_INET]192.168.3.44:61787, sid=6f397250 47ccb339
+2023-04-07 09:15:12 us=50780 MULTI: multi_create_instance called
+2023-04-07 09:15:12 us=50851 192.168.3.44:49169 Re-using SSL/TLS context
+2023-04-07 09:15:12 us=50972 192.168.3.44:49169 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:15:12 us=50995 192.168.3.44:49169 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:15:12 us=51046 192.168.3.44:49169 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:15:12 us=51060 192.168.3.44:49169 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:15:12 us=51100 192.168.3.44:49169 TLS: Initial packet from [AF_INET]192.168.3.44:49169, sid=928c4800 2f1bb2c4
+2023-04-07 09:15:23 us=15962 192.168.3.44:55042 TLS Error: TLS key negotiation failed to occur within 60 seconds (check your network connectivity)
+2023-04-07 09:15:23 us=16001 192.168.3.44:55042 TLS Error: TLS handshake failed
+2023-04-07 09:15:23 us=16109 192.168.3.44:55042 SIGUSR1[soft,tls-error] received, client-instance restarting
+2023-04-07 09:15:47 us=732377 192.168.3.44:55043 TLS Error: TLS key negotiation failed to occur within 60 seconds (check your network connectivity)
+2023-04-07 09:15:47 us=732425 192.168.3.44:55043 TLS Error: TLS handshake failed
+2023-04-07 09:15:47 us=732528 192.168.3.44:55043 SIGUSR1[soft,tls-error] received, client-instance restarting
+2023-04-07 09:16:01 us=839839 192.168.3.44:61787 TLS Error: TLS key negotiation failed to occur within 60 seconds (check your network connectivity)
+2023-04-07 09:16:01 us=839879 192.168.3.44:61787 TLS Error: TLS handshake failed
+2023-04-07 09:16:01 us=839967 192.168.3.44:61787 SIGUSR1[soft,tls-error] received, client-instance restarting
+2023-04-07 09:16:12 us=968508 192.168.3.44:49169 TLS Error: TLS key negotiation failed to occur within 60 seconds (check your network connectivity)
+2023-04-07 09:16:12 us=968552 192.168.3.44:49169 TLS Error: TLS handshake failed
+2023-04-07 09:16:12 us=968670 192.168.3.44:49169 SIGUSR1[soft,tls-error] received, client-instance restarting
+2023-04-07 09:17:30 us=706915 MULTI: multi_create_instance called
+2023-04-07 09:17:30 us=706991 192.168.3.44:58070 Re-using SSL/TLS context
+2023-04-07 09:17:30 us=707086 192.168.3.44:58070 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:17:30 us=707109 192.168.3.44:58070 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:17:30 us=707155 192.168.3.44:58070 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:17:30 us=707172 192.168.3.44:58070 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:17:30 us=707217 192.168.3.44:58070 TLS: Initial packet from [AF_INET]192.168.3.44:58070, sid=23a78e34 ecf5d5d2
+2023-04-07 09:17:46 us=476942 MULTI: multi_create_instance called
+2023-04-07 09:17:46 us=477013 192.168.3.44:58071 Re-using SSL/TLS context
+2023-04-07 09:17:46 us=477091 192.168.3.44:58071 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:17:46 us=477114 192.168.3.44:58071 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:17:46 us=477156 192.168.3.44:58071 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:17:46 us=477171 192.168.3.44:58071 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:17:46 us=477207 192.168.3.44:58071 TLS: Initial packet from [AF_INET]192.168.3.44:58071, sid=b34935e6 8f4b8cd0
+2023-04-07 09:18:30 us=25771 192.168.3.44:58070 TLS Error: TLS key negotiation failed to occur within 60 seconds (check your network connectivity)
+2023-04-07 09:18:30 us=25811 192.168.3.44:58070 TLS Error: TLS handshake failed
+2023-04-07 09:18:30 us=25906 192.168.3.44:58070 SIGUSR1[soft,tls-error] received, client-instance restarting
+^C2023-04-07 09:18:35 us=180961 event_wait : Interrupted system call (code=4)
+2023-04-07 09:18:35 us=181004 SENT CONTROL [UNDEF]: 'RESTART' (status=1)
+2023-04-07 09:18:35 us=181071 SENT CONTROL [yonghu]: 'RESTART' (status=1)
+^C2023-04-07 09:18:36 us=680124 event_wait : Interrupted system call (code=4)
+2023-04-07 09:18:36 us=918457 TCP/UDP: Closing socket
+2023-04-07 09:18:36 us=918568 Closing TUN/TAP interface
+2023-04-07 09:18:36 us=918589 net_addr_v4_del: 10.8.0.1 dev tun0
+2023-04-07 09:18:36 us=952131 SIGINT[hard,] received, process exiting
+
+================================================================================================================================================================================================================================
+
+root@tzwy-PC:/etc/openvpn/server# openvpn --config server.conf
+2023-04-07 09:18:38 us=668193 DEPRECATED OPTION: --cipher set to 'SMS4-CBC' but missing in --data-ciphers (SMS4:AES-256-GCM:AES-128-GCM). Future OpenVPN version will ignore --cipher for cipher negotiations. Add 'SMS4-CBC' to --data-ciphers or change --cipher 'SMS4-CBC' to --data-ciphers-fallback 'SMS4-CBC' to silence this warning.
+2023-04-07 09:18:38 us=668351 WARNING: Using --management on a TCP port WITHOUT passwords is STRONGLY discouraged and considered insecure
+2023-04-07 09:18:38 us=668407 Current Parameter Settings:
+2023-04-07 09:18:38 us=668422   config = 'server.conf'
+2023-04-07 09:18:38 us=668435   mode = 1
+2023-04-07 09:18:38 us=668447   persist_config = DISABLED
+2023-04-07 09:18:38 us=668459   persist_mode = 1
+2023-04-07 09:18:38 us=668470   show_ciphers = DISABLED
+2023-04-07 09:18:38 us=668481   show_digests = DISABLED
+2023-04-07 09:18:38 us=668493   show_engines = DISABLED
+2023-04-07 09:18:38 us=668505   genkey = DISABLED
+2023-04-07 09:18:38 us=668516   genkey_filename = '[UNDEF]'
+2023-04-07 09:18:38 us=668527   key_pass_file = '[UNDEF]'
+2023-04-07 09:18:38 us=668539   show_tls_ciphers = DISABLED
+2023-04-07 09:18:38 us=668550   connect_retry_max = 0
+2023-04-07 09:18:38 us=668562 Connection profiles [0]:
+2023-04-07 09:18:38 us=668574   proto = udp
+2023-04-07 09:18:38 us=668585   local = '[UNDEF]'
+2023-04-07 09:18:38 us=668597   local_port = '1194'
+2023-04-07 09:18:38 us=668608   remote = '[UNDEF]'
+2023-04-07 09:18:38 us=668620   remote_port = '1194'
+2023-04-07 09:18:38 us=668631   remote_float = DISABLED
+2023-04-07 09:18:38 us=668642   bind_defined = DISABLED
+2023-04-07 09:18:38 us=668653   bind_local = ENABLED
+2023-04-07 09:18:38 us=668665   bind_ipv6_only = DISABLED
+2023-04-07 09:18:38 us=668676   connect_retry_seconds = 5
+2023-04-07 09:18:38 us=668687   connect_timeout = 120
+2023-04-07 09:18:38 us=668699   socks_proxy_server = '[UNDEF]'
+2023-04-07 09:18:38 us=668710   socks_proxy_port = '[UNDEF]'
+2023-04-07 09:18:38 us=668721   tun_mtu = 1500
+2023-04-07 09:18:38 us=668733   tun_mtu_defined = ENABLED
+2023-04-07 09:18:38 us=668744   link_mtu = 1500
+2023-04-07 09:18:38 us=668755   link_mtu_defined = DISABLED
+2023-04-07 09:18:38 us=668767   tun_mtu_extra = 0
+2023-04-07 09:18:38 us=668778   tun_mtu_extra_defined = DISABLED
+2023-04-07 09:18:38 us=668790   mtu_discover_type = -1
+2023-04-07 09:18:38 us=668802   fragment = 0
+2023-04-07 09:18:38 us=668813   mssfix = 1450
+2023-04-07 09:18:38 us=668824   explicit_exit_notification = 1
+2023-04-07 09:18:38 us=668835   tls_auth_file = '[UNDEF]'
+2023-04-07 09:18:38 us=668846   key_direction = not set
+2023-04-07 09:18:38 us=668857   tls_crypt_file = '[UNDEF]'
+2023-04-07 09:18:38 us=668869   tls_crypt_v2_file = '[UNDEF]'
+2023-04-07 09:18:38 us=668880 Connection profiles END
+2023-04-07 09:18:38 us=668892   remote_random = DISABLED
+2023-04-07 09:18:38 us=668903   ipchange = '[UNDEF]'
+2023-04-07 09:18:38 us=668914   dev = 'tun'
+2023-04-07 09:18:38 us=668925   dev_type = '[UNDEF]'
+2023-04-07 09:18:38 us=668936   dev_node = '[UNDEF]'
+2023-04-07 09:18:38 us=668947   lladdr = '[UNDEF]'
+2023-04-07 09:18:38 us=668959   topology = 3
+2023-04-07 09:18:38 us=668970   ifconfig_local = '10.8.0.1'
+2023-04-07 09:18:38 us=668981   ifconfig_remote_netmask = '255.255.255.0'
+2023-04-07 09:18:38 us=668993   ifconfig_noexec = DISABLED
+2023-04-07 09:18:38 us=669004   ifconfig_nowarn = DISABLED
+2023-04-07 09:18:38 us=669015   ifconfig_ipv6_local = '[UNDEF]'
+2023-04-07 09:18:38 us=669027   ifconfig_ipv6_netbits = 0
+2023-04-07 09:18:38 us=669038   ifconfig_ipv6_remote = '[UNDEF]'
+2023-04-07 09:18:38 us=669050   shaper = 0
+2023-04-07 09:18:38 us=669061   mtu_test = 0
+2023-04-07 09:18:38 us=669072   mlock = DISABLED
+2023-04-07 09:18:38 us=669084   keepalive_ping = 10
+2023-04-07 09:18:38 us=669096   keepalive_timeout = 120
+2023-04-07 09:18:38 us=669107   inactivity_timeout = 0
+2023-04-07 09:18:38 us=669118   ping_send_timeout = 10
+2023-04-07 09:18:38 us=669129   ping_rec_timeout = 240
+2023-04-07 09:18:38 us=669140   ping_rec_timeout_action = 2
+2023-04-07 09:18:38 us=669152   ping_timer_remote = DISABLED
+2023-04-07 09:18:38 us=669163   remap_sigusr1 = 0
+2023-04-07 09:18:38 us=669174   persist_tun = ENABLED
+2023-04-07 09:18:38 us=669186   persist_local_ip = DISABLED
+2023-04-07 09:18:38 us=669197   persist_remote_ip = DISABLED
+2023-04-07 09:18:38 us=669210   persist_key = ENABLED
+2023-04-07 09:18:38 us=669222   passtos = DISABLED
+2023-04-07 09:18:38 us=669233   resolve_retry_seconds = 1000000000
+2023-04-07 09:18:38 us=669245   resolve_in_advance = DISABLED
+2023-04-07 09:18:38 us=669256   username = '[UNDEF]'
+2023-04-07 09:18:38 us=669267   groupname = '[UNDEF]'
+2023-04-07 09:18:38 us=669278   chroot_dir = '[UNDEF]'
+2023-04-07 09:18:38 us=669290   cd_dir = '[UNDEF]'
+2023-04-07 09:18:38 us=669301   writepid = '/var/log/openvpn/server.pid'
+2023-04-07 09:18:38 us=669312   up_script = '[UNDEF]'
+2023-04-07 09:18:38 us=669323   down_script = '[UNDEF]'
+2023-04-07 09:18:38 us=669334   down_pre = DISABLED
+2023-04-07 09:18:38 us=669346   up_restart = DISABLED
+2023-04-07 09:18:38 us=669357   up_delay = DISABLED
+2023-04-07 09:18:38 us=669368   daemon = DISABLED
+2023-04-07 09:18:38 us=669380   inetd = 0
+2023-04-07 09:18:38 us=669391   log = DISABLED
+2023-04-07 09:18:38 us=669402   suppress_timestamps = DISABLED
+2023-04-07 09:18:38 us=669413   machine_readable_output = DISABLED
+2023-04-07 09:18:38 us=669425   nice = 0
+2023-04-07 09:18:38 us=669436   verbosity = 4
+2023-04-07 09:18:38 us=669448   mute = 0
+2023-04-07 09:18:38 us=669459   gremlin = 0
+2023-04-07 09:18:38 us=669470   status_file = '/var/log/openvpn/openvpn-status.log'
+2023-04-07 09:18:38 us=669482   status_file_version = 1
+2023-04-07 09:18:38 us=669493   status_file_update_freq = 60
+2023-04-07 09:18:38 us=669505   occ = ENABLED
+2023-04-07 09:18:38 us=669516   rcvbuf = 0
+2023-04-07 09:18:38 us=669527   sndbuf = 0
+2023-04-07 09:18:38 us=669538   mark = 0
+2023-04-07 09:18:38 us=669550   sockflags = 0
+2023-04-07 09:18:38 us=669561   fast_io = DISABLED
+2023-04-07 09:18:38 us=669572   comp.alg = 0
+2023-04-07 09:18:38 us=669584   comp.flags = 0
+2023-04-07 09:18:38 us=669595   route_script = '[UNDEF]'
+2023-04-07 09:18:38 us=669607   route_default_gateway = '10.8.0.2'
+2023-04-07 09:18:38 us=669618   route_default_metric = 0
+2023-04-07 09:18:38 us=669630   route_noexec = DISABLED
+2023-04-07 09:18:38 us=669641   route_delay = 0
+2023-04-07 09:18:38 us=669653   route_delay_window = 30
+2023-04-07 09:18:38 us=669664   route_delay_defined = DISABLED
+2023-04-07 09:18:38 us=669676   route_nopull = DISABLED
+2023-04-07 09:18:38 us=669687   route_gateway_via_dhcp = DISABLED
+2023-04-07 09:18:38 us=669698   allow_pull_fqdn = DISABLED
+2023-04-07 09:18:38 us=669710   management_addr = '127.0.0.1'
+2023-04-07 09:18:38 us=669721   management_port = '1190'
+2023-04-07 09:18:38 us=669733   management_user_pass = '[UNDEF]'
+2023-04-07 09:18:38 us=669744   management_log_history_cache = 250
+2023-04-07 09:18:38 us=669756   management_echo_buffer_size = 100
+2023-04-07 09:18:38 us=669768   management_write_peer_info_file = '[UNDEF]'
+2023-04-07 09:18:38 us=669779   management_client_user = '[UNDEF]'
+2023-04-07 09:18:38 us=669791   management_client_group = '[UNDEF]'
+2023-04-07 09:18:38 us=669802   management_flags = 0
+2023-04-07 09:18:38 us=669814   shared_secret_file = '[UNDEF]'
+2023-04-07 09:18:38 us=669825   key_direction = not set
+2023-04-07 09:18:38 us=669837   ciphername = 'SMS4-CBC'
+2023-04-07 09:18:38 us=669848   ncp_enabled = ENABLED
+2023-04-07 09:18:38 us=669859   ncp_ciphers = 'SMS4-CBC:AES-256-GCM:AES-128-GCM:SMS4-CBC'
+2023-04-07 09:18:38 us=669871   authname = 'SM3'
+2023-04-07 09:18:38 us=669883   prng_hash = 'SM3'
+2023-04-07 09:18:38 us=669894   prng_nonce_secret_len = 16
+2023-04-07 09:18:38 us=669906   keysize = 0
+2023-04-07 09:18:38 us=669917   engine = DISABLED
+2023-04-07 09:18:38 us=669929   replay = ENABLED
+2023-04-07 09:18:38 us=669941   mute_replay_warnings = DISABLED
+2023-04-07 09:18:38 us=669952   replay_window = 64
+2023-04-07 09:18:38 us=669964   replay_time = 15
+2023-04-07 09:18:38 us=669975   packet_id_file = '[UNDEF]'
+2023-04-07 09:18:38 us=669987   test_crypto = DISABLED
+2023-04-07 09:18:38 us=669998   tls_server = ENABLED
+2023-04-07 09:18:38 us=670010   tls_client = DISABLED
+2023-04-07 09:18:38 us=670021   ca_file = 'ca.pem'
+2023-04-07 09:18:38 us=670033   ca_path = '[UNDEF]'
+2023-04-07 09:18:38 us=670044   dh_file = 'dh2048.pem'
+2023-04-07 09:18:38 us=670055   cert_file = 'eccsignsite.pem'
+2023-04-07 09:18:38 us=670067   enc_cert_file = 'eccencsite.pem'
+2023-04-07 09:18:38 us=670078   extra_certs_file = '[UNDEF]'
+2023-04-07 09:18:38 us=670090   priv_key_file = 'eccsignsitekey.pem'
+2023-04-07 09:18:38 us=670102   pkcs12_file = '[UNDEF]'
+2023-04-07 09:18:38 us=670113   cipher_list = '[UNDEF]'
+2023-04-07 09:18:38 us=670124   cipher_list_tls13 = '[UNDEF]'
+2023-04-07 09:18:38 us=670136   tls_cert_profile = '[UNDEF]'
+2023-04-07 09:18:38 us=670147   tls_verify = '[UNDEF]'
+2023-04-07 09:18:38 us=670158   tls_export_cert = '[UNDEF]'
+2023-04-07 09:18:38 us=670170   verify_x509_type = 0
+2023-04-07 09:18:38 us=670181   verify_x509_name = '[UNDEF]'
+2023-04-07 09:18:38 us=670192   crl_file = '/etc/openvpn/server/crl/'
+2023-04-07 09:18:38 us=670204   ns_cert_type = 0
+2023-04-07 09:18:38 us=670216   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670227   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670238   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670250   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670261   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670272   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670284   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670295   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670306   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670317   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670329   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670340   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670351   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670363   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670374   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670385   remote_cert_ku[i] = 0
+2023-04-07 09:18:38 us=670396   remote_cert_eku = '[UNDEF]'
+2023-04-07 09:18:38 us=670407   ssl_flags = 36
+2023-04-07 09:18:38 us=670419   tls_timeout = 2
+2023-04-07 09:18:38 us=670430   renegotiate_bytes = -1
+2023-04-07 09:18:38 us=670441   renegotiate_packets = 0
+2023-04-07 09:18:38 us=670453   renegotiate_seconds = 3600
+2023-04-07 09:18:38 us=670464   handshake_window = 60
+2023-04-07 09:18:38 us=670476   transition_window = 3600
+2023-04-07 09:18:38 us=670487   single_session = DISABLED
+2023-04-07 09:18:38 us=670498   push_peer_info = DISABLED
+2023-04-07 09:18:38 us=670510   tls_exit = DISABLED
+2023-04-07 09:18:38 us=670521   tls_crypt_v2_metadata = '[UNDEF]'
+2023-04-07 09:18:38 us=670533   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670544   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670556   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670567   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670579   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670590   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670602   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670613   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670625   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670636   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670647   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670658   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670670   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670681   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670693   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670704   pkcs11_protected_authentication = DISABLED
+2023-04-07 09:18:38 us=670716   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670728   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670739   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670751   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670763   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670774   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670785   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670797   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670808   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670819   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670830   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670842   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670853   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670864   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670875   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670887   pkcs11_private_mode = 00000000
+2023-04-07 09:18:38 us=670898   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670909   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670920   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670931   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670943   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670954   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670965   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670976   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670987   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=670998   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671009   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671021   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671032   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671043   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671054   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671066   pkcs11_cert_private = DISABLED
+2023-04-07 09:18:38 us=671077   pkcs11_pin_cache_period = -1
+2023-04-07 09:18:38 us=671088   pkcs11_id = '[UNDEF]'
+2023-04-07 09:18:38 us=671099   pkcs11_id_management = DISABLED
+2023-04-07 09:18:38 us=671112   server_network = 10.8.0.0
+2023-04-07 09:18:38 us=671125   server_netmask = 255.255.255.0
+2023-04-07 09:18:38 us=671140   server_network_ipv6 = ::
+2023-04-07 09:18:38 us=671152   server_netbits_ipv6 = 0
+2023-04-07 09:18:38 us=671164   server_bridge_ip = 0.0.0.0
+2023-04-07 09:18:38 us=671177   server_bridge_netmask = 0.0.0.0
+2023-04-07 09:18:38 us=671189   server_bridge_pool_start = 0.0.0.0
+2023-04-07 09:18:38 us=671201   server_bridge_pool_end = 0.0.0.0
+2023-04-07 09:18:38 us=671213   push_entry = 'route-gateway 10.8.0.1'
+2023-04-07 09:18:38 us=671224   push_entry = 'topology subnet'
+2023-04-07 09:18:38 us=671236   push_entry = 'ping 10'
+2023-04-07 09:18:38 us=671247   push_entry = 'ping-restart 120'
+2023-04-07 09:18:38 us=671259   ifconfig_pool_defined = ENABLED
+2023-04-07 09:18:38 us=671271   ifconfig_pool_start = 10.8.0.2
+2023-04-07 09:18:38 us=671283   ifconfig_pool_end = 10.8.0.253
+2023-04-07 09:18:38 us=671296   ifconfig_pool_netmask = 255.255.255.0
+2023-04-07 09:18:38 us=671308   ifconfig_pool_persist_filename = '/var/log/openvpn/ipp.txt'
+2023-04-07 09:18:38 us=671320   ifconfig_pool_persist_refresh_freq = 600
+2023-04-07 09:18:38 us=671331   ifconfig_ipv6_pool_defined = DISABLED
+2023-04-07 09:18:38 us=671343   ifconfig_ipv6_pool_base = ::
+2023-04-07 09:18:38 us=671355   ifconfig_ipv6_pool_netbits = 0
+2023-04-07 09:18:38 us=671367   n_bcast_buf = 256
+2023-04-07 09:18:38 us=671378   tcp_queue_limit = 64
+2023-04-07 09:18:38 us=671389   real_hash_size = 256
+2023-04-07 09:18:38 us=671401   virtual_hash_size = 256
+2023-04-07 09:18:38 us=671412   client_connect_script = './connect.py'
+2023-04-07 09:18:38 us=671424   learn_address_script = './learn-address.py'
+2023-04-07 09:18:38 us=671435   client_disconnect_script = './disconnect.py'
+2023-04-07 09:18:38 us=671447   client_config_dir = 'ccd'
+2023-04-07 09:18:38 us=671458   ccd_exclusive = DISABLED
+2023-04-07 09:18:38 us=671470   tmp_dir = '/tmp'
+2023-04-07 09:18:38 us=671481   push_ifconfig_defined = DISABLED
+2023-04-07 09:18:38 us=671494   push_ifconfig_local = 0.0.0.0
+2023-04-07 09:18:38 us=671506   push_ifconfig_remote_netmask = 0.0.0.0
+2023-04-07 09:18:38 us=671518   push_ifconfig_ipv6_defined = DISABLED
+2023-04-07 09:18:38 us=671530   push_ifconfig_ipv6_local = ::/0
+2023-04-07 09:18:38 us=671542   push_ifconfig_ipv6_remote = ::
+2023-04-07 09:18:38 us=671554   enable_c2c = DISABLED
+2023-04-07 09:18:38 us=671565   duplicate_cn = DISABLED
+2023-04-07 09:18:38 us=671577   cf_max = 0
+2023-04-07 09:18:38 us=671588   cf_per = 0
+2023-04-07 09:18:38 us=671599   max_clients = 1024
+2023-04-07 09:18:38 us=671611   max_routes_per_client = 256
+2023-04-07 09:18:38 us=671622   auth_user_pass_verify_script = './checkpsw.py'
+2023-04-07 09:18:38 us=671634   auth_user_pass_verify_script_via_file = DISABLED
+2023-04-07 09:18:38 us=671645   auth_token_generate = ENABLED
+2023-04-07 09:18:38 us=671656   auth_token_lifetime = 0
+2023-04-07 09:18:38 us=671668   auth_token_secret_file = '[UNDEF]'
+2023-04-07 09:18:38 us=671679   port_share_host = '[UNDEF]'
+2023-04-07 09:18:38 us=671691   port_share_port = '[UNDEF]'
+2023-04-07 09:18:38 us=671702   vlan_tagging = DISABLED
+2023-04-07 09:18:38 us=671714   vlan_accept = all
+2023-04-07 09:18:38 us=671725   vlan_pvid = 1
+2023-04-07 09:18:38 us=671736   client = DISABLED
+2023-04-07 09:18:38 us=671748   pull = DISABLED
+2023-04-07 09:18:38 us=671759   auth_user_pass_file = '[UNDEF]'
+2023-04-07 09:18:38 us=671772 OpenVPN 2.5.4 aarch64-unknown-linux-gnu [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [PKCS11] [MH/PKTINFO] [AEAD] built on Apr  6 2023
+2023-04-07 09:18:38 us=671799 library versions: GmSSL 2.5.4 - OpenSSL 1.1.0d  19 Jun 2019, LZO 2.10
+2023-04-07 09:18:38 us=672096 MANAGEMENT: TCP Socket listening on [AF_INET]127.0.0.1:1190
+2023-04-07 09:18:38 us=672215 net_route_v4_best_gw query: dst 0.0.0.0
+2023-04-07 09:18:38 us=672327 net_route_v4_best_gw result: via 172.16.250.3 dev enaftgm1i0
+2023-04-07 09:18:38 us=672400 NOTE: the current --script-security setting may allow this configuration to call user-defined scripts
+2023-04-07 09:18:38 us=672999 Diffie-Hellman initialized with 2048 bit key
+[GMTLS_DEBUG] set sm2 signing certificate
+[GMTLS_DEBUG] set sm2 signing private key
+[GMTLS_DEBUG] set sm2 encryption certificate
+[GMTLS_DEBUG] set sm2 decryption private key
+2023-04-07 09:18:38 us=673937 Using random OpenVPN auth-token server key.
+2023-04-07 09:18:38 us=674148 auth-token secret: Using 256 bit message hash 'SM3' for HMAC authentication
+2023-04-07 09:18:38 us=674174 TLS-Auth MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:18:38 us=675124 TUN/TAP device tun0 opened
+2023-04-07 09:18:38 us=675867 do_ifconfig, ipv4=1, ipv6=0
+2023-04-07 09:18:38 us=675920 net_iface_mtu_set: mtu 1500 for tun0
+2023-04-07 09:18:38 us=675973 net_iface_up: set tun0 up
+2023-04-07 09:18:38 us=676099 net_addr_v4_add: 10.8.0.1/24 dev tun0
+2023-04-07 09:18:38 us=676197 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:18:38 us=676218 Could not determine IPv4/IPv6 protocol. Using AF_INET
+2023-04-07 09:18:38 us=676602 Socket Buffers: R=[2097152->2097152] S=[212992->212992]
+2023-04-07 09:18:38 us=676638 UDPv4 link local (bound): [AF_INET][undef]:1194
+2023-04-07 09:18:38 us=676652 UDPv4 link remote: [AF_UNSPEC]
+2023-04-07 09:18:38 us=676669 MULTI: multi_init called, r=256 v=256
+2023-04-07 09:18:38 us=676712 IFCONFIG POOL IPv4: base=10.8.0.2 size=252
+2023-04-07 09:18:38 us=676742 ifconfig_pool_read(), in='yonghu,10.8.0.2,'
+2023-04-07 09:18:38 us=676760 succeeded -> ifconfig_pool_set(hand=0)
+2023-04-07 09:18:38 us=676773 ifconfig_pool_read(), in='yh2,10.8.0.3,'
+2023-04-07 09:18:38 us=676786 succeeded -> ifconfig_pool_set(hand=1)
+2023-04-07 09:18:38 us=676798 ifconfig_pool_read(), in='222,10.8.0.4,'
+2023-04-07 09:18:38 us=676810 succeeded -> ifconfig_pool_set(hand=2)
+2023-04-07 09:18:38 us=676822 ifconfig_pool_read(), in='yy,10.8.0.8,'
+2023-04-07 09:18:38 us=676834 succeeded -> ifconfig_pool_set(hand=6)
+2023-04-07 09:18:38 us=676846 ifconfig_pool_read(), in='adf,10.8.0.12,'
+2023-04-07 09:18:38 us=676858 succeeded -> ifconfig_pool_set(hand=10)
+2023-04-07 09:18:38 us=676870 ifconfig_pool_read(), in='yy11,10.8.0.16,'
+2023-04-07 09:18:38 us=676882 succeeded -> ifconfig_pool_set(hand=14)
+2023-04-07 09:18:38 us=676894 ifconfig_pool_read(), in='yy1,10.8.0.20,'
+2023-04-07 09:18:38 us=676907 succeeded -> ifconfig_pool_set(hand=18)
+2023-04-07 09:18:38 us=676921 ifconfig_pool_read(), in='12fas,10.8.0.24,'
+2023-04-07 09:18:38 us=676934 succeeded -> ifconfig_pool_set(hand=22)
+2023-04-07 09:18:38 us=676946 ifconfig_pool_read(), in='@yy1,10.8.0.28,'
+2023-04-07 09:18:38 us=676958 succeeded -> ifconfig_pool_set(hand=26)
+2023-04-07 09:18:38 us=676972 IFCONFIG POOL LIST
+2023-04-07 09:18:38 us=676985 yonghu,10.8.0.2,
+2023-04-07 09:18:38 us=676996 yh2,10.8.0.3,
+2023-04-07 09:18:38 us=677008 222,10.8.0.4,
+2023-04-07 09:18:38 us=677019 yy,10.8.0.8,
+2023-04-07 09:18:38 us=677030 adf,10.8.0.12,
+2023-04-07 09:18:38 us=677042 yy11,10.8.0.16,
+2023-04-07 09:18:38 us=677053 yy1,10.8.0.20,
+2023-04-07 09:18:38 us=677064 12fas,10.8.0.24,
+2023-04-07 09:18:38 us=677075 @yy1,10.8.0.28,
+2023-04-07 09:18:38 us=677112 Initialization Sequence Completed
+2023-04-07 09:18:44 us=396077 MULTI: multi_create_instance called
+2023-04-07 09:18:44 us=396158 192.168.3.44:60229 Re-using SSL/TLS context
+2023-04-07 09:18:44 us=396316 192.168.3.44:60229 Control Channel MTU parms [ L:1637 D:1212 EF:38 EB:0 ET:0 EL:3 ]
+2023-04-07 09:18:44 us=396337 192.168.3.44:60229 Data Channel MTU parms [ L:1637 D:1450 EF:137 EB:408 ET:0 EL:3 ]
+2023-04-07 09:18:44 us=396385 192.168.3.44:60229 Local Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-server'
+2023-04-07 09:18:44 us=396401 192.168.3.44:60229 Expected Remote Options String (VER=V4): 'V4,dev-type tun,link-mtu 1569,tun-mtu 1500,proto UDPv4,cipher SMS4-CBC,auth SM3,keysize 128,key-method 2,tls-client'
+2023-04-07 09:18:44 us=396446 192.168.3.44:60229 TLS: Initial packet from [AF_INET]192.168.3.44:60229, sid=49e2c8c3 80cb6e57
+^C2023-04-07 09:19:05 us=728916 event_wait : Interrupted system call (code=4)
+2023-04-07 09:19:05 us=728964 SENT CONTROL [UNDEF]: 'RESTART' (status=1)
+q2023-04-07 09:19:07 us=730398 TCP/UDP: Closing socket
+2023-04-07 09:19:07 us=730467 Closing TUN/TAP interface
+2023-04-07 09:19:07 us=730486 net_addr_v4_del: 10.8.0.1 dev tun0
+2023-04-07 09:19:07 us=760192 SIGINT[hard,] received, process exiting

@@ -1,3 +1,6 @@
+/*
+ * 引擎有静态引擎和动态引擎之分，这里演示的是静态引擎的定义与使用
+ */
 #include <openssl/rsa.h>
 #include <openssl/rand.h>
 #include <openssl/engine.h>
@@ -395,8 +398,8 @@ void ENGINE_load_hwcipher()
 {
        ENGINE *e_hw = engine_hwcipher();
        if (!e_hw) return;
-       ENGINE_add(e_hw);
-       ENGINE_free(e_hw);
+       ENGINE_add(e_hw);   //会增加引用计数
+       ENGINE_free(e_hw);  //引用计数控制真正的释放
        ERR_clear_error();   
 }
  

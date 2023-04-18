@@ -1,0 +1,24 @@
+updatedb :
+配置文件路径：
+    /etc/updatedb.conf
+-o FILE : 
+    Write the database to FILE instead of using the default database.
+-U PATH :  
+    Store only results of scanning the file system subtree rooted at PATH to the generated database.  
+    The whole file system is scanned by default.
+    
+    
+locate :
+-d DBPATH :
+    Replace  the  default  database  with DBPATH.
+    DBPATH is a :-separated list of database file names.
+    If more than one --dhiatabase option is specified, 
+    the resulting path is a concatenation of the separate paths.
+-e :
+    Print only entries that refer to files existing at the time locate is run   
+    
+在当前文件系统下生成数据库文件：
+updatedb -U `pwd` -o locate.db
+
+使用当前数据库查找：
+locate -d locate.db ...

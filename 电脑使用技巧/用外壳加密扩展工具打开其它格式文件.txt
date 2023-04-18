@@ -1,0 +1,5 @@
+×¢²á±í
+HKCR    
+    .pem
+        *               CERFile
+        Content Type    application/x-x509-ca-cert
