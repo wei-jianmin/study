@@ -1,0 +1,10 @@
+使用 GetAdaptersInfo 获取所有网络设备的信息，从中找到 tun/tap 设备
+使用 CreateFile 打开 tun/tap 设备
+使用 DeviceIoControl 设置 tun/tap 设备的ip、掩码、dhcp等信息并打开设备
+使用 GetIpForwardTable 获取路由表， 从中检索出与 tun/tap 设备相关的条目
+使用 DeleteIpForwardEntry 删除与 tun/tap 设备相关路由信息
+使用 CreateIpForwardEntry 为 tun/tap 设备添加新的路由信息
+使用 ReadFile 读 tun/tap 设备（读到的是 ip 层数据？）
+    循环，直到读取到 ICMP 格式的
+    使用 WriteFile 将响应的 ICMP 包数据写到 tun/tap 设备
+    

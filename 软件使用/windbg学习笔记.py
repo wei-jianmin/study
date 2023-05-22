@@ -1,3 +1,49 @@
+在线中文帮助：
+    https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/memory-window
+    
+windbg 使用手记
+    在 File 菜单中，有"执行进程"或"附近到进程"操作
+    在"执行进程"或"附近到进程"前，先设置好"符号路径"、"源码路径"、"可执行文件路径"
+    多个路径，使用分号分隔，"符号路径"设置窗口下面有个reload控制项
+    在 view 菜单中，可控制显示"监视"、"内存"、"调用堆栈"等窗口
+    在 Edit 菜单中，可控制显示"断点"窗口
+    在"局部变量窗口"中，不仅可以看到变量值，还可以看到局部变量的类型，内存地址等信息
+    F5 运行程序，F10 下一步，F11 进入，shift + F11 跳出， F9 触发断点
+    查看pdf文件是否匹配
+        在windgb工具包中，有个 symchk 工具：
+        语法：symchk /v 库路径 /s 符号文件所在目录
+    加载不匹配的pdb文件
+        .reload /i mytest.dll
+    设置初始断点
+        初始断点是自动设置的
+    设置内存修改时断点
+        ba Access Size 地址
+        Access 是访问的方式， 比如 e (执行)， r (读/写)， w (写)
+        Size 是监控访问的位置的大小，以字节为单位。 值为 1、2或4，还可以是 8（64位机）
+        如果Access是e，Size必须是1
+        比如要对内存0x0483DFE进行写操作的时候下断点，可以用命令 ba w4 0x0483DFE
+        注意：在Access 和 Size 之间不能加入空格
+    设置条件断点
+        bp/bu 地址
+        bp/bu 函数名
+        bp/bu `文件名：行号`  (注：` 是 ~ 键上的那个点)
+        bp设置的断点，程序重启后会丢失，bu设置的断点不会丢失
+        举例：bp `func.cpp:18` ".if(x>=0){};.else{gc;}"
+        功能：变量x是否大于0,若成功,则断下，否则继续运行
+    代码回跳：
+        右键源文件标题栏，set instruction pointer to current line
+    导出内存数据：
+        .writemem [文件名] [内存地址范围]
+        .writemem c:\test.log 0x20000000 L1000   或
+        .writemem c:\test.log 0x20000000 0x20001000 
+    查看数组内容
+        !da 地址
+    常用命令
+        lmf : 列出当前进程中加载的所有dll文件和对应的路径
+        dt 变量名 ： 显示变量的资料和结构
+        .cls : 清屏
+        !gle ： 显示GetLastError的值，并尝试解码该值
+        
 使用情景：
     替代vs进行调式，一般在客户电脑上进行调试时，使用windgb，然后将pdf及特定的源码文件放到客户电脑上，即可进行调试
 注意事项：
@@ -121,9 +167,9 @@
     要想中断调试，在CDB和KD中使用CTRL+C，在WinDbg中，使用Debug | Break或按下CTRL+BREAK。
     使用.cls (Clear Screen) 命令清空调试器命令窗口的所有文本。该命令清除所有命令的历史记录。
 表达式语法    
-    很多命令和扩展命令都接受表达式作为参数。
+    '''很多命令和扩展命令都接受表达式作为参数。
     调试器在执行命令之前先计算这些表达式的值。
-    调试器能够识别两种表达式类型：MASM表达式和C++表达式。
+    调试器能够识别两种表达式类型：MASM表达式和C++表达式。'''
     如果没有特别指出，本帮助文档示例中使用的是Microsoft宏汇编(MASM)表达式。
     在MSAM表达式中，所有符号都被当作地址对待(如全局变量，本地变量，函数，段，模块等)。
     C++表达式和真实的C++代码中一样，符号被当作适当的数据类型。
@@ -131,9 +177,9 @@
         在调试器启动之前使用_NT_EXPR_EVAL 环境变量。
         调试器启动时，使用-ee {masm|c++} 命令行选项。
         调试器启动之后，使用.expr (Choose Expression Evaluator)命令来显示或修改表达式类型。
-    ?? (Evaluate C++ Expression)命令总是使用C++ 表达式形式。
-    Watch 窗口始终使用C++表达式。
-    Locals 窗口始终使用C++ 表达式。
+    '?? (Evaluate C++ Expression)'命令总是使用C++ 表达式形式。
+    'Watch 窗口始终使用C++表达式。'
+    'Locals 窗口始终使用C++ 表达式。'
     有些扩展命令始终使用MASM表达式(而有一些扩展命令只允许使用数字参数)。
     @@(the other expression),双at号可以嵌套。每层@@号都将表达式类型改为另一种。
 别名
@@ -573,7 +619,7 @@ MASM语法：
             由于符号文件有时间戳，所以不用担心调试器会找错
         延迟符号加载
             调试器默认延迟符号加载，当用到时才加载；
-            当符号路径改变时，所以已加载的符号会重新加载;
+            当符号路径改变时，所有已加载的符号会重新加载;
             可以在CDB和KD中使用-s 命令行选项关闭延迟符号加载
             可以使用ld (Load Symbols) 命令强制加载符号
                 ld ModuleName [/f FileName]
@@ -802,14 +848,13 @@ MASM语法：
                 该语法只能用于名字，不能用于参数。
                 模板和重载是符号中需要这种引号的主要原因。
                 举例：
-                   bu @!"ExecutableName!std::pair<
-                            unsigned int,
-                            std::basic_string<
-                                unsigned short,
-                                std::char_traits<unsigned short>,
-                                std::allocator<unsigned short> 
-                            > 
-                        >::operator="
+                   '''bu @!"ExecutableName!std::pair< unsigned int, 
+                                                      std::basic_string< unsigned short, 
+                                                                         std::char_traits<unsigned short>,
+                                                                         std::allocator<unsigned short> 
+                                                                       > 
+                                                    >::operator="
+                   '''
                    ExecutableName 是一个可执行文件的名字。
                    注释连续的两个简括要，应该用空格隔开
             断点的数量

@@ -1,0 +1,106 @@
+WSAWaitForMultipleEvents
+     函数返回一个或多个指定事件对象处于信号状态、超时间隔过期或 I/O 完成端口有效
+     DWORD WSAAPI WSAWaitForMultipleEvents(
+                      [in] DWORD          cEvents,
+                      [in] const WSAEVENT *lphEvents,
+                      [in] BOOL           fWaitAll,
+                      [in] DWORD          dwTimeout,
+                      [in] BOOL           fAlertable
+                    );
+      fAlertable:
+        如果为true，则将当前线程处于可报警状态，
+        当完成端口有效时，当前线程会被报警激活
+        此时WSAWaitForMultipleEvents返回WSA_WAIT_IO_COMPLETION
+        注意这时lphEvents还没被触发，所以需要再次调用该等待函数
+        并根据返回值，进一步确认哪个完成端口被触发了
+        如果为false，则表明不支持完成端口监控
+        也就是说，无法监控WSAOVERLAPPED结构的hEvent 
+      返回值：
+        WSA_WAIT_EVENT_0 + (cEvents-1)
+        
+        
+MsgWaitForMultipleObjectsEx 
+    等待多个对象（包括事件对象）处于信号触发状态，或完成端口有效，
+    或当前线程的APC队列中有异步过程调用，@QueueUserAPC ，或超时
+    DWORD MsgWaitForMultipleObjectsEx(
+                      [in] DWORD        nCount,
+                      [in] const HANDLE *pHandles,
+                      [in] DWORD        dwMilliseconds,
+                      [in] DWORD        dwWakeMask,
+                      [in] DWORD        dwFlags
+                    );
+    dwWakeMask：
+        要加入到“等待对象队列”中的对象的类型，可以是如下值：
+        QS_KEY=0x0001	        pHandles 中是按键消息
+        QS_MOUSEMOVE=0x0002	    pHandles 中是鼠标消息
+        QS_MOUSEBUTTON=0x0004	pHandles 中是鼠标按键消息
+        QS_POSTMESSAGE=0x0008	pHandles 中是 posted 消息. 祥参：PostMessage.该消息会被 GetMessage or PeekMessage 清除
+        QS_TIMER=0x0010	        pHandles 中是 WM_TIMER 消息
+        QS_PAINT=0x0020	        pHandles 中是 WM_PAINT 消息
+        QS_SENDMESSAGE=0x0040	A message sent by another thread or application is in the queue. For more information, see SendMessage.
+        QS_HOTKEY=0x0080	    A WM_HOTKEY message is in the queue.
+        QS_ALLPOSTMESSAGE=0x0100	
+                                A posted message (other than those listed here) is in the queue. 
+                                For more information, see PostMessage.
+                                This value is cleared when you call GetMessage or PeekMessage without filtering messages.
+        QS_RAWINPUT=0x0400	    Windows XP and newer: A raw input message is in the queue. For more information, see Raw Input.
+        QS_TOUCH=0x0800	        Windows 8 and newer: A touch input message is in the queue. For more information, see Touch Input.
+        QS_POINTER=0x1000	    Windows 8 and newer: A pointer input message is in the queue. For more information, see Pointer Input.
+        QS_MOUSE=(QS_MOUSEMOVE | QS_MOUSEBUTTON)	
+                                A WM_MOUSEMOVE message or mouse-button message (WM_LBUTTONUP, WM_RBUTTONDOWN, and so on).
+        QS_INPUT=(QS_MOUSE | QS_KEY | QS_RAWINPUT | QS_TOUCH | QS_POINTER)	
+                                An input message is in the queue.
+        QS_ALLEVENTS=(QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY)	
+                                An input, WM_TIMER, WM_PAINT, WM_HOTKEY, or posted message is in the queue.
+        QS_ALLINPUT=(QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY | QS_SENDMESSAGE)	
+                                Any message is in the queue.
+    dwFlags:
+        0                           当任何对象有信号时，该函数返回.
+        MWMO_WAITALL=0x0001         当所有对象都有信号时，函数返回
+        MWMO_ALERTABLE=0x0002       当执行了QueueUserAPC后，等待线程返回
+        MWMO_INPUTAVAILABLE=0x0004  如果队列中存在输入，则该函数返回，即使该输入已通过调用另一个函数(如PeekMessage)被看到(但未被删除)
+    返回值：
+        WAIT_OBJECT_0 to (WAIT_OBJECT_0 + nCount - 1)
+            如果有 MWMO_WAITALL 标记，则表明所有对象都有信号了，
+            否则表明某个对象有信号了
+        WAIT_OBJECT_0 + nCount  不清楚
+        WAIT_ABANDONED_0 to (WAIT_ABANDONED_0 + nCount - 1)
+            如果有 MWMO_WAITALL 标记，则表明所有对象都有信号，且至少有一个互斥对象被废弃了
+            否则，返回值中的 (WAIT_OBJECT_0 + nCount - 1) 表明哪个互斥对象被废弃了
+        WAIT_IO_COMPLETION
+            The wait was ended by one or more user-mode asynchronous procedure calls (APC) queued to the thread.
+        WAIT_TIMEOUT    
+        
+&<QueueUserAPC>
+    将用户模式 异步过程调用 (APC) 对象添加到指定线程的 APC 队列。
+    DWORD QueueUserAPC(
+              [in] PAPCFUNC  pfnAPC,
+              [in] HANDLE    hThread,
+              [in] ULONG_PTR dwData
+            );
+    每个线程都有自己的 APC 队列。 APC 的队列是线程调用 APC 函数的请求。
+    操作系统发出软件中断，以指示线程调用 APC 函数。
+    将用户模式 APC 排入队列后，线程不会被引导至调用 APC 函数，除非此函数处于可警告状态
+    线程处于可警报状态后，线程先处理所有挂起的 APC，先 (FIFO) 顺序，等待操作 返回WAIT_IO_COMPLETION
+    线程使用 SleepEx 函数、 SignalObjectAndWait 函数、 WaitForSingleObjectEx 函数、 
+    WaitForMultipleObjectsEx 函数或 MsgWaitForMultipleObjectsEx 函数进入可警报状态。
+    如果应用程序在线程开始运行之前排队 APC，则线程首先调用 APC 函数。
+    线程调用 APC 函数后，它会为其 APC 队列中的所有 APC 调用 APC 函数。
+    请注意， ReadFileEx 函数、 SetWaitableTimer 函数和 WriteFileEx 函数 函数是使用 APC 作为完成通知回调机制实现的。 
+    当系统创建一个线程的时候，会同时创建一个与线程相关的队列。这个队列被成为异步过程调用(APC)队列。
+    同时我们也知道，windows提供了6个函数可以等待并将线程设置为可提醒状态--------- 
+    SleepEx(),SignalObjectAndWait(),GetQueuedCompletionStatusEx(),
+    WaitForSingleObjectEx(),WaitForMultipleObjectsEx(),MsgWaitForMultipleObjectsEx()
+    当我们调用这6个函数之一并将线程设置为可提醒状态的时候，系统会首先检查线程的APC队列。
+    如果队列中至少有一项，那么系统不会让线程进入睡眠状态。
+    需要牢记：当调用这些函数的时候，只要线程的APC队列中至少有一项，线程就不会进入睡眠状态。
+    PAPCFUNC Papcfunc;
+    void Papcfunc([in] ULONG_PTR Parameter) {...}
+
+WsaCreateEvent & CreateEvent
+    创建一个事件对象，
+    创建的对象开始为非触发状态，如果触发了，需要手动重置
+    Winsock事件对象是系统对象
+    因此，一个程序需要自动重置事件，可以直接调用 CreateEvent 函数
+    事件对象的范围仅限于创建它的进程。
+    

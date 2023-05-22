@@ -1,0 +1,3 @@
+修复了在没有类名的函数中，使用msgbox2,WRITELOG2时，误删函数名的问题
+使用_MSC_VER宏，当使用的是非vs编译器时，对msgbox2,WRITELOG2,VIEWCALL,DUMPCALL进行了更正
+定义了NO_USE_SIMPLE_LOG宏，控制日志语句的开关

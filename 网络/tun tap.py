@@ -81,7 +81,7 @@ https://segmentfault.com/a/1190000009249039
         用户层程序通过tun设备只能读写IP数据包，而通过tap设备能读写链路层数据包
         file://tun tap.cpp
         上面cpp文件中的关键代码为：
-            int fd = open(clonedev, O_RDWR);
+            int fd = open("/dev/net/tun", O_RDWR);
             struct ifreq ifr;
             memset(&ifr, 0, sizeof(ifr));
             ifr.ifr_flags = IFF_TUN | IFF_NO_PI;

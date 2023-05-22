@@ -1,0 +1,503 @@
+
+PS(1)                            User Commands                           PS(1) 
+
+NAME 
+       ps - report a snapshot of the current processes. 
+
+SYNOPSIS 
+       ps [options] 
+
+DESCRIPTION 
+       ps displays information about a selection of the active processes.  If you want a repetitive update of the selection and the displayed information, use top(1) instead. 
+
+       This version of ps accepts several kinds of options: 
+
+       1   UNIX options, which may be grouped and must be preceded by a dash. 
+       2   BSD options, which may be grouped and must not be used with a dash. 
+       3   GNU long options, which are preceded by two dashes. 
+
+       Options of different types may be freely mixed, but conflicts can appear.  There are some synonymous options, which are functionally identical, due to the many standards and ps implementations that this ps is compatible with. 
+
+       Note that "ps -aux" is distinct from "ps aux".  The POSIX and UNIX standards require that "ps -aux" print all processes owned by a user named "x", as well as printing all processes that would be selected by the -a option.  If the user named "x" does not exist, this ps may interpret the command as "ps aux" instead and print a warning.  This behavior is intended to aid in transitioning old scripts and habits. It is fragile, subject to change, and thus should not be relied upon. 
+
+       By default, ps selects all processes with the same effective user ID (euid=EUID) as the current user and associated with the same terminal as the invoker.  It displays the process ID (pid=PID), the terminal associated with the process (tname=TTY), the cumulated CPU time in [DD-]hh:mm:ss format (time=TIME), and the executable name (ucmd=CMD). Output is unsorted by default. 
+
+       The use of BSD-style options will add process state (stat=STAT) to the default display and show the command args (args=COMMAND) instead of the executable name.  You can override this with the PS_FORMAT environment variable. The use of BSD-style options will also change the process selection to include processes on other terminals (TTYs) that are owned by you; alternately, this may be described as setting the selection to be the set of all processes filtered to exclude processes owned by other users or not on a terminal.  These effects are not considered when options are described as being "identical" below, so -M will be considered identical to Z and so on. 
+
+       Except as described below, process selection options are additive.  The default selection is discarded, and then the selected processes are added to the set of processes to be displayed.  A process will thus be shown if it meets any of the given selection criteria. 
+
+EXAMPLES 
+       To see every process on the system using standard syntax: ps -e 
+          ps -ef 
+          ps -eF 
+          ps -ely 
+
+       To see every process on the system using BSD syntax: 
+          ps ax 
+          ps axu 
+
+       To print a process tree: 
+          ps -ejH 
+          ps axjf 
+
+       To get info about threads: 
+          ps -eLf 
+          ps axms 
+
+       To get security info: 
+          ps -eo euser,ruser,suser,fuser,f,comm,label 
+          ps axZ 
+          ps -eM 
+
+       To see every process running as root (real & effective ID) in user format: 
+          ps -U root -u root u 
+
+       To see every process with a user-defined format: 
+          ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm ps axo stat,euid,ruid,tty,tpgid,sess,pgrp,ppid,pid,pcpu,comm ps -Ao pid,tt,user,fname,tmout,f,wchan 
+
+       Print only the process IDs of syslogd: 
+          ps -C syslogd -o pid= 
+
+       Print only the name of PID 42: 
+          ps -q 42 -o comm= 
+
+SIMPLE PROCESS SELECTION 
+       a      Lift the BSD-style "only yourself" restriction, which is imposed upon the set of all processes when some BSD-style (without "-") options are used or when the ps personality setting is BSD-like. The set of processes selected in this manner is in addition to the set of processes selected by other means.  An alternate description is that this option causes ps to list all processes with a terminal (tty), or to list all processes when used together with the x option. 
+
+       -A     Select all processes.  Identical to -e. 
+
+       -a     Select all processes except both session leaders (see getsid(2)) and processes not associated with a terminal. 
+
+       -d     Select all processes except session leaders. 
+
+       --deselect 
+              Select all processes except those that fulfill the specified conditions (negates the selection).  Identical to -N. 
+
+       -e     Select all processes.  Identical to -A. 
+
+       g      Really all, even session leaders.  This flag is obsolete and may be discontinued in a future release.  It is normally implied by the a flag, and is only useful when operating in the sunos4 personality. 
+
+       -N     Select all processes except those that fulfill the specified conditions (negates the selection).  Identical to --deselect. 
+
+       T      Select all processes associated with this terminal.  Identical to the t option without any argument. 
+
+       r      Restrict the selection to only running processes. 
+
+       x      Lift the BSD-style "must have a tty" restriction, which is imposed upon the set of all processes when some BSD-style (without "-") options are used or when the ps personality setting is BSD-like.  The set of processes selected in this manner is in addition to the set of processes selected by other means.  An alternate description is that this option causes ps to list all processes owned by you (same EUID as ps), or to list all processes when used together with the a option. 
+
+PROCESS SELECTION BY LIST 
+       These options accept a single argument in the form of a blank-separated or comma-separated list.  They can be used multiple times.  For example: ps -p "1 2" -p 3,4 
+
+       -123   Identical to --pid 123. 
+
+       123    Identical to --pid 123. 
+
+       -C cmdlist 
+              Select by command name.  This selects the processes whose executable name is given in cmdlist. 
+
+       -G grplist 
+              Select by real group ID (RGID) or name.  This selects the processes whose real group name or ID is in the grplist list. The real group ID identifies the group of the user who created the process, see getgid(2). 
+
+       -g grplist 
+              Select by session OR by effective group name.  Selection by session is specified by many standards, but selection by effective group is the logical behavior that several other operating systems use.  This ps will select by session when the list is completely numeric (as sessions are).  Group ID numbers will work only when some group names are also specified.  See the -s and --group options. 
+
+       --Group grplist 
+              Select by real group ID (RGID) or name.  Identical to -G. 
+
+       --group grplist 
+              Select by effective group ID (EGID) or name.  This selects the processes whose effective group name or ID is in grplist.  The effective group ID describes the group whose file access permissions are used by the process (see getegid(2)).  The -g option is often an alternative to --group. 
+
+       p pidlist 
+              Select by process ID.  Identical to -p and --pid. 
+
+       -p pidlist 
+              Select by PID.  This selects the processes whose process ID numbers appear in pidlist.  Identical to p and --pid. 
+
+       --pid pidlist 
+              Select by process ID.  Identical to -p and p. 
+
+       --ppid pidlist 
+              Select by parent process ID.  This selects the processes with a parent process ID in pidlist.  That is, it selects processes that are children of those listed in pidlist. 
+
+       q pidlist 
+              Select by process ID (quick mode).  Identical to -q and --quick-pid. 
+
+       -q pidlist 
+              Select by PID (quick mode).  This selects the processes whose process ID numbers appear in pidlist.  With this option ps reads the necessary info only for the pids listed in the pidlist and doesn't apply additional filtering rules. The order of pids is unsorted and preserved. No additional selection options, sorting and forest type listings are allowed in this mode.  Identical to q and --quick-pid. 
+
+       --quick-pid pidlist 
+              Select by process ID (quick mode).  Identical to -q and q. 
+
+       -s sesslist 
+              Select by session ID.  This selects the processes with a session ID specified in sesslist. 
+
+       --sid sesslist 
+              Select by session ID.  Identical to -s. 
+
+       t ttylist 
+              Select by tty.  Nearly identical to -t and --tty, but can also be used with an empty ttylist to indicate the terminal associated with ps.  Using the T option is considered cleaner than using t with an empty ttylist. 
+
+       -t ttylist 
+              Select by tty.  This selects the processes associated with the terminals given in ttylist.  Terminals (ttys, or screens for text output) can be specified in several forms: /dev/ttyS1, ttyS1, S1.  A plain "-" may be used to select processes not attached to any terminal. 
+
+       --tty ttylist 
+              Select by terminal.  Identical to -t and t. 
+
+       U userlist 
+              Select by effective user ID (EUID) or name.  This selects the processes whose effective user name or ID is in userlist.  The effective user ID describes the user whose file access permissions are used by the process (see geteuid(2)).  Identical to -u and --user. 
+
+       -U userlist 
+              Select by real user ID (RUID) or name.  It selects the processes whose real user name or ID is in the userlist list.  The real user ID identifies the user who created the process, see getuid(2). 
+
+       -u userlist 
+              Select by effective user ID (EUID) or name.  This selects the processes whose effective user name or ID is in userlist. 
+
+              The effective user ID describes the user whose file access permissions are used by the process (see geteuid(2)).  Identical to U and --user. 
+
+       --User userlist 
+              Select by real user ID (RUID) or name.  Identical to -U. 
+
+       --user userlist 
+              Select by effective user ID (EUID) or name.  Identical to -u and U. 
+
+OUTPUT FORMAT CONTROL 
+       这些选项是用来选择ps显示的信息的。 输出结果可能因人而异。
+
+       -c 为-l选项显示不同的调度器信息。
+
+       --context 
+              显示安全上下文格式（用于SELinux）。
+
+       -f 做全格式的列表。这个选项可以和许多其他UNIX风格的选项结合起来，增加额外的列。 它还会使命令参数被打印出来。 当与-L一起使用时，NLWP（线程数）和LWP（线程ID）列将被添加。 参见c选项、格式关键字args和格式关键字comm。
+
+       -F 额外的完整格式。 参见-f选项，-F暗示了该选项。
+
+       --format格式 
+              用户定义的格式。 与-o和o相同。
+
+       j BSD作业控制格式。
+
+       -j 作业格式。
+
+       l 显示BSD长格式。
+
+       -l 长格式。 -y选项通常与此有关。
+
+       -M 增加一列安全数据。 与Z相同（用于SELinux）。
+
+       O格式 
+              是预装的o（重载）。 BSD的O选项可以像-O（用户定义的输出格式，预定义了一些常用的字段），也可以用来指定排序顺序。 启发式方法被用来确定这个选项的行为。 为了确保获得所需的行为（排序或格式化），请以其他方式指定该选项（例如，用-O或-排序）。 当作为一个格式化选项使用时，它与-O相同，具有BSD的个性。
+
+       -O格式 
+              和-o一样，但是预装了一些默认的列。 与-o pid,format,state,tname,time,command或-o pid,format,tname,time,cmd相同，见下文-o。
+
+       o 格式 
+              指定用户定义的格式。 与-o和--format相同。
+
+       -o format 
+              用户定义的格式。格式是一个空白分隔或逗号分隔的列表形式的单一参数，它提供了一种指定单个输出列的方法。 认可的关键字在下面的STANDARD FORMAT SPECIFIERS部分有描述。列头可以根据需要进行重命名（ps -o pid,ruser=RealUser -o comm=Command）。 如果所有列的标题都是空的（ps -o pid= -o comm=），那么标题行将不会被输出。列的宽度将根据需要增加宽的标题；这可以用来扩大列的宽度，如WCHAN（ps -o pid,wchan=WIDE- WCHAN-COLUMN -o comm）。 也提供了明确的宽度控制（ps opid, wchan:42,cmd）。 ps -o pid=X, comm=Y的行为因人而异；输出可能是一列名为 "X,comm=Y "或两列名为 "X "和 "Y"。 在有疑问的时候使用多个-o选项。 使用PS_FORMAT环境变量来指定所需的默认值；DefSysV和DefBSD是宏，可以用来选择默认的UNIX或BSD列。
+
+       s 显示信号格式。
+
+       u 显示面向用户的格式。
+
+       v 显示虚拟内存格式。
+
+       X 寄存器格式。
+
+       -y 不显示标志；显示rss以代替addr。 这个选项只能和-l一起使用。
+
+       Z 增加一列安全数据。 与-M（用于SELinux）相同。
+
+输出修饰语 
+       GNU风格
+       --cols n 
+              设置屏幕宽度。
+       --columns n 
+              设置屏幕宽度。
+       --cumulative 
+              包括一些死亡的子进程数据（作为与父进程的总和）。
+       --forest 
+              ASCII艺术进程树。
+       --headers 
+              重复打印标题行，每页输出一个。
+       --lines n 
+              设置屏幕高度。
+       --no-headers 
+              完全不打印标题行。 --no-heading是这个选项的一个别名。
+       --rows n 
+              设置屏幕高度。
+       --sort spec 
+              指定排序的顺序。 排序的语法是 
+              [+|-]key[,[+|-]key[,...]].  从STANDARD FORMAT SPECIFIERS部分选择一个多字母键。 "+"是可选的，因为默认的方向是数字或词法的递增顺序。 与k相同。例如：ps jax --sort=uid,-ppid, +pid 
+       --width n 
+              设置屏幕宽度。
+
+       UNIX风格
+       -H 显示进程的层次结构（森林）。
+       -w 宽幅输出。 使用该选项两次，可以获得无限的宽度。
+
+       BSD风格
+       c 显示真正的命令名称。 这是从可执行文件的名称得出的，而不是从argv值得出的。 因此不显示命令参数和对其进行的任何修改。这个选项有效地将args格式关键字变成了comm格式关键字；它对-f格式选项和各种BSD风格的格式选项很有用，它们通常都显示命令参数。 参见-f选项，格式关键字args和格式关键字comm。
+       e 显示命令后的环境。
+       f ASCII艺术进程的层次结构（森林）。
+       h No header. (或者，在BSD个性中每个屏幕有一个头)。h选项是有问题的。 标准的BSD ps使用这个选项在每页输出上打印一个页眉，但是老的Linux ps使用这个选项完全禁用页眉。 这个版本的ps沿用了Linux的做法，即不打印页眉，除非选择了BSD个性，在这种情况下，它会在每一页的输出上打印一个页眉。 不管当前的个性是什么，你可以使用长选项--headers和--no-headers来分别启用每页打印页眉或完全禁用页眉。
+       k spec 指定排序顺序。 排序的语法是 
+              [+|-]key[,[+|-]key[,...]].  从STANDARD FORMAT SPECIFIERS部分选择一个多字母键。 "+"是可选的，因为默认方向是数字或词法的增加。 与--排序相同。
+                      例子： 
+                      ps jaxkuid,-ppid,+pid 
+                      ps axk comm o comm,args 
+                      ps kstart_time -ef 
+       n WCHAN和USER的数字输出（包括所有类型的UID和GID）。
+       O order 
+              排序顺序（重载）。 BSD的O选项可以像-O（用户定义的输出格式，预先定义了一些常见的字段）一样，也可以用来指定排序顺序。 启发式方法被用来确定这个选项的行为。 为了确保获得所需的行为（排序或格式化），以其他方式指定该选项（例如，用-O或-sort）。
+
+              对于排序，过时的BSD O选项语法是 
+              O[+|-]k1[,[+|-]k2[,...]].  它根据下面OBSOLETE SORT KEYS部分描述的单字母短键k1,k2,...序列所指定的多级排序来排列进程列表。 目前 "+"是可选的，只是在一个键上重复默认的方向，但可能有助于区分O排序和O格式。 "-"只在它前面的键上反转方向。
+       S 将一些信息，如CPU的使用，从死的子进程汇总到它们的父进程中。 这对于检查一个父进程反复分叉短命的子进程进行工作的系统很有用。
+       w 宽幅输出。 使用该选项两次可获得无限宽度。
+
+THREAD DISPLAY 
+       H      Show threads as if they were processes. 
+
+       -L     Show threads, possibly with LWP and NLWP columns. 
+
+       m      Show threads after processes. 
+
+       -m     Show threads after processes. 
+
+       -T     Show threads, possibly with SPID column. 
+
+OTHER INFORMATION 
+       --help section 
+              Print a help message.  The section argument can be one of simple, list, output, threads, misc or all.  The argument can be shortened to one of the underlined letters as in: s|l|o|t|m|a. 
+
+       --info Print debugging info. 
+
+       L      List all format specifiers. 
+
+       V      Print the procps-ng version. 
+
+       -V     Print the procps-ng version. 
+
+       --version 
+              Print the procps-ng version. 
+
+NOTES 
+       This ps works by reading the virtual files in /proc.  This ps does not need to be setuid kmem or have any privileges to run.  Do not give this ps any special permissions. 
+
+       CPU usage is currently expressed as the percentage of time spent running during the entire lifetime of a process.  This is not ideal, and it does not conform to the standards that ps otherwise conforms to. CPU usage is unlikely to add up to exactly 100%. 
+
+       The SIZE and RSS fields don't count some parts of a process including the page tables, kernel stack, struct thread_info, and struct task_struct.  This is usually at least 20 KiB of memory that is always resident.  SIZE is the virtual size of the process (code+data+stack). 
+
+       Processes marked <defunct> are dead processes (so-called "zombies") that remain because their parent has not destroyed them properly. These processes will be destroyed by init(8) if the parent process exits. 
+
+       If the length of the username is greater than the length of the display column, the username will be truncated. See the -o and -O formatting options to customize length. 
+
+       Commands options such as ps -aux are not recommended as it is a confusion of two different standards.  According to the POSIX and UNIX standards, the above command asks to display all processes with a TTY (generally the commands users are running) plus all processes owned by a user named "x".  If that user doesn't exist, then ps will assume you really meant "ps aux". 
+
+PROCESS FLAGS 
+       The sum of these values is displayed in the "F" column, which is provided by the flags output specifier: 
+
+               1    forked but didn't exec 
+               4    used super-user privileges 
+
+PROCESS STATE CODES 
+       Here are the different values that the s, stat and state output specifiers (header "STAT" or "S") will display to describe the state of a process: 
+
+               D    uninterruptible sleep (usually IO) 
+               I    Idle kernel thread 
+               R    running or runnable (on run queue) 
+               S    interruptible sleep (waiting for an event to complete) T    stopped by job control signal 
+               t    stopped by debugger during the tracing 
+               W    paging (not valid since the 2.6.xx kernel) X    dead (should never be seen) 
+               Z    defunct ("zombie") process, terminated but not reaped by its parent 
+
+       For BSD formats and when the stat keyword is used, additional characters may be displayed: 
+
+               <    high-priority (not nice to other users) 
+               N    low-priority (nice to other users) 
+               L    has pages locked into memory (for real-time and custom IO) s    is a session leader 
+               l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do) 
+               +    is in the foreground process group 
+
+OBSOLETE SORT KEYS 
+       These keys are used by the BSD O option (when it is used for sorting). The GNU --sort option doesn't use these keys, but the specifiers described below in the STANDARD FORMAT SPECIFIERS section.  Note that the values used in sorting are the internal values ps uses and not the "cooked" values used in some of the output format fields (e.g.  sorting on tty will sort into device number, not according to the terminal name displayed).  Pipe ps output into the sort(1) command if you want to sort the cooked values. 
+
+       KEY   LONG         DESCRIPTION 
+       c     cmd          simple name of executable 
+       C     pcpu         cpu utilization 
+       f     flags        flags as in long format F field 
+       g     pgrp         process group ID 
+       G     tpgid        controlling tty process group ID 
+       j     cutime       cumulative user time 
+       J     cstime       cumulative system time 
+       k     utime        user time 
+       m     min_flt      number of minor page faults 
+       M     maj_flt      number of major page faults 
+       n     cmin_flt     cumulative minor page faults 
+       N     cmaj_flt     cumulative major page faults 
+       o     session      session ID 
+       p     pid          process ID 
+       P     ppid         parent process ID 
+       r     rss          resident set size 
+       R     resident     resident pages 
+       s     size         memory size in kilobytes 
+       S     share        amount of shared pages 
+       t     tty          the device number of the controlling tty T     start_time   time process was started 
+       U     uid          user ID number 
+       u     user         user name 
+       v     vsize        total VM size in KiB 
+       y     priority     kernel scheduling priority 
+
+AIX FORMAT DESCRIPTORS 
+       This ps supports AIX format descriptors, which work somewhat like the formatting codes of printf(1) and printf(3).  For example, the normal default output can be produced with this: ps -eo "%p %y %x %c".  The NORMAL codes are described in the next section. 
+
+       CODE   NORMAL   HEADER 
+       %C     pcpu     %CPU 
+       %G     group    GROUP 
+       %P     ppid     PPID 
+       %U     user     USER 
+       %a     args     COMMAND 
+       %c     comm     COMMAND 
+       %g     rgroup   RGROUP 
+       %n     nice     NI 
+       %p     pid      PID 
+       %r     pgid     PGID 
+       %t     etime    ELAPSED 
+       %u     ruser    RUSER 
+       %x     time     TIME 
+       %y     tty      TTY 
+       %z     vsz      VSZ 
+
+STANDARD FORMAT SPECIFIERS 
+       Here are the different keywords that may be used to control the output format (e.g. with option -o) or to sort the selected processes with the GNU-style --sort option. 
+
+       For example: ps -eo pid,user,args --sort user 
+
+       This version of ps tries to recognize most of the keywords used in other implementations of ps. 
+
+       The following user-defined format specifiers may contain spaces: args, cmd, comm, command, fname, ucmd, ucomm, lstart, bsdstart, start. 
+
+       Some keywords may not be available for sorting. 
+
+       CODE        HEADER    DESCRIPTION 
+
+       %cpu        %CPU      cpu utilization of the process in "##.#" format. Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.  It will not add up to 100% unless you are lucky.  (alias pcpu). 
+
+       %mem        %MEM      ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.  (alias pmem). 
+
+       args        COMMAND   command with all its arguments as a string. Modifications to the arguments may be shown.  The output in this column may contain spaces.  A process marked <defunct> is partly dead, waiting to be fully destroyed by its parent.  Sometimes the process args will be unavailable; when this happens, ps will instead print the executable name in brackets.  (alias cmd, command).  See also the comm format keyword, the -f option, and the c option. 
+                             When specified last, this column will extend to the edge of the display.  If ps can not determine display width, as when output is redirected (piped) into a file or another command, the output width is undefined (it may be 80, unlimited, determined by the TERM variable, and so on).  The COLUMNS environment variable or --cols option may be used to exactly determine the width in this case.  The w or -w option may be also be used to adjust width. 
+
+       blocked     BLOCKED   mask of the blocked signals, see signal(7). According to the width of the field, a 32 or 64-bit mask in hexadecimal format is displayed. (alias sig_block, sigmask). 
+
+       bsdstart    START     time the command started.  If the process was started less than 24 hours ago, the output format is " HH:MM", else it is " Mmm:SS" (where Mmm is the three letters of the month).  See also lstart, start, start_time, and stime. 
+
+       bsdtime     TIME      accumulated cpu time, user + system.  The display format is usually "MMM:SS", but can be shifted to the right if the process used more than 999 minutes of cpu time. 
+
+       c           C         processor utilization. Currently, this is the integer value of the percent usage over the lifetime of the process.  (see %cpu). 
+
+       caught      CAUGHT    mask of the caught signals, see signal(7). According to the width of the field, a 32 or 64 bits mask in hexadecimal format is displayed. (alias sig_catch, sigcatch). 
+
+       cgname      CGNAME    display name of control groups to which the process belongs. 
+
+       cgroup      CGROUP    display control groups to which the process belongs. 
+
+       class       CLS       scheduling class of the process.  (alias policy, cls).  Field's possible values are: 
+
+                                      -   not reported 
+                                      TS  SCHED_OTHER 
+                                      FF  SCHED_FIFO 
+                                      RR  SCHED_RR 
+                                      B   SCHED_BATCH 
+                                      ISO SCHED_ISO 
+                                      IDL SCHED_IDLE 
+                                      DLN SCHED_DEADLINE 
+                                      ?   unknown value 
+
+       cls         CLS       scheduling class of the process.  (alias policy, cls).  Field's possible values are: 
+
+                                      -   not reported 
+                                      TS  SCHED_OTHER 
+                                      FF  SCHED_FIFO 
+                                      RR  SCHED_RR 
+                                      B   SCHED_BATCH 
+                                      ISO SCHED_ISO 
+                                      IDL SCHED_IDLE 
+                                      DLN SCHED_DEADLINE 
+                                      ?   unknown value 
+
+       cmd         CMD       see args.  (alias args, command). 
+
+       comm        COMMAND   command name (only the executable name). Modifications to the command name will not be shown.  A process marked <defunct> is partly dead, waiting to be fully destroyed by its parent.  The output in this column may contain spaces.  (alias ucmd, ucomm).  See also the args format keyword, the -f option, and the c option. When specified last, this column will extend to the edge of the display.  If ps can not determine display width, as when output is redirected (piped) into a file or another command, the output width is undefined (it may be 80, unlimited, determined by the TERM variable, and so on).  The COLUMNS environment variable or --cols option may be used to exactly determine the width in this case.  The w or -w option may be also be used to adjust width. 
+
+       command     COMMAND   See args.  (alias args, command). 
+
+       cp          CP        per-mill (tenths of a percent) CPU usage.  (see %cpu). 
+
+       cputime     TIME      cumulative CPU time, "[DD-]hh:mm:ss" format. (alias time). 
+
+       cputimes    TIME      cumulative CPU time in seconds (alias times). 
+
+       drs         DRS       data resident set size, the amount of physical memory devoted to other than executable code. 
+
+       egid        EGID      effective group ID number of the process as a decimal integer.  (alias gid). 
+
+       egroup      EGROUP    effective group ID of the process.  This will be the textual group ID, if it can be obtained and the field width permits, or a decimal representation otherwise.  (alias group). 
+
+       eip         EIP       instruction pointer. 
+
+       esp         ESP       stack pointer. 
+
+       etime       ELAPSED   elapsed time since the process was started, in the form [[DD-]hh:]mm:ss. 
+
+       etimes      ELAPSED   elapsed time since the process was started, in seconds. 
+
+       euid        EUID      effective user ID (alias uid). 
+
+       euser       EUSER     effective user name.  This will be the textual user ID, if it can be obtained and the field width permits, or a decimal representation otherwise.  The n option can be used to force the decimal representation.  (alias uname, user). 
+
+       f           F         flags associated with the process, see the PROCESS FLAGS section.  (alias flag, flags). 
+
+       fgid        FGID      filesystem access group ID.  (alias fsgid). 
+
+       fgroup      FGROUP    filesystem access group ID.  This will be the textual group ID, if it can be obtained and the field width permits, or a decimal representation otherwise.  (alias fsgroup). 
+
+       flag        F         see f.  (alias f, flags). 
+
+       flags       F         see f.  (alias f, flag). 
+
+       fname       COMMAND   first 8 bytes of the base name of the process's executable file.  The output in this column may contain spaces. 
+
+       fuid        FUID      filesystem access user ID.  (alias fsuid). 
+
+       fuser       FUSER     filesystem access user ID.  This will be the textual user ID, if it can be obtained and the field width permits, or a decimal representation otherwise. 
+
+       gid         GID       see egid.  (alias egid). 
+
+       group       GROUP     see egroup.  (alias egroup). 
+
+       ignored     IGNORED   mask of the ignored signals, see signal(7). According to the width of the field, a 32 or 64 bits mask in hexadecimal format is displayed. (alias sig_ignore, sigignore). 
+
+       ipcns       IPCNS     Unique inode number describing the namespace the process belongs to. See namespaces(7). 
+
+       label       LABEL     security label, most commonly used for SELinux context data.  This is for the Mandatory Access Control ("MAC") found on high-security systems. 
+
+       lstart      STARTED   time the command started.  See also bsdstart, start, start_time, and stime. 
+
+       lsession    SESSION   displays the login session identifier of a process, if systemd support has been included. 
+
+       luid        LUID      displays Login ID associated with a process. 
+
+       lwp         LWP       light weight process (thread) ID of the dispatchable entity (alias spid, tid).  See tid for additional information. 
+
+       lxc         LXC       The name of the lxc container within which a task is running.  If a process is not running inside a container, a dash ('-') will be shown. 
+
+       machine     MACHINE   displays the machine name for processes assigned to VM or container, if systemd support has been included. 
+
+       maj_flt     MAJFLT    The number of major page faults that have occurred with this process. 
+
+       min_flt     MINFLT    The number of minor page faults that have occurred with this process. 
+
+       mntns       MNTNS     Unique inode number describing the namespace the 

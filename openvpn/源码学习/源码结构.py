@@ -502,6 +502,7 @@ wmain
             如果上面函数执行成功，程序退出
             options_postprocess(&c.options);  //对选项的后处理 &<对options_postprocess的分析>
                 options_postprocess_mutate(options);  //处理配置变动
+                    helper_xxx : 对复合命令进行展开处理
                     helper_client_server(o);
                         作为客户端/服务端时，检查配置项配置是否正确，并根据已有配置项进行处理
                         服务端
@@ -1078,7 +1079,7 @@ tunnel_point_to_point  //客户端模式主循环
                 根据压缩、代理、--tun-mtu-extra配置项、socket参数、字节对齐
                 等因素，设置增加 c->c2.frame.extra_frame 的值
             '''初始化TLS MTU相关变量'''
-            do_init_frame_tls(c);
+            do_init_frame_tls(c);  //file://do_init_frame_tls.png
                 do_init_finalize_tls_frame(c)
                     '''对tls_multi的介绍：
                        使用了TLS的vpn隧道，有一个tls_multi对象
@@ -1158,7 +1159,7 @@ tunnel_point_to_point  //客户端模式主循环
                     '''动态设置tun的MTU'''
                     frame_set_mtu_dynamic(frame, options->ce.mssfix, SET_MTU_UPPER_BOUND);
             '''绑定tcp/udp socket'''
-            do_init_socket_1(c, link_socket_mode=LS_MODE_DEFAULT=0);
+            do_init_socket_1(c, link_socket_mode=LS_MODE_DEFAULT=0); //file://do_init_socket_1.png 
                 '''link_socket初始化阶段1'''
                 link_socket_init_phase1(sock=c->c2.link_socket, ......)
                     根据参数传来的值，设置sock的各成员
@@ -1199,7 +1200,8 @@ tunnel_point_to_point  //客户端模式主循环
                  (c->mode == CM_P2P 或 c->mode == CM_TOP) )  
                 c->c2.did_open_tun = do_open_tun(c);
             c->c2.frame_initial = c->c2.frame;
-            '''获取本地和远程选项兼容性字符串'''
+            '''获取本地和远程选项兼容性字符串，并设置给 multi->opt.local_options
+               和 multi->opt.remote_options = remote;'''
             do_compute_occ_strings
                 '''建立选项字符串来代表数据通道加密选项，该字符串两端必须一致
                    keysize单独被read_key()检查
@@ -1236,10 +1238,10 @@ tunnel_point_to_point  //客户端模式主循环
                 char * options_string(const struct options *o, const struct frame *frame,
                                       struct tuntap *tt, openvpn_net_ctx_t *ctx,
                                       bool remote, struct gc_arena *gc)
-                c->c2.options_string_local = options_string(&c->options, &c->c2.frame, 
-                                                            c->c1.tuntap, &c->net_ctx,
-                                                            false, &gc);
-                    struct buffer out = alooc_buf(255)
+                c->c2.options_string_local = options_string(o=&c->options, frame=&c->c2.frame, 
+                                                            tt=c->c1.tuntap, ctx=&c->net_ctx,
+                                                            remote=false, gc=&gc);
+                    struct buffer out = alloc_buf(255)
                     out += "V4"
                     '''隧道选项'''
                     out += "dev-type tun"
@@ -1272,10 +1274,16 @@ tunnel_point_to_point  //客户端模式主循环
                     '''密码选项'''
                     如果是tls客户端或tls服务端  //条件满足
                         struct key_type kt
-                        init_key_type(&kt, o->ciphername, o->authname, o->keysize, true, false);
+                        init_key_type(kt=&kt, ciphername=o->ciphername, authname=o->authname, 
+                                      keysize=o->keysize, tls_mode=true, warn=false);
+                            kt->cipher = cipher_kt_get(ciphername);
+                            kt->cipher_length = cipher_kt_key_size(kt->cipher);
+                            kt->digest = md_kt_get(authname);
+                            kt->hmac_length = md_kt_size(kt->digest);
                         out += "cipher AES-256-CBC,auth SHA1,keysize 256"
                     '''SSL选项'''
                     out += "tls-auth,key-method 2,tls-client"
+                    return out
                 c->c2.options_string_remote= options_string(&c->options, &c->c2.frame, 
                                                             c->c1.tuntap, &c->net_ctx,
                                                                     true, &gc);
@@ -1284,9 +1292,9 @@ tunnel_point_to_point  //客户端模式主循环
                            keysize 256,tls-auth,key-method 2,tls-server"
                 if (c->c2.tls_multi)  //满足
                     '''设置本地和远端选项兼容字符串，用于验证本地和远端选项集合的兼容性'''
-                    tls_multi_init_set_options(c->c2.tls_multi,
-                                               c->c2.options_string_local,
-                                               c->c2.options_string_remote);
+                    tls_multi_init_set_options(multi=c->c2.tls_multi,
+                                               local=c->c2.options_string_local,
+                                               remote=c->c2.options_string_remote);
                         multi->opt.local_options = local;
                         multi->opt.remote_options = remote;
             '''初始化输出速度限制'''
@@ -1333,6 +1341,7 @@ tunnel_point_to_point  //客户端模式主循环
             '''完成TCP/UDP socket的最终操作'''
             do_init_socket_2(c);
                 link_socket_init_phase2(sock=c->c2.link_socket, frame=&c->c2.frame, sig_info=c->sig);
+                    const char *remote_dynamic = NULL;
                     '''初始化buffers'''
                     socket_frame_init(frame, sock);
                         如果是Windows
@@ -1352,7 +1361,7 @@ tunnel_point_to_point  //客户端模式主循环
                     '''我们通过inetd还是xinetd启动？'''
                     if (sock->inetd)  // 0
                         ...
-                    else
+                    else  //完成sock的连接
                         '''第二次创建/处理socket的机会'''
                         resolve_remote(sock, 2, &remote_dynamic,  &sig_info->signal_received);
                             '''解决远程地址问题（如果没定义）'''
@@ -1384,8 +1393,8 @@ tunnel_point_to_point  //客户端模式主循环
                                 '''基于--sndbuf和--rcvbuf配置项，设置socket buffer，否则不设置(默认大小65536)'''
                                 socket_set_buffers(sock->sd, &sock->socket_buffer_sizes)
                                 '''绑定本地地址/端口'''
-                                bind_local(sock, addr->ai_family); 
-                                    if (sock->bind_local)   //false
+                                bind_local(sock, addr->ai_family);  
+                                    if (sock->bind_local)   //false，因为客户端要绑定远端服务器，而不是监听本地网卡
                                         if (sock->socks_proxy && sock->info.proto == PROTO_UDP)
                                             socket_bind(sock->ctrl_sd, sock->info.lsa->bind_local,
                                                         ai_family, "SOCKS", false);
@@ -1461,6 +1470,22 @@ tunnel_point_to_point  //客户端模式主循环
                 '''粗定时器精度为1s'''
                 process_coarse_timers(c);
            
+process_coarse_timers(struct context *c)
+    event_timeout_trigger(  struct event_timeout *et,
+                            struct timeval *tv,
+                            const int et_const_retry)
+        if(et->defined == false) return false
+        bool ret = false
+        检查et是否已到时，
+            是：
+                et_const_retry<0  //et_const_retry通常传来的值为-1
+                    et->last = now
+                    ret = true
+        如果tv不为空
+            如果 tv->tv_sec > et->n
+                tv->tv_sec = et->n
+                tv->tv_usec = 0
+        return ret
 ===========================================================================================================     
                 
 部分数据结构

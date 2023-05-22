@@ -214,7 +214,7 @@
     (1) 命令执行成功/失败： "SUCCESS: [text]" or  "ERROR: [text]".
     (2) 如果有多行输出的，最后一行是 "END"
     (3) 实时消息格式 ">[source]:[text]",
-        source 的可能值： 
+        source表明该实时消息对应的是哪个命令，可能值： 
             "CLIENT", "ECHO", "FATAL", "HOLD", "INFO", 
             "LOG", "NEED-OK", "PASSWORD", "STATE".
 
@@ -245,10 +245,10 @@
                     参 client-pending-auth
 
 CLIENT 消息
-    ">CLIENT:" 通知需要vpn以 --management-client-auth 命令运行，
-    从而允许管理接口客户端在客户端证书认证成功后继续其它的认证
-    客户端认证可以有多行，对于给定的客户端认证序列，
-    其关联的变量，和终止行 ">CLIENT:ENV,END" 是原子执行的
+    ">CLIENT:" 该通知需要vpn事先以 --management-client-auth 命令运行，
+    从而允许管理接口客户端在"客户端证书认证成功"后继续其它的认证
+    客户端认证可以有多行，
+    对于给定的客户端认证序列，其关联的变量，和终止行 ">CLIENT:ENV,END" 是原子执行的
     。。。
     
 挑战应答协议

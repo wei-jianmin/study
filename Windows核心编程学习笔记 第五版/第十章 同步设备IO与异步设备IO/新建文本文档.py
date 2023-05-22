@@ -309,6 +309,8 @@ CreateFile函数详解
             （如果是等待到了内核对象，则返回值为WAIT_OBJECT_0+n），
             此时，本线程就可以做一些清理工作，完成结束退出线程，
             此时虽然回调函数pfnAPC函数会被调用，但此时通常无需让它做任何工作，函数为空即可。
+            有关 QueueUserAPC，参：
+            file://..\..\WIN32\WSAWaitForMultipleEvents 和 MsgWaitForMultipleObjectsEx.txt
     4.  使用I/O完成端口
         设计理念：
             微软设计完成端口的背景是，多线程并发响应模型并不能如期望的那般发挥其优良的性能

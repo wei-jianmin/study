@@ -1,1 +1,0 @@
-去掉第一版的mylog_init方法，增加mylog_ctrl方法，控制更灵活

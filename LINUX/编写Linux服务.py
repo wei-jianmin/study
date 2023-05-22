@@ -24,20 +24,25 @@ Linux注册服务的两种方式
             按需启动服务，减少系统资源消耗。
             尽可能并行启动进程，减少系统启动等待时间
             由Linx内核加载运行，位于 /usr/lib/systemd/systemd  ，是系统中第一个进程，PID永远为1
-            
+            测试Ubuntu16/Ubuntu20/UOS，发现第一启动进程都是/sbin/init，但也能搜索到systemd进程
+            测试centos，测试发现第一启动进程是systemd
+    
+    systemd 为什么会有那么大的争议
+        https://www.zhihu.com/question/25873473
+        
     Rhel6 vs Rhel7 管理服务
         Rhel6 用 service 和 chkconfig 来管理服务，它是 SystemV 架构下的一个工具。
-        Rhel7 是用 systemctl  来管理服务，它融合了之前的 service 和 chkconfig 的功能于一体
+        Rhel7 是用 systemctl  来管理服务，它融合了之前的 service 和 chkconfig 的功能于一体（Ubuntu16下也有该工具）
         动作                  Rhel6 旧指令                          Rhel7新指令
         启动某服务            service  httpd   start                systemctl  start   httpd
         停止某服务            service  httpd   stop                 systemctl  stop   httpd
-        重启某服务            service  httpd   restart              systemctl  restart  httpd
-        检查服务状态          service  httpd  status                systemctl  status  httpd
-        删除某服务            chkconfig  --del  httpd               停掉应用，删除其配置文件
         使服务开机自启动      chkconfig  --level   5  httpd   on    systemctl  enable  httpd
         使服务开机不自启动    chkconfig  --level   5  httpd   off   systemctl  disable  httpd
+        重启某服务            service  httpd   restart              systemctl  restart  httpd
+        检查服务状态          service  httpd  status                systemctl  status  httpd
         显示所有已启动的服务  chkconfig  --list                     systemctl  list-unit-files | grep enabled
         加入自定义服务        chkconfig  --add  test                systemctl  load  test
+        删除某服务            chkconfig  --del  httpd               停掉应用，删除其配置文件
         查询服务是否开机自启  chkconfig  --list | grep httpd        systemctl  is-enabled   httpd
         查看启动失败的服务    无                                    systemctl  --failed
 

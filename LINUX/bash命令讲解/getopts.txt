@@ -1,0 +1,59 @@
+例：
+    while getopts 'd:Dm:f:t:' OPT; do
+        case $OPT in
+            d)
+                DEL_DAYS="$OPTARG";;
+            D)
+                DEL_ORIGINAL='yes';;
+            f)
+                DIR_FROM="$OPTARG";;
+            m)
+                MAILDIR_NAME="$OPTARG";;
+            t)
+                DIR_TO="$OPTARG";;
+            ?)
+                echo "Usage: `basename $0` [options] filename"
+        esac
+    done
+    
+getopts 后面的字符串就是可以使用的选项列表，
+每个字母代表一个选项，
+后面带 : 的意味着选项除了定义本身之外，还会带上一个参数作为选项的值，
+比如 d: 在实际的使用中就会对应 -d 30，选项的值就是 30；
+getopts字符串中没有跟随 : 的是开关型选项，不需要再指定值，相当于 true/false，只要带了这个参数就是 true。
+如果命令行指定参数时，本来要求参数后面带值，结果没带，会有警告信息，
+如果在整个 getopts 字符串前面也加上个 :，就能消除警告信息了。     
+注意case中的最后一个选择──?，代表这如果出现了不认识的选项，所进行的操作。
+
+注意：
+经过第一次调用后OPTIND的值保存在当前的回话里，而getopts是根据OPTIND来解析参数的，
+因为第二次调用stjob时，OPTIND已经有了值，就导致解析不正常了。
+所以为了保证解析正常，应该在解析前将OPTIND置零或者去掉这个变量。
+
+当读到与"选项列表"中不匹配的参数时，循环结束（剩下的参数不再读了）
+
+两个相对固定的“常量”：
+    OPTARG，用来取当前选项的值
+    OPTIND，代表当前选项在参数列表中的位移，
+            当前脚本为第一个参数，所以：
+            解析完第一个参数项后，OPTIND 为 2
+            解析完第二个参数项后，OPTIND 为 3
+            注意：在处理参数的时候，
+            处理一个开关型选项，OPTIND加1，
+            处理一个带值的选项参数，OPTIND则会加2
+            
+=====================================================================================
+
+外部强大的参数解析工具：getopt 
+ 先来看下getopt/getopts的区别
+ 1. getopts是bash内建命令的， 而getopt是外部命令
+ 2. getopts不支持长选项， 比如： --date
+ 3. 在使用getopt的时候， 每处理完一个位置参数后都需要自己shift来跳到下一个位置， 
+    getopts只需要在最后使用shift $(($OPTIND - 1))来跳到parameter的位置。
+ 4. 使用getopt时， 在命令行输入的位置参数是什么， 在getopt中需要保持原样， 
+    比如 -t 在getopt的case语句中也要使用-t，  而getopts中不要前面的-。
+ 5. getopt往往需要跟set配合使用
+ 6. getopt -o的选项注意一下 
+ 7. getopts 使用语法简单，getopt 使用语法较复杂 
+ 8. getopts 不会重排所有参数的顺序，getopt 会重排参数顺序 
+ 9. getopts 出现的目的是为了代替 getopt 较快捷的执行参数分析工作             

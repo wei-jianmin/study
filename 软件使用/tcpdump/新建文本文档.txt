@@ -2,6 +2,10 @@ BPF过滤语法（Berkeley Packet Filter）
     适用于tcpdump和wireshark
 
 需要以管理员权限运行
+
+[流向] [协议] [ip/port] [not/and/or]
+[Direction] [Protocal] [Address:host-net-port-range] : DPA(hnpr)
+
 tcpdump [选项] [src/dst/*dst or src] [tcp/udp/ip/arp/rarp/fddi] [[*host/net/port] ...] [not/!/and/or ...]
     数据流方向 [src/dst/*dst or src]
         默认 dst or src
