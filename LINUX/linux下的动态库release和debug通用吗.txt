@@ -1,0 +1,17 @@
+windows下 
+    1 c的 debug 动态库 和 release 动态库 
+      在debug 或 release项目中都可以使用 
+      备注： 不含stl库
+    2 含有stl的 debug 动态库 和 release 动态库 
+      在项目中不能混用，
+      debug项目用debug库， release 项目用release 库
+    
+    原因：
+    比如std::string 在debug 和 release 环境中的内存大小是不一致的。 
+    如果混用，会出现踩内存崩溃现象。
+
+
+只要在编译的时候定义_GLIBCXX_DEBUG宏就可以使用调试版的c++运行库了。
+
+libstdc++使用了特别的技术使得debug和release版是在同一个库里的，
+而且大部分情况可以混合链接，部分特殊情况不可以

@@ -1,3 +1,4 @@
+<catalog s0/s4/s8 text_line_prefix=/ super_text_line_prefix=.>
 Ïà¹ØÎÄ¼ş£º
     file://add_optionº¯Êı.py
     file://openvpn_help.txt
@@ -783,9 +784,9 @@ void tunnel_server_tcp(struct context *top) //&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎ
             
 ===========================================================================================================
 
-//&<¶Ôinit_instanceµÄ·ÖÎö>
+&<¶Ôinit_instanceµÄ·ÖÎö>
 //³õÊ¼»¯Ò»¸öËíµÀÊµÀı
-void init_instance(struct context *c, const struct env_set *env, const unsigned int flags)    //&init_instance     
+/void init_instance(struct context *c, const struct env_set *env, const unsigned int flags)    //&init_instance     
     gc_init(&c->c2.gc);
     if (env) //Âú×ã
         c->c2.es->list ÖĞÌí¼ÓĞÂµÄ struct env_item£¬¼ÇÂ¼±éÀúµÄ env->list->string  
@@ -1497,7 +1498,7 @@ process_coarse_timers(struct context *c)
     #&<multi_context>
     #´æ´¢openvpnµÄ·şÎñ×´Ì¬µÄ½á¹¹£¬Ö»ÔÚ·şÎñ¶ËÊ¹ÓÃ£¬´æ´¢ËùÓĞvpnËíµÀºÍ½ø³Ì¼¶µÄ×´Ì¬
     struct multi_context multi
-    {
+    /{
         #MC_UNDEF(0)¡¢MC_SINGLE_THREADED£¨1£©¡¢MC_MULTI_THREADED_MASTER£¨2£©
         #MC_MULTI_THREADED_WORKER£¨4£©¡¢MC_MULTI_THREADED_SCHEDULER£¨8£©
         int thread_mode;
@@ -1518,25 +1519,25 @@ process_coarse_timers(struct context *c)
         #ÒÑÈÏÖ¤Í¨¹ıµÄÁ¬½ÓÊı
         int n_clients;
         ¡£¡£¡£
-    }
+    /}
     
     #&<multi_instance>
     #·şÎñÆ÷Ä£Ê½ÏÂ£¬ÓÃÓÚ´æ´¢Ò»¸övpnËíµÀµÄ×´Ì¬µÄ½á¹¹
     struct multi_instance
-    {
+    /{
         #¸ÃvpnËíµÀÊµÀıÊÇÊ²Ã´Ê±ºò´´½¨µÄ
         time_t created;
         #server/tcpÄ£Ê½ÏÂ£¬Òª·¢³öµÄÊı¾İµÄ¶ÓÁĞ
         struct mbuf_set *tcp_link_out_deferred;
         struct context context;  #´æ´¢¸ÃvpnËíµÀµÄ×´Ì¬
         ¡£¡£¡£
-    }
+    /}
     
     #&<context>
     #¸Ã½á¹¹´ú±íÁËÒ»¸övpnËíµÀ£¬ÓÃÓÚ´æ´¢Ò»¸öËíµÀµÄ×´Ì¬ĞÅÏ¢
     #µ«Ò²°üº¬Ò»Ğ©½ø³Ì¼¶±ğµÄÊı¾İ£¬ÏñÈçÅäÖÃÑ¡Ïî
     struct context
-    {
+    /{
         #±ê¼ÇmainÖ÷Ñ­»·µÄµÚÒ»´Îµü´ú
         bool first_time;
         #´ÓÃüÁîĞĞ»òÅäÖÃÎÄ¼şÖĞ»ñÈ¡µÄÑ¡Ïî
@@ -1554,12 +1555,12 @@ process_coarse_timers(struct context *c)
         struct context_1 c1;        
         struct context_2 c2;       
         ¡£¡£¡£
-    }
+    /}
     
     #&<context_1>
     #¸Ã½á¹¹°üº¬µÄ×´Ì¬²»ÊÜSIGUSR1ÖØÆôĞÅºÅµÄÓ°Ïì£¬µ«»áÒòSIGHUPÖØÆôĞÅºÅ¶øÖØÖÃ
     struct context_1
-    {
+    /{
         #±¾µØºÍÔ¶¶ËµÄµØÖ·
         struct link_socket_addr link_socket_addr;
         #ËíµÀµÄ»á»°ÃÜÔ¿
@@ -1580,12 +1581,12 @@ process_coarse_timers(struct context *c)
         struct user_pass *auth_user_pass;
         #ÅäÖÃÎÄ¼şÖĞµÄÊı¾İÍ¨µÀÉí·İÑéÖ¤
         const char *authname;
-    }
+    /}
     
     #&<context_2>
     #´æ´¢ÁËÒòSIGHUP»òSIGUSR1ĞÅºÅµ¼ÖÂµÄ¡°ÖØÆô¡±ÒÔÀ´µÄ×´Ì¬ĞÅÏ¢
     struct context_2
-    {
+    /{
         #ÓÃÓÚÓëÔ¶¶Ë½¨Á¢tcp/udpÁ¬½ÓµÄsocket£¨link_socketÊÇWindowsºÍlinuxÏÂsocketµÄÍ¸Ã÷ÊµÏÖ£©
         struct link_socket *link_socket;   
         #Ô¶¶ËµÄipµØÖ·
@@ -1613,7 +1614,7 @@ process_coarse_timers(struct context *c)
         struct env_set *es;
         bool es_owned;
         ¡£¡£¡£
-    }
+    /}
     
     #&<tls_multi>
     #ÆôÓÃ TLS µÄÇé¿öÏÂÔËĞĞµÄ»î¶¯ VPN ËíµÀÓĞÒ»¸ötls_multi¶ÔÏó£¬
@@ -1623,7 +1624,7 @@ process_coarse_timers(struct context *c)
     #Ã¿¸ötls_context´ú±íÒ»¸ö¿ØÖÆÍ¨µÀ»á»°£¬
     #¸Ã»á»°¿ÉÒÔ¿çÔ½´æ´¢ÔÚkey_state½á¹¹ÖĞµÄ¶à¸öÊı¾İÍ¨µÀ°²È«²ÎÊı»á»°¡£
     struct tls_multi
-    {
+    /{
          #³£Á¿Ñ¡ÏîºÍÅäÖÃĞÅÏ¢
         struct tls_options opt;
         #¸ÃÁĞ±í½«»á±»Êı¾İÍ¨µÀÉ¨Ãè
@@ -1643,13 +1644,13 @@ process_coarse_timers(struct context *c)
         #´Ó¶Ô¶ËµÄ¿ØÖÆÍ¨µÀÉÏ½ÓÊÕµÄ¶àĞĞÍ¨ÓÃĞÅÏ¢×Ö·û´®
         char *peer_info;
         ¡£¡£¡£
-    }
+    /}
     
     #&<key_state>
     #´æ´¢Á¿¿ØÖÆÍ¨µÀµÄtls×´Ì¬ºÍÊı¾İÍ¨µÀµÄÃÜÂë×´Ì¬£¬
     #»¹°üº¬ÁË¡°¿ÉĞÅ²ã½á¹¹¡±--ÓÃÓÚ¿ØÖÆÍ¨µÀµÄÏûÏ¢[´«Êä]
     struct key_state
-    {
+    /{
         #´Ó¿Í»§¶Ë·¢ËÍµÄÉí·İÑéÖ¤ÁîÅÆµÄ×´Ì¬
         int state;
         #key_stateµÄid£¬¼Ì³Ğ×Ôtls_session
@@ -1675,18 +1676,18 @@ process_coarse_timers(struct context *c)
         #¸Ã¶ÔÏó½«ÔÚÕâ¸öÊ±¼äÊ±Ïú»Ù
         time_t must_die;         
         ¡£¡£¡£
-    }
+    /}
     
     #&<tls_session>
     #´æ´¢Ò»¸ö»á»°µÄ°²È«²ÎÊıĞÅÏ¢£¨»á»°ÊôÓÚËíµÀ£©
     #¸Ã½á¹¹¶ÔÓ¦Ò»¸övpnµÄ¶Ëµ½¶ËµÄ¿ØÖÆÍ¨µÀsession
     struct tls_session
-    {
+    /{
         struct tls_options *opt;  #³£Á¿Ñ¡ÏîºÍÅäÖÃĞÅÏ¢
         struct session_id session_id;
         int key_id; #ÓÃÒÔ¸ú×Ùrenegotiations
         ¡£¡£¡£
-    }
+    /}
     
     
     &<½á¹¹±äÁ¿Ê¹ÓÃÇé¿ö×·×Ù>

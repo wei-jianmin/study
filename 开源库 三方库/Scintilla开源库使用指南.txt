@@ -5,3 +5,4 @@ SciLexer则是Scintilla控件的功能演示程序
 http://blog.csdn.net/akof1314/article/details/8585917
 http://www.cnblogs.com/superanyi/archive/2011/04/07/2008632.html#3224726
 http://www.naughter.com/scintilla.html
+https://blog.csdn.net/h8062651/article/details/123992361

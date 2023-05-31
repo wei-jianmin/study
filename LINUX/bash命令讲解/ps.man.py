@@ -1,3 +1,4 @@
+<catelob s0>
 语法
        ps [options]
 简述
