@@ -1,3 +1,4 @@
+<catalog s0 catalog_line_prefix=.>
 /**
  &<context> 结构:
  * 包涵了隧道的所有状态
@@ -11,7 +12,7 @@
 #define CM_TOP_CLONE      2  /* CM_TOP 的克隆 for one thread */
 #define CM_CHILD_UDP      3  /* child context of a CM_TOP */
 #define CM_CHILD_TCP      4  /* child context of a CM_TOP */
-struct context
+.struct context
 {
     struct options options;      /** 从命令行或配置文件读到的配置项 */
     bool first_time;             /** 标记vpn主循环的第一次迭代 */
@@ -34,7 +35,7 @@ struct context
  * Level 0 状态在程序启动时就被初始化，然后持续整个进程的声明周期
  * 该结构包含进程的pid、用户、组和权限
  */
-struct context_0
+.struct context_0
 {
     bool uid_gid_specified;  //是否使用了--user或--group配置项
     bool uid_gid_chroot_set; //指示是否应该持有privileges
@@ -46,7 +47,7 @@ struct context_0
  * Level 1 context 包含的状态将横跨（across） SIGUSR1 restarts.
  * 每次main函数的外层SIGHUP循环时被初始化，但内存SIGUSR1循环则将被维持不变
  */
-struct context_1
+.struct context_1
 {
     struct link_socket_addr link_socket_addr;    /** 本地或外网地址 */
     struct key_schedule ks;                     //密钥协商：隧道的会话密钥
@@ -80,7 +81,7 @@ struct context_1
  * tunnel_server_tcp() 
  * 也就是说，在main函数内的每次 SIGUSR1 循环中，它将被重置
  */
-/* io_wait可能返回的事件 */
+&<io_wait可能返回的事件值>
 #define SOCKET_READ       (1<<0)
 #define SOCKET_WRITE      (1<<1)
 #define TUN_READ          (1<<2)
@@ -89,13 +90,13 @@ struct context_1
 #define ES_TIMEOUT        (1<<5)
 #define MANAGEMENT_READ   (1<<6)
 #define MANAGEMENT_WRITE  (1<<7)
-struct context_2
+.struct context_2
 {
     struct gc_arena gc;         /** 垃圾管理器 */
-    struct event_set *event_set;  //全局等待的事件（global wait events）
-    int event_set_max;
+    struct event_set *event_set;  //全局等待的事件（global wait events） @we_set
+    unsigned int event_set_status;  //event_set的探测结果  @io_wait可能返回的事件值
+    int event_set_max;  //=BASE_N_EVENTS=4
     bool event_set_owned;
-    unsigned int event_set_status;
     struct link_socket *link_socket;     /* 用于tcp/udp连接到远端的socket */
     bool link_socket_owned;
     struct link_socket_info *link_socket_info;
@@ -226,13 +227,37 @@ struct context_2
     struct man_def_auth_context mda_context;
 };
 /*====================================================================*/
+//&<we_set>
+.struct we_set
+{
+    struct event_set_functions func;
+    bool fast;
+    HANDLE *events;
+    struct event_set_return *esr;
+    int n_events;  #记录events的个数
+    int capacity;
+};
+struct event_set_functions
+{
+    void (*free)(struct event_set *es); #清理
+    void (*reset)(struct event_set *es); #重置
+    void (*del)(struct event_set *es, event_t event); #删除
+    void (*ctl)(struct event_set *es, event_t event, unsigned int rwflags, void *arg); #添加
+    int  (*wait)(struct event_set *es, const struct timeval *tv, struct event_set_return *out, int outlen); #等待
+};
+struct event_set_return
+{
+    unsigned int rwflags;
+    void *arg;
+};
+/*====================================================================*/
 //&<env_set>
-struct env_set {
+.struct env_set {
     struct gc_arena *gc;
     struct env_item *list;
 };
 //&<env_item>
-struct env_item {
+.struct env_item {
     char *string;
     struct env_item *next;
 };
@@ -241,7 +266,7 @@ struct env_item {
 typedef void *openvpn_net_ctx_t;
 /*====================================================================*/
 //&<signal_info>
-struct signal_info
+.struct signal_info
 {
     volatile int signal_received;
     volatile int source;
@@ -249,25 +274,25 @@ struct signal_info
 };
 /*====================================================================*/
 //&<plugin_list>
-struct plugin_list
+.struct plugin_list
 {
     struct plugin_per_client per_client;
     struct plugin_common *common;
     bool common_owned;
 };
 //&<plugin_per_client>
-struct plugin_per_client
+.struct plugin_per_client
 {
     void *per_client_context[MAX_PLUGINS];
 };
 //&<plugin_common>
-struct plugin_common
+.struct plugin_common
 {
     int n;
     struct plugin plugins[MAX_PLUGINS];
 };
 //&<plugin>
-struct plugin {
+.struct plugin {
     bool initialized;
     const char *so_pathname;
     unsigned int plugin_type_mask;
@@ -300,26 +325,26 @@ typedef int (*openvpn_plugin_open_v3)(const int version,
 //其它函数的定义及各函数的用法说明见openvpn-plugin.h
 /*====================================================================*/
 //&<context_persist>
-struct context_persist
+.struct context_persist
 {
     int restart_sleep_seconds;
 };
 /*====================================================================*/
 //&<platform_state_user>
 /* Get/Set UID of process */
-struct platform_state_user 
+.struct platform_state_user 
 {
     int dummy;
 };
 /*====================================================================*/
 //&<platform_state_group>
 /* Get/Set GID of process */
-struct platform_state_group {
+.struct platform_state_group {
     int dummy;
 };
 /*====================================================================*/
 //&<key_schedule>
-struct key_schedule
+.struct key_schedule
 {
     struct key_type key_type;           /* 标记用哪种cipher、HMAC摘要和key长度 */
     struct key_ctx_bi static_key;       /* 预共享的静态密钥，从文件中读取的 */
@@ -331,7 +356,7 @@ struct key_schedule
     struct key_ctx auth_token_key;
 };
 //&<key_type>
-struct key_type
+.struct key_type
 {
     uint8_t cipher_length;      /** Cipher length */
     uint8_t hmac_length;        /** HMAC length */
@@ -341,20 +366,20 @@ struct key_type
 typedef EVP_CIPHER cipher_kt_t; //&<EVP_CIPHER>
 typedef EVP_MD md_kt_t;         //&<EVP_MD>
 //&<key_ctx_bi>
-struct key_ctx_bi               //包含收发双向 OpenSSL cipher和 HMAC context
+.struct key_ctx_bi               //包含收发双向 OpenSSL cipher和 HMAC context
 {
     struct key_ctx encrypt;     /**发方向的 */
     struct key_ctx decrypt;     /**收方向的 */
     bool initialized;
 };
 //&<tls_root_ctx>
-struct tls_root_ctx {   //封装TLS context的结构，使用的ssl库不同，内容不同
+.struct tls_root_ctx {   //封装TLS context的结构，使用的ssl库不同，内容不同
     SSL_CTX *ctx;
     time_t crl_last_mtime;
     off_t crl_last_size;
 };
 //&<key_ctx>
-struct key_ctx      //包含一组的 cipher 和/或 HMAC context
+.struct key_ctx      //包含一组的 cipher 和/或 HMAC context
 {
     cipher_ctx_t *cipher;       /** 产生 cipher context. */
     hmac_ctx_t *hmac;           /** 产生 Generic HMAC context. */
@@ -365,7 +390,7 @@ typedef EVP_CIPHER_CTX cipher_ctx_t;  //&<EVP_CIPHER_CTX>
 typedef HMAC_CTX hmac_ctx_t;          //&<HMAC_CTX>
 /*====================================================================*/
 //&<buffer>
-struct buffer
+.struct buffer
 {
     int capacity;               /** 申请的内存内容 */
     int offset;                 /** 实际数据在申请内存中的偏移量 */
@@ -374,7 +399,7 @@ struct buffer
 };
 /*====================================================================*/
 //&<cached_dns_entry>
-struct cached_dns_entry {       /* 存放解析的 host names */
+.struct cached_dns_entry {       /* 存放解析的 host names */
     const char *hostname;
     const char *servname;
     int ai_family;
@@ -384,7 +409,7 @@ struct cached_dns_entry {       /* 存放解析的 host names */
 };
 /*====================================================================*/
 //&<packet_id_persist>
-struct packet_id_persist    //文件，用以解决跨会话持久化时间和id
+.struct packet_id_persist    //文件，用以解决跨会话持久化时间和id
 {
     const char *filename;
     int fd;
@@ -398,7 +423,7 @@ typedef uint32_t packet_id_type;
 #define TUNNEL_TYPE(tt) ((tt) ? ((tt)->type) : DEV_TYPE_UNDEF)      //&<TUNNEL_TYPE>
 #define TUNNEL_TOPOLOGY(tt) ((tt) ? ((tt)->topology) : TOP_UNDEF)   //&<TUNNEL_TOPOLOGY>
 //&<tuntap>
-struct tuntap  //定义一个 tun/tap 设备
+.struct tuntap  //定义一个 tun/tap 设备
 {
     int type;       /* 同 proto.h 中的 DEV_TYPE_x */
     int topology;   /* topology：拓扑，one of the TOP_x values */
@@ -438,7 +463,7 @@ struct tuntap  //定义一个 tun/tap 设备
     int post_open_mtu;  // 一些TUN/TAP驱动程序在打开后喜欢被引导到mtu上
 };
 //&<tun_ring>
-struct tun_ring     /** Wintun ring buffer */
+.struct tun_ring     /** Wintun ring buffer */
 {
     volatile ULONG head;
     volatile ULONG tail;
@@ -450,7 +475,7 @@ struct tun_ring     /** Wintun ring buffer */
 #define RL_DID_LOCAL                    (1<<1)      
 #define RL_ROUTES_ADDED                 (1<<2)
 //&<route_list>
-struct route_list {
+.struct route_list {
     unsigned int iflags;
     struct route_special_addr spec;
     struct route_gateway_info rgi;
@@ -459,7 +484,7 @@ struct route_list {
     struct gc_arena gc;
 };
 //&<route_ipv6_list>
-struct route_ipv6_list {
+.struct route_ipv6_list {
     unsigned int iflags;                /* RL_ flags, 参 route_list */
     unsigned int spec_flags;            /* RTSA_ flags, route_special_addr */
     struct in6_addr remote_endpoint_ipv6; /* inside tun */
@@ -474,7 +499,7 @@ struct route_ipv6_list {
 #define STATUS_OUTPUT_READ  (1<<0)
 #define STATUS_OUTPUT_WRITE (1<<1)
 //&<status_output>
-struct status_output   //printf样式的接口，用于输入/输出状态信息
+.struct status_output   //printf样式的接口，用于输入/输出状态信息
 {
     unsigned int flags;
     char *filename;
@@ -494,7 +519,7 @@ struct status_output   //printf样式的接口，用于输入/输出状态信息
 };
 /*====================================================================*/
 //&<http_proxy_info>
-struct http_proxy_info {
+.struct http_proxy_info {
     bool defined;
     int auth_method;
     struct http_proxy_options options;
@@ -507,7 +532,7 @@ struct http_proxy_info {
 #define PAR_ALL 1   /* allow all proxy auth protocols */
 #define PAR_NCT 2   /* disable cleartext proxy auth protocols */
 //&<http_proxy_options>
-struct http_proxy_options {
+.struct http_proxy_options {
     const char *server;
     const char *port;
     int auth_retry;
@@ -519,13 +544,13 @@ struct http_proxy_options {
     bool inline_creds;
 };
 //&<http_custom_header>
-struct http_custom_header {
+.struct http_custom_header {
     const char *name;
     const char *content;
 };
 /*====================================================================*/
 //&<socks_proxy_info>
-struct socks_proxy_info {
+.struct socks_proxy_info {
     bool defined;
     char server[128];
     const char *port;
@@ -533,20 +558,20 @@ struct socks_proxy_info {
 };
 /*====================================================================*/
 //&<ifconfig_pool_persist>
-struct ifconfig_pool_persist
+.struct ifconfig_pool_persist
 {
     struct status_output *file;
     bool fixed;
 };
 /*====================================================================*/
 //&<sha256_digest>
-struct sha256_digest {
+.struct sha256_digest {
     uint8_t digest[SHA256_DIGEST_LENGTH];
 };
 /*====================================================================*/
 #define USER_PASS_LEN 4096  /* username/password 的最大长度*/
 //&<user_pass>
-struct user_pass   //获取和存储 username/password
+.struct user_pass   //获取和存储 username/password
 {
     bool defined;
     /*对于auth-token来说，用户名和令牌可以单独设置，
@@ -571,7 +596,7 @@ struct user_pass   //获取和存储 username/password
 #define SF_PORT_SHARE (1<<2)
 #define SF_HOST_RANDOMIZE (1<<3)
 #define SF_GETADDRINFO_DGRAM (1<<4)
-struct link_socket
+.struct link_socket
 {
     struct link_socket_info info;
     socket_descriptor_t sd;
@@ -622,14 +647,14 @@ struct link_socket
 //&<socket_descriptor_t>
 socket_descriptor_t 如果在win下，为 SOCKET，否则，为 int
 //&<rw_handle>
-struct rw_handle {
+.struct rw_handle {
     HANDLE read;
     HANDLE write;
 };
 /*====================================================================*/
 //&<cached_dns_entry> 项目中socket.h中定义
 /* 保存预解析了的 host names */
-struct cached_dns_entry {
+.struct cached_dns_entry {
     const char *hostname;
     const char *servname;
     int ai_family;
@@ -642,7 +667,7 @@ struct cached_dns_entry {
  * 用于将流中封装的包提取到buffer中
  * 此中情况下，ip包嵌入在tcp流中
  */
-struct stream_buf
+.struct stream_buf
 {
     struct buffer buf_init;
     struct buffer residual;
@@ -656,7 +681,7 @@ struct stream_buf
 /*====================================================================*/
 //&<link_socket_actual>
 /* 远端的实际地址，基于收到的包的源地址 */
-struct link_socket_actual
+.struct link_socket_actual
 {
     struct openvpn_sockaddr dest;
 };
@@ -668,7 +693,7 @@ struct link_socket_actual
 #define FRAME_HEADROOM_MARKER_FRAGMENT    (1<<1)
 #define FRAME_HEADROOM_MARKER_READ_LINK   (1<<2)
 #define FRAME_HEADROOM_MARKER_READ_STREAM (1<<3)
-struct frame {
+.struct frame {
     int link_mtu;               /**< 发送到对外的网络接口的包的最大size */
     int link_mtu_dynamic;       /**< 外部网络接口的动态 MTU 值 */
     int extra_frame;            /**< 当前处理的所有字节数的最大值？
@@ -709,7 +734,7 @@ struct frame {
  * fragment_incoming()函数将新收到的部分加入这个数组中 
  * 并在重新组装完成后返回整个数据包。
  */
-struct fragment_master {
+.struct fragment_master {
     struct event_timeout wakeup; /**< Timeout structure used by the main
                                   *   event loop to know when to do
                                   *   fragmentation housekeeping. */
@@ -763,7 +788,7 @@ struct fragment_master {
 #define SHAPER_MAX 100000000
 #define SHAPER_MAX_TIMEOUT 10   /* seconds */
 #define SHAPER_USE_FP
-struct shaper
+.struct shaper
 {
     int bytes_per_second;
     struct timeval wakeup;
@@ -776,7 +801,7 @@ typedef unsigned long long int counter_type;
 /* &<event_timeout>
  * 记录一个事件发生以来，已过去了多少秒了
  */
-struct event_timeout
+.struct event_timeout
 {
     bool defined;
     interval_t n;
@@ -792,7 +817,7 @@ struct event_timeout
  * 每个tls_context代表一个控制通道会话，
  * 它可以跨越（存储在key_state结构中的）多个数据通道安全参数sessions
  */
-struct tls_multi
+.struct tls_multi
 {
     /* 常量的选项和配置信息 */
     struct tls_options opt;
@@ -878,7 +903,7 @@ struct tls_multi
  *  - This structure should be cleaned up using the \c key_state_free()
  *    function.
  */
-struct key_state
+.struct key_state
 {
     int state;
     /** The state of the auth-token sent from the client */
@@ -922,22 +947,23 @@ struct key_state
 #endif
 };
 //&<key_state_ssl>
-struct key_state_ssl {
+.struct key_state_ssl {
     SSL *ssl;                   /* SSL object -- new obj created for each new key */
     BIO *ssl_bio;                       /* read/write plaintext from here */
     BIO *ct_in;                 /* write ciphertext to here */
     BIO *ct_out;                        /* read ciphertext from here */
 };
 //&<session_id>
-struct session_id
+.struct session_id
 {
     uint8_t id[8];
 };
+/*====================================================================*/
 /** &<crypto_options>
  * Security parameter state for processing data channel packets.
  * @ingroup data_crypto
  */
-struct crypto_options
+.struct crypto_options
 {
     struct key_ctx_bi key_ctx_bi;
     /**< OpenSSL cipher and HMAC contexts for
@@ -965,7 +991,6 @@ struct crypto_options
     unsigned int flags;         /**< Bit-flags determining behavior of
                                  *   security operation functions. */
 };
-/*====================================================================*/
 /*====================================================================*/
 /*====================================================================*/
 /*====================================================================*/

@@ -670,7 +670,7 @@ strongswan SA分析（一）
         5.5 charon进程
             charon进程运行启动成功后，启动16个子线程执行不同的job
             整个charon中的任务调度围绕着task和job两个核心概念进行
-            图：file://imgs/charon进程流程图.png
+            图：file://../imgs/charon进程流程图.png
     6 sa的抽象模型
         sa
             目的地址（dip）加 spi 唯一确定一个sa条目

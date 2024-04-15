@@ -6,6 +6,6 @@
 70行： 声明fcamelCase函数对象
 87~92： 把一些js原生对象的方法重命名，方便以后使用
 97~320： 定义了jQuery函数对象的原型
-	98： 定义constructor属性
-	99~208： init: function( selector, context, rootjQuery )
-		103： 如果selector参数为空，返回this（即jQuery的原型）
+98： 定义constructor属性
+99~208： init: function( selector, context, rootjQuery )
+103： 如果selector参数为空，返回this（即jQuery的原型）

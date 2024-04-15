@@ -1,37 +1,64 @@
+<catalog s0/s4 text_line_prefix=- super_text_line_prefix=.>
 openssl版本：0.9.8e
-file://openssl.chm
+相关参考
+    file://openssl.chm
+    file://gmssl的密码套件问题.py
+    file://evp示例.c
+    file://gmssl服务端接收连接源码跟踪.py
+    file://gmssl客户端源码跟踪.py
+    file://openssl状态机.py
+    file://RUN_ONCE宏.txt
+    file://RSA、DSA、ECDSA、EdDSA 和 Ed25519 的区别.py
+    file://SSL3、TLS1.0、TSL1.1、TLS1.2、TLS 1.3协议版本间的差异.txt
+    file://SSL协议详解---看这一篇就够了.py
+    file://编程问题记录.txt
+    file://编译openssl.py
+    file://密码相关知识.py
 openssl源代码
-    openssl源代码主要由eay库、ssl库、工具源码、范例源码以及测试源码组成。
-    eay库是基础的库函数，提供了很多功能。源代码放在crypto目录下。包括如下内容：
-    1）  asn.1 DER编码解码(crypto/asn1目录)，它包含了基本asn1对象的编解码以及数字证书请求、
-         数字证书、CRL撤销列表以及PKCS8等最基本的编解码函数。这些函数主要通过宏来实现。
-    2）  抽象IO(BIO,crypto/bio目录)，本目录下的函数对各种输入输出进行抽象，包括文件、内存、标准输入输出、socket和SSL协议等。
-    3）  大数运算(crypto/bn目录)，本目录下的文件实现了各种大数运算。这些大数运算主要用于非对称算法中密钥生成以及各种加解密操作。
-         另外还为用户提供了大量辅助函数，比如内存与大数之间的相互转换。
-    4）  字符缓存操作(crypto/buffer目录)。
-    5）  配置文件读取(crypto/conf目录)，openssl主要的配置文件为openssl.cnf。本目录下的函数实现了对这种格式配置文件的读取操作。
-    6）  DSO(动态共享对象,crypto/dso目录)，本目录下的文件主要抽象了各种平台的动态库加载函数，为用户提供统一接口。
-    7）  硬件引擎(crypto/engine目录)，硬件引擎接口。用户如果要写自己的硬件引擎，必须实现它所规定的接口。
-    8）  错误处理(crypto/err目录)，当程序出现错误时，openssl能以堆栈的形式显示各个错误。
-         本目录下只有基本的错误处理接口，具体的的错误信息由各个模块提供。各个模块专门用于错误处理的文件一般为*_err..c文件。
-    9）  对称算法、非对称算法及摘要算法封装(crypto/evp目录)。
-    10） HMAC(crypto/hmac目录)，实现了基于对称算法的MAC。
-    11） hash表(crypto/lhash目录)，实现了散列表数据结构。openssl中很多数据结构都是以散列表来存放的。
-         比如配置信息、ssl session和asn.1对象信息等。
-    12） 数字证书在线认证(crypto/ocsp目录)，实现了ocsp协议的编解码以及证书有效性计算等功能。
-    13） PEM文件格式处理(crypto/pem)，用于生成和读取各种PEM格式文件，包括各种密钥、数字证书请求、数字证书、PKCS7消息和PKCS8消息等。
-    14） pkcs7消息语法(crypto/pkcs7目录)，主要实现了构造和解析PKCS7消息；
-    15） pkcs12个人证书格式(crypto/pckcs12目录)，主要实现了pkcs12证书的构造和解析。
-    16） 队列(crypto/pqueue目录)，实现了队列数据结构，主要用于DTLS。
-    17） 随机数(crypto/rand目录)，实现了伪随机数生成，支持用户自定义随机数生成。
-    18） 堆栈(crypto/stack目录)，实现了堆栈数据结构。
-    19） 线程支持(crypto/threads)，openssl支持多线程，但是用户必须实现相关接口。
-    20） 文本数据库(crypto/txt_db目录)。
-    21） x509数字证书(crypto/x509目录和crypto/x509v3)，包括数字证书申请、数字证书和CRL的构造、解析和签名验证等功能了；
-    22） 对称算法(crypto/aes、crypto/bf、crypto/cast、ccrypto/omp和crypto/des等目录)。
-    23） 非对称算法(crypto/dh、crypto/dsa、crypto/ec和crypto/ecdh)。
-    24） 摘要算法(crypto/md2、crypto/md4、crypto/md5和crypto/sha)以及密钥交换/认证算法(crypto/dh 和crypto/krb5)。
-
+    -openssl源代码主要由eay库、ssl库、工具源码、范例源码以及测试源码组成。
+    -eay库是基础的库函数，提供了很多功能。源代码放在crypto目录下。
+    源代码包含的内容：
+      数据结构
+        16） 队列(crypto/pqueue目录)，实现了队列数据结构，主要用于DTLS。
+        18） 堆栈(crypto/stack目录)，实现了堆栈数据结构。
+        11） hash表(crypto/lhash目录)，实现了散列表数据结构。openssl中很多数据结构都是以散列表来存放的。
+             比如配置信息、ssl session和asn.1对象信息等。
+      通用工具
+        4）  字符缓存操作(crypto/buffer目录)。
+        2）  抽象IO(BIO,crypto/bio目录)，本目录下的函数对各种输入输出进行抽象，包括文件、内存、标准输入输出、socket和SSL协议等。
+        5）  配置文件读取(crypto/conf目录)，openssl主要的配置文件为openssl.cnf。本目录下的函数实现了对这种格式配置文件的读取操作。
+        20） 文本数据库(crypto/txt_db目录)。
+        19） 线程支持(crypto/threads)，openssl支持多线程，但是用户必须实现相关接口。
+      算法
+        9）  对称算法、非对称算法及摘要算法封装(crypto/evp目录)。
+        10） HMAC(crypto/hmac目录)，实现了基于对称算法的MAC。
+        22） 对称算法(crypto/aes、crypto/bf、crypto/cast、crypto/idea、crypto/Rc2、crypto/Rc4、crypto/Rc5、ccrypto/omp和crypto/des等目录)。
+        23） 非对称算法(crypto/dh、crypto/dsa、crypto/ec、crypto/rsa、crypto/ecdh)。
+        24） 摘要算法(crypto/md2、crypto/md4、crypto/md5和crypto/sha)以及密钥交换/认证算法(crypto/dh 和crypto/krb5)。
+        25)  压缩算法(crypto/comp)
+        17） 随机数(crypto/rand目录)，实现了伪随机数生成，支持用户自定义随机数生成。
+      其它
+        1）  asn.1 DER编码解码(crypto/asn1目录)，它包含了基本asn1对象的编解码以及数字证书请求、
+             数字证书、CRL撤销列表以及PKCS8等最基本的编解码函数。这些函数主要通过宏来实现。
+        3）  大数运算(crypto/bn目录)，本目录下的文件实现了各种大数运算。这些大数运算主要用于非对称算法中密钥生成以及各种加解密操作。
+             另外还为用户提供了大量辅助函数，比如内存与大数之间的相互转换。
+        6）  DSO(动态共享对象,crypto/dso目录)，本目录下的文件主要抽象了各种平台的动态库加载函数，为用户提供统一接口。
+        7）  硬件引擎(crypto/engine目录)，硬件引擎接口。用户如果要写自己的硬件引擎，必须实现它所规定的接口。
+        8）  错误处理(crypto/err目录)，当程序出现错误时，openssl能以堆栈的形式显示各个错误。
+             本目录下只有基本的错误处理接口，具体的的错误信息由各个模块提供。各个模块专门用于错误处理的文件一般为*_err..c文件。
+        12） 数字证书在线认证(crypto/ocsp目录)，实现了ocsp协议的编解码以及证书有效性计算等功能。
+        13） PEM文件格式处理(crypto/pem)，用于生成和读取各种PEM格式文件，包括各种密钥、数字证书请求、数字证书、PKCS7消息和PKCS8消息等。
+        14） pkcs7消息语法(crypto/pkcs7目录)，主要实现了构造和解析PKCS7消息；
+        15） pkcs12个人证书格式(crypto/pckcs12目录)，主要实现了pkcs12证书的构造和解析。
+        21） x509数字证书(crypto/x509目录和crypto/x509v3)，包括数字证书申请、数字证书和CRL的构造、解析和签名验证等功能了；
+        27)  skf封装(crypto/skf)、sdf封装(crypto/sdf)
+        29)  内存管理(crypto/mem.c、crypto/mem_clr.c、crypto/mem_dgb.c、crypto/mem_sec.c)  mem_sec是内存安全使用方面的
+        30)  文件打开(crypto/o_fopen.c)
+        31)  目录枚举(crypto/o_dir.c)
+        32)  字符串处理(crypto/o_str.c)
+        33)  时间处理(crypto/o_time.c)
+        ...
+        
 第三章 堆栈
    数据结构
         typedef struct stack_st
@@ -67,7 +94,6 @@ openssl源代码
         4）sk_pop_free
             本函数用于释放堆栈内存放的数据以及堆栈本身，它需要一个由用户指定的针对具体数据的释放函数。
             如果用户仅调用sk_free函数，则只会释放堆栈本身所用的内存，而不会释放数据内存。
-            
 第四章 哈希表
     数据结构
         其源码在crypto/lhash目录下，数据结构在lhash.h中定义如下：
@@ -173,7 +199,6 @@ openssl源代码
         15）unsigned long lh_strhash(const char *c)
             源文件：lhash.c
             功能：计算文本字符串到哈希值
-            
 第五章 内存分配
     简介
         openssl提供了内置的内存分配/释放函数。
@@ -243,7 +268,6 @@ openssl源代码
         7）CRYPTO_mem_leaks_cb
             处理内存泄露，输入参数为用户自己实现的处理内存泄露的函数地址。
             该函数只需要处理一个内存泄露，openssl通过lh_doall_arg调用用户函数来处理所有记录(泄露的内存)。
-            
 第七章 抽象IO
     简介
         openssl对于io类型的抽象封装，包括：
@@ -252,7 +276,7 @@ openssl源代码
         Bio中的数据能从一个BIO传送到另外一个BIO或者是应用程序
     数据结构：
         在crypto/bio.h中定义如下
-        1）BIO_METHOD
+        1）BIO_METHOD  #完成文件的创建销毁及读写控制
             typedef struct bio_method_st
             {
                  int type;
@@ -281,7 +305,7 @@ openssl源代码
                 callback_ctrl：具体BIO控制回调函数，与ctrl回调函数不一样，
                                该函数可由调用者（而不是实现者）来实现，
                                然后通过BIO_set_callback等函数来设置。
-        2）BIO
+        2）BIO  #存放如文件指针、读写缓冲区、引用数量、下一个BIO指针等
             truct bio_st
             {
                 BIO_METHOD *method;
@@ -334,18 +358,53 @@ openssl源代码
                     BIO中已写入的字节数。
                 ex_data：
                     用于存放额外数据。
+                callback：
+                    读写操作时，如果 callback 不为空，会调用到该回调
     相关函数
         BIO各个函数定义在crypto/bio.h中。所有的函数都由BIO_METHOD中的回调函数来实现。
         函数主要分为几类：
             1）具体BIO相关函数
                比如：BIO_new_file（生成新文件）和BIO_get_fd（设置网络链接）等。
             2）通用抽象函数
-               比如BIO_read和BIO_write等。
-        另外，有很多函数是由宏定义通过控制函数BIO_ctrl实现，
+               BIO_read  ：调用 b->method->bread，读前、读后分别调用 b->callback（存在时）
+               BIO_write ：调用 b->method->bwrite，读前、读后分别调用 b->callback（存在时）
+               BIO_push  ：将 BIO 放入队列（第二个参数尾插到第一个参数上），并告知 BIO_ctrl 函数
+               BIO_pop   ：将 BIO 移出队列，并告知 BIO_ctrl 函数
+               BIO_find_type ： 遍历 BIO 队列，返回 bio->method->type 匹配的 BIO
+        另外，有很多函数是通过宏，对控制函数BIO_ctrl进行包装实现的，
         比如BIO_set_nbio、BIO_get_fd和BIO_eof等等。
+    创建 BIO_METHOD
+        filter 类型
+            const BIO_METHOD *BIO_f_buffer(void);
+            const BIO_METHOD *BIO_f_linebuffer(void);
+            const BIO_METHOD *BIO_f_nbio_test(void);
+            const BIO_METHOD *BIO_f_md(void);       # EVP 提供
+            const BIO_METHOD *BIO_f_base64(void);   # EVP 提供
+            const BIO_METHOD *BIO_f_cipher(void);   # EVP 提供
+            const BIO_METHOD *BIO_f_reliable(void); # EVP 提供
+            const BIO_METHOD *BIO_f_ssl(void);
+            const BIO_METHOD *BIO_f_null(void);  #结束标记
+        source/sink型    
+            const BIO_METHOD *BIO_s_mem(void);
+            const BIO_METHOD *BIO_s_secmem(void);
+            # ifndef OPENSSL_NO_SOCK
+            const BIO_METHOD *BIO_s_socket(void);
+            const BIO_METHOD *BIO_s_connect(void);
+            const BIO_METHOD *BIO_s_accept(void);
+            # endif
+            const BIO_METHOD *BIO_s_fd(void);
+            const BIO_METHOD *BIO_s_log(void);
+            # ifndef OPENSSL_NO_DGRAM
+            const BIO_METHOD *BIO_s_datagram(void);
+            # endif
+            const BIO_METHOD *BIO_s_bio(void);
+            const BIO_METHOD *BIO_s_null(void);  #结束标记
     示例
         加解密
-            const BIO_METHOD* bm1 = BIO_f_cipher();
+            const BIO_METHOD* bm1 = BIO_f_cipher(); #完成文件的创建销毁及读写控制
+            # filter 类型bio ： 对写给它的数据加密，对从它上读取的数据解密
+            # 是对 EVP_CipherInit(), EVP_CipherUpdate() 和 EVP_CipherFinal() 的包装
+            # 不支持 BIO_gets() or BIO_puts().
             BIO *bc=BIO_new(bm1);
             const EVP_CIPHER*c=EVP_des_ecb();
             unsigned char key[8],iv[8];
@@ -354,9 +413,10 @@ openssl源代码
                 iv[i]=key[i]=i+1;
             }
             BIO_set_cipher(bc,c,key,iv,1);
+            # 为 bc 设置加密使用的算法，并设置密钥和初始向量
             const BIO_METHOD* bm2 = BIO_s_null();
             BIO *b= BIO_new(bm2);
-            b = BIO_push(bc,b);
+            b = BIO_push(bc,b);  #挂接到上一个BIO上（b尾插到bc上）
             int len = BIO_write(b,"openssl",7);
             char tmp[100];
             len = BIO_read(b,tmp,1024);
@@ -369,10 +429,9 @@ openssl源代码
             b = BIO_new(bm2);
             b = BIO_push(bdec,b);
             len = BIO_write(b,tmp,len);
+            BIO_flush(b);
             len = BIO_read(b,tmp,100);
             BIO_free(b);
-        SSL
-            
 第九章 随机数
     概述
         openssl生成随机数的源码位于crypto/rand目录下
@@ -437,7 +496,6 @@ openssl源代码
             用来查看内部随机数熵值是否已达到预定值，如果未达到，则不应该生成随机数。
         11) RAND_bytes
             生成指定数量的随机字节（使用一个密码安全伪随机数）并存储在buf参数中
-        
 第十一章 大数
     数据结构
         crypto/bn.h中定义了大数的表示方式，如下：
@@ -483,7 +541,6 @@ openssl源代码
             计算ax=1(mod n)。          
         12）BN_zero()、BN_one()、BN_set_word() 
             设置值为0、1、或指定值
-            
 第十二章 BASE64编解码
     主要函数
         1）  编码函数
@@ -496,13 +553,12 @@ openssl源代码
         EVP_DecodeUpdate       BASE64解码，本函数可多次调用。
         EVP_DecodeFinal        BASE64解码，并输出结果。
         EVP_DecodeBlock        BASE64解码，可单独调用。
-    
 第十三章 asn1
-    ASN.1(Abstract Syntax Notation One，X.208)，是一套灵活的标记语言，它允许定义多种数据类型，
-    从integer、bit string 一类的简单类型，到结构化类型，如set 和sequence，
-    并且可以使用这些类型构建复杂类型。
-    DER编码是ANS.1定义的将对象描述数据编码成八位串值的编码规则，
-    它给出了对ANS.1值（对象的类型和值）的唯一编码规则。
+    -ASN.1(Abstract Syntax Notation One，X.208)，是一套灵活的标记语言，它允许定义多种数据类型，
+    -从integer、bit string 一类的简单类型，到结构化类型，如set 和sequence，
+    -并且可以使用这些类型构建复杂类型。
+    -DER编码是ANS.1定义的将对象描述数据编码成八位串值的编码规则，
+    -它给出了对ANS.1值（对象的类型和值）的唯一编码规则。
     1) 简单类型
         BIT STRING          任意0、1位串；
         IA5String           任意IA5(ASCII)字符串；
@@ -562,7 +618,6 @@ openssl源代码
                 notBeforeTime  GeneralizedTime,
                 notAfterTime   GeneralizedTime
             }
-            
             所以我们可以定义相应的内部数据结构，如下：
             typedef    struct      X509V4_VALID_st
             {
@@ -570,7 +625,6 @@ openssl源代码
                 ASN1_GENERALIZEDTIME *notAfter;
             }X509V4_VALID;
             DECLARE_ASN1_FUNCTIONS(X509V4_VALID)
-            
             其中最后一行用于定义四个函数：
             X509V4_VALID  *X509V4_VALID_new(void);
             void          *X509V4_VALID_free(X509V4_VALID *a);
@@ -642,14 +696,12 @@ openssl源代码
             const char *sname;          # Structure name 
             'endif
         };
-        
         define ASN1_SIMPLE(stname, field, type)               ASN1_EX_TYPE(flags=0,tag=0, stname, field, type)
         define ASN1_OPT(stname, field, type)                  ASN1_EX_TYPE(ASN1_TFLG_OPTIONAL, tag=0, stname, field, type)
         define ASN1_IMP(stname, field, type, tag)             ASN1_EX_TYPE(ASN1_TFLG_IMPLICIT, tag, stname, field, type)
         define ASN1_IMP_OPT(stname, field, type, tag)         ASN1_EX_TYPE(ASN1_TFLG_IMPLICIT | ASN1_TFLG_OPTIONAL, tag, stname, field, type)
         define ASN1_SEQUENCE_OF(stname, field, type)          ASN1_EX_TYPE(ASN1_TFLG_SEQUENCE_OF, tag=0, stname, field, type)    
         define ASN1_EX_TYPE(flags, tag, stname, field, type)  { (flags), (tag), offsetof(stname, field), '#field', ASN1_ITEM_ref(type) }  
-                                           
         template flags (ASN1_TFLG_xxx)
             ''' Field is optional '''
             define ASN1_TFLG_OPTIONAL      (0x1) = 1
@@ -712,7 +764,6 @@ openssl源代码
             ' indefinite length constructed encoding to be used if required.
             '''
             define ASN1_TFLG_NDEF          (0x1<<11) = 2048
- 
 第十四章 错误处理
     数据结构
         openssl中，通过unsigned long类型来存放错误信息。
@@ -859,7 +910,6 @@ openssl源代码
             将错误信息存放到ERR_STATE 表中top指定的错误堆栈(最后的错误)。
         28)  ERR_unload_strings
             从错误哈希表中删除相关信息。
- 
 第十五章 摘要与hmac
     函数说明
         1)  XXX_Init
@@ -870,7 +920,6 @@ openssl源代码
             XXX为具体的摘要算法名称，进行摘要计算，该函数与1)和2）一起用。
         4)  XXX
             对一个数据进行摘要。该函数由上述1）2）和3）实现，只是XXX_Update只调用一次
-            
 第十六章 数据压缩
     数据结构
         COMP_METHOD（压缩算法）
@@ -923,7 +972,6 @@ openssl源代码
             压缩计算。
         5） COMP_expand_block
             解压计算。
-            
 第十七章 rsa
     简介
         RSA算法是一个广泛使用的公钥算法。其密钥包括公钥和私钥。
@@ -1070,16 +1118,16 @@ openssl源代码
         11）int DSA_print_fp(FILE *fp, const DSA *x, int off)
             将RSA信息输出到FILE中，off为输出偏移量。
         12）RSA_public_decrypt
-            RSA公钥解密。
+            RSA公钥解密。 # 调用 rsa_meth_st 中的相应方法
         13）RSA_public_encrypt
-            RSA公钥加密。
+            RSA公钥加密。 # 调用 rsa_meth_st 中的相应方法     
         14）RSA_set_default_method/ RSA_set_method
             设置RSA结构中的method，当用户实现了一个RSA_METHOD时，
             调用此函数来设置，使RSA运算采用用户的方法。
         15）RSA_set_ex_data
             设置扩展数据。
         16）RSA_sign
-            RSA签名。
+            RSA签名。  # 调用 rsa_meth_st 中的相应方法
         17）RSA_sign_ASN1_OCTET_STRING
             另外一种RSA签名，不涉及摘要算法，它将输入数据作为ASN1_OCTET_STRING
             进行DER编码，然后直接调用RSA_private_encrypt进行计算。
@@ -1088,7 +1136,7 @@ openssl源代码
         19）RSA_up_ref
             给RSA密钥增加一个引用。
         20）RSA_verify
-            RSA验证。
+            RSA验证。  # 调用 rsa_meth_st 中的相应方法
         21）RSA_verify_ASN1_OCTET_STRING
             另一种RSA验证，不涉及摘要算法，与RSA_sign_ASN1_OCTET_STRING对应。
         22）RSAPrivateKey_asn1_meth
@@ -1097,7 +1145,6 @@ openssl源代码
             复制RSA私钥。
         24）RSAPublicKey_dup
             复制RSA公钥。
-                
 第十八章 DSA
     简介
         DSA算法是一种公钥算法，DSA安全性基于离散对数问题
@@ -1105,7 +1152,31 @@ openssl源代码
         与RSA相比，DSA的签名生成速度更快，但验证速度较慢
         file://RSA、DSA、ECDSA、EdDSA 和 Ed25519 的区别.py
         因为DSA已经不推荐使用，所以这里略过，具体参看chm文件
-        
+    DSA 和 RSA 区别
+        DSA（Digital Signature Algorithm）通常是指数字签名算法。
+        RSA是指创建它的人的首字母缩写
+        DSA被设计为一种加密算法。
+        #签名的本质其实就是加密，但是由于签名无需还原成明文，因此可以在加密前进行哈希处理。
+        #所以签名其实就是哈希+加密，而验签就是哈希+解密+比较。
+        DSA由NSA开发，供美国政府用作数字签名的标准
+        DSA加密算法主要依赖于整数有限域离散对数难题
+        RSA的安全性是基于极其困难的大整数的分解（两个素数的乘积）
+        DSA和RSA是两种常见的加密算法，可以说具有相同的强度；
+        基本上可以认为相同密钥长度的 RSA 算法与 DSA 算法安全性相当。
+        DSA 只能用于数字签名，而无法用于加密（某些扩展可以支持加密）；
+        RSA 即可作为数字签名，也可以作为加密算法。
+        不过作为加密使用的 RSA 有着随密钥长度增加，性能急剧下降的问题。
+        相同密钥长度下，DSA 加密更慢，而（在扩展支持下）解密密文更快；
+        RSA 正好反过来，一般来说解密次数多于加密次数，所以其加密快、解密慢。
+        不过由于非对称加密算法的先天性能问题，两者都不是加密的好选择。
+        两者的性能是两者的区别；
+        生成密钥时的 DSA 比 RSA 快；
+        RSA在加密方面比DSA更快；
+        解密时，DSA速度更快，主要是因为它具有出色的解密能力；
+        如果需要数字签名，DSA 是首选的加密算法；
+        对于数字签名的验证，RSA是最佳选择。
+        根据具体情况，需要做出选择，但 DSA 和 RSA 都具有相同的加密能力，
+        应选择对资源需求较少的选项。
 第十九章 DH
     简介
         它实质是一个通信双方进行密钥协商的协议：
@@ -1202,7 +1273,6 @@ openssl源代码
             将DH密钥参数输出到bio中。
         17) DHparams_print_fp
             将DH密钥参数输出到FILE中。
-
 第二十章 ECC
     简介
         椭圆曲线(ECC)算法是一种公钥算法，它比流行的RSA算法有很多优点：
@@ -1214,7 +1284,7 @@ openssl源代码
         Openssl实现了ECC算法。
         ECC算法系列包括三部分：
             ECC算法(crypto/ec)、
-            椭圆曲线数字签名算法ECDSA (crypto/ecdsa)
+            椭圆曲线数字签名算法ECDSA (crypto/ecdsa) #因为政治原因和技术原因，不推荐使用
             椭圆曲线密钥交换算法ECDH(crypto/dh)
         密钥数据结构
             主要是公钥和私钥数据结构。
@@ -1228,11 +1298,13 @@ openssl源代码
                 /* 其他项 */
             }
         密钥生成
-            对照公钥和私钥的表示方法，非对称算法不同有各自的密钥生成过程。
+            对照公钥和私钥的表示方法，非对称算法不同，有各自的密钥生成过程。
             椭圆曲线的密钥生成实现在crytpo/ec/ec_key.c中。
             Openssl中，椭圆曲线密钥生成时，首先用户需要选取一种椭圆曲线
-            (openssl的crypto/ec_curve.c中内置实现了67种，调用EC_get_builtin_curves获取该列表)，
-            然后根据选择的椭圆曲线计算密钥生成参数group，最后根据密钥参数group来生公私钥。
+            (openssl的crypto/ec_curve.c中内置实现了67种，
+            调用EC_get_builtin_curves获取该列表)，
+            然后根据选择的椭圆曲线计算'密钥生成参数group'，
+            最后根据密钥参数group来生公、私钥。
         签名值数据结构
             非对称算法不同，签名的结果表示也不一样。
             与DSA签名值一样，ECDSA的签名结果表示为两项。
@@ -1249,7 +1321,7 @@ openssl源代码
         密钥交换
             研究其密钥交换是如何进行的；
             crypto/ecdh/ech_ossl.c实现了密钥交换算法。
-        主要函数
+        主要函数 #和dsa一样，只适合签名，不适合加密    
             1） EC_get_builtin_curves
                 获取椭圆曲线列表。
             2） EC_GROUP_new_by_curve_name
@@ -1270,19 +1342,87 @@ openssl源代码
                 获取私钥。
             10）ECDH_compute_key
                 生成共享密钥
+    网络资料
+        https://www.cnblogs.com/testlife007/p/6704435.html
+        openssl的ECC实现
+            ECC算法系列包括三部分：
+                ECC算法(crypto/ec)、
+                椭圆曲线数字签名算法ECDSA (crypto/ecdsa)
+                椭圆曲线密钥交换算法ECDH(crypto/ecdh)。
+            数据结构
+                椭圆曲线数据结构：EC_GROUP
+                    该结构不仅包含各个参数，还包含了各种算法
+                点的表示：EC_POINT
+                EC_CURVE_DATA：用于内置椭圆曲线，包含了椭圆曲线的各个参数
+                密钥结构
+                    椭圆曲线密钥数据结构，定义在crypto/ec_lcl.h中，对用户是透明的。
+                    struct ec_key_st
+                         int        version;
+                         EC_GROUP   *group;
+                         EC_POINT   *pub_key;
+                         BIGNUM     *priv_key;
+                         /* 其他项 */
+            文件介绍
+                ec2_smpl.c            
+                       F2m  二进制扩展域上的EC_METHOD实现；
+                ecp_mont.c     
+                       Fp   素数域上的EC_METHOD实现，(Montgomery 蒙哥马利)
+                ecp_smpl.c     
+                       Fp   素数域上的EC_METHOD实现；
+                ecp_nist.c       
+                       Fp   素数域上的EC_METHOD实现；
+                ec2_mult.c
+                       F2m上的乘法；
+                ec2_smpt.c
+                       F2m上的压缩算法；
+                ec_asn1.c
+                       asn1编解码；
+                ec_check.c
+                       椭圆曲线检测；
+                ec_curve.c
+                       内置的椭圆曲线，
+                       NID_X9_62_prime_field：X9.62的素数域；
+                       NID_X9_62_characteristic_two_field：X9.62的二进制扩展域；
+                       NIST：美国国家标准
+                ec_cvt.c
+                       给定参数生成素数域和二进制扩展域上的椭圆曲线；
+                ec_err.c
+                       错误处理；
+                ec_key.c
+                       椭圆曲线密钥EC_KEY函数；
+                ec_lib.c
+                       通用库实现，一般会调用底层的EC_METHOD方法；
+                ec_mult.c
+                       This file implements the wNAF-based interleaving multi-exponentation method乘法；
+                ec_print.c
+                       数据与椭圆曲线上点的相互转化；
+                ectest.c
+                       测试源码，可以参考此源码学习椭圆曲线函数。
+                ec.h
+                       对外头文件；
+                ec_lcl.h
+                       内部头文件，数据结构一般在此定义。
+            函数介绍 & 编程示例
+                https://www.cnblogs.com/testlife007/p/6704435.html
+    示例
+        EVP接口实现国密SM2算法的加解密，签名验签，秘钥对生成等操作
+            https://blog.csdn.net/weixin_41761608/article/details/107623909
+        gmssl编程之签发X509证书
+            https://blog.csdn.net/lt4959/article/details/114671616
                 
 第二十一章 evp
-    Openssl EVP(high-level cryptographic functions[1])提供了丰富的密码学中的各种函数
-    Openssl中实现了各种摘要算法、对称算法以及签名/验签算法。
-    EVP函数将这些具体的算法进行了封装。
+    -Openssl EVP(high-level cryptographic functions[1])提供了丰富的密码学中的各种函数
+    -Openssl中"实现了"各种摘要算法、对称算法以及签名/验签算法。
+    -对前面的第十七 -- 第二十章算法的更高一层的封装，提供相对统一的操作接口
+    -EVP函数将这些具体的算法进行了封装。
     EVP主要封装了如下功能函数：
-        1） 实现了base64编解码BIO；
-        2） 实现了加解密BIO；
-        3） 实现了摘要BIO；
-        4） 实现了reliable BIO；
-        5） 封装了摘要算法；
-        6） 封装了对称加解密算法；
-        7） 封装了非对称密钥的加密(公钥)、解密(私钥)、签名与验证以及辅助函数；
+        1） '实现了'base64编解码BIO；
+        2） '实现了'加解密BIO；
+        3） '实现了'摘要BIO；
+        4） '实现了'reliable BIO；
+        5） '封装了'摘要算法；
+        6） '封装了'对称加解密算法；
+        7） '封装了'非对称密钥的加密(公钥)、解密(私钥)、签名与验证以及辅助函数；
         7） 基于口令的加密(PBE)；
         8） 对称密钥处理；
         9） 数字信封：数字信封用对方的公钥加密对称密钥，数据则用此对称密钥加密。
@@ -1291,10 +1431,14 @@ openssl源代码
         10）其他辅助函数。
     数据结构
         EVP数据结构定义在crypto/evp.h中
-        EVP_PKEY
+        EVP_PKEY    #适用于摘要算法及非对称算法（密钥部分）
             struct evp_pkey_st
             {
+                int type;
+                int save_type;
                 int references;
+                const EVP_PKEY_ASN1_METHOD *ameth;
+                ENGINE *engine;
                 union      
                 {
                      char *ptr;
@@ -1313,9 +1457,37 @@ openssl源代码
                 } pkey;
                 STACK_OF(X509_ATTRIBUTE) *attributes; /* [ 0 ] */
             };
-            该结构用来存放非对称密钥信息，可以是RSA、DSA、DH或ECC密钥。
+            该结构用来存放'非对称密钥信息'，可以是RSA、DSA、DH或ECC密钥。
             其中， ptr 用来存放密钥结构地址，attributes堆栈用来存放密钥属性。
-        EVP_MD
+        EVP_PKEY_CTX
+            struct evp_pkey_ctx_st {
+                /* Method associated with this operation */
+                const EVP_PKEY_METHOD *pmeth;
+                /* Engine that implements this method or NULL if builtin */
+                ENGINE *engine;
+                /* Key: may be NULL */
+                //ECDH密钥交换时存放己端临时公钥，SM2DHE密钥交换时存放己端固定私钥  
+                EVP_PKEY *pkey;
+                //add by zhouping SM2DHE密钥交换时存放己端临时密钥对  SM2DHE
+                EVP_PKEY *pkey_tmp;
+                /* Peer key for key agreement, may be NULL */
+                //ECDH密钥交换时存放对端临时公钥，SM2DHE密钥交换时存放对端固定公钥 
+                EVP_PKEY *peerkey;
+                //add by zhouping SM2DHE密钥交换时存放对端临时公钥  SM2DHE
+                EVP_PKEY *peerkey_tmp;
+                /* Actual operation */
+                int operation;
+                /* Algorithm specific data */
+                void *data;
+                /* Application specific data */
+                void *app_data;
+                /* Keygen callback */
+                EVP_PKEY_gen_cb *pkey_gencb;
+                /* implementation specific keygen data */
+                int *keygen_info;
+                int keygen_info_count;
+            };
+        EVP_MD      #适用于摘要算法及非对称算法（算法部分）
             struct env_md_st
             {
                 int type;
@@ -1335,7 +1507,8 @@ openssl源代码
                 int block_size;
                 int ctx_size;  # how big does the ctx->md_data need to be 
             } ;
-            该结构用来存放摘要算法信息、非对称算法类型以及各种计算函数。
+            该结构用来存放'摘要算法'信息、'非对称算法'类型以及各种计算函数。 
+            #因为非对称算法处理的原文一般是哈希值，所以将两者放在一块
             主要各项意义如下：
                 type：     摘要类型，一般是摘要算法NID；
                 pkey_type：公钥类型，一般是签名算法NID；
@@ -1350,7 +1523,17 @@ openssl源代码
                 verify：   摘要函数，其中key为非对称密钥结构地址。
             openssl对于各种摘要算法实现了上述结构，各个源码位于cypto/evp目录下，文件名以m_开头。
             Openssl通过这些结构来封装了各个摘要相关的运算。
-        EVP_CIPHER
+        EVP_MD_CTX  #适用于摘要算法及非对称算法（数据部分）
+            struct evp_md_ctx_st {
+                const EVP_MD *digest;
+                ENGINE *engine;      //functional reference if 'digest' is  ENGINE-provided
+                unsigned long flags;
+                void *md_data;
+                EVP_PKEY_CTX *pctx;  //Public key context for sign/verify
+                /* Update function: usually copied from EVP_MD */
+                int (*update) (EVP_MD_CTX *ctx, const void *data, size_t count);
+            };
+        EVP_CIPHER  #适用于对称算法（算法部分）
             struct evp_cipher_st
             {
                 int nid;
@@ -1369,7 +1552,7 @@ openssl源代码
                 int (*ctrl)(EVP_CIPHER_CTX *, int type, int arg, void *ptr);
                 void *app_data;
             } ;
-            该结构用来存放对称加密相关的信息以及算法。主要各项意义如下：
+            该结构用来存放'对称加密'相关的信息以及算法。主要各项意义如下：
                 nid：        对称算法nid；
                 block_size： 对称算法每次加解密的字节数；
                 key_len：    对称算法的密钥长度字节数；
@@ -1385,7 +1568,7 @@ openssl源代码
                 app_data：   用于存放应用数据。
             openssl对于各种对称算法实现了上述结构，各个源码位于cypto/evp目录下，文件名以e_开头。
             Openssl通过这些结构来封装了对称算法相关的运算。
-        EVP_CIPHER_CTX
+        EVP_CIPHER_CTX  #适用于对称算法（数据部分）
             struct evp_cipher_ctx_st
             {
                 const EVP_CIPHER *cipher;
@@ -1398,7 +1581,7 @@ openssl源代码
                 /* 其他 */
                 unsigned char final[EVP_MAX_BLOCK_LENGTH];
             } ;
-            对称算法上下文结构，此结构主要用来维护加解密状态，存放中间以及最后结果。
+            '对称算法上下文'结构，此结构主要用来维护加解密状态，存放中间以及最后结果。
             因为加密或解密时，当数据很多时，可能会用到Update函数，
             并且每次加密或解密的输入数据长度任意的，并不一定是对称算法block_size的整数倍，
             所以需要用该结构来存放中间未加密的数据。
@@ -1514,13 +1697,23 @@ openssl源代码
                               unsigned char **ek,int *ekl, unsigned char *iv, 
                               EVP_PKEY **pubk, int npubk)
              type为对称算法，ek数组用来存放多个公钥对密钥加密的结果，
-             ekl用于存放ek数组中每个密钥密文的长度，iv为填充值，pubk数组用来存放多个公钥，
-             npubk为公钥个数，本函数用多个公钥分别加密密钥，并做加密初始化。
+             ekl用于存放ek数组中每个密钥密文的长度，iv为填充值，
+             pubk数组用来存放多个公钥，npubk为公钥个数，
+             本函数用多个公钥分别加密密钥，并做加密初始化。
+             EVP_SealInit() 初始化 cipher ctx，从而加密时使用 type 对称加密算法
+             并使用随机的 key 和 iv. type 通常由一个函数提供，例如 EVP_aes_256_cbc().
+             密钥key 使用一个或多个公钥加密，
+             这使得相同的加密数据可以使用任意关联的私钥解密
+             ek是个 buffer 数组，公钥加密后的key会存放在这里面，
+             每个 buffer 的大小为 EVP_PKEY_get_size(pubk[i]) 个字节
+             iv 参数用以存放生成的随机 IV，必须留有足够的空间，
+             像如使用 EVP_CIPHER_get_iv_length(type) 获取空间大小
+             如果不需要，iv 参数可设置为 NULL
         12） EVP_SealUpdate
              做加密运算。
         13） EVP_SealFinal
              做加密运算，制作数字信封。
-     BASE64编解码函数
+    BASE64编解码函数
         1)   EVP_EncodeInit
              BASE64编码初始化。
         2)   EVP_EncodeUpdate
@@ -1537,7 +1730,7 @@ openssl源代码
              BASE64编码函数，本函数可单独调用。
         8）  EVP_DecodeBlock
              BASE64解码，本函数可单独调用，对输入数据长度无要求。
-     其他函数
+    其他函数
         1）  EVP_add_cipher
              将对称算法加入到全局变量，以供调用。
         2）  EVP_add_digest
@@ -1632,11 +1825,10 @@ openssl源代码
              总之，加密大块数据（比如一个大的文件，多出调用EVP_EncryptUpdate）
              的结果等效于将所有的数据一次性读入内存进行加密的结果。
              加密和解密时每次计算的数据块的大小不影响其运算结果。
-     编程示例
-        略
-            
+    编程示例
+        file://evp示例.c
 第二十二章 PEM
-    它是openssl默认采用的信息存放方式
+    -它是openssl默认采用的信息存放方式
     Openssl生成PEM格式文件的大致过程如下：
         1)    将各种数据DER编码；
         2)    将1）中的数据进行加密处理（如果需要）；
@@ -1691,12 +1883,11 @@ openssl源代码
             获取PEM数据，得到的结果为一个DER编码的明文数据，该函数先后调用了5)、6）和7）函数。
         Openssl各个类型的PEM处理函数主要是write和read函数。
         write函数用于生成PEM格式的文件，而read函数主要用于读取PEM格式的文件。
-    
 第二十三章 引擎
-    Openssl硬件引擎(Engine）能够使用户比较容易地将自己的硬件加入到openssl中去，替换其提供的软件算法。
-    一个Engine提供了密码计算中各种计算方法的集合，它用于控制openssl的各种密码计算。
+    -Openssl硬件引擎(Engine）能够使用户比较容易地将自己的硬件加入到openssl中去，替换其提供的软件算法。
+    -一个Engine提供了密码计算中各种计算方法的集合，它用于控制openssl的各种密码计算。
     Engine支持的原理
-        Openssl中的许多数据结构不仅包含数据本身，还包含各种操作，并且这些操作是可替换的。
+        Openssl中的许多数据结构不仅包含数据本身，还包含各种操作，并且这些操作是可替换的(数据与方法分离)。
         Openssl中这些结构集合一般叫做XXX_METHOD，有DSO_METHOD、DSA_METHOD、EC_METHOD、
         ECDH_METHOD、ECDSA_METHOD、DH_METHOD、RAND_METHOD、 RSA_METHOD、EVP_CIPHER和EVP_MD等。
         以RSA结构为例(crypto/rsa/rsa.h)，RSA结构不仅包含了大数n、e、d和p等等数据项目，
@@ -1710,29 +1901,159 @@ openssl源代码
     Engine数据结构
         struct engine_st
         {
-            const char *id;
-            const char *name;
-            const RSA_METHOD *rsa_meth;
-            const DSA_METHOD *dsa_meth;
-            const DH_METHOD *dh_meth;
-            const ECDH_METHOD *ecdh_meth;
-            const ECDSA_METHOD *ecdsa_meth;
-            const RAND_METHOD *rand_meth;
-            const STORE_METHOD *store_meth;
-            ENGINE_CIPHERS_PTR ciphers;
-            ENGINE_DIGESTS_PTR digests;
-            ENGINE_GEN_INT_FUNC_PTRdestroy;
-            ENGINE_GEN_INT_FUNC_PTR init;
-            ENGINE_GEN_INT_FUNC_PTR finish;
-            ENGINE_CTRL_FUNC_PTR ctrl;
-            ENGINE_LOAD_KEY_PTR load_privkey;
-            ENGINE_LOAD_KEY_PTR load_pubkey;
+            const char *id;   # ENGINE_set_id/ENGINE_get_id
+            const char *name; # ENGINE_set_name/ENGINE_get_name
+            const RSA_METHOD *rsa_meth; # ENGINE_get_RSA/ENGINE_set_RSA
+                char *name;
+                int (*rsa_pub_enc) (int flen, const unsigned char *from,
+                                    unsigned char *to, RSA *rsa, int padding);
+                int (*rsa_pub_dec) (int flen, const unsigned char *from,
+                                    unsigned char *to, RSA *rsa, int padding);
+                int (*rsa_priv_enc) (int flen, const unsigned char *from,
+                                     unsigned char *to, RSA *rsa, int padding);
+                int (*rsa_priv_dec) (int flen, const unsigned char *from,
+                                     unsigned char *to, RSA *rsa, int padding);
+                /* Can be null */
+                int (*rsa_mod_exp) (BIGNUM *r0, const BIGNUM *I, RSA *rsa, BN_CTX *ctx);
+                /* Can be null */
+                int (*bn_mod_exp) (BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
+                                   const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx);
+                /* called at new */
+                int (*init) (RSA *rsa);
+                /* called at free */
+                int (*finish) (RSA *rsa);
+                /* RSA_METHOD_FLAG_* things */
+                int flags;
+                /* may be needed! */
+                char *app_data;
+                /*
+                 * New sign and verify functions: some libraries don't allow arbitrary
+                 * data to be signed/verified: this allows them to be used. Note: for
+                 * this to work the RSA_public_decrypt() and RSA_private_encrypt() should
+                 * *NOT* be used RSA_sign(), RSA_verify() should be used instead.
+                 */
+                int (*rsa_sign) (int type,
+                                 const unsigned char *m, unsigned int m_length,
+                                 unsigned char *sigret, unsigned int *siglen,
+                                 const RSA *rsa);
+                int (*rsa_verify) (int dtype, const unsigned char *m,
+                                   unsigned int m_length, const unsigned char *sigbuf,
+                                   unsigned int siglen, const RSA *rsa);
+                /*
+                 * If this callback is NULL, the builtin software RSA key-gen will be
+                 * used. This is for behavioural compatibility whilst the code gets
+                 * rewired, but one day it would be nice to assume there are no such
+                 * things as "builtin software" implementations.
+                 */
+                int (*rsa_keygen) (RSA *rsa, int bits, BIGNUM *e, BN_GENCB *cb);
+            const DSA_METHOD *dsa_meth; # ENGINE_set_DSA
+                char *name;
+                DSA_SIG *(*dsa_do_sign) (const unsigned char *dgst, int dlen, DSA *dsa);
+                int (*dsa_sign_setup) (DSA *dsa, BN_CTX *ctx_in, BIGNUM **kinvp,
+                                       BIGNUM **rp);
+                int (*dsa_do_verify) (const unsigned char *dgst, int dgst_len,
+                                      DSA_SIG *sig, DSA *dsa);
+                int (*dsa_mod_exp) (DSA *dsa, BIGNUM *rr, const BIGNUM *a1,
+                                    const BIGNUM *p1, const BIGNUM *a2, const BIGNUM *p2,
+                                    const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *in_mont);
+                /* Can be null */
+                int (*bn_mod_exp) (DSA *dsa, BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
+                                   const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx);
+                int (*init) (DSA *dsa);
+                int (*finish) (DSA *dsa);
+                int flags;
+                void *app_data;
+                /* If this is non-NULL, it is used to generate DSA parameters */
+                int (*dsa_paramgen) (DSA *dsa, int bits,
+                                     const unsigned char *seed, int seed_len,
+                                     int *counter_ret, unsigned long *h_ret,
+                                     BN_GENCB *cb);
+                /* If this is non-NULL, it is used to generate DSA keys */
+                int (*dsa_keygen) (DSA *dsa);
+            const DH_METHOD *dh_meth;   # ENGINE_set_DH
+                char *name;
+                /* Methods here */
+                int (*generate_key) (DH *dh);
+                int (*compute_key) (unsigned char *key, const BIGNUM *pub_key, DH *dh);
+
+                /* Can be null */
+                int (*bn_mod_exp) (const DH *dh, BIGNUM *r, const BIGNUM *a,
+                                   const BIGNUM *p, const BIGNUM *m, BN_CTX *ctx,
+                                   BN_MONT_CTX *m_ctx);
+                int (*init) (DH *dh);
+                int (*finish) (DH *dh);
+                int flags;
+                char *app_data;
+                /* If this is non-NULL, it will be used to generate parameters */
+                int (*generate_params) (DH *dh, int prime_len, int generator,
+                                        BN_GENCB *cb);
+            const EC_KEY_METHOD *ec_meth;    # 注1
+                const char *name;
+                int32_t flags;
+                int (*init)(EC_KEY *key);
+                void (*finish)(EC_KEY *key);
+                int (*copy)(EC_KEY *dest, const EC_KEY *src);
+                int (*set_group)(EC_KEY *key, const EC_GROUP *grp);
+                int (*set_private)(EC_KEY *key, const BIGNUM *priv_key);
+                int (*set_public)(EC_KEY *key, const EC_POINT *pub_key);
+                int (*keygen)(EC_KEY *key);
+                int (*compute_key)(unsigned char **pout, size_t *poutlen,
+                                   const EC_POINT *pub_key, const EC_KEY *ecdh);
+                int (*sign)(int type, const unsigned char *dgst, int dlen, unsigned char
+                            *sig, unsigned int *siglen, const BIGNUM *kinv,
+                            const BIGNUM *r, EC_KEY *eckey);
+                int (*sign_setup)(EC_KEY *eckey, BN_CTX *ctx_in, BIGNUM **kinvp,
+                                  BIGNUM **rp);
+                ECDSA_SIG *(*sign_sig)(const unsigned char *dgst, int dgst_len,
+                                       const BIGNUM *in_kinv, const BIGNUM *in_r,
+                                       EC_KEY *eckey);
+
+                int (*verify)(int type, const unsigned char *dgst, int dgst_len,
+                              const unsigned char *sigbuf, int sig_len, EC_KEY *eckey);
+                int (*verify_sig)(const unsigned char *dgst, int dgst_len,
+                                  const ECDSA_SIG *sig, EC_KEY *eckey);
+                int (*encrypt)(int type, const unsigned char *in, size_t inlen,
+                               unsigned char *out, size_t *outlen, EC_KEY *ec_key);
+                ECIES_CIPHERTEXT_VALUE *(*do_encrypt)(int type, const unsigned char *in,
+                                                      size_t inlen, EC_KEY *ec_key);
+                int (*decrypt)(int type, const unsigned char *in, size_t inlen,
+                               unsigned char *out, size_t *outlen, EC_KEY *ec_key);
+                int (*do_decrypt)(int type, const ECIES_CIPHERTEXT_VALUE *in,
+                                  unsigned char *out, size_t *outlen, EC_KEY *ec_key);
+            const ECDH_METHOD *ecdh_meth;    # 注1
+            const ECDSA_METHOD *ecdsa_meth;  # 注1
+            const RAND_METHOD *rand_meth;    # ENGINE_get_RAND/ENGINE_set_RAND
+                int (*seed) (const void *buf, int num);
+                int (*bytes) (unsigned char *buf, int num);
+                void (*cleanup) (void);
+                int (*add) (const void *buf, int num, double entropy);
+                int (*pseudorand) (unsigned char *buf, int num);
+                int (*status) (void);
+            const STORE_METHOD *store_meth;  # 注1
+            ENGINE_CIPHERS_PTR ciphers;      # ENGINE_get_ciphers/ENGINE_set_ciphers
+            ENGINE_DIGESTS_PTR digests;      # ENGINE_get_digests/ENGINE_set_digests
+            ENGINE_GEN_INT_FUNC_PTR destroy; # ENGINE_set_destroy_function
+            ENGINE_GEN_INT_FUNC_PTR init;    # ENGINE_set_init_function
+            ENGINE_GEN_INT_FUNC_PTR finish;  # ENGINE_set_finish_function
+            ENGINE_CTRL_FUNC_PTR ctrl;       # ENGINE_set_ctrl_function
+            ENGINE_LOAD_KEY_PTR load_privkey;   # 注1
+            ENGINE_LOAD_KEY_PTR load_pubkey;    # 注1
             /* 其他项 */
-            int struct_ref;
-            CRYPTO_EX_DATA ex_data;
+            const ENGINE_CMD_DEFN *cmd_defns;   # 用于引擎支持自定义的控制命令，与 ctrl 方法配合使用
+                unsigned int cmd_num;       /* The command number */
+                const char *cmd_name;       /* The command name itself */
+                const char *cmd_desc;       /* A short description of the command */
+                unsigned int cmd_flags;     /* The input the command expects */
+            int struct_ref; # ENGINE_up_ref/ENGINE_free
+            CRYPTO_EX_DATA ex_data;  # STACK_OF(void) *sk; ENGINE_get_ex_data/ENGINE_set_ex_data
             struct engine_st *prev;
             struct engine_st *next;
-        };
+        };  
+        注1：
+            在 nginx 工程下的 gmssl 源码中，没有 ecdh_meth 和 ecdsa_meth 成员
+            但有 const EC_KEY_METHOD *ec_meth; 对应的设置方法为：ENGINE_set_EC
+            除此之外，还有一些数据成员不一致的地方，
+            但几乎引擎结构中所有成员，在 engine.h 中，都能找到相应的设置方法
         本结构包含大量的运算集合函数(包括各种METHOD)供用户来实现。各项意义如下：
             id：         Engine标识；
             name：       Engine的名字；
@@ -1760,21 +2081,37 @@ openssl源代码
     openssl 的Engine源码
         Openssl的Engine源码分为四类：
         1） 核心实现
-            在crypto/engine目录下，是其核心实现。
+            在crypto/engine目录下，是其核心实现，主要负责维护/管理引擎。
             当同时有多个硬件Engine时，openssl分别为cipher对称算法(tb_cipher.c)、
             dh算法(tb_dh.c)、digest摘要算法(tb_digest.c)、dsa算法(tb_dsa.c)、
             ecdh算法(tb_ecdh.c)、ecdsa算法(tb_ecdsa.c)、rand随机数算法(tb_rand.c)、
             rsa算法(tb_rsa.c)和存储方式(tb_store.c)维护一个哈希表。
             所有用户实现的硬件Engine都注册在这些全局的哈希表中。
             同时，用户使用的时候，能够指定各种算法默认的硬件Engine。
+            这就是说，不仅引擎中有指针指向不同的算法method，各算法也用过哈希表记录引擎的指针
         2） 内置硬件Engine
             源码位于engines目录，实现了一些硬件Engine。
         3)  范例
             源码位于demos/engines目录下，供用户学习参考。
-        4） 分散于其他各个运算模块用于支持Engine
+        4） 分散于其他各个运算模块用于支持Engine #即算法的实现代码中有支持引擎的机制
             各个运算模块都支持Engine，当提供了Engine时，将会采用Engine中的算法。
+            如 RAND_set_rand_engine，就是为 rand 方法设置引擎
+            内部调用 ENGINE_get_RAND 获取 RAND_METHOD * tmp
+            再通过 RAND_set_rand_method ，将 tmp 存给 default_RAND_meth
+            可以通过 RAND_get_rand_method 获取到 default_RAND_meth
+            如果没有通过 RAND_set_rand_method 设置过 default_RAND_meth
+            则 RAND_get_rand_method 内部还会调用 
+            NGINE *e = ENGINE_get_default_RAND();
+            if (e) default_RAND_meth = ENGINE_get_RAND(e);
+            ENGINE_get_default_RAND 会从 rand_table 链表中选一个合适的
+            可以调用 ENGINE_set_default_RAND，将引擎加到到 rand_table 链表中
+            当调用像如 RAND_bytes 这样的方法时，内部会
+            const RAND_METHOD *meth = RAND_get_rand_method();
+            return meth->bytes(buf, num);
+            也可以调用 ENGINE_set_default(ENGINE_METHOD_ALL), 把引擎加到各种 table 链表中
+            其它算法模块类似
     Engine函数(包括定义、实现、使用各方面)
-        主要函数如下：
+        主要函数如下（核心实现中提供的引擎管理方法、设置引擎结构的成员值等）：
         1)  ENGINE_add
             将Engine加入全局到链表中。
         2)  ENGINE_by_id
@@ -1782,7 +2119,7 @@ openssl源代码
         3） ENGINE_cleanup
             清除所有Engine数据。
         4） const EVP_CIPHER *ENGINE_get_cipher(ENGINE *e, int nid)
-            根据指定的硬件Engine以及对称算法的nid，获取Engine实现的对应的     EVP_CIPHER，用于对称计算。
+            根据指定的硬件Engine以及对称算法的nid，获取Engine实现的对应的 EVP_CIPHER，用于对称计算。
         5） ENGINE_get_cipher_engine
             根据对称算法nid来获取Engine。
         6） ENGINE_get_ciphers/ENGINE_set_ciphers
@@ -1846,6 +2183,397 @@ openssl源代码
         实现的Engine方法有：随机数方法、对称算法、摘要算法以及RSA运算算法。
         其中，RSA计算中，密钥ID存放在Engine的扩展数据结构中。
         file://Openssl引擎示例.c
+        注：上例中，是个静态引擎的示例，并包含了引擎的使用方法
+    Engine源码分析
+        跟踪 <file://Openssl引擎示例.c> 的结果
+        ENGINE_load_builtin_engines();
+        e=ENGINE_by_id(id="ID_hw");
+            RUN_ONCE(&engine_lock_init, do_engine_lock_init)
+                OPENSSL_init_crypto(0, NULL);
+                # 文件全局变量 CRYPTO_RWLOCK *global_engine_lock;
+                global_engine_lock = CRYPTO_THREAD_lock_new();
+            ENGINE *iterator = engine_list_head
+            while (iterator && (strcmp(id, iterator->id) != 0))
+                iterator = iterator->next;
+            if (iterator)
+                if (iterator->flags & ENGINE_FLAGS_BY_ID_COPY)
+                    ENGINE *cp = ENGINE_new();
+                    engine_cpy(cp, iterator);
+                    iterator = cp;
+                else
+                    iterator->struct_ref++;
+            if (iterator != NULL)
+                return iterator;
+            if (strcmp(id, "dynamic"))
+                load_dir = getenv("OPENSSL_ENGINES");
+                iterator = ENGINE_by_id("dynamic");
+                #调用 ENGINE_ctrl_cmd_string，应该了解该引擎提供的 cmd  &<ENGINE_ctrl_cmd_string>
+                ENGINE_ctrl_cmd_string(e=iterator, cmd_name="ID", arg=id, cmd_optional=0)
+                    参数有效性检查  
+                    # i 是 index 的意思， p 是 param 的意思， f 是 function 的意思  &<ENGINE_ctrl>
+                    num = ENGINE_ctrl(e, cmd=ENGINE_CTRL_GET_CMD_FROM_NAME, i=0, p=(void *)cmd_name, f=NULL)
+                        确保 e->struct_ref > 0
+                        if (cmd == ENGINE_CTRL_HAS_CTRL_FUNCTION)
+                            return (e->ctrl != NULL)
+                        如果 cmd 为如下值： #查询cmd
+                        ENGINE_CTRL_GET_FIRST_CMD_TYPE:     #获取第一个 cmd 的类型
+                        ENGINE_CTRL_GET_NEXT_CMD_TYPE:      #获取下一个 cmd 的类型
+                        ENGINE_CTRL_GET_CMD_FROM_NAME:      #根据名字获取 cmd
+                        ENGINE_CTRL_GET_NAME_LEN_FROM_CMD:  #根据 cmd 获取名字长度
+                        ENGINE_CTRL_GET_NAME_FROM_CMD:      #根据 cmd 获取名字
+                        ENGINE_CTRL_GET_DESC_LEN_FROM_CMD:  #根据 cmd 获取描述长度
+                        ENGINE_CTRL_GET_DESC_FROM_CMD:      #根据 cmd 获取描述
+                        ENGINE_CTRL_GET_CMD_FLAGS:          #获取 cmd 标记
+                            if(e->ctrl)
+                                # 也就是说，不但引擎要有 ctrl 有效指针，
+                                # 还要有 ENGINE_FLAGS_MANUAL_CMD_CTRL 标记，
+                                # 才会尝试使用引擎自己的 ctrl 方法
+                                if( e->flags & ENGINE_FLAGS_MANUAL_CMD_CTRL == 0)
+                                    # i 一般传要找的 e->cmd_defns[].cmd_num
+                                    # p 一般传要找的 e->cmd_defns[].cmd_name
+                                    # 该函数主要完成的功能就是辅助查询 e->cmd_defns[]
+                                    return int_ctrl_helper(e, cmd, i, p, f);
+                                        if (cmd == ENGINE_CTRL_GET_FIRST_CMD_TYPE)
+                                            if (e->cmd_defns==NULL)
+                                                return 0
+                                            if (e->cmd_defns->cmd_num==0)
+                                                return 0
+                                            if (e->cmd_defns->cmd_name==NULL)
+                                                return 0
+                                            return e->cmd_defns->cmd_num;
+                                        if (cmd == ENGINE_CTRL_GET_CMD_FROM_NAME)
+                                            if (e->cmd_defns == NULL)
+                                                return -1
+                                            #struct engine_st 中有成员 const ENGINE_CMD_DEFN *cmd_defns;
+                                            char * s = p;
+                                            idx = int_ctrl_cmd_by_name(e->cmd_defns, s)
+                                                int int_ctrl_cmd_is_null(const ENGINE_CMD_DEFN *defn)
+                                                    if (defn->cmd_num == 0) || (defn->cmd_name == NULL)
+                                                        return 1
+                                                    else
+                                                        return 0
+                                                while (0==int_ctrl_cmd_is_null(defn) && (strcmp(defn->cmd_name, s)!=))
+                                                    idx++;
+                                                    defn++;
+                                                #defn 是最后一个（所有成员为NULL），说明没找到
+                                                if (int_ctrl_cmd_is_null(defn)) 
+                                                    return -1
+                                                return idx
+                                            if(inx < 0)
+                                                return -1
+                                            return e->cmd_defns[idx].cmd_num;
+                                        #对于剩余的命令，要求 i 必须指定一个有效的命令号
+                                        if(e->cmd_defns == NULL)
+                                            return -1
+                                        # 找出使得 defn[idx]->cmd_num == i 的 idx，找不到返回 -1
+                                        idx = int_ctrl_cmd_by_num(e->cmd_defns,i)
+                                            # 注：defn->cmd_num 是依次增长的
+                                            while (0==int_ctrl_cmd_is_null(defn) && (defn->cmd_num < num)) 
+                                                idx++;
+                                                defn++;
+                                            if (defn->cmd_num == num)
+                                                return idx;
+                                            return -1
+                                        if(idx<0)
+                                            return -1
+                                        switch(cmd)
+                                        case ENGINE_CTRL_GET_NEXT_CMD_TYPE:
+                                            if (int_ctrl_cmd_is_null(e->cmd_defns + idx + 1))
+                                                return 0;
+                                            else
+                                                return e->cmd_defns[idx+1].cmd_num;
+                                        case ENGINE_CTRL_GET_NAME_LEN_FROM_CMD:
+                                            return strlen(e->cmd_defns[idx].cmd_name);
+                                        case ENGINE_CTRL_GET_NAME_FROM_CMD:
+                                            return BIO_snprintf(s, strlen(e->cmd_defns[idx].cmd_name) + 1,
+                                                                "%s", e->cmd_defns[idx].cmd_name);
+                                        case ENGINE_CTRL_GET_DESC_LEN_FROM_CMD:
+                                            if (e->cmd_defns[idx].cmd_desc)
+                                                return strlen(e->cmd_defns[idx].cmd_desc);
+                                            return strlen(int_no_description);
+                                        case ENGINE_CTRL_GET_DESC_FROM_CMD:
+                                            if (e->cmd_defns[idx].cmd_desc)
+                                                return BIO_snprintf(s,
+                                                                    strlen(e->cmd_defns[idx].cmd_desc) + 1,
+                                                                    "%s", e->cmd_defns[idx].cmd_desc);
+                                            return BIO_snprintf(s, strlen(int_no_description) + 1, "%s",
+                                                                int_no_description);
+                                        case ENGINE_CTRL_GET_CMD_FLAGS:
+                                            return e->cmd_defns[idx].cmd_flags;
+                                else
+                                    return e->ctrl(e, cmd, i, p, f);
+                            else
+                                return -1
+                        否则：
+                        return e->ctrl(e, cmd, i, p, f);
+                            # &<dynamic_ctrl>
+                            int dynamic_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f) (void))
+                                ...
+                    # 检查一个命令是否可用作 setting
+                    # 即检查该命令的flags包含 ENGINE_CMD_FLAG_NO_INPUT 或 ENGINE_CMD_FLAG_NUMERIC 或 ENGINE_CMD_FLAG_STRING
+                    ret = ENGINE_cmd_is_executable(e, cmd=num)
+                        int flags = ENGINE_ctrl(e, ENGINE_CTRL_GET_CMD_FLAGS, cmd, NULL, NULL)
+                        if flags & ENGINE_CMD_FLAG_NO_INPUT == 1    #!该命令不接受参数
+                        or if flags & ENGINE_CMD_FLAG_NUMERIC == 1  #!该命令接收数字参数（通过 ENGINE_ctrl 的 i 传入）
+                        or if flags & ENGINE_CMD_FLAG_STRING == 1   #!该命令接收字符串参数（通过 ENGINE_ctrl 的 p 传入）
+                            return 1
+                        return 0
+                    if (0==ret)
+                        return 0
+                    int flags = ENGINE_ctrl(e, ENGINE_CTRL_GET_CMD_FLAGS, cmd, NULL, NULL)
+                    if (flags<0)
+                        return 0  #正常不应该出现这种情况
+                    if (flags & ENGINE_CMD_FLAG_NO_INPUT)
+                        if (arg != NULL)
+                            return 0
+                        if (ENGINE_ctrl(e, num, 0, NULL, NULL) > 0)
+                            return 1
+                        return 0
+                    if (arg)
+                        if (flags & ENGINE_CMD_FLAG_STRING)
+                            if (ENGINE_ctrl(e, num, 0, (void *)arg, NULL) > 0)
+                                return 1;
+                        if (flags & ENGINE_CMD_FLAG_NUMERIC)
+                            long l = strtol(arg)
+                            if (ENGINE_ctrl(e, num, l, NULL, NULL) > 0)
+                                return 1;
+                    return 0
+                ENGINE_ctrl_cmd_string(iterator, "DIR_LOAD", "2", 0) 
+                ENGINE_ctrl_cmd_string(iterator, "DIR_ADD",load_dir, 0) 
+                ENGINE_ctrl_cmd_string(iterator, "LIST_ADD", "1", 0) 
+                ENGINE_ctrl_cmd_string(iterator, "LOAD", NULL, 0)
+                return iterator;
+        ret=RAND_set_rand_engine(ENGINE *e);
+            if (0 == ENGINE_init(e)) return 0;
+                # 初始化 engine ，主要就是增加引用计数（仅供内部调用）
+                # 每次调用该函数会增加引用计数，但只有第一调用时，才会调用 e->init
+                return engine_unlocked_init(e);
+                    int to_return = 1;
+                    if ((e->funct_ref == 0) && e->init)
+                        to_return = e->init(e);  #初始化失败时，应返回0
+                    if (to_return)
+                        e->struct_ref++;
+                        e->funct_ref++;
+                    return to_return;
+            RAND_METHOD *tmp_meth = ENGINE_get_RAND(engine);
+            if (tmp_meth == NULL)
+                ENGINE_finish(engine);
+                    if engine== NULL , return 1
+                    return engine_unlocked_finish(e, 1);
+                        e->funct_ref--;
+                        if (e->funct_ref==0 && e->finish)
+                            int to_return = e->finish(e);
+                            if (0==to_return) return 0;
+                        if(0==engine_free_util(e, 0)) return 0
+                            int i = --e->struct_ref;
+                            if(i>0) return 1
+                            engine_pkey_meths_free(e);
+                            engine_pkey_asn1_meths_free(e);
+                            if (e->destroy) e->destroy(e);
+                            CRYPTO_free_ex_data(CRYPTO_EX_INDEX_ENGINE, e, &e->ex_data);
+                            OPENSSL_free(e);
+                            return 1
+                        return to_return
+                return 0;
+            RAND_set_rand_method(tmp_meth);
+                ENGINE_finish(funct_ref);
+                funct_ref = NULL;
+                # rand_lib.c : static const RAND_METHOD *default_RAND_meth = NULL;
+                default_RAND_meth = meth;
+                return 1;
+            # rand_lib.c : static ENGINE *funct_ref = NULL;
+            funct_ref = engine;  
+            return 1
+        ret=RAND_bytes((unsigned char *)buf,num);
+            RAND_METHOD *meth = RAND_get_rand_method();
+                if (NULL == default_RAND_meth) 
+                    ENGINE *e = ENGINE_get_default_RAND();
+                        return engine_table_select(&rand_table, dummy_nid); # dummy_nid==1
+                    if (e) 
+                        default_RAND_meth = ENGINE_get_RAND(e);
+                            return e->rand_meth;
+                        if (default_RAND_meth == NULL) 
+                            ENGINE_finish(e);
+                            e = NULL;
+                    if (e)
+                        funct_ref = e;
+                    else
+                        default_RAND_meth = RAND_OpenSSL();
+                return default_RAND_meth;
+            # 可见一旦引擎自定义了 RAND_METHOD，则应该提供 RAND_METHOD 中的所有实现
+            # 否则将导致相应的函数执行失败
+            if (meth && meth->bytes)
+                return meth->bytes(buf, num);
+            return (-1);
+        EVP_CIPHER_CTX  ciph_ctx;
+        EVP_CIPHER_CTX_init(&ciph_ctx);
+            EVP_CIPHER_CTX_reset(EVP_CIPHER_CTX *c)
+                if (c == NULL)  return 1;
+        dynamic_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f) (void))  #dynamic 的 ctrl 方法  
+            struct st_dynamic_data_ctx 
+                # The DSO object we load that supplies the ENGINE code 
+                DSO *dynamic_dso;
+                # The function pointer to the version checking shared library function
+                dynamic_v_check_fn v_check;
+                # The function pointer to the engine-binding shared library function
+                dynamic_bind_engine bind_engine;
+                # The default name/path for loading the shared library 
+                char *DYNAMIC_LIBNAME;
+                # Whether to continue loading on a version check failure 
+                int no_vcheck;
+                # If non-NULL, stipulates the 'id' of the ENGINE to be loaded 
+                char *engine_id;
+                # If non-zero, a successfully loaded ENGINE should be added to the
+                # internal ENGINE list. If 2, the add must succeed or the entire load
+                # should fail.
+                int list_add_value;
+                # The symbol name for the version checking function 
+                const char *DYNAMIC_F1;
+                # The symbol name for the "initialise ENGINE structure" function 
+                const char *DYNAMIC_F2;
+                # Whether to never use 'dirs', use 'dirs' as a fallback, or only use
+                # 'dirs' for loading. Default is to use 'dirs' as a fallback.
+                int dir_load;
+                # A stack of directories from which ENGINEs could be loaded 
+                STACK_OF(OPENSSL_STRING) *dirs;
+            dynamic_data_ctx *ctx = dynamic_get_data_ctx(e);
+                dynamic_data_ctx *ctx = ENGINE_get_ex_data(e, dynamic_ex_data_idx);
+                    return CRYPTO_get_ex_data(ad=&e->ex_data, idx)
+                        return sk_void_value(ad->sk, idx);
+            int initialised = ((ctx->dynamic_dso == NULL) ? 0 : 1);
+            switch (cmd) 
+                case DYNAMIC_CMD_ID:
+                    # ENGINE_ctrl_cmd_string(iterator, "ID", "tzwysdf", 0)
+                    ctx->engine_id = p  # "tzwysdf"
+                    return 1
+                case DYNAMIC_CMD_DIR_LOAD:
+                    # ENGINE_ctrl_cmd_string(iterator, "DIR_LOAD", "2", 0)
+                    ctx->dir_load = (int)i;  # i==2, 表征如何使用 ctx->dirs
+                    return 1
+                case DYNAMIC_CMD_DIR_ADD:
+                    # ENGINE_ctrl_cmd_string(iterator, "DIR_ADD",load_dir, 0)  
+                    # load_dir == D:\ceshi\setup\OPENSSL_ENGINES
+                    char *tmp_str = OPENSSL_strdup(p);
+                    sk_OPENSSL_STRING_push(ctx->dirs, tmp_str)
+                    return 1
+                case DYNAMIC_CMD_LIST_ADD:
+                    # ENGINE_ctrl_cmd_string(iterator, "LIST_ADD", "1", 0)
+                    ctx->list_add_value = (int)i;
+                    return 1
+                case DYNAMIC_CMD_LOAD:
+                    # ENGINE_ctrl_cmd_string(iterator, "LOAD", NULL, 0)
+                    return dynamic_load(e, ctx);
+                        if (ctx->dynamic_dso == NULL)
+                            ctx->dynamic_dso = DSO_new();
+                        if (ctx->DYNAMIC_LIBNAME == NULL)
+                            DSO_ctrl(ctx->dynamic_dso, DSO_CTRL_SET_FLAGS,
+                                    DSO_FLAG_NAME_TRANSLATION_EXT_ONLY, NULL);
+                            ctx->DYNAMIC_LIBNAME = DSO_convert_filename(
+                                                        dso = ctx->dynamic_dso, 
+                                                        filename = ctx->engine_id); # "tzwysdf"
+                                if (filename == NULL)
+                                    filename = dso->filename;
+                                if (filename == NULL)
+                                    return NULL
+                                if (dso->name_converter != NULL)  # 不满足
+                                    result = dso->name_converter(dso, filename);
+                                else if (dso->meth->dso_name_converter != NULL)
+                                    result = dso->meth->dso_name_converter(dso, filename); # tzwysdf.dll
+                                if (result == NULL)
+                                    result = OPENSSL_strdup(filename);
+                                return (result);  
+                        int_load(ctx)
+                            # unless told not to, try a direct load
+                            if ((ctx->dir_load != 2)
+                                # ctx->DYNAMIC_LIBNAME == tzwysdf.dll
+                                ret = DSO_load(ctx->dynamic_dso, ctx->DYNAMIC_LIBNAME, NULL, 0)
+                                if(ret != NULL)
+                                    return 1
+                            # If we're not allowed to use 'dirs' or we have none, fail
+                            if (ctx->dir_load == 0)
+                                if((num = sk_OPENSSL_STRING_num(ctx->dirs)) < 1)
+                                    return 0
+                            for (int loop = 0; loop < num; loop++)
+                                const char *s = sk_OPENSSL_STRING_value(ctx->dirs, loop);
+                                # s == D:\ceshi\setup\OPENSSL_ENGINES
+                                char *merge = DSO_merge(ctx->dynamic_dso, ctx->DYNAMIC_LIBNAME, s);
+                                # merge == D:\ceshi\setup\OPENSSL_ENGINES\tzwysdf.dll
+                                if (DSO_load(ctx->dynamic_dso, merge, NULL, 0))
+                                    return 1
+                            return 0
+                        ctx->bind_engine = DSO_bind_func(ctx->dynamic_dso, ctx->DYNAMIC_F2)  # DYNAMIC_F2==bind_engine
+                        # Do we perform version checking?
+                        if (0 == ctx->no_vcheck)
+                            unsigned long vcheck_res = 0;
+                            ctx->v_check = DSO_bind_func(ctx->dynamic_dso, ctx->DYNAMIC_F1); # DYNAMIC_F1 == v_check
+                            if (ctx->v_check)
+                                vcheck_res = ctx->v_check(OSSL_DYNAMIC_VERSION);
+                            if (vcheck_res < OSSL_DYNAMIC_OLDEST)  # OSSL_DYNAMIC_OLDEST == (unsigned long)0x00030000
+                                return 0
+                        ENGINE cpy;
+                        memcpy(&cpy, e, sizeof(ENGINE));
+                        dynamic_fns fns;
+                            struct dynamic_fns 
+                                void *static_state;
+                                dynamic_MEM_fns mem_fns;
+                                    struct dynamic_MEM_fns 
+                                        dyn_MEM_malloc_fn malloc_fn;
+                                        dyn_MEM_realloc_fn realloc_fn;
+                                        dyn_MEM_free_fn free_fn;
+                        fns.static_state = ENGINE_get_static_state();
+                            # static int internal_static_hack = 0;
+                            return &internal_static_hack;
+                        CRYPTO_get_mem_functions(&fns.mem_fns.malloc_fn, 
+                                                 &fns.mem_fns.realloc_fn,
+                                                 &fns.mem_fns.free_fn);
+                        engine_set_all_null(e);
+                        ctx->bind_engine(e, ctx->engine_id, &fns)
+                            if (ENGINE_get_static_state() == fns->static_state) 
+                                goto skip_cbs;
+                            CRYPTO_set_mem_functions(fns->mem_fns.malloc_fn, 
+                                     fns->mem_fns.realloc_fn, 
+                                     fns->mem_fns.free_fn);
+                            skip_cbs:
+                                if (fn(e, id)) return 1
+                                return 0
+                        if (ctx->list_add_value > 0)
+                            ENGINE_add(e)
+                                engine_list_add(e)
+                        return 1
+    动态引擎 vs 静态引擎
+        OpenSSL引擎分为两类：动态引擎，Version => 0.9.7、静态引擎，0.9.7 <= Version < 1.1.0
+        静态引擎：
+            提供特定的非导出的方法，如：
+            void engine_load_capi_int(void) 
+            void engine_load_padlock_int(void)
+            在这样的函数内部，完成如下操作
+                ENGINE *e = ENGINE_new();  #创建引擎，初始引用计数为1
+                bind_capi(e);    #设置引擎：调用 ENGINE_set_xxx 设置引擎 e 的成员值
+                ENGINE_add(e);   #插入到 engine_list_head 指向的链表中，并增加引用计数
+                ENGINE_free(e);  #减小引用计数或释放对象
+                ERR_clear_error();
+            要使用这样的引擎时，在代码中手动调用上述方法，创建、设置并将引擎加入到链表中
+        动态引擎：
+            通过 IMPLEMENT_DYNAMIC_BIND_FN(bind_helper)，提供 bind_engine 导出方法
+                #static int internal_static_hack = 0;
+                extern int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) 
+                { 
+                    if (&internal_static_hack == fns->static_state) 
+                        goto skip_cbs; 
+                    CRYPTO_set_mem_functions(fns->mem_fns.malloc_fn, 
+                                             fns->mem_fns.realloc_fn, 
+                                             fns->mem_fns.free_fn); 
+                skip_cbs: 
+                    if (!fn(e, id)) return 0;  #失败返回0
+                    return 1;   #成功返回1
+                }
+            通过 IMPLEMENT_DYNAMIC_CHECK_FN，提供 v_check 导出方法
+                OPENSSL_EXPORT unsigned long v_check(unsigned long v) 
+                { 
+                    if (v >= OSSL_DYNAMIC_OLDEST)       # = 0x00030000
+                        return OSSL_DYNAMIC_VERSION;    # = 0x00030000
+                    return 0; 
+                }
     引擎编写
         https://blog.csdn.net/cqwei1987/article/details/107423111
         OpenSSL引擎分为两类：动态引擎，Version => 0.9.7、静态引擎，0.9.7 <= Version < 1.1.0
@@ -1931,6 +2659,19 @@ openssl源代码
         当硬件计算完成后通过回调函数将任务唤醒继续执行，该过程和将人物挂起的流程类似，
         通过写异步句柄的方式将人物唤醒。由于示例代码中没有使用硬件设备，
         异步模式没有进行添加，但在实际应用中确非常重要。
+    引擎部分函数源码分析
+        ENGINE_set_default(ENGINE *e, unsigned int flags)  flags==ENGINE_METHOD_ALL
+            if ((flags & ENGINE_METHOD_CIPHERS) && !ENGINE_set_default_ciphers(e))
+                return 0;
+            if ((flags & ENGINE_METHOD_DIGESTS) && !ENGINE_set_default_digests(e))
+                return 0;
+            if ((flags & ENGINE_METHOD_RSA) && !ENGINE_set_default_RSA(e))
+                return 0;
+            ...
+            ENGINE_set_default_ciphers 会把 e 添加到哈希表 cipher_table 中 
+            ENGINE_set_default_digests 会把 e 添加到哈希表 digest_table 中 
+            ENGINE_set_default_RSA 会把 e 添加到哈希表 rsa_table 中 
+            ...
     利用ENGINE替换OPENSSL中的加解密算法
         https://blog.csdn.net/bytxl/article/details/39498769
         一：ENGINE的目的：
@@ -1950,7 +2691,6 @@ openssl源代码
             4 实现真正的接口，包括RSA密钥结构的转换，如果是不能取出的私钥，
               要保存硬件设备提供的指针（通常是HANDLE）等等操作。然后调用硬件的加密解密函数。
         四：程序实例：（实现ENGINE）
-        
 第三十一章 SSL实现
     概述
         SSL协议最先由netscape公司提出，包括sslv2和sslv3两个版本
@@ -2176,49 +2916,103 @@ openssl源代码
             进行ssl握手。
     示例
         file://ssl_server.cpp | file://ssl_client.cpp
-        
 第三十二章 OpenSSL命令
-    asn1parse   是一种用来诊断ASN.1结构的工具，也能用于从ASN1.1数据中提取数据
-    dgst        用于数据摘要
-    gendh       此命令用于生成DH参数。
-    passwd      生成各种口令密文
-    rand        生成随机数   
-    genrsa      生成RSA密钥
-    req         主要用于生成和处理PKCS#10证书请求
-    x509        是一个多用途的证书工具。它可以显示证书信息、转换证书格式、签名证书请求以及改变证书的信任设置等。
-    version     印版本以及openssl其他各种信息
-    speed       用于测试库的性能
-    sess_id     SSL/TLS协议的session处理工具。
-    s_server    openssl提供的一个SSL服务程序。使用此程序前，需要生成各种证书; 
-                本命令可以用来测试ssl客户端，比如各种浏览器的https协议支持
-    s_client    一个SSL/TLS客户端程序，与s_server对应，
-                它不仅能与s_server进行通信，也能与任何使用ssl协议的其他服务程序进行通信。
-    rsa         用于处理RSA密钥、格式转换和打印信息
-    pkcs7       用于处理DER或者PEM格式的pkcs#7文件
-    dsaparam    用于生成和操作dsa参数
-    gendsa      根据DSA密钥参数生成DSA密钥，dsa密钥参数可用dsaparam命令生成
-    enc         对称加解密工具，还可以进行base64编码转换
-    ciphers     显示支持的加密套件
-    CA          是一个小型CA系统。它能签发证书请求和生成CRL。它维护一个已签发证书状态的文本数据库。
-    verify      证书验证工具
-    rsatul      本指令能够使用RSA算法签名，验证身份， 加密/解密数据
-    crl         用于处里PME或DER格式的CRL文件
-    crl2pkcs7   根据CRL或证书来生成pkcs#7消息
-    errstr      用于查询错误代码
-    ocsp        在线证书状态工具
-    pkcs12      pkcs12文件工具，能生成和分析pkcs12文件
-    pkcs8       pkcs8格式的私钥转换工具。
-    s_time      SSL/TLS性能测试工具，用于测试SSL/TSL服务
-    dhparam和dh ？
-    ecparam     椭圆曲线密钥参数生成及操作
-    ec          椭圆曲线密钥处理工具
-    dsa         处理DSA密钥、格式转换和打印信息
-    nseq        用于多个证书与netscape证书序列间相互转化
-    prime       检查一个数是否为素数
-    smime       用于处理S/MIME邮件，它能加密、解密、签名和验证S/MIME消息
-    注：这里只给出了各命令的简介，具体使用参chm文件
-        
-OpenSSL各版本区别        
+    命令简介
+        asn1parse   是一种用来诊断ASN.1结构的工具，也能用于从ASN1.1数据中提取数据
+        dgst        用于数据摘要
+        gendh       此命令用于生成DH参数。
+        passwd      生成各种口令密文
+        rand        生成随机数   
+        genrsa      生成RSA密钥
+        req         主要用于生成和处理PKCS＃10证书请求
+        x509        是一个多用途的证书工具。它可以显示证书信息、转换证书格式、签名证书请求以及改变证书的信任设置等。
+        version     印版本以及openssl其他各种信息
+        speed       用于测试库的性能
+        sess_id     SSL/TLS协议的session处理工具。
+        s_server    openssl提供的一个SSL服务程序。使用此程序前，需要生成各种证书; 
+                    本命令可以用来测试ssl客户端，比如各种浏览器的https协议支持
+        s_client    一个SSL/TLS客户端程序，与s_server对应，
+                    它不仅能与s_server进行通信，也能与任何使用ssl协议的其他服务程序进行通信。
+        rsa         用于处理RSA密钥、格式转换和打印信息
+        pkcs7       用于处理DER或者PEM格式的pkcs＃7文件
+        dsaparam    用于生成和操作dsa参数
+        gendsa      根据DSA密钥参数生成DSA密钥，dsa密钥参数可用dsaparam命令生成
+        enc         对称加解密工具，还可以进行base64编码转换
+        ciphers     显示支持的加密套件
+        CA          是一个小型CA系统。它能签发证书请求和生成CRL。它维护一个已签发证书状态的文本数据库。
+        verify      证书验证工具
+        rsatul      本指令能够使用RSA算法签名，验证身份， 加密/解密数据
+        crl         用于处里PME或DER格式的CRL文件
+        crl2pkcs7   根据CRL或证书来生成pkcs＃7消息
+        errstr      用于查询错误代码
+        ocsp        在线证书状态工具
+        pkcs12      pkcs12文件工具，能生成和分析pkcs＃12文件
+        pkcs8       pkcs8格式的私钥转换工具。
+        s_time      SSL/TLS性能测试工具，用于测试SSL/TSL服务
+        dhparam和dh ？
+        ecparam     椭圆曲线密钥参数生成及操作
+        ec          椭圆曲线密钥处理工具
+        dsa         处理DSA密钥、格式转换和打印信息
+        nseq        用于多个证书与netscape证书序列间相互转化
+        prime       检查一个数是否为素数
+        smime       用于处理S/MIME邮件，它能加密、解密、签名和验证S/MIME消息
+        注：这里只给出了各命令的简介，具体使用参chm文件
+    部分命令详解
+        req
+            https://blog.csdn.net/abccheng/article/details/82622899
+            req命令主要的功能有：
+                生成证书请求文件， 
+                查看验证证书请求文件，
+                还有就是生成自签名证书。
+            首先说明下生成证书请求需要什么：
+                申请者需要将自己的信息及其公钥放入证书请求中。
+                但在实际操作过程中，所需要提供的是私钥而非公钥，
+                因为它会自动从私钥中提取公钥。
+                另外，还需要将提供的数据进行数字签名(使用单向加密)，
+                保证该证书请求文件的完整性和一致性，
+                防止他人盗取后进行篡改
+            主要命令选项：
+                -new    :说明生成证书请求文件
+                -x509   :说明生成自签名证书（暗含了-new选项）
+                -key    :指定已有的秘钥文件生成秘钥请求，
+                         只与生成证书请求选项-new配合。
+                -newkey :-newkey是与-key互斥的，
+                         -newkey是指在生成证书请求或者自签名证书的时候自动生成密钥，
+                         然后生成的密钥名称由-keyout参数指定。
+                         当指定newkey选项时，
+                         后面指定rsa:bits说明产生rsa密钥，位数由bits指定。 
+                         如果没有指定选项-key和-newkey，默认自动生成秘钥。
+                -out    :-out 指定生成的证书请求或者自签名证书名称
+                -config :默认参数在ubuntu上为 /etc/ssl/openssl.cnf, 
+                         可以使用-config指定特殊路径的配置文件
+                -nodes  :如果指定-newkey自动生成秘钥，
+                         那么-nodes选项说明生成的秘钥不需要加密，
+                         即不需要输入passphase.   
+                -batch  :指定非交互模式，直接读取config文件配置参数，
+                         或者使用默认参数值 
+            使用举例：
+                #生成自签名证书,证书名client.crt，采用自动生成秘钥的方式，
+                #指定生成秘钥长度为1024，加密，秘钥文件client.key.
+                openssl req -x509 -newkey rsa:1024 -out client.crt -keyout client.key -batch -nodes   
+                #上面的命令加上-new选项是同样的执行效果
+                openssl req -new -x509 -newkey rsa:1024 -out client.crt -keyout client.key -batch -nodes  
+                #生成自签名证书，证书名client.crt，指定秘钥文件，秘钥文件为rsa_private_key.pem。
+                openssl req -new -x509 -key ./rsa_private_key.pem -out client.crt -nodes -batch
+                #注意下面命令不能正确执行，不加-new 命令貌似不能指定秘钥文件
+                openssl req -x509 -key ./rsa_private_key.pem -out client.crt -nodes -batch
+                #指定秘钥文件pri_key.pem，生成证书请求文件 req.csr
+                openssl req -new -key pri_key.pem -out req.csr
+                #使用req命令，以文本方式查看刚生成的证书请求文件
+                openssl req -in req1.csr -text
+                #查看证书请求文件的公钥， 这个公钥就是从pri_key.pem私钥文件导出的公钥
+                openssl req -in req1.csr -noout -pubkey
+        x509
+        s_server
+        s_client
+        speed
+        CA
+        s_time
+.OpenSSL各版本区别        
     OpenSSL版本	官方支持情况
     0.9.8 系列	不再支持
     1.0.0 系列	不再支持
@@ -2294,10 +3088,8 @@ OpenSSL各版本区别
     我们在使用 OpenSSL 时，一定要留心不同版本之间的差异，
     这种差异可能给已有的应用程序带来不兼容的问题。
     在编程时应尽量选择近期发布的 OpenSSL 系列中的稳定版本。
-    
     OpenSSL 1.1.1 新特性: 全面支持国密SM2/SM3/SM4加密算法
         https://blog.csdn.net/bruce135lee/article/details/81811403
-        
 openssl编程注意事项
     定义 EVP_CIPHER_CTX ctx; 报错
         原因： 
@@ -2314,7 +3106,70 @@ openssl编程注意事项
          原理：
             c/c++支持使用typedef将外部未知结构重命名，
             但不可以将外部未知结构定义为实例，而只能定义为指针，
-            这有点类似于只用class A声明的类，可以定义指针，不能定义实例一样
-            
-        
-                           
+            这有点类似于只用class A声明的类，可以定义指针，不能定义实例一样         
+gmssl源码编译安装——windows
+    https://blog.csdn.net/ly305750665/article/details/104052012
+    下载安装 ActivePerl  # Configure 是 Perl 脚本
+    下载安装 nasm
+        汇编语言有Intel格式和AT&T格式
+        Windows平台Intel格式最常用的是两种汇编格式：MASM和NASM格式
+        MASM是为数不多的微软开发工具之一，没有单独的16位和32位版本。
+        MASM是微软自己的独有的，不开源，且只能用于Windows平台。
+        NASM全称为Netwide Assembler ，是一款基于x86架构的汇编与反汇编软件。
+        它可以用来编写16位（8086、80286等）、32位（IA-32）和64位（x86_64）的程序。 
+        NASM被认为是Linux平台上最受欢迎的汇编工具之一。
+        nasm把.asm汇编程序编译成二进制的.obj文件，gcc再将这些文件链接成可执行文件
+        *.c --预处理--> *.i --编译--> *.s --汇编--> *.o --链接--> *.bin
+    下载gmssl 源码
+        https://kgithub.com/guanzhi/GmSSL/archive/master.zip
+    执行perl Configure 
+        perl Configure VC-WIN32 --debug --prefix=G:\SRC_REF\GmSSL2.5.4-main\inst
+        源码下没有 Configure 文件
+        最新下载的版本是 gmssl3 版本
+        在之前下载的 GmSSL2.5.4-main 下有 Configure 文件
+        所以在 GmSSL2.5.4-main 下进行源码编译
+    执行nmake (使用vs的命令行工具)
+        提示缺少 srp.h 
+            从 openssl-1.1.1k\include\openssl 下拷贝该文件
+            放到 GmSSL2.5.4-main\include\openssl 下
+        link 时，提示无法解析的外部符号：
+            libcrypto-1_1.def : error LNK2001: 无法解析的外部符号 EVP_get_ciphernames
+            libcrypto-1_1.def : error LNK2001: 无法解析的外部符号 EVP_get_digestnames
+            libcrypto.lib : fatal error LNK1120: 2 个无法解析的外部命令
+            法1：
+                修改 include\openssl\evp.h
+                由于这两个函数没有实现，也没有其它函数调用，注释掉即可
+            法2：
+                GmSSL-master\crypto\evp\names2.c文件末尾添加下面的代码：
+                static void cipher_name_len(const EVP_CIPHER *cipher, const char *from,
+                                            const char *to, void *x)
+                {
+                    *((int *)x) += strlen(EVP_CIPHER_name(cipher));
+                }
+
+                static void cipher_name(const EVP_CIPHER *cipher, const char *from,
+                    const char *to, void *x)
+                {
+                    strcat((char *)x, EVP_CIPHER_name(cipher));
+                }
+
+                char *EVP_get_ciphernames(int aliases)
+                {
+                    char *ret = NULL;
+                    int len = 0;
+                    EVP_CIPHER_do_all_sorted(cipher_name_len, &len);
+
+                    ret = OPENSSL_zalloc(len);
+                    if (!ret) {
+                        return NULL;
+                    }
+
+                    EVP_CIPHER_do_all_sorted(cipher_name, ret);
+                    return ret;
+                }
+
+                char *EVP_get_digestnames(int aliases)
+                {
+                    return "sm3:sha1:sha256";
+                }
+    执行nmake install

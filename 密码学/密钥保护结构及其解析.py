@@ -1,4 +1,4 @@
-file://imgs/密钥保护结构定义.bmp * 出自：gmt-0016
+file://imgs/3.bmp * 出自：gmt-0016
 
 注意，该结构只是个结构体（base64编码了），不是 asn1 编码格式
 

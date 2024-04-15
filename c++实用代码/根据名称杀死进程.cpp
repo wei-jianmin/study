@@ -1,6 +1,10 @@
 #include <Windows.h>
 #include <TLHELP32.H>
-//根据程序名获取进程ID
+/*根据程序名获取进程ID
+  *举例：
+  * const wchar_t* exes[]={L"WebSign0.exe",L"WebsignServer0.exe",L"WebsignServerProc0.exe"};
+  * KillProcessByName(3,exes);
+  */
 DWORD KillProcessByName(int argc,const char* argv[])
 {
 	//获取进程信息

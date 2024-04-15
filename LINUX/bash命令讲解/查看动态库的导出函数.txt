@@ -4,3 +4,9 @@ cut 截取
 c++filter 翻译符号
 
 命令： nm test.so | cut -f3 -d\  | c++filter > test.funcs.txt
+
+注：
+nm 命令能同时看到导出的，和非导出的符号
+导出的符号，其标记是 T，非导出的符号，其标记是 t
+非导出的符号，用 nm -D 是看不到的
+

@@ -1,3 +1,11 @@
+/*
+    提供的方法有：
+    GetTmpPath
+    GetOesTmpPath
+    SaveDataToPathname
+    SaveDataToTempPath
+    GetFileData
+*/
 #ifndef FS_HELPER_H_
 #define FS_HELPER_H_
 #include <stdio.h>

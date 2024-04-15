@@ -393,7 +393,10 @@ static ENGINE *engine_hwcipher(void)
               }
        return ret;
 }
- 
+
+/*
+ * 该例为静态引擎示例
+*/
 void ENGINE_load_hwcipher()
 {
        ENGINE *e_hw = engine_hwcipher();
@@ -429,9 +432,11 @@ int    main()
        ENGINE_CTRL_FUNC_PTR  func;
  
        OpenSSL_add_all_algorithms();
-       ENGINE_load_hwcipher();
        
-       e=ENGINE_by_id("ID_hw");
+       ENGINE_load_hwcipher();   //为ssl添加引擎
+       
+       e=ENGINE_by_id("ID_hw");  //获取引擎
+           
        name = (char *)ENGINE_get_name(e);
        printf("engine name :%s \n",name);
        /* 随机数生成 */
@@ -441,7 +446,7 @@ int    main()
               printf("RAND_set_rand_engine err\n");
               return -1;
        }
-       ret=ENGINE_set_default_RAND(e);
+       ret=ENGINE_set_default_RAND(e);  //将 e 注册到 tb_rand.c 的 ENGINE_TABLE 链表中
        if(ret!=1)
        {
               printf("ENGINE_set_default_RAND err\n");
@@ -451,6 +456,9 @@ int    main()
        /* 对称加密 */
        for(i=0;i<8;i++)
               memset(&key[i],i,1);
+          
+          
+          
        EVP_CIPHER_CTX_init(&ciph_ctx);
        /* 采用Engine对称算法 */
        cipher=EVP_des_ecb();

@@ -9,7 +9,7 @@ BPF过滤语法（Berkeley Packet Filter）
 tcpdump [选项] [src/dst/*dst or src] [tcp/udp/ip/arp/rarp/fddi] [[*host/net/port] ...] [not/!/and/or ...]
     数据流方向 [src/dst/*dst or src]
         默认 dst or src
-    过滤协议   [tcp/udp/ip/arp/rarp/fddi] 
+    过滤协议   [tcp/udp/ip/icmp/arp/rarp/fddi] 
         默认监听所有协议，fddi是链路层协议
     过滤类型   [[*host/net/port/portrange] ...] 
         host域名/ip地址/端口/端口范围 对应参数， 默认为host
@@ -67,18 +67,24 @@ tcpdump [选项] [src/dst/*dst or src] [tcp/udp/ip/arp/rarp/fddi] [[*host/net/port
     常用选项： [ Divv Ann pq ]
         -D 打印出系统中所有可以用tcpdump截包的网络接口。
         -i 指定监听的网络接口。 如果要抓包所有网卡，使用 -i any 
-        -q 快速输出。只输出较少的协议信息。 
-        -nn 不进行端口名称的转换。 （如果不加该选项，有时会因无法将端口转为名称，而导致没有输出）
-        -vv 输出详细的报文信息。
         -n 不把网络地址转换成名字。
-        -e 在输出行打印出数据链路层的头部信息。 
+        -nn 不进行端口名称的转换。 （如果不加该选项，有时会因无法将端口转为名称，而导致没有输出）
+        -q 快速输出。只输出较少的协议信息。 
+        -v 输出一个稍微详细的信息，例如在ip包中可以包括ttl和服务类型的信息。
+        -vv 输出详细的报文信息。
+        -e 在输出行打印出数据链路层的头部信息（用于查看数据是从mac发出的）。 
         -A 以ASCII格式打印出所有分组，并将链路层的头最小化。 
         -b 在数据-链路层上选择协议，包括ip、arp、rarp、ipx都是这一层的。
         -P 不将网络接口设置成混杂模式。
         -tt 在每一行中输出非格式化的时间戳。 
+        -w 将抓取数据包保存到本地文件中（可以在wireshark中打开查看）
 
 举例：
     如果想要获取主机192.168.228.246接收或发出的ssh包，并且不转换主机名使用如下命令： 
     #tcpdump -nn -n src host 192.168.228.246 and port 22 and tcp
     如果想要获取主机210.27.48.1除了和主机210.27.48.2之外所有主机通信的ip包，使用命令： 
     #tcpdump ip host 210.27.48.1 and ! 210.27.48.2
+    
+    错误举例：
+    tcp host ip 192.163.3.23   错误原因：tcp 层不包含ip地址（但可以使用 tcp port 1196）
+    

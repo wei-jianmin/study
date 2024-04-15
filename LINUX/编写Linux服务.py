@@ -1,4 +1,5 @@
-Linux注册服务的两种方式
+<catalog s0/s4/s8 catalog_line_prefix=+>
++Linux注册服务的两种方式
     一种是init.d的形式，一种systemd的形式
     1. /etc/init.d，对应的服务管理命令为 ： service 服务名 start
     2. systemd 对应的服务管理命令为 : systemctl start 服务名
@@ -9,13 +10,13 @@ Linux注册服务的两种方式
     红帽6的启动过程为 ： 开机自检BIOS -> MBR引导 -> GRUB菜单 -> 加载内核 -> init进程初始化
     红帽7的启动过程为 ： 开机自检BIOS -> MBR引导 -> GRUB2菜单 -> 加载内核 -> systemd进程初始化
 
-    systemd是对传统sysvinit的改进
+    +systemd是对传统sysvinit的改进
         systemd 被设计用来改进 sysvinit 的缺点，它和ubuntu的upstart是竞争对手，预计会取代它们
         systemd的目标是：尽可能启动更少进程；尽可能将更多进程并行启动。
         systemd尽可能减少对shell脚本的依赖。
         传统sysvinit使用inittab来决定运行哪些shell脚本，大量使用shell脚本被认为是效率低下无法并行的原因
 
-    init和Systemd的区别
+    +init和Systemd的区别
         init： 
             一是启动时间长，init是串行启动，只有前一个进程启动完，才会启动下一个进程
             二是启动脚本复杂，Init进程只是执行启动脚本，不管其他事情，脚本需要自己处理各种情况，这往往使得脚本变得很长
@@ -27,10 +28,13 @@ Linux注册服务的两种方式
             测试Ubuntu16/Ubuntu20/UOS，发现第一启动进程都是/sbin/init，但也能搜索到systemd进程
             测试centos，测试发现第一启动进程是systemd
     
-    systemd 为什么会有那么大的争议
+    +systemd 为什么会有那么大的争议
         https://www.zhihu.com/question/25873473
+            代码质量不高, 频繁变更设计和接口。systemd的新功能，最好都等几个版本再用
+            不考虑向后兼容
+            。。。
         
-    Rhel6 vs Rhel7 管理服务
+    +Rhel6 vs Rhel7 管理服务
         Rhel6 用 service 和 chkconfig 来管理服务，它是 SystemV 架构下的一个工具。
         Rhel7 是用 systemctl  来管理服务，它融合了之前的 service 和 chkconfig 的功能于一体（Ubuntu16下也有该工具）
         动作                  Rhel6 旧指令                          Rhel7新指令
@@ -60,9 +64,9 @@ Linux注册服务的两种方式
 
 ======================================================================  
 
-旧的服务方式
++旧的服务方式
 
-    服务是如何自启动的：
+    +服务是如何自启动的：
         参：https://www.jianshu.com/p/5af068656d4b
 
         1. 服务脚本都是放在 /etc/init.d 目录下的
@@ -91,7 +95,7 @@ Linux注册服务的两种方式
    
     ======================================================================  
 
-    /etc/init 目录下的脚本格式样例：
+    +/etc/init 目录下的脚本格式样例：
 
        #! /bin/bash
        ### BEGIN INIT INFO
@@ -134,7 +138,7 @@ Linux注册服务的两种方式
 
     ======================================================================
 
-    LSB初始化脚本
+    +LSB初始化脚本
         上面的 ### BEGIN INIT INFO 段，就是LSB初始化脚本
         Debian 在 2015 年停止了对 LSB 的支持
         符合 LSB 标准的初始化脚本需要：
@@ -175,7 +179,7 @@ Linux注册服务的两种方式
 
     ====================================================================== 
 
-    将脚本注册成服务
+    +将脚本注册成服务
         RedHat系的操作系统自带 chkconfig 工具，可以将上面的脚本注册成服务
             使用方法参：https://www.runoob.com/linux/linux-comm-chkconfig.html
                 这是Red Hat公司遵循GPL规则所开发的程序，
@@ -204,7 +208,7 @@ Linux注册服务的两种方式
         
     ======================================================================
 
-    调用/停用服务   
+    +调用/停用服务   
         历史版本中的linux对服务的操作是通过service来完成的。
         若创建用户自定义的服务，则需要较为复杂的操作。
         目前linux新的发行版已经内置了systemctl来操作服务
@@ -213,9 +217,9 @@ Linux注册服务的两种方式
         
 ======================================================================
 
-新的服务方式
++新的服务方式
 
-    service脚本编写格式（/lib/systemd/system）
+    +service脚本编写格式（/lib/systemd/system）
         参：https://www.jianshu.com/p/92208194d700
         参：https://www.cnblogs.com/mafeng/p/10316351.html
         参：https://www.cnblogs.com/virgosnail/p/12675880.html
@@ -440,7 +444,7 @@ Linux注册服务的两种方式
         
     ======================================================================  
 
-    service脚本样例：
+    +service脚本样例：
         [Unit]
         Description=tzvirtd-Cloud cryptographic server management
         After=network-online.target
@@ -460,7 +464,7 @@ Linux注册服务的两种方式
         [Install]
         WantedBy=multi-user.target
 
-    最简化的service模板
+    +最简化的service模板
         [Unit]
         Description=simulator
         [Service]
@@ -469,10 +473,28 @@ Linux注册服务的两种方式
         ExecStop=/home/chenfan/simulator/stop.sh
         [Install]
         WantedBy=multi-user.target
+    
+    +Demo
+        [Unit]
+        Description=Esign Service
+        After=network.target
+        [Service]
+        Type=forking
+        User=root
+        ExecStart=/usr/local/bin/esign-startup.sh
+        Restart=on-failure
+        [Install]
+        WantedBy=default.target
 
+        esign-startup.sh 内容：
+        #!/bin/bash
+        JAR_PATH=/usr/local/app/esign/esign.war
+        LOG_PATH=/usr/local/app/esign/start.log
+        nohup java -Xms2048M -Xmx8192M -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=512M  
+                   -jar $JAR_PATH > $LOG_PATH 2>&1 &
     ======================================================================    
 
-    各种systemd目录的介绍
+    +各种systemd目录的介绍
         /etc/systemd  
         /run/systemd 
         /lib/systemd
@@ -519,7 +541,7 @@ Linux注册服务的两种方式
             
 ======================================================================    
 
-界面程序的崩溃自启
++界面程序的崩溃自启
     尝试的，但不可行的方法：
         通过服务，无论是直接启动WebsignServer，还是通过keepalive启动WebsignServer，都不行
         原因可能是桌面环境没准备好

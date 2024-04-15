@@ -1,3 +1,4 @@
+<catalog s0>
 几种常见的Shell
     常见的 Shell 有 sh、bash、csh、tcsh、ash、dash等。
         sh 是 UNIX 上的标准 shell，很多 UNIX 版本都配有 sh。sh 是第一个流行的 Shell。
@@ -109,7 +110,73 @@ Shell 通过PS1和PS2两个环境变量来控制提示符格式
     ${var:1}         提取子字符串（第2个字符到结尾），第一个字符从0算起
     拼接字符串         两个字符串直接拼接即可， 如echo "abc""def" 或 "abc"$var
     查找子字符串       可以expr实现，如 expr index 和 expr substr等
+    替换子字符串
+        https://blog.csdn.net/coraline1991/article/details/120235471
+        1. 替换（只替换一个）
+        用varrB=${varA/str1/str2}
+        $ var="AAAszip_BBB.zip";var2=${var/zip/ZIP};echo $var2};
+        AAAsZIP_BBB.zip
+        $ var="AAAszip_BBB.zip";var2=${var/.zip/.ZIP};echo $var2;
+        AAAszip_BBB.ZIP
+        2. 替换（替换所有）
+        用varB=${varA//str1/str2}
+        $ var="AAAszip_BBB.zip";var2=${var//zip/ZIP};echo $var2;
+        AAAsZIP_BBB.ZIP
+        3. 替换（替换开头一个）
+        用varB=${varA/#str1/str2}
+        $ var=".zipAAAszip_BBB.zip_CCC";var2=${var/#.zip/.ZIP};echo $var2;
+        .ZIPAAAszip_BBB.zip_CCC
+        不存在
+        varB=${varA//#str1/str2}
+        4. 替换（替换结尾一个）
+        用varB=${varA/%str1/str2}
+        $ var="AAAszip_BBB.zip_CCC.zip";var2=${var/%.zip/.ZIP};echo $var2;
+        AAAszip_BBB.zip_CCC.ZIP
+        不存在
+        varB=${varA//%str1/str2}
+        而且可以很好地匹配到 “.” 点号
+        5. 截取，删除右边，保留左边，从右起最短匹配
+        用$varB=${varAa%<pattern>}，
+        $ a="aaa=bbb";b=${a%=*};echo $b
+        aaa
+        $ a="http://localhost:3000/china/shanghai.html";b=${a%/*};echo $b
+        http://localhost:3000/china
+        6. 截取，删除右边，保留左边，从右起最长匹配
+        用$varb=${vara%%<pattern>}从右起最长匹配
+        $ a="http://localhost:3000/china/shanghai.html";b=${a%%/*};echo $b
+        http:
+        7. 截取，删除左边，保留右边，从左起最短匹配
+        用$varb=${vara#<pattern>}
+        $ a="aaa=bbb";b=${a#*=};echo $b
+        bbb
+        $ a="http://localhost:3000/china/shanghai.html";b=${a#*/};echo $b
+        /localhost:3000/china/shanghai.html
+        8. 截取，删除左边，保留右边，从左起最长匹配
+        用$varb=${vara##<pattern>}从左起最长匹配
+        $ a="http://localhost:3000/china/shanghai.html";b=${a##*/};echo $b
+        shanghai.html
     更多知识，参见后面的"各种括号详解/单大括号"一节
+    根据正则式提取子字符串：
+        for option in "$@"
+        do
+            case $option in
+            -help | --help | -h)
+              echo "show help"
+              ;;
+            -prefix=* | --prefix=*)
+              PREFIX=`expr "x$option" : "x-*prefix=\(.*\)"`
+              echo "-prefix"
+              ;;
+            -*)
+                echo "error : $option"
+              ;;
+            esac
+        done
+        说明
+            expr 有多种功能，这里只是展示了其中的一种 : expr 原字符串 : 正则
+            正则中，子表达式(括号里面的)，就是提取的结果
+            这里就是提取 -prefix= 或 --prefix= 后面的值，
+            前面的 x 只是标记用，确保 -prefix= 或 --prefix= 前面没有其它字符
 运算符
     数学运算
         法一：

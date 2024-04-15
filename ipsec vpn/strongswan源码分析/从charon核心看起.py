@@ -302,7 +302,7 @@ process_job
                                             PLV2_VENDOR_ID ,get_vid_data(vids[i]) )
                             //实际没有一个需要发送vnedor id 的，所以该函数相当于什么也没干
                         ike_init.c : buid_i
-                            ike_cfg_t *ike_cfg = this->ike_sa->get_ike_cfg()
+                            ike_cfg_t *ike_cfg = this->ike_sa->get_ike_cfg() 
                             this->ike_sa->set_state(IKE_CONNECTING)
                             if(!this->dh)  //条件满足
                                 if (this->old_sa && lib->settings->get_bool(lib->settings,

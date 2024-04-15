@@ -1,3 +1,4 @@
+<catalog s0>
 https://forum.huawei.com/enterprise/zh/thread-325295.html
 什么是防火墙
     防火墙这一具体设备，通常用于两个网络之间的隔离
@@ -77,6 +78,7 @@ https://forum.huawei.com/enterprise/zh/thread-325295.html
     报文在两个安全区域之间流动时，我们规定：
     报文从低级别的安全区域向高级别的安全区域流动时为入方向（Inbound），
     报文从由高级别的安全区域向低级别的安全区域流动时为出方向（Outbound）。
+    参 file://imgs/安全区域间报文的流动方向.png
     报文在两个方向上流动时，将会触发不同的安全检查。
     通过安全区域，防火墙上划分出了等级森严、关系明确的网络，
     防火墙成为连接各个网络的节点
@@ -101,7 +103,7 @@ https://forum.huawei.com/enterprise/zh/thread-330381.html
     例如，对于WINDOWS操作系统来说，这个值可能是1024~65535范围内任意的一个端口。
     这个值是不确定的，所以这里设定为任意端口。
     配置了这条规则后，PC发出的报文就可以顺利通过防火墙，到达Web服务器。
-    然后Web服务器将会向PC发送回应报文，这个报文也要穿过防火墙才能到达PC。
+    然后Web服务器将会向PC发送"回应报文"，这个报文"也"要穿过防火墙才能到达PC。
     在状态检测防火墙出现之前，包过滤防火墙还必须配置如下所示的规则2，允许反方向的报文通过
     编号    源地址      源端口     目的地址     目的端口        动作
     1       1.1.1.1     *          2.2.2.2      80              允许通过
@@ -740,7 +742,7 @@ https://forum.huawei.com/enterprise/zh/thread-227775.html
         只有完全匹配上这些要求的流量才能利用NAT地址池1中的IP做NAT转换
         （如果要针对源IP设置NAT策略，那么应该是做源NAT转换前的IP）
         配置方法：
-            # nat address-group 1 202.30.1.1 202.30.1.2                                           
+            # nat address-group 1 202.30.1.1 202.30.1.2    //创建地址池，池编号为1                                       
             # nat-policy interzone trust untrust outbound                                          
             # policy 1                                                                       
             # action source-nat                                                              
@@ -1157,10 +1159,11 @@ VPN篇 GRE
 https://forum.huawei.com/enterprise/zh/thread-260911.html
 VPN篇 L2TP VPN的诞生及演进
     说到L2TP VPN必须先将镜头切到互联网发展初期，我们还通过电话线上网的那个时代
+    注：L2TP（Layer 2 Tunneling Protocol，二层隧道协议）
     那个时代个人用户和企业用户大都通过电话线上网，
     当然企业分支机构和出差用户一般也通过 PSTN/ISDN 电话网络来访问总部网络
     PSTN（Public Switched Telephone Network）/ISDN（integrated services digital network）
-    人们将这种基于PSTN/ISDN的VPN命名为VPDN
+    人们将这种基于PSTN/ISDN的VPN命名为VPDN（Virtual Private Dial-up Network， 虚拟私有拨号网）
     L2TP VPN是VPDN技术的一种，其它的VPDN技术已经逐步退出历史舞台了
     在传统的基于PSTN/ISDN的L2TP VPN中，运营商在PSTN/ISDN和IP网络之间部署LAC（在VPDN里称为NAS，Network Access Server）
     集中为多个企业用户提供L2TP VPN专线服务，配套提供认证和计费功能

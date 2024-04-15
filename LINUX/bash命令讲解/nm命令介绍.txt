@@ -8,3 +8,6 @@ usr@usrpc:~$nm -Do /lib/*.so.*
 类似的命令还有：
 readelf --symbols  *.so.* 
 objdump -T *.so.*
+
+用 nm 命令，可以查看到导出的，和非导出的符号，导出的符号，其标记是 T，非导出的符号，其标记是 t
+对于非导出的符号，用 nm -D 是看不到的

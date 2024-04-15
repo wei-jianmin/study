@@ -1,3 +1,4 @@
+<catalog s4>
 https://blog.csdn.net/zhongmushu/article/details/108220232
     路由表
         所谓路由表，是指路由器或者其它互联网网络设备上存储的表，该表中存有到达特定网络终端的路径，

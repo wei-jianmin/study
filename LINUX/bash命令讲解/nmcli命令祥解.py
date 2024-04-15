@@ -2,6 +2,7 @@
 
 nmcli : network manager command line interface
 nmcli命令是redhat7或者centos7之后的命令，
+nmcui 是 mncli 的可视化版
 该命令可以完成网卡上所有的配置工作，并且可以写入配置文件，永久生效
 nmcli实用工具是由NetworkManager包提供 ： yum install -y NetworkManager
 关于NetworkManager

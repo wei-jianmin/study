@@ -1,5 +1,6 @@
+<catalog s0/s4 text_line_prefix=/>
 状态机数据结构
-    &<OSSL_STATEM>
+    //&<OSSL_STATEM>
     //用于状态机的结构体,该结构是SSL结构体的成员
     struct ossl_statem_st {         
         MSG_FLOW_STATE state;
@@ -15,9 +16,10 @@
         /* Should we skip the CertificateVerify message? */
         unsigned int no_cert_verify;
         int use_timer;
-    };
+        };
     typedef struct ossl_statem_st OSSL_STATEM
-    &<MSG_FLOW_STATE>
+    
+    //&<MSG_FLOW_STATE>
     typedef enum {
         /* No handshake in progress */
         MSG_FLOW_UNINITED,
@@ -31,23 +33,24 @@
         MSG_FLOW_WRITING,
         /* Handshake has finished */
         MSG_FLOW_FINISHED
-    } MSG_FLOW_STATE;
+        } MSG_FLOW_STATE;
     
-    &<READ_STATE>
+    //&<READ_STATE>
     typedef enum {
         READ_STATE_HEADER,
         READ_STATE_BODY,
         READ_STATE_POST_PROCESS
-    } READ_STATE;
+        } READ_STATE;
     
-    &<WRITE_STATE>
+    //&<WRITE_STATE>
     typedef enum {
         WRITE_STATE_TRANSITION,
         WRITE_STATE_PRE_WORK,
         WRITE_STATE_SEND,
         WRITE_STATE_POST_WORK
-    } WRITE_STATE;
-    &<WORK_STATE>
+        } WRITE_STATE;
+    
+    //&<WORK_STATE>
     typedef enum {
         /* Something went wrong */
         WORK_ERROR,
@@ -59,8 +62,9 @@
         WORK_MORE_A,
         /* We're working on phase B */
         WORK_MORE_B
-    } WORK_STATE;
-    &<OSSL_HANDSHAKE_STATE>
+        } WORK_STATE;
+    
+    //&<OSSL_HANDSHAKE_STATE>
     typedef enum {
         TLS_ST_BEFORE,
         TLS_ST_OK,
@@ -99,9 +103,10 @@
         TLS_ST_SW_CERT_STATUS,
         TLS_ST_SW_CHANGE,
         TLS_ST_SW_FINISHED
-    } OSSL_HANDSHAKE_STATE;
+        } OSSL_HANDSHAKE_STATE;
+
 记录层数据结构
-    &<RECORD_LAYER>
+    //&<RECORD_LAYER>
     typedef struct record_layer_st {
         /* The parent SSL structure */
         SSL *s;
@@ -151,8 +156,9 @@
         /* Count of the number of consecutive warning alerts received */
         unsigned int alert_count;
         DTLS_RECORD_LAYER *d;
-    } RECORD_LAYER;
-    &<SSL3_BUFFER>
+        } RECORD_LAYER;
+    
+    //&<SSL3_BUFFER>
     typedef struct ssl3_buffer_st {
         /* at least SSL3_RT_MAX_PACKET_SIZE bytes, see ssl3_setup_buffers() */
         unsigned char *buf;
@@ -164,8 +170,10 @@
         int offset;
         /* how many bytes left */
         int left;
-    } SSL3_BUFFER;
+        } SSL3_BUFFER;
+    
 状态机
+
 SSL_do_handshake(SSL *s)
 {
     s->statem.in_init!=0 &&

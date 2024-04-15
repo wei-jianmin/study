@@ -1,38 +1,41 @@
-参考：
-https://rfc2cn.com/rfc5996.html
-https://blog.csdn.net/PiPiQ_Blog/article/details/121869391
-https://blog.csdn.net/PiPiQ_Blog/article/details/123646843
+<catalog s0>
+说明：本文（rfc5996）描述了ikev2协议，取代了之前的rfc4306/rfc4718    
 
+参考：
+    https://rfc2cn.com/rfc5996.html
+    https://blog.csdn.net/PiPiQ_Blog/article/details/121869391
+    https://blog.csdn.net/PiPiQ_Blog/article/details/123646843
+    
 相关知识链接：
-Diffie-Hellman 组解释 ： https://blog.csdn.net/ever_peng/article/details/89205051
-    Diffie-Hellman (DH) 组确定了在密钥交换进程中使用的密钥的强度。 --公开的p,q值？
-    组的编号越大安全性就越高，但是也就需要更多的时间来计算密钥。
-    VPN 交换中的两个对等方必须使用同一 DH 组，该组在 IPSec 协商进程的第 1 阶段协商。
-    DH 组 1： 768 位组
-    DH 组 2： 1024 位组
-    DH 组 5： 1536 位组
-    DH 组和 Perfect Forward Secrecy (PFS)
-        除了第 1 阶段之外，您还可以在 IPSec 连接的第 2 阶段指定 Diffie-Hellman 组。 
-        第 2 阶段配置包括安全性关联 (SA) 设置，也就是数据包在两个端点之间传递时，如何对其加以保护。 
-        只有当您选择了 Perfect Forward Secrecy (PFS) 时，您才可以在第 2 阶段指定 Diffie-Hellman 组。
-        PFS 会增强密钥的安全性，因为此方法不根据之前的密钥创建新密钥。 
-        如果某个密钥泄露，新会话密钥仍是安全的。 
-        当您在第 2 阶段指定 PFS 后，每次协商新 SA 时都会出现 Diffie-Hellman 交换。
-        您为第 2 阶段选择的 DH 组不一定要与您为第 1 阶段选择的组匹配。
-    如何选择 Diffie-Hellman 组
-        第 1 阶段和第 2 阶段的默认 DH 组都是 Diffie-Hellman 组 1。 
-        该组能够提供基本的安全保护和良好的性能。 
-        如果隧道初始化和重新生成密钥的速度不重要，可使用组 2 和组 5。 
-        初始化和重新生成密钥的真实速度取决于很多因素。 
-        您可以尝试 DH 组 2 或 5 并确定较慢的性能时间是否会对您的网络造成问题。
-        如果您不能接受该性能，请改为使用编号较小的 DH 组。
-    性能分析
-        下表显示了一款生成了 2000 个 Diffie-Hellman 值的软件应用程序的输出。 这些数字适用于 1.7GHz Intel Pentium 4 CPU。
-        DH 组	密钥对数量	需要的时间	每个密钥对需要的时间
-        组 1	2000	    43 秒	    21 毫秒
-        组 2	2000	    84 秒	    42 毫秒
-        组 5	2000	    246 秒	    123 毫秒
-file://../密码学/DH算法原理及ssl实现过程.txt
+    Diffie-Hellman 组解释 ： https://blog.csdn.net/ever_peng/article/details/89205051
+        Diffie-Hellman (DH) 组确定了在密钥交换进程中使用的密钥的强度。 --公开的p,q值？
+        组的编号越大安全性就越高，但是也就需要更多的时间来计算密钥。
+        VPN 交换中的两个对等方必须使用同一 DH 组，该组在 IPSec 协商进程的第 1 阶段协商。
+        DH 组 1： 768 位组
+        DH 组 2： 1024 位组
+        DH 组 5： 1536 位组
+        DH 组和 Perfect Forward Secrecy (PFS)
+            除了第 1 阶段之外，您还可以在 IPSec 连接的第 2 阶段指定 Diffie-Hellman 组。 
+            第 2 阶段配置包括安全性关联 (SA) 设置，也就是数据包在两个端点之间传递时，如何对其加以保护。 
+            只有当您选择了 Perfect Forward Secrecy (PFS) 时，您才可以在第 2 阶段指定 Diffie-Hellman 组。
+            PFS 会增强密钥的安全性，因为此方法不根据之前的密钥创建新密钥。 
+            如果某个密钥泄露，新会话密钥仍是安全的。 
+            当您在第 2 阶段指定 PFS 后，每次协商新 SA 时都会出现 Diffie-Hellman 交换。
+            您为第 2 阶段选择的 DH 组不一定要与您为第 1 阶段选择的组匹配。
+        如何选择 Diffie-Hellman 组
+            第 1 阶段和第 2 阶段的默认 DH 组都是 Diffie-Hellman 组 1。 
+            该组能够提供基本的安全保护和良好的性能。 
+            如果隧道初始化和重新生成密钥的速度不重要，可使用组 2 和组 5。 
+            初始化和重新生成密钥的真实速度取决于很多因素。 
+            您可以尝试 DH 组 2 或 5 并确定较慢的性能时间是否会对您的网络造成问题。
+            如果您不能接受该性能，请改为使用编号较小的 DH 组。
+        性能分析
+            下表显示了一款生成了 2000 个 Diffie-Hellman 值的软件应用程序的输出。 这些数字适用于 1.7GHz Intel Pentium 4 CPU。
+            DH 组	密钥对数量	需要的时间	每个密钥对需要的时间
+            组 1	2000	    43 秒	    21 毫秒
+            组 2	2000	    84 秒	    42 毫秒
+            组 5	2000	    246 秒	    123 毫秒
+    file://../密码学/DH算法原理及ssl实现过程.txt
         
 1. 介绍
     IP安全（IPsec）为IP数据报提供：机密性、数据完整性、访问控制和数据源身份验证。

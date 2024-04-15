@@ -1,8 +1,16 @@
-<catalog s0/s4/s8 text_line_prefix=/ super_text_line_prefix=.>
-Ïà¹ØÎÄ¼ş£º
+<catalog s0/s4/s8/s12/s16/s20/s24/s28/s32 catalog_line_prefix=+>
++Ïà¹ØÎÄ¼ş£º
     file://add_optionº¯Êı.py
     file://openvpn_help.txt
-wmain
+    file://openvpnµÄcontext½á¹¹.c+
+    file://../ÖªÊ¶µã.txt
+    file://openvpnÖĞsslµÄ³õÊ¼»¯¹ı³Ì.c
+    file://ovpnlog--·ÖÎö1/ÎÄ¼ş·ÖÎö.png
+    file://ovpnlog--·ÖÎö1/_×¥°ü·ÖÎö.txt
+    file://ovpnlog/_×¥°ü·ÖÎö.txt
+    file://ovpnĞ­ÉÌ¶Ô³Æ¼ÓÃÜÃÜÔ¿.txt
+    file://ovpnÔ´Âë·ÖÎö-·şÎñ¶Ë.py
++wmain  
     /*
      * ¸Ãº¯Êı°üº¬Á½¸öÍâ²ãÑ­»·£¬Æä½á¹¹ÈçÏÂ
      *     Ã¿¸ö½ø³ÌÒ»´ÎµÄ³õÊ¼»¯
@@ -16,9 +24,13 @@ wmain
      *     Ã¿½ø³ÌÒ»´ÎµÄÇåÀí
      */
     //&<¶Ôopenvpn_mainµÄ·ÖÎö>
-    openvpn_main
-        struct context c;
-        init_static  #&<¶Ôinit_staticµÄ·ÖÎö>
+    +openvpn_main
+        struct context c; 
+        /'''init_static¼ò½é
+         ÉèÖÃËæ»úÖÖ×Ó£¬³õÊ¼»¯errorÏà¹Ø±äÁ¿£¬wsa³õÊ¼»¯£¬³õÊ¼»¯ĞÅºÅÁ¿
+         ³õÊ¼»¯Ê±¼ä£¬µ÷ÓÃssl¿âÎª³ÌĞòµÄÊı¾İ×¢²áĞÂË÷Òı£¬³õÊ¼»¯Î±Ëæ»úÊı
+         '''
+        +init_static  #&<¶Ôinit_staticµÄ·ÖÎö>
             srandomÉèÖÃËæ»úÊıÖÖ×Ó
             error_reset
                 error.cÖĞµÄ·½·¨£¬³õÊ¼»¯ÎÄ¼ş±äÁ¿
@@ -31,16 +43,39 @@ wmain
             init_ssl_lib
                 ssl.cÖĞµÄ·½·¨
                     tls_init_lib
+                        '''CRYPTO_get_ex_new_index(int class_index,
+                            long argl, void *argp,
+                            CRYPTO_EX_new *new_func,
+                            CRYPTO_EX_dup *dup_func,
+                            CRYPTO_EX_free *free_func);
+                            #define SSL_get_ex_new_index(l, p, newf, dupf, freef) 
+                             CRYPTO_get_ex_new_index(CRYPTO_EX_INDEX_SSL, l, p, newf, dupf, freef)
+                            CRYPTO_get_ex_new_index ²Ù×÷ÌØ¶¨½á¹¹µÄexdata, argpÊÇµ±Ç°µÄexdataÏî
+                            SSL_get_ex_new_index ÓÃÓÚÎªÌØ¶¨ÓÚÓ¦ÓÃ³ÌĞòµÄÊı¾İ×¢²áĞÂË÷Òı
+                        '''
                         mydata_index = SSL_get_ex_new_index(0, "struct session *", NULL, NULL, NULL);
                     crypto_init_lib
                         ÄÚ²¿Ã»ÓĞÖ´ĞĞÈÎºÎ´úÂë
             prng_init
                 crypto.cÖĞµÄ·½·¨£¬prng : pseudorandom number generator
-        do.while(c.sig->signal_received == SIGHUP)
+        /'''SIGHUPÒı·¢µÄÑ­»·£¬Ò»°ã ip-fail, tun-abort »áÒı·¢ÕâÖÖÖĞ¶Ï'''
+        +do.while(c.sig->signal_received == SIGHUP)
+            /'''windowsÏÂ£¬¸Ãº¯ÊıÖ´ĞĞÎª¿Õ£¬linuxÏÂÉèÖÃĞÅºÅ´¦Àíº¯Êı'''
             pre_init_signal_catch
-                sig.cÖĞµÄ·½·¨£¬windowsÏÂ£¬¸Ãº¯ÊıÖ´ĞĞÎª¿Õ£¬linuxÏÂÉèÖÃĞÅºÅ´¦Àíº¯Êı
+                sig.cÎÄ¼şÖĞµÄ·½·¨£¬windowsÏÂ£¬¸Ãº¯ÊıÖ´ĞĞÎª¿Õ£¬linuxÏÂÉèÖÃĞÅºÅ´¦Àíº¯Êı
+            /'''³õÊ¼»¯ context c'''
             context_clear_all_except_first_time
                 ³õÊ¼»¯ context c
+            /'''³õÊ¼»¯ĞÅºÅĞÅÏ¢¶ÔÏó£¨³ıÁËfirst_time³ÉÔ±£©   &<ovpnÖĞµÄĞÅºÅ¶ÔÏó>
+                c.sigÊÇÕû¸öcontext£¨°üÀ¨Æä×Ó½á¹¹£©ÖĞÎ¨Ò»µÄÒ»¸öÓÃÓÚ¼ÇÂ¼ĞÅºÅµÄ³ÉÔ±
+                ËüÖ¸ÏòµÄsiginfo_staticÊÇ¸öÎÄ¼ş¼¶µÄ¾²Ì¬±äÁ¿£¨sig.cÎÄ¼şÖĞ£©
+                ÀàËÆµÄ£¬»¹ÓĞÒ»¸öwin32_signal£¬ÊÇÓÃÓÚ¼ÇÂ¼¿ØÖÆÌ¨¼üÅÌÊÂ¼şµÄ
+                ÆäËü»¹ÄÜ¼ÇÂ¼ĞÅºÅµÄ£¬¿ÉÄÜ¾ÍÊÇwin32µÄÖØµş¶Ë¿Ú½á¹¹ÁË£¨overlapped_io£©¼°Æä¹ØÁª¾ä±úÁË
+                ÕâÑùµÄ½á¹¹±äÁ¿ÓĞ£º
+                context_2.(link_socket/accept_from).(reads/writes)  <-> context_2.(link_socket/accept_from).rw_handle
+                context_1.tuntap.reads/writes <-> context_1.tuntap.rw_handle
+                ×¢£ºcontext_2ÖĞÓĞ¸ö event_set ³ÉÔ±£¬ÓÃ×ö¼ÇÂ¼µÈ´ı¶à¸ö event ¶ÔÏó
+                '''
             CLEAR(siginfo_static)£¬c.sig = &siginfo_static;  
                 siginfo_staticÎªsig.hÖĞµÄÈ«¾Ö±äÁ¿
                 struct signal_info
@@ -49,9 +84,11 @@ wmain
                     volatile int source;
                     const char *signal_text;
                 } siginfo_static;
-            gc_init(&c.gc)
+            /'''À¬»ø»ØÊÕ»úÖÆ³õÊ¼»¯'''
+            +gc_init(&c.gc)
                 ²Î£ºfile://À¬»ø»ØÊÕ»úÖÆ.txt
-            c.es = env_set_create(NULL)
+            /'''³õÊ¼»¯»·¾³±äÁ¿¼¯ºÏ'''
+            +c.es = env_set_create(NULL)
                 ´´½¨ struct env_set {
                     struct gc_arena *gc;
                     struct env_item *list;
@@ -63,7 +100,8 @@ wmain
                 listÁ´±íÕ¼ÓÃµÄÄÚ´æ£¬Í¨¹ıgc¹ÜÀí²¢ÊÍ·Å
             WindowsÏÂ£¬set_win_sys_path_via_env(c.es)
                 »ñÈ¡ "SystemRoot" »·¾³±äÁ¿µÄÖµ£¬´æ¸ø c.es
-            init_management  &<init_management>
+            /'''³õÊ¼»¯ÓÃ»§Á¬½Ó¹ÜÀíÆ÷'''
+            +init_management  &<init_management>
                 init.cÖĞµÄ·½·¨
                     management = management_init();  management ÎªÈ«¾Ö±äÁ¿
                         struct management *man;
@@ -80,9 +118,11 @@ wmain
                             struct man_connection : created on socket binding and listen,
                                                     deleted on socket unbind, may handle 
                                                     multiple sequential client connections.
-            init_options(&c.options, true); //³õÊ¼»¯Ñ¡ÏîÎªÄ¬ÈÏ×´Ì¬ &<¶Ôinit_optionsµÄ·ÖÎö>
+            /'''³õÊ¼»¯ÅäÖÃĞÅÏ¢£¬¸øÒ»Ğ©ÅäÖÃÏî¸³³õÊ¼Öµ'''
+            +init_options(&c.options, true); //³õÊ¼»¯Ñ¡ÏîÎªÄ¬ÈÏ×´Ì¬ &<¶Ôinit_optionsµÄ·ÖÎö>
                 struct options options;  //¼ÇÂ¼ÃüÁîĞĞºÍÅäÖÃÎÄ¼ş
-            parse_argv(&c.options, argc, argv, msglevel=M_USAGE=45056,    //&<¶Ôparse_argvµÄ·ÖÎö>
+            /'''½âÎöÅäÖÃ²ÎÊı'''
+            +parse_argv(&c.options, argc, argv, msglevel=M_USAGE=45056,    //&<¶Ôparse_argvµÄ·ÖÎö>
                        permission_mask=OPT_P_DEFAULT, option_types_found=NULL, es=c.es);
                 ÅĞ¶ÏÈç¹ûargcĞ¡ÓÚ1£¬ÏÔÊ¾ÌáÊ¾ĞÅÏ¢£¬³ÌĞòÍË³ö
                 Èç¹ûÓĞ2¸ö²ÎÊı£¨µÚÒ»¸ö²ÎÊıÊÇ³ÌĞò±¾Éí£©£¬ÇÒµÚ¶ş¸ö²ÎÊıÊÇ --£¬¸ø³ö´íÎóÌáÊ¾
@@ -424,6 +464,7 @@ wmain
                     Èç¹ûp[0] Îª "vlan-tagging"
                     Èç¹ûp[0] Îª "vlan-accept"
                     Èç¹ûp[0] Îª "vlan-pvid"
+            /'''²å¼şÖ§³Ö'''
             Èç¹û¶¨ÒåÁË ENABLE_PLUGIN
                 init_verb_mute  //ÉèÖÃÏêÏ¸³Ì¶ÈºÍ¾²Òô¼¶±ğ  
                     set_check_status(D_LINK_ERRORS, D_READ_WRITE);
@@ -474,23 +515,29 @@ wmain
                 open_plugins(&c, bool import_options=true, int init_point=OPENVPN_PLUGIN_INIT_PRE_CONFIG_PARSE);
                     if (c->plugins && c->plugins_owned)
                         ¡£¡£¡£ÂÔ£¨µ÷ÊÔÊ±²»Âú×ãÌõ¼ş£¬ËùÒÔÃ»ÓĞÖ´ĞĞ£©
-            net_ctx_init(&c, &c.net_ctx);  //¿ÕÊµÏÖ£¬·µ»Ø0
+            /'''¿ÕÊµÏÖ£¬·µ»Ø0'''
+            net_ctx_init(&c, &c.net_ctx);  
                 networking.hÖĞµÄº¯Êı
-            init_verb_mute(&c, IVM_LEVEL_1);//³õÊ¼»¯ÈÕÖ¾¼¶±ğµÄÏêÏ¸³Ì¶È
-            init_options_dev(&c.options);
+            /'''³õÊ¼»¯ÈÕÖ¾¼¶±ğµÄÏêÏ¸³Ì¶È'''
+            +init_verb_mute(&c, IVM_LEVEL_1);   &<init_verb_mute:1>
+            /'''ÉèÖÃ options->dev '''
+            +init_options_dev(&c.options);
                 if (!options->dev && options->dev_node)  //devÅäÖÃÏî¿ØÖÆ£¬ÅäÖÃÎÄ¼şÖĞÖ¸¶¨ÁË dev tun
                     Èç¹ûÉèÖÃÁË--dev-nodeÅäÖÃÏî£¬¶øÃ»ÓĞÉèÖÃ--devÏîÊ±£¬¸ÃÌõ¼şÂú×ã
                     ¸ù¾İ options->dev_node µÄÖµµÄbasename£¬ÉèÖÃ options->dev
-            print_openssl_info(&c.options)
+            /'''´òÓ¡sslÏà¹ØĞÅÏ¢'''
+            +print_openssl_info(&c.options)
                 ¸ù¾İ c.options ÖĞµÄÅäÖÃÏî show_ciphers¡¢show_digests¡¢show_engines¡¢show_tls_ciphers¡¢show_curves
                 ¿ØÖÆÏÔÊ¾²»Í¬µÄĞÅÏ¢£¨¸ù¾İµ±Ç°µÄÅäÖÃ£¬ÕâÀïÊ²Ã´Ò²Ã»ÓĞ£©
-            do_genkey(&c.options)
+            /'''openvpn ´´½¨ÃÜÔ¿¹¤¾ß'''
+            +do_genkey(&c.options)
                 if (options->mlock && options->genkey)
                     ·Ö±ğÓÉ mlock ºÍ genkey ÅäÖÃÏî¿ØÖÆ£¬¸ù¾İµ±Ç°ÅäÖÃ£¬ÕâÀïÁ½Õß¾ùÎªfalse
                 ºóÃæµÄËùÓĞ´úÂë£¬¶¼ÊÇ»ùÓÚ genkey ÅäÖÃÎªÕæµÄ£¬
                 ¸ù¾İµ±Ç°ÅäÖÃ£¬ÕâĞ©´úÂë¾ù²»Ö´ĞĞ£¬º¯Êı·µ»Øfalse
             Èç¹ûÉÏÃæº¯ÊıÖ´ĞĞ³É¹¦£¬³ÌĞòÍË³ö
-            do_persist_tuntap(&c.options, &c.net_ctx)
+            /'''tuntap¹¤¾ß'''
+            +do_persist_tuntap(&c.options, &c.net_ctx)
                 if (options->persist_config) //¸ù¾İµ±Ç°ÅäÖÃ£¬Îªfalse
                     Èç¹û¶¨ÒåÁË ENABLE_FEATURE_TUN_PERSIST  //µ±Ç°Ã»ÓĞ¶¨Òå
                         tuncfg(...)
@@ -501,9 +548,14 @@ wmain
                     ·ñÔò
                         Êä³ö´íÎóÌáÊ¾£¬return false
             Èç¹ûÉÏÃæº¯ÊıÖ´ĞĞ³É¹¦£¬³ÌĞòÍË³ö
-            options_postprocess(&c.options);  //¶ÔÑ¡ÏîµÄºó´¦Àí &<¶Ôoptions_postprocessµÄ·ÖÎö>
+            +options_postprocess(&c.options);  //¶ÔÑ¡ÏîµÄºó´¦Àí &<¶Ôoptions_postprocessµÄ·ÖÎö>
+                /'''Ö÷ÒªÉèÖÃÁË routes¡¢push_list¡¢ncp_ciphers¡¢connection_list µÈ³ÉÔ±'''
                 options_postprocess_mutate(options);  //´¦ÀíÅäÖÃ±ä¶¯
-                    helper_xxx : ¶Ô¸´ºÏÃüÁî½øĞĞÕ¹¿ª´¦Àí
+                    #helper_xxx : ¶Ô¸´ºÏÃüÁî½øĞĞÕ¹¿ª´¦Àí
+                    /''' ¿Í»§¶Ë/·şÎñ¶Ë Â·ÓÉÏà¹ØÉèÖÃ
+                     µ±Îª·şÎñ¶Ë£¬ÇÒÍØÆËÎª TOP_NET30 »ò TOP_P2P£¬£¨todo)
+                     µ±Îª¿Í»§¶Ë£¬ÉèÖÃ o->pull = true; o->pull = true;
+                     '''
                     helper_client_server(o);
                         ×÷Îª¿Í»§¶Ë/·şÎñ¶ËÊ±£¬¼ì²éÅäÖÃÏîÅäÖÃÊÇ·ñÕıÈ·£¬²¢¸ù¾İÒÑÓĞÅäÖÃÏî½øĞĞ´¦Àí
                         ·şÎñ¶Ë
@@ -511,6 +563,8 @@ wmain
                                 //Ïà¹Ø²Î¿¼£ºfile://openvpnÍøÂçÍØÆË.py
                                 if (topology == TOP_NET30 || topology == TOP_P2P) //¸ù¾İµ±Ç°ÅäÖÃ£¬topology==TOP_NET30
                                     helper_add_route(o->server_network, o->server_netmask, o)
+                                        add_route_to_option_list£¨o->routes,network,netmask,0,0)
+                                        ' route_option_list *routes;
                                     push_option(o, print_opt_route(o->server_network + 1, 0, &o->gc), M_USAGE);
                                         ¸ù¾İ²ÎÊı´«À´µÄ×Ö·û´®£¬×éÖ¯Îª push_entry ½á¹¹£¬·ÅÈë o->push_list ÖĞ
                                         push "route 10.8.0.1"
@@ -520,11 +574,13 @@ wmain
                         ¿Í»§¶Ë
                             o->pull = true;   //¿ØÖÆ´Ó·şÎñ¶ËÀ­È¡ÅäÖÃÏî
                             o->tls_client = true;
+                    /'''·şÎñ¶ËÊ±£¬push pingÊ±¼ä¼ä¸ô'''
                     helper_keepalive(o);  //´¦Àí keepalive ÅäÖÃÏî
                         ÉèÖÃ o->ping_rec_timeout_action¡¢o->ping_send_timeout¡¢o->ping_rec_timeout
                         Èç¹û o->mode == MODE_SERVER
                             push "ping 10"
                             push "ping-restart 60"
+                    /'''µ±Îª·şÎñ¶Ë£¬ÇÒ°üº¬ SF_TCP_NODELAY_HELPER ÅäÖÃÊ±£¨µ±Ç°²»Âú×ã£©Ìá¸ß´«ÊäĞ§ÂÊ'''
                     helper_tcp_nodelay(o);  // ´¦Àí tcp-nodelay ÅäÖÃÏî
                         Èç¹û o->server_flags °üº¬ SF_TCP_NODELAY_HELPER £¨¸ù¾İµ±Ç°ÅäÖÃ£¬²»Âú×ã¸ÃÌõ¼ş£¬server_flags==0£©
                             o->sockflags |= SF_TCP_NODELAY;
@@ -532,6 +588,7 @@ wmain
                                 push "socket-flags TCP_NODELAY"
                                     TCP_NODELAYÑ¡ÏîÊÇÓÃÀ´¿ØÖÆÊÇ·ñ¿ªÆôNagleËã·¨£¬
                                     ¸ÃËã·¨ÊÇÎªÁËÌá¸ß½ÏÂıµÄ¹ãÓòÍø´«ÊäĞ§ÂÊ
+                    /'''½« ciphername="SMS4-CBC" Ìí¼Óµ½ o->ncp_ciphers ÖĞ; o->enable_ncp_fallback = true;'''
                     options_postprocess_cipher(o);
                         if (!o->pull && !(o->mode == MODE_SERVER))  //o->pull:¿ØÖÆ´Ó¶Ô¶Ë½ÓÊÕÅäÖÃÑ¡Ïî£¬¸ù¾İµ±Ç°ÅäÖÃ£¬¸ÃÖµÎªfalse
                             µ±Îª·ÇSERVERÊ±£¬²Å»áÖ´ĞĞ¸ÃÌõ¼şÏÂÃæµÄÓï¾ä
@@ -543,11 +600,13 @@ wmain
                         else if (!o->enable_ncp_fallback && !tls_item_in_cipher_list(o->ciphername, o->ncp_ciphers))  //Âú×ã
                             o->enable_ncp_fallback = true;
                             ½« ciphername="SMS4-CBC" Ìí¼Óµ½ o->ncp_ciphers ÖĞ
-                    options_postprocess_mutate_invariant(o);  //mutate : Ê¹±ä»»£¬Ê¹¸Ä±ä
+                    /'''winÏµÍ³£¬ÇÒÎª server Ê±£¬options->tuntap_options.tap_sleep = 10; options->route_delay_defined = false;'''
+                    options_postprocess_mutate_invariant(o);  //mutate : Ê¹±ä»»£¬Ê¹¸Ä±ä£¬ invariant£º²»±äµÄ
                         Èç¹û¶¨ÒåÁË _WIN32
                             if (options->mode == MODE_SERVER)
                                 options->tuntap_options.tap_sleep = 10;
                                 options->route_delay_defined = false;
+                    /'''o->ncp_ciphers ¹ıÂËµôlibcrypto¿â²»Ö§³ÖµÄËã·¨ '''
                     if (o->ncp_enabled)  //true ,  NCP: ÍøÂç¿ØÖÆĞ­Òé Network Control Protocol
                         ncpĞ­Òé¼ò½é
                             ÀıÈç£¬Èç¹ûÒ»¸öÓÃ»§Òª²¦ºÅ½øÈëÂ·ÓÉÆ÷£¬¸ÃÓÃ»§µÄ»úÆ÷Ò»°ã²»ÖªµÀÒªÊ¹ÓÃÄÄ¸öIPµØÖ·£¬
@@ -555,8 +614,9 @@ wmain
                         o->ncp_ciphers = mutate_ncp_cipher_list(o->ncp_ciphers, &o->gc);
                             ¹ıÂËµôlibcrypto¿âÖĞ²»Ö§³ÖµÄËã·¨£¨Èç¹û·¢ÏÖ¿â²»Ö§³ÖµÄËã·¨¾Í·µ»Ø¿Õ£©
                         Èç¹û o->ncp_ciphers Îª¿Õ£¬ÌáÊ¾´æÔÚ²»Ö§³ÖµÄ ciphers »ò  ciphersµÄ×Ü³¤¶È³¬¹ı127×Ö½Ú
-                    if (o->remote_list && !o->connection_list)
-                    else if (!o->remote_list && !o->connection_list)    
+                    /'''½«remote_list×ªÎªconnection_list'''
+                    if (o->remote_list && !o->connection_list) //¿Í»§¶ËÊ±Âú×ã
+                    else if (!o->remote_list && !o->connection_list)  
                         struct connection_entry *ace = alloc_connection_entry(o, M_USAGE);
                             struct connection_list *l = alloc_connection_list_if_undef(options);
                                 if (options->connection_list == null)
@@ -565,6 +625,8 @@ wmain
                             ½« e ·Åµ½ l->array[] ÖĞ
                             ·µ»Ø e
                         *ace = o->ce  // o->ce ÊÇÔÚ³õÊ¼»¯µÄÊ±ºòÎ£»ú¸ĞÉèÖÃµÄ
+                    /'''±éÀúconnection_list£¬¸ù¾İÏÖÓĞĞÅÏ¢£¬ĞŞ¸Ä/ÉèÖÃÒ»Ğ©³ÉÔ±Öµ£»
+                        if(o->persist_key) Ô¤¼ÓÔØ tls_auth_file¡¢tls_crypt_file¡¢tls_crypt_v2_file'''
                     for i in o->connection_list->len
                         options_postprocess_mutate_ce(o, o->connection_list->array[i]);
                             if (o->server_defined || o->server_bridge_defined || o->server_bridge_proxy_dhcp) // server_definedÎªtrue
@@ -578,20 +640,25 @@ wmain
                                     #connection_entry_preload_key(const char **key_file, bool *key_inline,struct gc_arena *gc)
                                     if (key_file && *key_file && !(*key_inline))
                                         Ìõ¼ş²»Âú×ã£¨*key_fileÎª¿Õ£©£¬²»Ö´ĞĞ
+                    /'''ÉèÖÃo->dh_file = NULL'''
                     if (o->tls_server)
                          if (o->dh_file == "none")  //true
                             o->dh_file = NULL
+                    /'''Ã»Ö´ĞĞ'''
                     if (o->http_proxy_override)  //false
                         options_postprocess_http_proxy_override(o);
+                     /'''Ã»Ö´ĞĞ'''
                      pre_pull_save(o);
                         if (o->pull)  //false
                             ...
+                /'''¼ìÑéÅäÖÃÏî'''
                 options_postprocess_verify(options);
                     if (o->connection_list)
                         for i in o->connection_list->len  //len=1
                             options_postprocess_verify_ce(o, o->connection_list->array[i]);
                                 ¼ì²é options->dev ÊÇ·ñÎª·Ç¿Õ £¨="tun"£©
                                 ¼ì²éce×Ó³ÉÔ±¡¢option×Ó³ÉÔ±µÈ£¬Èç¹ûÓÃ·¨²»¶Ô£¬¸ø³öÌáÊ¾ĞÅÏ¢
+                /'''¼ìÑéÅäÖÃÏî'''
                 options_postprocess_filechecks(options);
                     check_file_access_inline(bool is_inline, const int type, const char *file, const int mode, const char *opt)
                         if (is_inline)  return false;
@@ -614,13 +681,17 @@ wmain
                     ×Ü½á£º
                         ¸Ãº¯Êı¼ì²é optionsÏÂµÄ dh_file¡¢ca_path¡¢extra_certs_file¡¢pkcs12_file¡¢chroot_dir¡¢
                         tls_auth_file¡¢tls_crypt_file¡¢tls_crypt_v2_file¡¢shared_secret_file¡£¡£¡£ÊÇ·ñ¾ßÓĞÖ¸¶¨µÄÈ¨ÏŞ
-            show_settings(&c.options);
+            /'''ÏÔÊ¾ÅäÖÃĞÅÏ¢'''
+            +show_settings(&c.options);
                 ¸ù¾İÅäÖÃµÄµ÷ÊÔĞÅÏ¢µÇ¼Ç£¬¿ØÖÆÏÔÊ¾ÅäÖÃĞÅÏ¢
-            show_windows_version(M_INFO);
+            /'''ÏÔÊ¾Windows°æ±¾ĞÅÏ¢'''
+            +show_windows_version(M_INFO);
                 ¸ù¾İÅäÖÃµÄµ÷ÊÔĞÅÏ¢µÇ¼Ç£¬¿ØÖÆÏÔÊ¾Windows°æ±¾ĞÅÏ¢
-            show_library_versions(M_INFO);
+            /'''ÏÔÊ¾ssl¿â°æ±¾ĞÅÏ¢'''
+            +show_library_versions(M_INFO);
                 ¸ù¾İÅäÖÃµÄµ÷ÊÔĞÅÏ¢µÇ¼Ç£¬¿ØÖÆÏÔÊ¾ssl¿â°æ±¾ĞÅÏ¢
-            pre_setup(const struct options *options)
+            /'''windowsÏÂ£¬¶Ô¿ØÖÆÌ¨½øĞĞÉèÖÃ£¬¼àÊÓ¿ØÖÆÌ¨¼üÅÌÊÂ¼ş'''
+            +pre_setup(const struct options *options)
                 Èç¹û¶¨ÒåÁË _WIN32          
                     win32_signal_open(&win32_signal,
                                       int force=WSO_FORCE_CONSOLE,
@@ -630,7 +701,8 @@ wmain
                         Èç¹ûÉÏÃæµÄ³¢ÊÔÊ§°ÜÁË£¬±íÃ÷ÊÇÒ»¸ö·şÎñ
                         ÉèÖÃ¿ØÖÆÌ¨ÏûÏ¢´¦Àí¹³×Óº¯ÊıÎª£ºwin_ctrl_handler£¬´¦Àíctrl+c»òbreakÊÂ¼ş
                     Èç¹ûÎª¿ØÖÆÌ¨£¬ÉèÖÃ¿ØÖÆÌ¨±êÌâ
-            do_test_crypto(struct options *o= &c.options)
+            /'''ÔÚ¼ÓÃÜ×ÓÏµÍ³ÉÏ×ö»·»Ø²âÊÔ'''
+            +do_test_crypto(struct options *o= &c.options)
                  if (o->test_crypto)  // false
                     struct context c;
                     c.options = *o;
@@ -644,6 +716,7 @@ wmain
                         key_schedule_free(&c->c1.ks, true);
                         packet_id_free(&c->c2.crypto_options.packet_id);
                 ³ÌĞòÍË³ö
+            /'''Èç¹ûÅäÖÃÊ¹ÓÃÁ¬½Ó¹ÜÀíÆ÷£¬ÔòÍ¨¹ıÁ¬½Ó¹ÜÀíÆ÷»ñÈ¡ÓÃ»§ÃûÃÜÂë£¬·ñÔò£¬Á¢¼´»ñÈ¡ÓÃ»§ÃûÃÜÂë'''
             ¼ì²é (c.options.management_flags & MF_QUERY_PASSWORDS),
                 Èç¹û²»Í¨¹ı¹ÜÀí½Ó¿Ú»ñµÃÃÜÂë£¬Ôò²éÑ¯ÃÜÂë£¬¸ù¾İµ±Ç°ÅäÖÃ£¬Âú×ãÖ´ĞĞÌõ¼ş
                 init_query_passwords(&c);
@@ -651,6 +724,7 @@ wmain
                         pem_password_setup(c->options.key_pass_file);
                     if (c->options.auth_user_pass_file)   //Ìõ¼ş²»Âú×ã
                         auth_user_pass_setup(c->options.auth_user_pass_file, &c->options.sc_info);
+            /'''ÊÇµÚÒ»¸öÑ­»·Ê±£¬½«½ø³ÌidĞ´Èë±¾µØÎÄ¼ş'''
             if (c.first_time)  //true
                 c.did_we_daemonize = possibly_become_daemon(&c.options)  //¼ì²éÎÒÃÇÓ¦¸Ã³ÉÎªÊØ»¤½ø³ÌÂğ£¿
                     if (options->daemon)  //Ìõ¼ş²»Âú×ã
@@ -663,7 +737,8 @@ wmain
                         »ñÈ¡pid£¬Ğ´µ½ filename ÎÄ¼şÖĞ
                     if (!chroot_dir)  //Ìõ¼ş²»Âú×ã
                         saved_pid_file_name = strdup(filename)  //saved_pid_file_nameÎªÎÄ¼şÈ«¾Ö±äÁ¿
-            open_management(&c)   //&<¶Ôopen_managementµÄ·ÖÎö>
+            /'''´ò¿ªÁ¬½Ó¹ÜÀí×ÓÏµÍ³'''
+            +open_management(&c)   //&<¶Ôopen_managementµÄ·ÖÎö>
                 if (management)   //management ÎªÎÄ¼şÈ«¾Ö±äÁ¿£¬init_managementÔÚÇ°ÃæÒÑ¾­Ö´ĞĞ¹ı
                     if (c->options.management_addr)  //Ìõ¼ş²»Âú×ã
                         ¡£¡£¡£
@@ -728,15 +803,21 @@ wmain
                                     free(man);
                                 management = NULL;
                 return true
+            /'''µÈ´ıÁ¬½Ó¹ÜÀíÃÜÂë'''
             if (c.options.management_flags & MF_QUERY_PASSWORDS)  //Ìõ¼ş²»ÂúË­
                 //Èç¹ûĞèÒª£¬ÔòÍ¨¹ı¹ÜÀí½çÃæ²éÑ¯ÃÜÂë
                 init_query_passwords(&c);
-            setenv_settings(c.es, &c.options)  //½«Ä³Ğ©Ñ¡ÏîÉèÖÃÎª»·¾³±äÁ¿
-            context_init_1(&c)  //&<¶ÔmainÖĞcontext_init_1µÄ·ÖÎö>
+            /'''½«Ä³Ğ©Ñ¡ÏîÉèÖÃÎª»·¾³±äÁ¿'''
+            +setenv_settings(c.es, &c.options) 
+            /'''Ö÷ÒªÊÇÇå¿Õ c->c1£¬ÉèÖÃ c->c1 µÄ ciphername¡¢authname¡¢authname£¬ pkcs11³õÊ¼»¯£¬ÂÒĞò c->options.connection_list'''
+            +context_init_1(&c)  //&<¶ÔmainÖĞcontext_init_1µÄ·ÖÎö>
+                /'''Çå¿Õ context µÄ c1 '''
                 context_clear_1(c);
                     CLEAR(c->c1);
+                /''' c->c1->fd = -1 '''
                 packet_id_persist_init(p=&c->c1.pid_persist);
                     ½«pµÄ³ÉÔ±³õÊ¼»¯Îª¿Õ
+                /'''Èç¹ûÅäÖÃÁË remote_random£¬Ôò´òÂÒ connection_list µÄË³Ğò'''
                 init_connection_list(c);
                     if (c->options.remote_random)  //Ìõ¼ş²»Âú×ã
                         len = c->options.connection_list->len
@@ -744,31 +825,41 @@ wmain
                             j = rand() % len
                             if (i!=j)
                                 l->array[i] ºÍ l->array[j] »¥Ïà½»»»
+                /'''½« c->options µÄ ciphername¡¢authname¡¢authname £¬´æ¸ø c->c1 '''
                 save_ncp_options(c);
                     c->c1.ciphername = c->options.ciphername;
                     c->c1.authname = c->options.authname;
                     c->c1.keysize = c->options.keysize;
+                /'''pkcs11£¨ÃÜÂëÉè±¸½Ó¿Ú£¬Ö÷ÒªÊÇÓ¦ÓÃÓÚÖÇÄÜ¿¨ºÍHSM£©³õÊ¼»¯'''
                 if (c->first_time) //true
                     pkcs11_initialize(protected_auth=true, nPINCachePeriod=c->options.pkcs11_pin_cache_period=-1);
                     foreach c->options.pkcs11_providers[i]  //¸ÃÊı×éÎª¿Õ£¬Ìõ¼ş²»Âú×ã
                         pkcs11_addProvider(...)
-            do.while(c.sig->signal_received == SIGHUP)
-            do.while(c.sig->signal_received == SIGHUP)
-                switch(c.options.mode)  // = 1
-                     case MODE_POINT_TO_POINT:
-                        tunnel_point_to_point(&c);
-                     case MODE_SERVER:
+            /'''ÒòSIGUSR1Òı·¢µÄÑ­»·£¬Ò»°ãÍøÂçÍ¨ĞÅ¹ÊÕÏ»áÒı·¢ÕâÖÖĞÅºÅ'''
+            +do.while(c.sig->signal_received == SIGUSR1)
+                /'''¿Í»§¶Ë/·şÎñ¶ËËíµÀÍ¨ĞÅ£ºtunnel_point_to_point »ò tunnel_server_udp ÄÚ²¿¶¼ÊÇ¸öÑ­»·£¬Õı³£²»»áÍË³ö'''
+                +switch(c.options.mode)  // = 1
+                     /'''´¦Àí¿Í»§¶ËµÄÍ¨ĞÅ¹ı³Ì£¬¸Ãº¯ÊıÄÚÓĞ¸öÑ­»·'''
+                     +case MODE_POINT_TO_POINT:
+                        tunnel_point_to_point(&c);   //²Î£º@¶Ôtunnel_point_to_pointµÄ·ÖÎö
+                     /'''´¦Àí·şÎñ¶ËµÄÍ¨ĞÅ¹ı³Ì£¬¸Ãº¯ÊıÄÚÓĞ¸öÑ­»·'''
+                     +case MODE_SERVER:
                         tunnel_server(top=&c);
                             if (proto_is_udp(top->options.ce.proto))
                                 tunnel_server_udp(top);
                             else
                                 tunnel_server_tcp(top);  //@tunnel_server_tcp
-                c.first_time = false;   //³ÌĞò·¶Î§ÄÚµÄµÚÒ»´Îµü´ú
-
+                +c.first_time = false;   //³ÌĞò·¶Î§ÄÚµÄµÚÒ»´Îµü´ú
+                /'''Èç¹ûËíµÀÍ¨ĞÅÊÇÒòÎªÊÕµ½ĞÅºÅ¶øÍË³ö£¬Ôò´òÓ¡ĞÅºÅÄÚÈİ'''
+                +if(c->sig->signal_received)
+                    print_signal(c.sig, NULL, M_INFO);
+                /'''½«ÖØÆôĞÅºÅ´«µİ¸ø¹ÜÀí×ÓÏµÍ³£¨ÖØÆôÁ¬½Ó¹ÜÀí×ÓÏµÍ³£©'''
+                +signal_restart_status(c.sig);
 ===========================================================================================================
  
 // Top level event loop for single-threaded operation.                        
-void tunnel_server_tcp(struct context *top) //&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎö>
++&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎö>
+.void tunnel_server_tcp(struct context *top) 
     top->mode = CM_TOP
     context_clear_2(top);
          CLEAR(c->c2);
@@ -783,8 +874,7 @@ void tunnel_server_tcp(struct context *top) //&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎ
             uninit_management_callback();
             
 ===========================================================================================================
-
-&<¶Ôinit_instanceµÄ·ÖÎö>
++&<¶Ôinit_instanceµÄ·ÖÎö>
 //³õÊ¼»¯Ò»¸öËíµÀÊµÀı
 /void init_instance(struct context *c, const struct env_set *env, const unsigned int flags)    //&init_instance     
     gc_init(&c->c2.gc);
@@ -945,6 +1035,13 @@ void tunnel_server_tcp(struct context *top) //&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎ
                             ¡£¡£¡£
                         if (flags & CF_LOAD_PERSISTED_PACKET_ID)  //²»Âú×ã
                             ¡£¡£¡£
+                    '''
+                       Íê³ÉÈ«¾ÖÓÃµÄc1.ks.ssl_ctxµÄ³õÊ¼»¯
+                       Íê³É¶Ô³Æ¼ÓÃÜÓÃµÄc1.ks.key_typeµÄ³õÊ¼»¯
+                       Íê³ÉÎ±Ëæ»úÊıµÄ³õÊ¼»¯
+                       Íê³ÉÊ¹ÓÃÈÏÖ¤´«ÊäÊı¾İ£¨tls-auth£©Ê±ÓÃµÄc1.ks.tls_auth_key_typeµÄ³õÊ¼»¯
+                       Íê³ÉÊ¹ÓÃtlsÎÕÊÖ¼ÓÃÜ£¨tls-crypt£©Ê±ÓÃµÄc1.ks.tls_wrap_keyµÄ³õÊ¼»¯
+                       '''
                     do_init_crypto_tls_c1(c);   // ³õÊ¼»¯³Ö¾Ã»¯×é¼ş
                         if( c->c1.ks.ssl_ctx->ctx == null ) //Âú×ã£¬tls_ctx_initialised
                             init_ssl(options, new_ctx=&(c->c1.ks.ssl_ctx),   //³õÊ¼»¯ssl tcx£¬ËùÓĞÎÄ¼ş¶¼ÊÇpem¸ñÊ½
@@ -968,55 +1065,125 @@ void tunnel_server_tcp(struct context *top) //&<¶ÔmainÖĞµÄtunnel_server_tcpµÄ·ÖÎ
             goto sig;
        
 &<ÎÄ¼ş£ºopenvpnµÄcontext½á¹¹>       
-file://openvpnµÄcontext½á¹¹.c+
++file://openvpnµÄcontext½á¹¹.c+
 
 &<ÎÄ¼ş£ºÖªÊ¶µã>
 file://ÖªÊ¶µã.txt
 
 '''¿Í»§Ä£Ê½ÏÂµÄvpnÖ÷ÊÂ¼şÑ­»·£¬Ö»ÓĞÒ»¸övnpËíµÀÊÇ¼¤»îµÄ'''
 &<¶Ôtunnel_point_to_pointµÄ·ÖÎö>
-tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
++tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
     '''Çå¿Õc->c2'''
     context_clear_2(c)
     '''ÉèÖÃ¶Ëµ½¶ËÄ£Ê½'''
     c->mode = CM_P2P;
     '''³õÊ¼»¯ËíµÀÊµÀı£¬´¦ÀíÖ®Ç°ºÍÖ®ºóµÄĞÅºÅ¼¯ºÏ'''
-    init_instance_handle_signals(c, c->es, CC_HARD_USR1_TO_HUP);
-        pre_init_signal_catch
+    +init_instance_handle_signals(c, c->es, CC_HARD_USR1_TO_HUP);
+        +pre_init_signal_catch
             windowÏÂÊ²Ã´Ò²Ã»Ö´ĞĞ
-        init_instance  //Initialize a tunnel instance.
+        '''³õÊ¼»¯ËíµÀÊµÀı¼ò½é£º
+            ÈÃc->c2.es ¼Ì³Ğ env
+            ÎªÁ¬½Ó¹ÜÀí×ÓÏµÍ³£¨Èç¹ûÆôÓÃÁË£©ÉèÖÃ»Øµ÷º¯Êı
+            ¼Æ»®ĞÔÔİÍ£
+            ¹ûÅäÖÃÎª½»»¥Ä£Ê½£¨µ±Ç°²»ÊÇ£©£¬ÔòÔÙ´Î²éÑ¯ÓÃ»§ÃûÃÜÂë
+            Ô¤ÏÈ¶ÔÓòÃû½øĞĞ½âÎö£¨Ìõ¼ş²»Âú×ã£©
+            c->options.ce = c->options.connection_list[++i]
+            ¾¯¸æ²»Ò»ÖÂµÄÑ¡Ïî
+            ³õÊ¼»¯²å¼ş
+            ÉèÖÃtls´íÎóÊ±£¬ÊÇ²úÉúSIGUSR1ĞÅºÅ£¨¡Ì£©£¬»¹ÊÇ²úÉúSIGTERMĞÅºÅ
+            ´ò¿ª--statusÖ¸¶¨µÄÎÄ¼ş
+            ´ò¿ª--ifconfig-pool-persistÖ¸¶¨µÄÎÄ¼ş
+            ÖØÖÃocc£¨OpenVPN Configuration Control£©×´Ì¬
+            ³õÊ¼»¯eventÊÂ¼ş£¬(ÓÃÓÚµÈ´ıio)
+            ³õÊ¼»¯httpºÍsocks´úÀí£¨ÔÚlevel2µÄÉúÃüÖÜÆÚÄÚ£©
+            Îªc->c2.link_socketÉêÇë¶ÔÏó
+            ³õÊ¼»¯·ÖÆ¬¶ÔÏó£¨Ã»Ö´ĞĞ£©
+            ³õÊ¼»¯Ñ¹Ëõ¿â£¬Ã»Ö´ĞĞ
+            ³õÊ¼»¯¼ÓÃÜ²ã£¬Ö÷ÒªÉæ¼° c->c1.ks.ssl_ctx¡¢c->c1.ks.key_type¡¢c->c2.tls_multi
+            ³õÊ¼»¯Ñ¹Ëõ¿â£¬Ã»Ö´ĞĞ
+            ³õÊ¼»¯MTUÏà¹Ø±äÁ¿
+            ³õÊ¼»¯¹¤×÷Çøc->c2.buffers
+            ³õÊ¼»¯tcp/udp socket £º Ö÷ÒªÊÇÉèÖÃ c->c2.link_socket µÄ¸÷³ÉÔ±Öµ
+            ³õÊ¼»¯tun/tapÉè±¸¶ÔÏó£¨Ã»ÓĞÖ´ĞĞ£©£¬´ò¿ªÉè±¸£¬ifconfig£¬Ö´ĞĞup½Å±¾£¬µÈµÈ
+            ¸ù¾İ±¾µØºÍÔ¶³ÌÍ¨µÀÏà¹ØÑ¡Ïî£¬×ªÎª×Ö·û´®ÃèÊö£¬²¢ÉèÖÃ¸ø c->c2.tls_multi->opt
+            ³õÊ¼»¯Êä³öËÙ¶ÈÏŞÖÆ£¬Ã»ÓĞÖ´ĞĞ
+            ´ò¿ª²å¼ş OPENVPN_PLUGIN_INIT_POST_DAEMON£¬Ã»ÓĞÖ´ĞĞ
+            ÉèÖÃ³õÊ¼Á¬½ÓÊ±¼ä¶¨Ê±Æ÷
+            Íê³ÉTCP/UDP socketµÄ×îÖÕ²Ù×÷
+            ³õÊ¼»¯¸÷ÖÖ¶¨Ê±Æ÷
+            ´ò¿ª²å¼ş OPENVPN_PLUGIN_INIT_POST_UID_CHANGE£¬Ã»ÓĞÖ´ĞĞ
+            '''
+        +init_instance  //Initialize a tunnel instance.
             '''ÈÃc->c2.es ¼Ì³Ğ env'''
-            do_inherit_env(c, env);
+            +do_inherit_env(c, env);
+            '''ÎªÁ¬½Ó¹ÜÀí×ÓÏµÍ³£¨Èç¹ûÆôÓÃÁË£©ÉèÖÃ»Øµ÷º¯Êı'''
             if (c->mode == CM_P2P)   //true
                 init_management_callback_p2p
                     if (management)  //Ìõ¼ş²»Âú×ã
+            '''¼Æ»®ĞÔÔİÍ££ºÈç¹ûÊÇÊ×´ÎÑ­»·£¬ÔòÖ»ÔÚÆôÓÃÁËÁ¬½Ó¹ÜÀíÆ÷Ê±²ÅÔİÍ££¬µÈ´ı¿Í»§¶ËÁ¬½Ó£¬
+               ·ñÔò£¨²»ÊÇµÚÒ»´ÎÑ­»·£©£¬Ôò³ıÁËÓĞÁ¬½Ó¹ÜÀíÆ÷»áÔİÍ£Íâ£¬
+               Ã»ÓĞÅäÖÃÁ¬½Ó¹ÜÀíÆ÷Ê±£¬Ò²»áÔİÍ£Ò»¶ÎÊ±¼ä£¨²Å¿ªÆôÏÂ´ÎµÄÁ¬½Ó£©
+               '''
             if (c->mode == CM_P2P || c->mode == CM_TOP)  //true
                 do_startup_pause(c);
                     if (!c->first_time)
+                        '''ÈçÁ¬½Ó·şÎñ¶ËÊ§°Ü£¬SIGUSR1ĞÅºÅµ¼ÖÂµÄ¡®ÖØÆô¡¯£¬µÈ´ıÒ»¶ÎÊ±¼äºóÔÙ³¢ÊÔÁ¬½Ó'''
                         socket_restart_pause(c);
+                            ¿Í»§¶ËµÈ´ı5Ãë£¬ Èç¹ûÔÚËùÓĞµÄ connection_list ÉÏ¶¼³¢ÊÔ¹ı4±éÁË£¨ÕâÊÇµÚ5±éÁË£©£¬»¹Ã»½¨Á¢ÉÏÁ¬½Ó£¬
+                            ÔòÔÚÔö¼ÓµÈ´ıÊ±³¤£¬Ã¿´ÎÔö¼ÓµÄÊ±³¤Îª£º sec <<= min(Á¬½ÓÊ§°Ü´ÎÊı-4,15)
+                            sec = min(sec,c->options.ce.connect_retry_seconds_max)  = 300
+                            Èç¹ûÆôÓÃÁËÁ¬½Ó¹ÜÀí×ÓÏµÍ³£¬Ôò¸Ã×ÓÏµÍ³±£³Ö£¨ÖªµÀÁ¬½ÓÕß·¢ËÍrelease £©
+                            ·ñÔò£¬ sleep£¨sec£©
                     else
                         do_hold(0);   //Ê×´ÎÖ´ĞĞÕâÀï
                             if (management)  //Ìõ¼ş²»Âú×ã
+            '''Ô¤ÏÈ¶ÔÓòÃû½øĞĞ½âÎö£¨Ìõ¼ş²»Âú×ã£©'''
             if (c->options.resolve_in_advance)   //Ìõ¼ş²»Âú×ã
                 do_preresolve(c);
-            '''Ó³Éäµ±Ç°Á¬½ÓÌõÄ¿'''
-            next_connection_entry(c);
-                c->options.ce = *c->options.connection_list->array[0]
+            '''c->options.ce = c->options.connection_list[++i], c->options.unsuccessful_attempts++ '''
+            +next_connection_entry(c);
+                if(c->c1.link_socket_addr.current_remote && ¸ÃÁ´±íµÄÏÂÒ»¸ö²»Îª¿Õ)
+                    ÈÃ c->c1.link_socket_addr.current_remote Ö¸ÏòÁ´±íµÄÏÂÒ»¸ö
+                else 
+                    if ( persist_remote_ip Îª¼Ù£© #¼´²»Ê¹ÓÃ¹Ì¶¨µÄÔ¶¶ËµØÖ·
+                        clear_remote_addrlist(&c->c1.link_socket_addr, !c->options.resolve_in_advance);
+                    else
+                        c->c1.link_socket_addr.current_remote = c->c1.link_socket_addr.remote_list;
+                    c->options.unsuccessful_attempts++;
+                c->options.ce = *c->options.connection_list->array[i++]
+                '''Èç¹ûÓĞ×î´óÁ¬½Ó´ÎÊıÏŞÖÆ£¬ÔòÔÚ´ïµ½ÏŞÖÆ´ÎÊıºó£¬ÍË³ö³ÌĞò'''
+                if (c->options.connect_retry_max > 0)
+                    Èç¹ûÔÚËùÓĞ¿ÉÓÃµÄÔ¶³ÌµØÖ·ÉÏ·Ö±ğ³¢ÊÔ¹ı connect_retry_max ´Îºó»¹Ã»³É¹¦£¬Ôò·¢ËÍ M_FATAL ĞÅºÅ£¨exit(1)£©
+                '''ÖØÖÃpingÊ±¼ä'''
                 update_options_ce_post(&c->options);
-            init_verb_mute(c, IVM_LEVEL_2);
+            '''Èç¹ûÅäÖÃÎª½»»¥Ä£Ê½£¨µ±Ç°²»ÊÇ£©£¬ÔòÔÙ´Î²éÑ¯ÓÃ»§ÃûÃÜÂë
+               ÕâÒâÎ¶×Å£¬Èç¹ûÅäÖÃÎª½»»¥Ä£Ê½£¬ÔòÈç¹û±¾´ÎÁ¬½Ó·şÎñ¶ËÊ§°Ü£¬
+               ÏÂ´ÎÁ¬½Ó·şÎñ¶ËÇ°£¬Ò²»áË÷ÒªÃÜÂë
+               '''
+            if (auth_retry_get() == AR_INTERACT)
+                init_query_passwords(c);
+            '''ÉèÖÃ c->c2.log_rw ²¼¶ûÏî'''
+            +init_verb_mute(c, IVM_LEVEL_2);  
+                ÔÚ×îÍâ²ãµÄSIGHUPÑ­»·ÖĞÒ²ÉèÖÃ¹ı£¬²»¹ıÓÃµÄÊÇ IVM_LEVEL_1, 
+                ²Î @init_verb_mute:1
                 ÉèÖÃ c->c2.log_rw ²¼¶ûÏî
-            '''ÉèÖÃ´íÎóÑÓ³Ù£¬ÒÔÓ¦¶ÔÒ»Á¬´®µÄ´íÎó£¬ÕâÀïÉèÎª0'''
+            '''¿Í»§¶Ë£ºÉèÖÃ´íÎóÑÓ³Ù£¨ÒÔÓ¦¶Ô¼«¶ÌµÄÊ±¼äÄÚ³öÏÖÒ»Á¬´®µÄ´íÎó£©£¬ÕâÀïÉèÎª0'''
             set_check_status_error_delay(P2P_ERROR_DELAY_MS);  //0
+                x_cs_err_delay_ms = P2P_ERROR_DELAY_MS = 0£¨ms£©
+            '''¾¯¸æ²»Ò»ÖÂµÄÑ¡Ïî'''
+            do_option_warnings(c);
+            '''³õÊ¼»¯²å¼ş£¨Èç¹ûÅäÖÃÁËÊ¹ÓÃ²å¼ş£©'''
+            open_plugins(c, false, OPENVPN_PLUGIN_INIT_PRE_DAEMON);
             '''Æô¶¯fast io'''
             do_setup_fast_io(c);
-            '''ÉèÖÃtls´íÎóÊ±£¬²úÉúSIGUSR1ĞÅºÅ'''
+            '''ÉèÖÃtls´íÎóÊ±£¬ÊÇ²úÉúSIGUSR1ĞÅºÅ£¨¡Ì£©£¬»¹ÊÇ²úÉúSIGTERMĞÅºÅ'''
             do_signal_on_tls_errors(c);
                 c->c2.tls_exit_signal = SIGUSR1;
             '''´ò¿ª--statusÖ¸¶¨µÄÎÄ¼ş'''
             do_open_status_output(c);
             '''´ò¿ª--ifconfig-pool-persistÖ¸¶¨µÄÎÄ¼ş'''
             do_open_ifconfig_pool_persist(c);
-            '''ÖØÖÃocc×´Ì¬'''
+            '''ÖØÖÃocc£¨OpenVPN Configuration Control£©×´Ì¬'''
             c->c2.occ_op = -1
             '''³õÊ¼»¯eventÊÂ¼ş£¬(ÓÃÓÚµÈ´ıio)'''
             do_event_set_init
@@ -1024,17 +1191,33 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
             init_proxy(c);
                 ¸ù¾İÅäÖÃ£¬³õÊ¼»¯c->c1.http_proxyºÍc->c1.socks_proxy
             '''Îªc->c2.link_socketÉêÇë¶ÔÏó'''
-            do_link_socket_new(c);
-            '''³õÊ¼»¯·ÖÆ¬¶ÔÏó'''
+            +do_link_socket_new(c);
+            '''³õÊ¼»¯·ÖÆ¬¶ÔÏó£¨Ã»Ö´ĞĞ£©'''
             if (options->ce.fragmen) //0
                 c->c2.fragment = fragment_init(&c->c2.frame)
-            '''³õÊ¼»¯¼ÓÃÜ²ã'''
-            do_init_crypto(struct context *c, const unsigned int flags)
-                do_init_crypto_tls(c, flags);
-                    init_crypto_pre
-                        '''Õâµ×ÏÂÊ²Ã´Ò²Ã»Ö´ĞĞ'''
-                    '''³õÊ¼»¯ÓÀ¾Ã×é¼ş'''
-                    do_init_crypto_tls_c1
+            '''³õÊ¼»¯¼ÓÃÜ²ã£¬Ö÷ÒªÉæ¼° c->c1.ks.ssl_ctx¡¢c->c1.ks.key_type¡¢c->c2.tls_multi '''
+            +do_init_crypto(struct context *c, const unsigned int flags)
+                Èç¹ûÊÇ CM_TOP Ä£Ê½£¨µ±Ç°£©£¬flags = CF_LOAD_PERSISTED_PACKET_ID | CF_INIT_TLS_MULTI
+                '''³õÊ¼»¯ c->c1 ÖĞµÄssl»·¾³¡¢¼ÓÃÜËã·¨¡¢¹şÏ£Ëã·¨£¬ ³õÊ¼»¯ c->c2.tls_multi £º
+                   ³õÊ¼»¯ c->c1.ks.ssl_ctx£¬°üÀ¨ÉèÖÃtlsÅäÖÃÏî£¬ÉèÖÃÃÜÂëËã·¨£¬¼ÓÔØÖ¤Êé£¬¼ÓÔØË½Ô¿ÎÄ¼ş
+                   Îª c->c1.ks.key_type ÉèÖÃ¼ÓÃÜºÍ¹şÏ£Ëã·¨
+                   c->c2.tls_multi = tls_multi_init(&to)  //tls_options to;
+                   '''
+                +do_init_crypto_tls(c, flags);
+                    '''Ìõ¼ş²»Âú×ã£¬Ã»Ö´ĞĞ'''
+                    +init_crypto_pre
+                        '''¼ÓÔØÓ²¼şÒıÇæ£¨vpnÅäÖÃÊ¹ÓÃÓ²¼şÒıÇæÊ±²ÅÖ´ĞĞ£©'''
+                        if (c->options.engine)  //Îª¿Õ£¬²»Âú×ã
+                            crypto_init_lib_engine(c->options.engine);
+                        '''´ÓÎÄ¼şÖĞ¼ÓÔØ³Ö¾Ã¼ÇÂ¼µÄ packet_id (time and id) £¨½öÒ»´Î£©, ²¢ÉèÖÃ state ÎªÕæ'''
+                        if (c->options.packet_id_file)  //Îª¿Õ£¬²»Âú×ã
+                            packet_id_persist_load(&c->c1.pid_persist, c->options.packet_id_file);
+                    '''³õÊ¼»¯ÓÀ¾Ã×é¼ş:
+                       ³õÊ¼»¯ c->c1.ks.ssl_ctx£¬°üÀ¨ÉèÖÃtlsÅäÖÃÏî£¬ÉèÖÃÃÜÂëËã·¨£¬¼ÓÔØÖ¤Êé£¬¼ÓÔØË½Ô¿ÎÄ¼ş
+                       Îª c->c1.ks.key_type ÉèÖÃ¼ÓÃÜºÍ¹şÏ£Ëã·¨£¨ksÎª key_schedule ½á¹¹±äÁ¿£¬¼ÇÂ¼ÃÜÔ¿²ßÂÔĞÅÏ¢£©
+                       ÎªÎ±Ëæ»úÊıÖØÖÃnonce(ÎÄ¼şÈ«¾Ö±äÁ¿ nonce_data£©µÄ³õÊ¼ÖµÎªËæ»úÖµ 
+                       '''
+                    +do_init_crypto_tls_c1
                         Èç¹û&c->c1.ks.ssl_ctxÃ»ÓĞ³õÊ¼»¯¹ı
                             '''Initialize the OpenSSL library¡¯s global SSL context'''
                             init_ssl(options, new_ctx = &(c->c1.ks.ssl_ctx), c->c0 && c->c0->uid_gid_chroot_set)
@@ -1057,31 +1240,115 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                             prng_init(options->prng_hash, options->prng_nonce_secret_len);
                                 prng_reset_nonce(void)
                                     rand_bytes(nonce_data, size)
-                            '''³õÊ¼»¯ tls-auth/crypt/crypt-v2 ËùÓÃµÄkey'''
+                            '''³õÊ¼»¯ tls-auth/crypt/crypt-v2 ËùÓÃµÄkey£¬Ã»Ö´ĞĞ'''
                             do_init_tls_wrap_key(c);    /* initialize tls-auth/crypt/crypt-v2 key */
-                                ÉèÖÃ c->c1.ks ÏÂµÄÖµ /* tunnel session keys */
-                            '''³õÊ¼»¯auth-tokenµÄÃÜÔ¿ÉÏÏÂÎÄ'''
+                                if (options->ce.tls_auth_file)  //Îª¿Õ
+                                if (options->ce.tls_crypt_file)  //Îª¿Õ
+                                if (options->ce.tls_crypt_v2_file)  //Îª¿Õ
+                                ÉÏÃæÈı¸öÌõ¼şÏÂ£¬¶¼ÊÇÉèÖÃ c->c1.ks ÏÂµÄÏà¹ØÖµ /* tunnel session keys */
+                            '''³õÊ¼»¯auth-tokenµÄÃÜÔ¿ÉÏÏÂÎÄ£¬Ã»Ö´ĞĞ'''
                             do_init_auth_token_key
                                 Èç¹ûauth_token_generateÅäÖÃÏîÎªÕæ  //false
                                     auth_token_init_secret
                                         ¸ù¾İÅäÖÃÎÄ¼şµÄauth_token_secret_fileÉèÖÃ c->c1.ks.auth_token_key
-                            '''¸ù¾İc->c1.ks.key_type.cipher£¬ÅĞ¶ÏÊ¹ÓÃ³¤Î¨Ò»±êÊ¶·û(64Î»)»¹ÊÇ¶ÌÎ¨Ò»±êÊ¶·û(32Îª)'''
-                            packet_id_long_form = cipher_kt_mode_ofb_cfb(c->c1.ks.key_type.cipher);  
-                            ....
-                            struct tls_options to;
-                            to.*** = ***
-                            '''³õÊ¼»¯openvpnµÄÖ÷tls-mode¶ÔÏó'''
+                    '''¸ù¾İc->c1.ks.key_type.cipher£¬ÅĞ¶ÏÊ¹ÓÃ³¤Î¨Ò»±êÊ¶·û(64Î»)»¹ÊÇ¶ÌÎ¨Ò»±êÊ¶·û(32Îª)'''
+                    packet_id_long_form = cipher_kt_mode_ofb_cfb(c->c1.ks.key_type.cipher);  
+                    ....
+                    struct tls_options to;
+                    to.*** = ***
+                        to.crypto_flags &= ~(CO_PACKET_ID_LONG_FORM);
+                        to.ssl_ctx = c->c1.ks.ssl_ctx;
+                        to.key_type = c->c1.ks.key_type;
+                        to.server = options->tls_server;
+                        to.replay = options->replay;
+                        to.replay_window = options->replay_window;
+                        to.replay_time = options->replay_time;
+                        to.tcp_mode = link_socket_proto_connection_oriented(options->ce.proto);
+                        to.config_ciphername = c->c1.ciphername;
+                        to.config_ncp_ciphers = options->ncp_ciphers;
+                        to.ncp_enabled = options->ncp_enabled;
+                        to.transition_window = options->transition_window;
+                        to.handshake_window = options->handshake_window;
+                        to.packet_timeout = options->tls_timeout;
+                        to.renegotiate_bytes = options->renegotiate_bytes;
+                        to.renegotiate_packets = options->renegotiate_packets;
+                        to.renegotiate_seconds = options->renegotiate_seconds - ...;  #Ä¬ÈÏrenegotiate_seconds=3600
+                        to.single_session = options->single_session;
+                        to.mode = options->mode;
+                        to.pull = options->pull;
+                        to.push_peer_info_detail = 1;
+                        to.disable_occ = !options->occ;
+                        to.verify_command = options->tls_verify;
+                        to.verify_export_cert = options->tls_export_cert;
+                        to.verify_x509_type = (options->verify_x509_type & 0xff);
+                        to.verify_x509_name = options->verify_x509_name;
+                        to.crl_file = options->crl_file;
+                        to.crl_file_inline = options->crl_file_inline;
+                        to.ssl_flags = options->ssl_flags;
+                        to.ns_cert_type = options->ns_cert_type;
+                        memmove(to.remote_cert_ku, options->remote_cert_ku, sizeof(to.remote_cert_ku));
+                        to.remote_cert_eku = options->remote_cert_eku;
+                        to.verify_hash = options->verify_hash;
+                        to.verify_hash_algo = options->verify_hash_algo;
+                        to.x509_username_field = X509_USERNAME_FIELD_DEFAULT;
+                        to.es = c->c2.es;
+                        to.net_ctx = &c->net_ctx;
+                        to.gremlin = c->options.gremlin;
+                        to.plugins = c->plugins;
+                        to.mda_context = &c->c2.mda_context;
+                        to.auth_user_pass_verify_script = options->auth_user_pass_verify_script;
+                        to.auth_user_pass_verify_script_via_file = options->auth_user_pass_verify_script_via_file;
+                        to.tmp_dir = options->tmp_dir;
+                        to.client_config_dir_exclusive = options->client_config_dir;
+                        to.auth_user_pass_file = options->auth_user_pass_file;
+                        to.auth_token_generate = options->auth_token_generate;
+                        to.auth_token_lifetime = options->auth_token_lifetime;
+                        to.auth_token_call_auth = options->auth_token_call_auth;
+                        to.auth_token_key = c->c1.ks.auth_token_key;
+                        to.x509_track = options->x509_track;
+                        ...
+                        '''c->c2.tls_multi = tls_multi_init(&to);'''
+                        if (flags & CF_INIT_TLS_MULTI)  //Âú×ã
                             c->c2.tls_multi = tls_multi_init(&to);
-            '''³õÊ¼»¯Ñ¹Ëõ¿â'''
+                                struct tls_multi *ret;
+                                ret = new tls_multi
+                                ret->opt = *to;
+                                '''TM_ACTIVE=0 TM_UNTRUSTED=1 TM_LAME_DUCK=2, TM£ºtls multi'''
+                                '''Í¨³£Ò»¸ö»î¶¯µÄvpn»á»°»á³ÖÓĞ3¸ötls_session¶ÔÏó£»
+                                   Ò»¸ötlsÈÏÖ¤¹ıµÄ»á»°£¬µÚ¶ş¸öÓÃÓÚ´¦ÀíÀ´×ÔĞÂ¿Í»§µÄÁ¬½ÓÇëÇó£¬
+                                   Èç¹û³É¹¦Í¨¹ıÑéÖ¤£¬¸Ã¿Í»§½«È¡´úµ±Ç°»á»°£¬
+                                   µÚÈı¸öÓÃ×÷ "õË½Å "Ô¿³×µÄ´¢´æ¿â£¬ÒÔ±¸Ö÷»á»°Òò´íÎó¶øÖØÖÃ£¬
+                                   ¶ø "õË½Å "Ô¿³×ÔÚ¹ıÆÚÇ°ÈÔÓĞÊ£ÓàÊ±¼ä¡£ 
+                                   õË½ÅÔ¿³×ÓÃÓÚ±£³ÖÊı¾İÍ¨µÀÁ¬½ÓµÄÁ¬ĞøĞÔ£¬Í¬Ê±ÕıÔÚĞ­ÉÌÒ»¸öĞÂµÄÔ¿³×
+                                   »ù±¾ÉÏ£¬Ã¿¸ôÒ»¶ÎÊ±¼ä£¬OpenVPN¾Í»áÖØĞÂÉú³É»á»°ÃÜÔ¿²¢ÖØĞÂĞ­ÉÌÁ¬½Ó¡£
+                                   õË½ÅÑ¼Ô¿³×²»¹ıÊÇ´«³öµÄÃÜÔ¿£¨ÕıÔÚĞ­ÉÌµÄÃÜÔ¿£©¡£
+                                   "lame duck" keyÊÇÓÃÃÀ¹ú×ÜÍ³µÄÍ¨³ÆÀ´ÃüÃûµÄ£¬
+                                   Ö¸µÄÊÇÔÚÑ¡¾ÙÖĞÊ§°Ü»òÈÎÆÚ½ìÂú£¬µ«ÔÚ¼ÌÈÎÕßÉÏÌ¨Ç°»¹ÓĞ¼¸ÖÜÈÎÆÚµÄ×ÜÍ³£¬
+                                   ÆäÄ¿µÄÊÇÊµÏÖ´Ó¾ÉÕşÈ¨µ½ĞÂÕşÈ¨µÄÆ½ÎÈÕşÖÎ¹ı¶É¡£
+                                   OpenVPN¶¨ÆÚÖØĞÂĞ­ÉÌÒ»¸öĞÂÃÜÔ¿£¬ÔÚ´Ë¹ı³ÌÖĞ£¬
+                                   ¾ÉµÄ¡¢¹ıÆÚµÄÃÜÔ¿±»±ê¼ÇÎª¡°õË½ÅÑ¼¡±ÃÜÔ¿£¬ÒÔÔÊĞíĞÂ¾ÉÃÜÔ¿Ö®¼äÆ½»¬ÖØµş£¬
+                                   ÒÔ±ãÎŞ·ìµØ¹ı¶Éµ½ĞÂÃÜÔ¿£¬Ã»ÓĞËíµÀÁ÷Á¿ÑÓ³Ù»ò¶ªÊ§¡£
+                                   Òò´Ë£¬¡°É±ËÀµÄõË½ÅÑ¼Ô¿³×¡±ÊÇÍêÈ«ÎŞº¦µÄ£¬²¢²»ÒâÎ¶×ÅÖØÆôÒÑ¾­·¢Éú
+                                   '''
+                                '''KS_PRIMARY=0 KS_LAME_DUCK=1, KS=key state'''
+                                ret->key_scan[0] = &ret->session[TM_ACTIVE].key[KS_PRIMARY];
+                                ret->key_scan[1] = &ret->session[TM_ACTIVE].key[KS_LAME_DUCK];
+                                ret->key_scan[2] = &ret->session[TM_LAME_DUCK].key[KS_LAME_DUCK];
+                                ret->use_peer_id = false;
+                                return ret;
+                     if (flags & CF_INIT_TLS_AUTH_STANDALONE)   //²»Âú×ã
+                        c->c2.tls_auth_standalone = tls_auth_standalone_init(&to, &c->c2.gc);
+            '''³õÊ¼»¯Ñ¹Ëõ¿â£¬Ã»Ö´ĞĞ'''
             Èç¹ûoptions->compÖĞµÄÑ¹ËõËã·¨´æÔÚ  //false
                 c->c2.comp_context = comp_init(&options->comp);
-            '''³õÊ¼»¯MTUÏà¹Ø±äÁ¿'''
+            '''³õÊ¼»¯MTUÏà¹Ø±äÁ¿£¬Ö÷ÒªÊÇÉèÖÃ c->c2.frame.extra_frame µÄÖµ£¬
+               ÉÏÃæ do_init_crypto Ò²ĞŞ¸ÄÁË¸ÃÖµ£¬c->c2.frame ÊÇÊı¾İÍ¨µÀÓÃµÄ'''
             do_init_frame(c);
                 ¸ù¾İÑ¹Ëõ¡¢´úÀí¡¢--tun-mtu-extraÅäÖÃÏî¡¢socket²ÎÊı¡¢×Ö½Ú¶ÔÆë
                 µÈÒòËØ£¬ÉèÖÃÔö¼Ó c->c2.frame.extra_frame µÄÖµ
-            '''³õÊ¼»¯TLS MTUÏà¹Ø±äÁ¿'''
-            do_init_frame_tls(c);  //file://do_init_frame_tls.png
-                do_init_finalize_tls_frame(c)
+            '''³õÊ¼»¯TLS MTUÏà¹Ø±äÁ¿£ºc->c2.frame¡¢c->c2.multi->session[]£¨ÖØµã£©£º'''
+            +do_init_frame_tls(c);  //file://do_init_frame_tls.png
+                +do_init_finalize_tls_frame(c)
                     '''¶Ôtls_multiµÄ½éÉÜ£º
                        Ê¹ÓÃÁËTLSµÄvpnËíµÀ£¬ÓĞÒ»¸ötls_multi¶ÔÏó
                        ¸Ã¶ÔÏóÖĞ´æÁËËùÓĞ¿ØÖÆÍ¨µÀºÍÊı¾İÍ¨µÀµÄ°²È«²ÎÊı
@@ -1090,42 +1357,95 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                        Ã¿¸ötls_context±íÊ¾Ò»¸ö¿ØÖÆÍ¨µÀ
                        Ëü¿ÉÒÔ¿çÔ½key_state½á¹¹ÖĞµÄ¶à¸öÊı¾İÍ¨µÀµÄ»á»°°²È«²ÎÊı
                        ²Î£º<file://openvpnµÄcontext½á¹¹.c+>'''
-                    tls_multi_init_finalize(multi=c->c2.tls_multi, frame=&c->c2.frame)
-                        '''³õÊ¼»¯¿ØÖÆÍ¨µÀµÄÖ¡²ÎÊı'''
-                        tls_init_control_channel_frame_parameters(data_channel_frame = frame, 
-                                                                  frame = &multi->opt.frame)
-                            frame->extra_frameÒÑ¾­±»³õÊ¼»¯¹ıÁË
+                    +tls_multi_init_finalize(multi=c->c2.tls_multi, frame=&c->c2.frame)
+                        '''¸ù¾İÊı¾İÍ¨µÀµÄÖ¡²ÎÊı£¨c->c2.frame£©³õÊ¼»¯¿ØÖÆÍ¨µÀµÄÖ¡²ÎÊı£¨c->c2.multi->opt.frame£©'''
+                        +tls_init_control_channel_frame_parameters(data_channel_frame = c->c2.frame, 
+                                                                  frame = &c->c2.multi->opt.frame)
                             frame->link_mtu ºÍ frame->extra_link ¼Ì³Ğ data_channel_frame ÖĞµÄÖµ
-                            frame->extra_frame Ôö¼Ó´óĞ¡
+                            ÉèÖÃ frame->extra_frame£¬Ôö¼Ó´óĞ¡
                             frame->link_mtu_dynamic ÉèÖÃÖµ
-                        '''³õÊ¼»¯»î¶¯µÄÒÔ¼°untrustedµÄsessions
-                           ³õÊ¼»¯tls_session½á¹¹£¬Õâ°üÀ¨£º
-                           Éú³ÉÒ»¸öËæ»úµÄ»á»°id£¬
-                           ³õÊ¼»¯tls_session.key[KS_PRIMARY]Êı×éÏî'''
-                        tls_session_init(multi, session = &multi->session[TM_ACTIVE=0])
-                        tls_session_init(multi, session = &multi->session[TM_UNTRUSTED=1]
-                            session->optÖ¸Ïòmulti->opt
-                            session->session_idÉèÖÃËæ»úÖµ
-                            '''³õÊ¼»¯¿ØÖÆÍ¨µÀµÄÉí·İÈÏÖ¤²ÎÊı'''
-                            session->tls_wrap = session->opt->tls_wrap;
-                            '''Îª--tls-auth³õÊ¼»¯°üidÖØ²¥´°¿Ú'''
-                            packet_id_init
-                                ÉèÖÃ session->tls_wrap.opt.packet_id
-                            '''³õÊ¼»¯Óëtls_session¹ØÁªµÄkey_state½á¹¹
-                               º¯ÊıÆô¶¯¸Ã½á¹¹µÄSSL-BIO
-                               ÉèÖÃ¶ÔÏókey_state.stateÎªS_INITIAL
-                               »ùÓÚtls_sessionµÄÄÚ²¿×´Ì¬£¬Îªsession IDºÍkey IDÉèÖÃºÏÊÊµÄÖµ
-                               »¹³õÊ¼»¯ÁËÒ»Ğ©ÁĞµÄ½á¹¹ÓÃÓÚÁ´Â·²ã¿É¿¿ĞÔ
+                        '''³õÊ¼»¯ c->c2.multi->session[] : @tls_session
+                           c->c2.multi->session[]->opt = multi->opt
+                           c->c2.multi->session[]->session_id = Ëæ»úÖµ
+                           c->c2.multi->session[]->initial_opcode = 
+                           c->c2.multi->session[]->tls_wrap = multi->opt->tls_wrap
+                           c->c2.multi->session[]->tls_wrap.opt.packet_id->rec ¸÷³ÉÔ±³õÊ¼»¯ :
+                               ×¢£ºsession->tls_wrap.opt ÊÇ crypto_options ½á¹¹£¬ÓÃÓÚ¼ÇÂ¼Í¨ĞÅÓÃµÄ°²È«²ÎÊı
+                               crypto_options.packet_id ÊÇ packet_id ½á¹¹£¬ÓÃÓÚ¼ÇÂ¼·¢ËÍ(send)µÄ°üµÄid£¬Ê±¼ä
+                               ºÍ½ÓÊÕµÄ°ü(rec)µÄid¡¢Ê±¼ä¡¢naee¡¢seq_backtrack¡¢time_backtrackµÈµÈ
+                           c->c2.multi->session[]->key[KS_PRIMARY] ¸ö³ÉÔ±³õÊ¼»¯ :
+                               c->c2.multi->session[]->key[KS_PRIMARY]->ks_ssl £¨key_state_ssl½á¹¹£©¸÷³ÉÔ±³õÊ¼»¯
+                                   Îª¸÷³ÉÔ±´´½¨³öÏàÓ¦½á¹¹
+                                   ÉèÖÃ ssl ³ÉÔ±Îª½ÓÊÕ×´Ì¬£¨·şÎñ¶Ë£©»òÁ¬½Ó×´Ì¬£¨¿Í»§¶Ë£©
+                                   ½« ct_in ºÍ ct_in ÉèÖÃ¸ø ssl£¬ ÉèÖÃ ssl_bio ¹ØÁª ssl
+                                   struct key_state_ssl 
+                                        SSL *ssl;                   /* SSL object -- new obj created for each new key */
+                                        BIO *ssl_bio;               /* read/write plaintext from here */
+                                        BIO *ct_in;                 /* write ciphertext to here */
+                                        BIO *ct_out;                /* read ciphertext from here */
+                               c->c2.multi->session[]->key[KS_PRIMARY] µÄÆäËü³ÉÔ±ÉèÖÃÖµ»òÉêÇëÏàÓ¦½á¹¹ :
+                                   ks->initial_opcode¡¢session->initial_opcode¡¢ks->state¡¢ks->key_id
+                                   ks->send_reliable¡¢ks->rec_reliable¡¢ks->rec_ack
+                                   ks->plaintext_read_buf¡¢ks->plaintext_write_buf
+                                   ks->ack_write_buf¡¢ks->send_reliable¡¢ks->rec_reliable
+                                   ks->crypto_options.packet_id->rec
+                           '''
+                        +tls_session_init(multi = c->c2.multi, session = &c->c2.multi->session[TM_ACTIVE=0])
+                        +tls_session_init(multi = c->c2.multi, session = &c->c2.multi->session[TM_UNTRUSTED=1]
+                            '''c->c2.multi->session[]->optÖ¸ÏòÍâ²ãmulti->opt'''
+                            c->c2.multi->session[]->optÖ¸ÏòÍâ²ãmulti->opt
+                            '''c->c2.multi->session[]->session_idÉèÖÃËæ»úÖµ'''
+                            c->c2.multi->session[]->session_idÉèÖÃËæ»úÖµ
+                            '''ÉèÖÃc->c2.multi->session[]->initial_opcode'''
+                            if (session->opt->server)
+                                session->initial_opcode = 
+                            else
+                                session->initial_opcode = 
+                            '''³õÊ¼»¯¿ØÖÆÍ¨µÀµÄÉí·İÈÏÖ¤²ÎÊı£¬tls_wrap¹ÜÀíÓÃÓÚ£¨¿ØÖÆÍ¨µÀ£©Éí·İÈÏÖ¤µÄ°üµÄÉÏÏÂÎÄ'''
+                            session->tls_wrap = multi->opt->tls_wrap;
+                            session->tls_wrap.work = alloc_buf(session->opt->frame)
+                            '''¸ù¾İmulti->opt£¬ÉèÖÃ c->c2.multi->session[]->tls_wrap.opt.packet_id->rec(½ÓÊÕµÄ°ü) µÄ¸÷³ÉÔ±Öµ
+                               ×¢£ºsession->tls_wrap.opt ÊÇ crypto_options ½á¹¹£¬ÓÃÓÚ¼ÇÂ¼Í¨ĞÅÓÃµÄ°²È«²ÎÊı
+                               crypto_options.packet_id ÊÇ packet_id ½á¹¹£¬ÓÃÓÚ¼ÇÂ¼·¢ËÍ(send)µÄ°üµÄid£¬Ê±¼ä
+                               ºÍ½ÓÊÕµÄ°ü(rec)µÄid¡¢Ê±¼ä¡¢naee¡¢seq_backtrack¡¢time_backtrackµÈµÈ'''
+                            +packet_id_init
+                                session->tls_wrap.opt.packet_id->rec.name = "TLS_WRAP"
+                                session->tls_wrap.opt.packet_id->rec.unit = session->key_id
+                                if(session->opt->replay_window)
+                                    session->tls_wrap.opt.packet_id->rec.seq_list =
+                                                                alloc(sizeof(seq_list) * multi->opt->replay_window)
+                                    session->tls_wrap.opt.packet_id->rec.seq_backtrack = multi->opt->replay_window;
+                                    session->tls_wrap.opt.packet_id->rec.time_backtrack = multi->opt->replay_time
+                            '''c->c2.multi->session[]->key[KS_PRIMARY] £¨@key_state ½á¹¹£©ÖĞ¸÷³ÉÔ±µÄ³õÊ¼»¯ £º
+                               c->c2.multi->session[]->key[KS_PRIMARY]->ks_ssl £¨key_state_ssl½á¹¹£©¸÷³ÉÔ±³õÊ¼»¯
+                                   Îª¸÷³ÉÔ±´´½¨³öÏàÓ¦½á¹¹
+                                   ÉèÖÃ ssl ³ÉÔ±Îª½ÓÊÕ×´Ì¬£¨·şÎñ¶Ë£©»òÁ¬½Ó×´Ì¬£¨¿Í»§¶Ë£©
+                                   ½« ct_in ºÍ ct_in ÉèÖÃ¸ø ssl£¬ ÉèÖÃ ssl_bio ¹ØÁª ssl
+                                   ×¢ : struct key_state_ssl 
+                                            SSL *ssl;                   /* SSL object -- new obj created for each new key */
+                                            BIO *ssl_bio;               /* read/write plaintext from here */
+                                            BIO *ct_in;                 /* write ciphertext to here */
+                                            BIO *ct_out;                /* read ciphertext from here */
+                               c->c2.multi->session[]->key[KS_PRIMARY] µÄÆäËü³ÉÔ±ÉèÖÃÖµ»òÉêÇëÏàÓ¦½á¹¹ :
+                                   ks->initial_opcode¡¢session->initial_opcode¡¢ks->state¡¢ks->key_id
+                                   ks->send_reliable¡¢ks->rec_reliable¡¢ks->rec_ack
+                                   ks->plaintext_read_buf¡¢ks->plaintext_write_buf
+                                   ks->ack_write_buf¡¢ks->send_reliable¡¢ks->rec_reliable
+                                   ks->crypto_options.packet_id->rec
                                '''
-                            key_state_init(tls_session* session, key_state* ks=&session->key[KS_PRIMARY])
+                            +key_state_init(tls_session* session, key_state* ks=&session->key[KS_PRIMARY])  &<key_state_init>
                                 '''´´½¨tls¶ÔÏó--ÓÃÓÚÍ¨¹ıBIO¶ÁĞ´ÄÚ´æÖĞµÄciphertext'''
-                                key_state_ssl_init(key_state_ssl *ks_ssl = &ks->ks_ssl, 
+                                key_state_ssl_init(key_state_ssl *ks_ssl = &session->key[KS_PRIMARY]->ks_ssl, 
                                                    tls_root_ctx *ssl_ctx = &session->opt->ssl_ctx, 
                                                    bool is_server = session->opt->server,
                                                    tls_session *session)
+                                    ks_ssl = c->c2.multi->session[]->key[KS_PRIMARY]->ks_ssl
+                                    ssl_ctx = c->c2.multi->session[]->opt->ssl_ctx
                                     CLEAR(*ks_ssl);
+                                    ks_ssl->ssl = SSL_new(ssl_ctx->ctx)
                                     '''°ÑsessionÖ¸Õë´æ¸øssl¶ÔÏó£¬´Ó¶øÄÜÔÚÑéÖ¤»Øµ÷ÖĞ·ÃÎÊËü'''
                                     SSL_set_ex_data(ks_ssl->ssl, mydata_index, session);
+                                        ks_ssl->ssl->ex_data[mydata_index] = session
                                     '''BIO_f_ssl() returns the SSL BIO method'''
                                     ks_ssl->ssl_bio = BIO_new(BIO_f_ssl())  //ssl bio,ÓÃÓÚ¶ÁĞ´ÆÕÍ¨ÎÄ¼ş
                                     ks_ssl->ct_in = BIO_new(BIO_s_mem())    //ÄÚ´æbio£¬ÓÃÓÚĞ´¼ÓÃÜÎÄ±¾
@@ -1133,56 +1453,108 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                                     '''ÉèÖÃssl¹¤×÷ÔÚclient×´Ì¬£¬
                                        ¶ÔÓ¦µÄ£¬SSL_set_accept_stateÉèÖÃssl¹¤×÷ÔÚ·şÎñÆ÷×´Ì¬'''
                                     SSL_set_connect_state(ks_ssl->ssl);
-                                    '''ÉèÖÃssl´ÓÄÄÀï¶Á£¬ÍùÄÄÀïĞ´'''
+                                    '''ÉèÖÃssl´ÓÄÄÀï¶Á£¬ÍùÄÄÀïĞ´
+                                       µ±OpenSSLĞèÒª´ÓÔ¶³Ì²à»ñÈ¡Êı¾İÊ±£¬Ê¹ÓÃµÚÒ»¸ö£¬
+                                       ¶øµ±OpenSSLĞèÒª½«Êı¾İ·¢ËÍµ½Ô¶³Ì²àÊ±£¬ÔòÊ¹ÓÃµÚ¶ş¸öÊı¾İ
+                                       '''
                                     SSL_set_bio(ks_ssl->ssl, ks_ssl->ct_in, ks_ssl->ct_out);
                                     '''BIO_set_ssl(b,ssl,c)ÉèÖÃbÄÚ²¿µÄSSLÖ¸ÕëÖ¸Ïòssl
                                        ²¢Ê¹ÓÃ¹Ø±Õ±ê¼Çc'''
                                     BIO_set_ssl(ks_ssl->ssl_bio, ks_ssl->ssl, BIO_NOCLOSE);
-                                '''ÉèÖÃ¿ØÖÆÍ¨µÀµÄ³õÊ¼»¯Ä£Ê½'''
+                                '''ÉèÖÃ¿ØÖÆÍ¨µÀµÄ³õÊ¼»¯Ä£Ê½''' 
                                 ÉèÖÃ ks->initial_opcode¡¢session->initial_opcode¡¢ks->state¡¢ks->key_id
                                 '''allocate key source material object'''
                                 ³õÊ¼»¯ ks->send_reliable¡¢ks->rec_reliable¡¢ks->rec_ack
-                                '''ÉêÇëbuffer'''
+                                '''ÉêÇëbuffer²¢³õÊ¼»¯'''
                                 ³õÊ¼»¯ ks->plaintext_read_buf¡¢ks->plaintext_write_buf¡¢
                                        ks->ack_write_buf¡¢ks->send_reliable¡¢ks->rec_reliable
-            '''³õÊ¼»¯¹¤×÷Çøbuffers'''
-            do_init_buffers(c);
+                                if (session->opt->replay)  //Õæ
+                                    packet_id_init
+                                        ks->crypto_options.packet_id->rec.name = "SSL"
+                                        ks->crypto_options.packet_id->rec.unit = ks->key_id
+                                        ks->crypto_options.packet_id->rec.seq_backtrack = multi->opt->replay_window
+                                        ks->crypto_options.packet_id->rec.time_backtrack = multi->opt->replay_time
+            '''³õÊ¼»¯¹¤×÷Çøc->c2.buffers'''
+            +do_init_buffers(c);
                 c->c2.buffers = init_context_buffers(&c->c2.frame);
                     struct context_buffers *b;
-                    ÎªbµÄ¸÷³ÉÔ±ÉêÇëÏàÓ¦µÄ½á¹¹£¨´óĞ¡c->c2.frameµÄbuf size£©
+                    ÎªbµÄ¸÷³ÉÔ±ÉêÇëÏàÓ¦µÄ½á¹¹ :
+                        b = new context_buffers;
+                        b->read_link_buf  = alloc_buf(BUF_SIZE(frame));
+                        b->read_tun_buf   = alloc_buf(BUF_SIZE(frame));
+                        b->aux_buf        = alloc_buf(BUF_SIZE(frame));
+                        b->encrypt_buf    = alloc_buf(BUF_SIZE(frame));
+                        b->decrypt_buf    = alloc_buf(BUF_SIZE(frame));
+                        b->compress_buf   = alloc_buf(BUF_SIZE(frame));
+                        b->decompress_buf = alloc_buf(BUF_SIZE(frame));
                     return b
             '''Ê¹ÓÃÒÑÖªµÄframe´óĞ¡£¬³õÊ¼»¯ÄÚ²¿µÄ·ÖÆ¬ÄÜÁ¦£¨fragmentation capability£©'''
             if(options->ce.fragment)  //false
                 do_init_fragment
-            '''³õÊ¼»¯¶¯Ì¬MTU±äÁ¿'''
-            frame_init_mssfix(&c->c2.frame, &c->options);
+            '''³õÊ¼»¯¶¯Ì¬MTU±äÁ¿(max trans unit)'''
+            +frame_init_mssfix(&c->c2.frame, &c->options);
                 if (options->ce.mssfix)
                     '''¶¯Ì¬ÉèÖÃtunµÄMTU'''
-                    frame_set_mtu_dynamic(frame, options->ce.mssfix, SET_MTU_UPPER_BOUND);
-            '''°ó¶¨tcp/udp socket'''
-            do_init_socket_1(c, link_socket_mode=LS_MODE_DEFAULT=0); //file://do_init_socket_1.png 
-                '''link_socket³õÊ¼»¯½×¶Î1'''
-                link_socket_init_phase1(sock=c->c2.link_socket, ......)
-                    ¸ù¾İ²ÎÊı´«À´µÄÖµ£¬ÉèÖÃsockµÄ¸÷³ÉÔ±
+                    frame_set_mtu_dynamic(frame, options->ce.mssfix=1450, SET_MTU_UPPER_BOUND);
+            '''³õÊ¼»¯tcp/udp socket £º Ö÷ÒªÊÇÉèÖÃ c->c2.link_socket µÄ¸÷³ÉÔ±Öµ'''
+            +do_init_socket_1(c, link_socket_mode=LS_MODE_DEFAULT=0); //file://do_init_socket_1.png 
+                '''link_socket³õÊ¼»¯½×¶Î1 £º Ö÷ÒªÊÇÉèÖÃ c->c2.link_socket µÄ¸÷³ÉÔ±Öµ'''
+                +link_socket_init_phase1(sock=c->c2.link_socket, ......)
+                    ¸ù¾İ²ÎÊı´«À´µÄÖµ£¬ÉèÖÃsockµÄ¸÷³ÉÔ± :
+                            mode,           //±ê¼Ç×÷Îª·şÎñ¶Ë¼àÌı±¾»ú¡¢¼àÌıÍøÂç£¬»¹ÊÇ×÷Îª¿Í»§¶ËÁ¬½Ó
+                            c->plugins,
+                            c->options.ce.af,
+                            c->options.ce.proto,
+                            c->options.ce.local,
+                            c->options.ce.remote,
+                            c->options.ce.bind_local,
+                            c->options.ce.local_port,
+                            c->options.ce.remote_port,
+                            c->options.ce.remote_float,
+                            c->options.ce.bind_ipv6_only,
+                            c->options.ce.mtu_discover_type,
+                            c->options.mark,
+                            c->options.inetd,
+                            c->options.rcvbuf,
+                            c->options.sndbuf,
+                            c->options.gremlin,
+                            c->options.ipchange,
+                            c->options.bind_dev,
+                            c->options.resolve_retry_seconds,
+                            c->c2.accept_from,
+                            c->c2.server_poll_interval,
+                            c->c1.dns_cache,
+                            c->c1.http_proxy,
+                            c->c1.socks_proxy,
+                            c->c1.link_socket_addr
                     if (sock->bind_local)  //false
                         resolve_bind_local(sock, sock->info.af);
-                    resolve_remote(sock, 1, NULL, NULL); 
-                        '''Èç¹ûÎ´¶¨Òå£¬Ôò½â¾öremoteµØÖ·'''
+                    '''»ñÈ¡Ô¶¶ËµÄ addrinfo, ´æ¸ø sock->info.lsa->remote_list ºÍ sock->info.lsa->current_remote'''
+                    +resolve_remote(sock, 1, NULL, NULL); 
+                        '''Èç¹ûÎ´¶¨Òå£¬Ôò½â¾öremoteµØÖ· :
+                           struct addrinfo *ai = getaddrinfo(...)
+                           sock->info.lsa->remote_list = ai;
+                           sock->info.lsa->current_remote = ai;
+                           '''
                         if (!sock->info.lsa->remote_list)  //Âú×ã
                             if (sock->remote_host)  //"192.168.4.143"
                                 struct addrinfo *ai;
                                 ¡£¡£¡£
                                 '''³É¹¦·µ»Ø0£¬Ê§°Ü·µ»Ø-1£¬ÈçÍ¬getaddrinfo'''
-                                state = get_cached_dns_entry( ock->dns_cache,
+                                state = get_cached_dns_entry( sock->dns_cache,
                                                               sock->remote_host,
                                                               sock->remote_port,
                                                               sock->info.af,
                                                               flags, &ai);
+                                    ±éÀú sock->dns_cache£¬Èç¹ûÄÜÕÒµ½Óë²ÎÊı 2,3,4 Æ¥ÅäµÄÌõÄ¿£¬
+                                    Ôò½«¸ÃÌõÄ¿µÄ addrinfo ³ÉÔ±¸³Öµ¸ø×îºóÒ»¸ö²ÎÊı ai
+                                    Ê§°Ü·µ»Ø -1
                                 if(state != 0)  //Âú×ã
-                                    '''×ª»»ipv4»òipv6¶Ô³Æ»òÖ÷»úÃûÎª struct addrinfo
+                                    '''×ª»»ipv4»òipv6µØÖ·»òÖ÷»úÃûÎª struct addrinfo
                                        Èç¹ûÊ§°Ü£¬»áÔÚ²ÎÊıÖ¸¶¨µÄnÃëºóÖØÊÔ'''
                                     status = openvpn_getaddrinfo(flags, sock->remote_host, sock->remote_port,
                                                                  retry, signal_received, sock->info.af, &ai);
+                                        ÄÚ²¿µ÷ÓÃÁË getaddrinfo ·½·¨
                                 if(status == 0) //Âú×ã
                                     sock->info.lsa->remote_list = ai;
                                     sock->info.lsa->current_remote = ai;
@@ -1195,15 +1567,17 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                                 set_actual_address(&sock->info.lsa->actual,
                                                    sock->info.lsa->current_remote);
                                     actual->dest.addr.in4 = *(ai->ai_addr)
-            '''³õÊ¼»¯tun/tapÉè±¸¶ÔÏó£¬´ò¿ªÉè±¸£¬ifconfig£¬Ö´ĞĞup½Å±¾£¬µÈµÈ'''
-            //options->pull ÎªÕæ£¬Ìõ¼ş²»Âú×ã, ÔÚhelper_client_serverÖĞ±»ÉèÖÃÎªÕæ
+            '''³õÊ¼»¯tun/tapÉè±¸¶ÔÏó£¨Ã»ÓĞÖ´ĞĞ£©£¬´ò¿ªÉè±¸£¬ifconfig£¬Ö´ĞĞup½Å±¾£¬µÈµÈ'''
+            #options->pull ÎªÕæ£¬Ìõ¼ş²»Âú×ã, ÔÚ helper_client_server ÖĞ±»ÉèÖÃÎªÕæ
             if ( options->up_delayÎª¼Ù ÇÒ options->pullÎª¼Ù ÇÒ 
                  (c->mode == CM_P2P »ò c->mode == CM_TOP) )  
                 c->c2.did_open_tun = do_open_tun(c);
             c->c2.frame_initial = c->c2.frame;
-            '''»ñÈ¡±¾µØºÍÔ¶³ÌÑ¡Ïî¼æÈİĞÔ×Ö·û´®£¬²¢ÉèÖÃ¸ø multi->opt.local_options
-               ºÍ multi->opt.remote_options = remote;'''
-            do_compute_occ_strings
+            '''¸ù¾İ±¾µØºÍÔ¶³ÌÍ¨µÀÏà¹ØÑ¡Ïî£¬×ªÎª×Ö·û´®ÃèÊö£¬²¢ÉèÖÃ¸ø
+               c->c2.tls_multi->opt.local_options = c->c2.options_string_local = options_string() ºÍ
+               c->c2.tls_multi->opt.remote_options = c->c2.options_string_remote = options_string()
+               '''
+            +do_compute_occ_strings
                 '''½¨Á¢Ñ¡Ïî×Ö·û´®À´´ú±íÊı¾İÍ¨µÀ¼ÓÃÜÑ¡Ïî£¬¸Ã×Ö·û´®Á½¶Ë±ØĞëÒ»ÖÂ
                    keysizeµ¥¶À±»read_key()¼ì²é
                    ÏÂÃæµÄÑ¡ÏîÔÚÁ½¶ËÖ®¼ä±ØĞëÆ¥Åä£º
@@ -1298,7 +1672,7 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                                                remote=c->c2.options_string_remote);
                         multi->opt.local_options = local;
                         multi->opt.remote_options = remote;
-            '''³õÊ¼»¯Êä³öËÙ¶ÈÏŞÖÆ'''
+            '''³õÊ¼»¯Êä³öËÙ¶ÈÏŞÖÆ£¬Ã»ÓĞÖ´ĞĞ'''
             if (c->mode == CM_P2P)  //Âú×ã
                 do_init_traffic_shaper
                     '''³õÊ¼»¯Á÷Á¿shaper£¬Òà¼´´«Êä´ø¿íÏŞÖÆ'''
@@ -1306,8 +1680,9 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
             '''Ö»½øĞĞÒ»´ÎµÄ³õÊ¼»¯£¬¿ÉÄÜÔÚÕâÀï±ä³ÉÒ»¸öÊØ»¤³ÌĞò
                Ã¿¸ö³ÌĞòÊµÀıÖ»½øĞĞÒ»´Î
                Îª¿ÉÄÜµÄ UID/GID ½µ¼¶½øĞĞÉèÖÃ£¬µ«ÔİÊ±²»ÒªÕâÑù×ö
-               Èç¹ûĞèÒª£¬Ôò±ä³ÉÊØ»¤³ÌĞò'''
-            do_init_first_time
+               Èç¹ûĞèÒª£¬Ôò±ä³ÉÊØ»¤³ÌĞò
+               '''
+            do_init_first_time   #¿Í»§¶Ë¸ú×Ù½á¹û £º ¸Ãº¯ÊıÀïÃæÉ¶Ò²Ã»¸É
                 Îª c->c0 ÉêÇë¿Õ¼ä
                 '''»ñÈ¡/ÉèÖÃ½ø³ÌµÄGID'''
                 platform_group_get(c->options.groupname, &c0->platform_state_group)
@@ -1327,26 +1702,37 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                     platform_chdir("/");  //ÄÚ²¿Ö´ĞĞÆ½Ì¨Ïà¹ØµÄchdirÃüÁî
                 '''ÎÒÃÇÓ¦¸Ã¸Ä±äµ÷¶ÈÓÅÏÈ¼¶Âğ£¿'''
                 platform_nice(c->options.nice=0);
-            '''³õÊ¼»¯²å¼ş'''
+            '''³õÊ¼»¯²å¼ş£¬Ã»ÓĞÖ´ĞĞ'''
             open_plugins(c, false, OPENVPN_PLUGIN_INIT_POST_DAEMON);
                 if (c->plugins && c->plugins_owned)   //²»Âú×ã
-            '''³õÊ¼»¯Á¬½ÓÊ±¼ä¶¨Ê±Æ÷
+            '''ÉèÖÃ³õÊ¼Á¬½ÓÊ±¼ä¶¨Ê±Æ÷
                ³õÊ¼»¯·şÎñÆ÷ÂÖÑ¯³¬Ê±¼ÆÊ±Æ÷
-               ´Ë¼ÆÊ±Æ÷ÓÃÓÚ http/socks ´úÀíÉèÖÃ£¬Òò´ËĞèÒªÔÚÉèÖÃÖ®Ç°½øĞĞÉèÖÃ'''
-            do_init_server_poll_timeout(c);
-                update_time();
+               ¸Ã¶¨Ê±Æ÷ÓÃÓÚÍ³¼ÆÒ»ÇĞ£¬Ö±µ½ÊÕµ½À´×Ô·şÎñ¶Ë»òhttp´úÀíµÄµÚÒ»¸ö°ü
+               ´Ë¼ÆÊ±Æ÷ÔÚ http/socks ´úÀíÆô¶¯Ê±Ê¹ÓÃÁË£¬Òò´ËĞèÒªÔÚÕâÖ®Ç°½øĞĞÉèÖÃ'''
+            +do_init_server_poll_timeout(c);
+                update_time();  #¸üĞÂµ±Ç°Ê±¼ä
+                '''
+                   server_poll_interval : 
+                   Timer for everything up to the first packet from 
+                   the *OpenVPN* server socks, http proxy, and tcp packets do not count
+                   ÓÃÓÚËùÓĞµÄ¶¨Ê±Æ÷£¬Ö±µ½ÊÕµ½À´×Ô·şÎñ¶Ë»òhttp´úÀíµÄµÚÒ»¸ö°ü
+                   µ« tcp °ü²»¼ÆÈëÔÚÄÚ
+                   '''
                 if (c->options.ce.connect_timeout) //120
                     c->c2.server_poll_interval->defined = true
                     c->c2.server_poll_interval->n = max(c->options.ce.connect_timeout,0)
                     c->c2.server_poll_interval->last = now
-            '''Íê³ÉTCP/UDP socketµÄ×îÖÕ²Ù×÷'''
-            do_init_socket_2(c);
-                link_socket_init_phase2(sock=c->c2.link_socket, frame=&c->c2.frame, sig_info=c->sig);
+            '''Íê³ÉTCP/UDP socketµÄ×îÖÕ²Ù×÷ £º
+               Íê³ÉsockÌ×½Ó×ÖµÄ´´½¨£¬Èç¹ûÊÇ·şÎñ¶Ë£¬»¹°ó¶¨ÏàÓ¦Íø¿¨
+               '''
+            +do_init_socket_2(c);
+                +link_socket_init_phase2(sock=c->c2.link_socket, frame=&c->c2.frame, sig_info=c->sig);
                     const char *remote_dynamic = NULL;
-                    '''³õÊ¼»¯buffers'''
-                    socket_frame_init(frame, sock);
+                    '''³õÊ¼»¯ÖØµş¶Ë¿Ú: sock->reads¡¢sock->writes'''
+                    +socket_frame_init(frame, sock);   &<socket_frame_init>
                         Èç¹ûÊÇWindows
                             ³õÊ¼»¯ÖØµş¶Ë¿Ú sock->reads¡¢sock->writes
+                        '''udpÊ±£¬¸ÃÌõ¼ş²»Âú×ã'''
                         bool b=link_socket_connection_oriented(sock)
                             if(sock)   //Âú×ã
                                 '''¿´ÊÇ·ñÊÇÃæÏòÁ¬½ÓµÄ'''
@@ -1359,14 +1745,19 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                     '''´«µİÒªÁ¬½Ó/½ÓÊÜµÄÔ¶³ÌÃû³Æ£¬ÒÔ±ãËûÃÇ¿ÉÒÔ²âÊÔ¶¯Ì¬ IP µØÖ·¸ü¸Ä'''
                     if (sock->resolve_retry_seconds)  //=100000000
                         remote_dynamic = sock->remote_host;   //"192.168.4.143"
-                    '''ÎÒÃÇÍ¨¹ıinetd»¹ÊÇxinetdÆô¶¯£¿'''
+                    '''ÎÒÃÇÍ¨¹ıinetd»¹ÊÇxinetdÆô¶¯£¿
+                       file://inetdºÍxinetd.py
+                       '''
                     if (sock->inetd)  // 0
                         ...
-                    else  //Íê³ÉsockµÄÁ¬½Ó
-                        '''µÚ¶ş´Î´´½¨/´¦ÀísocketµÄ»ú»á'''
-                        resolve_remote(sock, 2, &remote_dynamic,  &sig_info->signal_received);
+                    else  '''Íê³ÉsockÌ×½Ó×ÖµÄ´´½¨£¬Èç¹ûÊÇ·şÎñ¶Ë£¬»¹°ó¶¨ÏàÓ¦Íø¿¨'''
+                        '''µÚ¶ş´Î´´½¨/´¦ÀísocketµÄ»ú»á£¨Ã»ÓĞÖ´ĞĞ£©
+                           ¸ù¾İ¿Í»§¶Ë¸ú×Ù½á¹ûÀ´¿´£¬ÒòÎª do_init_socket_1 ÖĞÒÑ¾­ÉèÖÃ¹ıÏàÓ¦ÖµÁË
+                           ËùÒÔ±¾´ÎÖ´ĞĞ»ù±¾Ã»×öÉ¶ÊÂ£¬¾ÍÊÇ°Ñ remote_dynamic ²ÎÊıÖÃÎª NULL ÁË
+                           '''
+                        +resolve_remote(sock, 2, &remote_dynamic,  &sig_info->signal_received);
                             '''½â¾öÔ¶³ÌµØÖ·ÎÊÌâ£¨Èç¹ûÃ»¶¨Òå£©'''
-                            if (!sock->info.lsa->remote_list)  //²»Âú×ã
+                            if (!sock->info.lsa->remote_list)  //²»Âú×ã£¬ÔÚ do_init_socket_1 ÖĞÒÑ¾­ÉèÖÃ¹ıÁË
                                 ¡£¡£¡£
                             '''ÎÒÃÇÓ¦¸ÃÖØÓÃÖ®Ç°»î¶¯µÄÔ¶³ÌµØÖ·Âğ'''
                             if (link_socket_actual_defined(&sock->info.lsa->actual))  //Âú×ã
@@ -1377,7 +1768,8 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                                 ...
                         '''Èç¹û·¢ÏÖÁËÒ»¸öÓĞĞ§µÄÔ¶¶Ë£¬ÔòÊ¹ÓÃËüµÄµØÖ·´´½¨socket'''
                         if (sock->info.lsa->current_remote)     //Âú×ã
-                            create_socket(sock, sock->info.lsa->current_remote);
+                            '''Íê³É socket Ì×½Ó×Ö¶ÔÏóµÄ´´½¨, Èç¹ûÊÇ·şÎñ¶Ë£¬»¹»á°ó¶¨ÏàÓ¦Íø¿¨'''
+                            +create_socket(sock, sock->info.lsa->current_remote);
                                 Èç¹ûÊÇudpÀàĞÍ
                                     sock->sd = create_socket_udp(addr, sock->sockflags);
                                         socket_descriptor_t sd;
@@ -1421,7 +1813,8 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                             phase2_tcp_client(sock, sig_info);
                         else if (sock->info.proto == PROTO_UDP && sock->socks_proxy)    //²»Âú×ã
                             phase2_socks_client(sock, sig_info);
-                    phase2_set_socket_flags(sock);
+                    '''¸ù¾İ sock->sockflags£¬ÉèÖÃsocketÌ×½Ó×Ö¶ÔÏóµÄÌØĞÔ'''
+                    +phase2_set_socket_flags(sock);
                         ¸ù¾İ sock->sockflags ÉèÖÃ sock->sd
                         ÉèÖÃ sock->sd Îª·Ç×èÈûµÄ
                         ÔÚÌ×½Ó×ÖÉÏÉèÖÃÂ·¾¶ MTU ·¢ÏÖÑ¡Ïî
@@ -1432,7 +1825,9 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                                     case AF_INET6: // 23
                                         setsockopt(sd, IPPROTO_IPV6, IPV6_MTU_DISCOVER, ...)
             '''ÕæÕıµÄ½øĞĞUID/GIDµÄ½µ¼¶£¬Èç¹ûĞèÒª£¬Ôòchroot
-               ¿ÉÄÜ±» --client --pull »ò --up-delay ÍÆ³Ù'''
+               ¿ÉÄÜ±» --client --pull »ò --up-delay ÍÆ³Ù
+               ¿Í»§¶Ë¸ú×Ù½á¹û £º ¸Ãº¯ÊıÉ¶Ò²Ã»¸É
+               '''
             do_uid_gid_chroot(c, bool no_delay=c->c2.did_open_tun)
                 if (c0 && !c0->uid_gid_chroot_set)  //Âú×ã
                     if (c->options.chroot_dir)  //NULL£¬²»Âú×ã
@@ -1445,13 +1840,18 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                             platform_user_set(&c0->platform_state_user);
             '''³õÊ¼»¯¸÷ÖÖ¶¨Ê±Æ÷'''
             if (c->mode == CM_P2P || child)
+                update_time()  #¸üĞÂµ±Ç°Ê±¼ä
                 do_init_timers(c, bool deferred = false);
-                    ³õÊ¼»¯·Ç»îÔ¾¼ÆÊ±
-                    ³õÊ¼»¯pingÊÕ·¢¼ÆÊ±
-                    if(!deferred)
-                        ³õÊ¼»¯½¨Á¢Á¬½Ó¼ÆÊ±
-                        ³õÊ¼»¯occ¶¨Ê±Æ÷
-                        ³õÊ¼»¯°üid³ÖĞøÊ±³¤¶¨Ê±Æ÷
+                    '''³õÊ¼»¯·Ç»îÔ¾¼ÆÊ± £ºc->c2.inactivity_interval'''
+                    if (c->options.inactivity_timeout)  //=0
+                    '''³õÊ¼»¯ping·¢ËÍ¼ÆÊ± £ºc->c2.ping_send_interval'''
+                    if (c->options.ping_send_timeout)   //=0
+                    '''³õÊ¼»¯ping½ÓÊÕ¼ÆÊ± £ºc->c2.ping_rec_interval'''
+                    if (c->options.ping_rec_timeout)   //=120
+                    if(!deferred)  //Âú×ãÌõ¼ş
+                        ³õÊ¼»¯½¨Á¢Á¬½Ó¼ÆÊ± : c->c2.wait_for_connect
+                        ³õÊ¼»¯occ¶¨Ê±Æ÷£¨²»Âú×ãÌõ¼ş£©
+                        ³õÊ¼»¯°üid³Ö¾Ã¶¨Ê±Æ÷£¨²»Âú×ã£©
                         ³õÊ¼»¯tmp_intÓÅ»¯£¬ÒÔÏŞÖÆÎÒÃÇÔÚÖ÷ÊÂ¼şÑ­»·ÖĞµ÷ÓÃtls_multi_processµÄ´ÎÊı
             '''³õÊ¼»¯²å¼ş'''
             if (c->mode == CM_P2P || c->mode == CM_TOP)
@@ -1460,42 +1860,854 @@ tunnel_point_to_point  //¿Í»§¶ËÄ£Ê½Ö÷Ñ­»·
                         ¡£¡£¡£
             if (child)  //²»Âú×ã
                 pf_init_context(c);
-        post_init_signal_catch  
+        +post_init_signal_catch  
     '''Ö÷ÊÂ¼şÑ­»·'''
-    while(true)
-        perf_push(PERF_EVENT_LOOP);  //¿ÕÊµÏÖ
+    +while(true)
+        '''¿ÕÊµÏÖ'''
+        +perf_push(PERF_EVENT_LOOP); 
         '''´¦Àí¶¨Ê±Æ÷¡¢tlsµÈ'''
-        pre_select(c);
-            '''¼ì²é´Ö¶¨Ê±Æ÷'''
-            check_coarse_timers(c);
-                '''´Ö¶¨Ê±Æ÷¾«¶ÈÎª1s'''
-                process_coarse_timers(c);
-           
-process_coarse_timers(struct context *c)
-    event_timeout_trigger(  struct event_timeout *et,
-                            struct timeval *tv,
-                            const int et_const_retry)
-        if(et->defined == false) return false
-        bool ret = false
-        ¼ì²éetÊÇ·ñÒÑµ½Ê±£¬
-            ÊÇ£º
-                et_const_retry<0  //et_const_retryÍ¨³£´«À´µÄÖµÎª-1
-                    et->last = now
-                    ret = true
-        Èç¹ûtv²»Îª¿Õ
-            Èç¹û tv->tv_sec > et->n
-                tv->tv_sec = et->n
-                tv->tv_usec = 0
-        return ret
+        +pre_select(c);   &<pre_select>
+            '''¼ì²é´Ö¶¨Ê±Æ÷Íê³ÉÈçÏÂ¶¨Ê±ÈÎÎñ£º
+               packed-id ´æÎÄ¼ş
+               status ´æÎÄ¼ş
+               ¼ì²éÁ¬½ÓÊÇ·ñ½¨Á¢
+               ¼ì²éÊÇ·ñĞèÒªÌí¼ÓÂ·ÓÉ
+               ¼ì²éc->sigÉÏÊÇ·ñÓĞĞÅºÅ
+               ¼ì²é¹æ¶¨Ê±¼äÄÚÊÇ·ñÊÕµ½ ping
+               ¼ì²éÊÇ·ñÊÕµ½·şÎñ¶ËµÄµÚÒ»¸ö°ü
+               ¼ì²éÊÇ·ñµ½´ïÔ¤¶¨µÄÍË³öÊ±¼äÁË
+               ¼ì²éÊÇ·ñ¸Ã·¢ËÍ OCC_REQUEST ÏûÏ¢ÁË
+               ¼ì²éÊÇ·ñ¸Ã·¢ËÍ MTU ¸ºÔØ²âÊÔÁË
+               ¼ì²éÊÇ·ñ¸ÃpingÔ¶¶ËÁË'''
+            +check_coarse_timers(c);   &<check_coarse_timers>
+                '''coarse_timer_wakeup¶¨Ê±Æ÷»¹Ã»µ½Ê±£¬¸üĞÂ¸Ã¶¨Ê±Æ÷£¬º¯Êı·µ»Ø'''
+                if (now < c->c2.coarse_timer_wakeup)
+                    context_reschedule_sec(c, c->c2.coarse_timer_wakeup - now);
+                    return
+                c->c2.coarse_timer_wakeup = now + 7Ìì
+                '''Íê³ÉÈçÏÂ¶¨Ê±ÈÎÎñ£º
+                   packed-id ´æÎÄ¼ş
+                   status ´æÎÄ¼ş
+                   ¼ì²éÁ¬½ÓÊÇ·ñ½¨Á¢
+                   ¼ì²éÊÇ·ñĞèÒªÌí¼ÓÂ·ÓÉ
+                   ¼ì²éc->sigÉÏÊÇ·ñÓĞĞÅºÅ
+                   ¼ì²é¹æ¶¨Ê±¼äÄÚÊÇ·ñÊÕµ½ ping
+                   ¼ì²éÊÇ·ñÊÕµ½·şÎñ¶ËµÄµÚÒ»¸ö°ü
+                   ¼ì²éÊÇ·ñµ½´ïÔ¤¶¨µÄÍË³öÊ±¼äÁË
+                   ¼ì²éÊÇ·ñ¸Ã·¢ËÍ OCC_REQUEST ÏûÏ¢ÁË
+                   ¼ì²éÊÇ·ñ¸Ã·¢ËÍ MTU ¸ºÔØ²âÊÔÁË
+                   ¼ì²éÊÇ·ñ¸ÃpingÔ¶¶ËÁË
+                   '''
+                process_coarse_timers(c);  &<process_coarse_timers>
+                    '''¸Ãº¯Êı¼ì²éµÚÒ»¸ö²ÎÊıet£¨¶¨Ê±Æ÷£©ÊÇ·ñÒÑµ½Ê±,
+                       Èç¹û¶¨Ê±Æ÷ÒÑ¾­µ½Ê±»ò³¬Ê±£¬ÔòÖ»ÔÚµÚÈı¸ö²ÎÊıĞ¡ÓÚ0Ê±£¬²Å¿ªÆô¶¨Ê±Æ÷etµÄÏÂÒ»ÂÖ¶¨Ê±£¬²¢½«Ê£ÓàÊ±¼äÉèÖÃÎª¶¨Ê±Æ÷ÉùÃ÷ÖÜÆÚ
+                       Èç¹ûµÚ¶ş¸ö²ÎÊı²»Îª¿Õ£¬¸ù¾İµÚÈı¸ö²ÎÊıÊÇ·ñĞ¡ÓÚ0£¬ÉèÖÃµÚ¶ş¸ö²ÎÊıµÄÖµ£º
+                       ÊÇ£ºÊ£ÓàÊ±¼ä(¿ÉÄÜ<0)Ğ¡ÓÚµÚ¶ş¸ö²ÎÊıµÄÖµÊ±£¬½«Ê£Óàµ½Ê±Ê±¼ä´æ¸øµÚ¶ş¸ö²ÎÊı
+                       ·ñ£ºµÚÈı¸ö²ÎÊıĞ¡ÓÚµÚ¶ş¸ö²ÎÊıµÄÖµÊ±£¬½«µÚÈı¸ö²ÎÊıµÄÖµ´æ¸øµÚ¶ş¸ö²ÎÊı
+                       Ö®ºóÔÚµÚÈı¸ö²ÎÊıĞ¡ÓÚ0£¬ÇÒ¶¨Ê±Æ÷»¹Ã»µ½Ê±Ê±£¬º¯Êı²Å·µ»ØÕæ
+                       ÁíÒ»ÖÖ±íÊö£º
+                       ²»Ê¹ÓÃµÚÈı¸ö²ÎÊıÊ±£¨´«-1£©
+                           ¶¨Ê±Æ÷ÒÑµ½Ê±£¬ÖØÖÃ¶¨Ê±Æ÷ºÍÊ£Óàµ½Ê±Ê±¼ä£¬·µ»ØÕæ
+                           Èç¹ûµÚ¶ş¸ö²ÎÊı²»Îª¿Õ£¬»¹°ÑÊ£ÓàÊ±¼ä´æ¸øµÚ¶ş¸ö²ÎÊı
+                       Ê¹ÓÃµÚÈı¸ö²ÎÊıÊ±£¨ÒªÇó>=0£©£¬ÔòÖ»ÓĞµÚ¶ş¸ö²ÎÊı²»Îª¿Õ£¬²ÅÓĞÒâÒå
+                           ¶¨Ê±Æ÷ÒÑµ½Ê±£¬parma2 > param3 ? param2=param3 : (0)
+                           ¶¨Ê±Æ÷Ã»µ½Ê±£¬param2 > Ê£ÓàÊ±¼ä ? param2=Ê£ÓàÊ±¼ä : (0)
+                       ÁíÒ»ÖÖ±íÊö£º
+                       µ±¶¨Ê±Æ÷Ã»µ½´ïÊ±£¬¼ÆËãËÕĞÑÊ±¼ä wakeup£¬ÇÒ wakeup < tv? tv=wakeup, ·µ»Ø¼Ù
+                       µ±¶¨Ê±Æ÷´ïµ½Ê±£¬
+                           et_const_retry < 0
+                               ¸üĞÂ¶¨Ê±Æ÷µÄ´¥·¢ÊÂ¼ş et->last = now£¬
+                               Èç¹û¸Ã¶¨Ê±Æ÷µÄ¶¨Ê±¼ä¸ô et->n < tv,  tv = et->n
+                               ·µ»ØÕæ
+                           else          //´ËÊ±²»»á¸üĞÂ¶¨Ê±Æ÷ÊÂ¼ş
+                               Èç¹û et_const_retry < tv, tv = et_const_retry
+                               ·µ»Ø¼Ù
+                       '''
+                    &<event_timeout_trigger>
+                    event_timeout_trigger(  struct event_timeout *et,
+                                            struct timeval *tv,
+                                            const int et_const_retry)
+                        if(et->defined == false) return false
+                        bool ret = false
+                        '''et->lastÊÇ¿ªÊ¼Ê±¼ä£¬et->nÊÇ¶¨Ê±Ê±³¤'''
+                        ¼ì²éetÊÇ·ñÒÑµ½Ê±£¬
+                            ÊÇ£º
+                                if et_const_retry<0  //et_const_retryÍ¨³£´«À´µÄÖµÎª-1
+                                    et->last = now
+                                    ret = true
+                                else
+                                    wakeup = et_const_retry;
+                        Èç¹ûtv²»Îª¿Õ             
+                            Èç¹û tv->tv_sec > et->n
+                                tv->tv_sec = et->n
+                                tv->tv_usec = 0
+                        return ret
+                    'Èç¹ûÖ¸¶¨ÁË --replay-persist£¬ÔòÃ¿60Ãë£¬½« packed-id ´æµ½ÎÄ¼ş
+                    'Èç¹ûc->c1.status_output²»Îª¿Õ£¬Ôò¶¨Ê±µÄĞ´ status ÎÄ¼ş
+                    '''Èç¹ûc->c2.wait_for_connectµ½´ï£¬Ôò¼ì²éÊÇ·ñ½¨Á¢ºÃÁ¬½ÓÁË
+                       ×¢Òâ£¬ÕâÒ»²½Ö®ºó£¬»á°Ñ c->c2.coarse_timer_wakeup ¸ÄÎª 1
+                       '''
+                    if (event_timeout_trigger(c->c2.wait_for_connect '=1'£¬c->c2.timeval£¬-1))
+                        check_connection_established(c);
+                    '''¼ì²éÊÇ·ñÓ¦¸Ã·¢ËÍÒ»¸ö push_request (¶ÔÓ¦Ñ¡Ïî--pull£¬´Ë´¦Ã»ÓĞÅäÖÃ)'''
+                    if (event_timeout_trigger(c->c2.push_request_interval£¬c->c2.timeval£¬-1))  
+                        check_push_request(c);
+                    '''¼ì²éÊÇ·ñĞèÒªÌí¼ÓÂ·ÓÉ£¨¶ÔÓ¦--routeÑ¡Ïî£¬´Ë´¦Ã»ÓĞÅäÖÃ£©'''
+                    if (event_timeout_trigger(c->c2.route_wakeup£¬c->c2.timeval£¬-1))
+                        check_add_routes(c);
+                    'Èç¹ûÅäÖÃÁË--inactiveÑ¡Ïî£¬Ôò¼ì²éÊÇ·ñ¸ÃÒòÊ§»î¶øÍË³ö³ÌĞò
+                    '''Èç¹û¼ì²âµÄĞÅºÅ£¬ËµÃ÷ÉÏÃæÄÄÒ»²½²úÉú´íÎóĞÅºÅÁË£¬Ôòº¯ÊıÍË³ö'''
+                    if (c->sig->signal_received) return
+                    '''ÊµÏÖÈç¹û¹æ¶¨Ê±¼äÄÚÃ»ÓĞÊÕµ½ ping ÔòÖØÆô'''
+                    check_ping_restart(c);
+                        if(event_timeout_trigger(c->c2.ping_rec_interval '=120'£¬c->c2.timeval£¬-1))
+                            trigger_ping_timeout_signal(c);
+                    if (c->sig->signal_received) return
+                    '''¼ì²é¹æ¶¨Ê±¼äÄÚ£¬ÊÇ·ñÁ¬·şÎñÆ÷µÄµÚÒ»¸ö°ü¶¼»¹Ã»ÊÕµ½'''
+                    if (c->options.ce.connect_timeout '=120' &&
+                        event_timeout_trigger(c->c2.server_poll_interval£¬c->c2.timeval£¬-1))
+                        check_server_poll_timeout(c);
+                            if (!tls_initial_packet_received(c->c2.tls_multi))
+                                register_signal(c, SIGUSR1, "server_poll");
+                    if (c->sig->signal_received) return
+                    '''¼ì²éÊÇ·ñµ½´ïÔ¤¶¨µÄÍË³öÊ±¼äÁË'''
+                    if (event_timeout_trigger(c->c2.scheduled_exit£¬c->c2.timeval£¬-1))
+                        check_scheduled_exit(c);
+                    if (c->sig->signal_received) return
+                    '''¸ù¾İÅäÖÃ¼ì²éÊÇ·ñ¸Ã·¢ËÍ OCC_REQUEST ÏûÏ¢ÁË£¨Ã»ÅäÖÃ£©'''
+                    check_send_occ_req(c);
+                        event_timeout_trigger(c->c2.occ_interval£¬c->c2.timeval£¬-1)
+                            check_send_occ_req_dowork(c);
+                    '''¸ù¾İÅäÖÃ£¬¼ì²éÊÇ·ñ¸Ã·¢ËÍ MTU ¸ºÔØ²âÊÔÁË£¨Ã»ÅäÖÃ£©'''
+                    check_send_occ_load_test(c);
+                        event_timeout_trigger(c->c2.occ_mtu_load_test_interval£¬c->c2.timeval£¬-1)
+                            check_send_occ_load_test_dowork(c)
+                    '''¸ù¾İÅäÖÃ£¬¼ì²éÊÇ·ñ¸ÃpingÔ¶¶ËÁË£¨Ã»ÅäÖÃ£©'''
+                    check_ping_send(c)
+                        event_timeout_trigger(c->c2.ping_send_interval£¬c->c2.timeval£¬-1)
+                            check_ping_send_dowork(c);
+                ÉèÖÃc->c2.coarse_timer_wakeupÎªc->c2.timevalµÄÊ±¼ä£¨1Ãëºó£©
+            '''Èç¹û´Ö¶¨Ê±Æ÷ÓĞĞÅºÅ²úÉú£¬Ôòº¯ÊıÍË³ö'''
+            if (c->sig->signal_received) return
+            '''¿ÉĞÅ²ã£¨reliable£©Êı¾İ´¦Àí£¬¹Ø¼üº¯ÊıÊÇtls_process'''
+            +if (c->c2.tls_multi) 
+                +check_tls(c);
+                    +if( interval_test(&c->c2.tmp_int) )  #Æğµ½¿ØÖÆµ÷ÓÃtls_multi_processÆµÂÊµÄ×÷ÓÃ
+                        '''±»¶¥²ãÑ­»·µ÷ÓÃ£¬Ö÷Òª¾ö¶¨ÊÇ·ñÓ¦¸ÃÎª active »ò untrusted sessions µ÷ÓÃ tls_process'''
+                        +int ret = tls_multi_process(   &<tls_multi_process>
+                                            multi               = c->c2.tls_multi,
+                                            to_link             = c->c2.to_link,
+                                            to_link_addr        = c->c2.to_link_addr,
+                                            to_link_socket_info = c->c2.link_socket->info,
+                                            wakeup              = &(interval_t wakeup=7Ìì) );
+                            +for (int i = 0; i < TM_SIZE; ++i)  #TM_SIZE=3
+                                struct tls_session *session = &multi->session[i];
+                                struct key_state *ks = &session->key[KS_PRIMARY];
+                                struct key_state *ks_lame = &session->key[KS_LAME_DUCK];
+                                int active = TLSMP_INACTIVE;
+                                '''Ö»ÓĞ TM_ACTIVE=0 µÄsession£¬ÇÒÆä ks µÄ×´Ì¬Îª S_INITIAL Ê±²ÅÖ´ĞĞ'''
+                                if (i == TM_ACTIVE && ks->state == S_INITIAL)
+                                    ks->remote_addr = to_link_socket_info->lsa->actual
+                                if (ks->state >= S_INITIAL)
+                                    struct link_socket_actual *tla = NULL;
+                                    '''¿ÉĞÅ²ã£¨reliable£©Êı¾İ´¦Àí'''
+                                    if (tls_process(multi, session, to_link, &tla, to_link_socket_info, wakeup))  @tls_process
+                                        active = TLSMP_ACTIVE;
+                                    if(tla)
+                                       c->c2.to_link_addr = multi->to_link_addr 
+                                                          = *tla; 
+                                                          = multi->session[].key[0].remote_addr
+                                    '''Èç¹ûÉÏÃæµÄtls_process¹ı³ÌÖĞ³öÁË´íÎó£¬ÔòÕâÀï»áÅĞ¶Ï³öÀ´'''
+                                    if (ks->state == S_ERROR)
+                                        ¡£¡£¡£
+                            '''»ñÈ¡ÈÏÖ¤×´Ì¬£º
+                               ±éÀúmulti->key_scan£¬¿´ÓĞÃ»ÓĞ×´Ì¬Îª>=S_GOT_KEY/S_SENT_KEYµÄ
+                               Èç¹ûÓĞ£¬Ôò¼ì²éÆäÓĞÃ»ÓĞÈÏÖ¤¹ı£¿
+                               Èç¹ûÈÏÖ¤¹ıÁË£¬Ôò·µ»Ø TLS_AUTHENTICATION_SUCCEEDED£¨ÈÏÖ¤³É¹¦£©
+                               ·ñÔò£¬Èç¹ûÓĞÓĞ×´Ì¬ÎªS_GOT_KEY/S_SENT_KEYµÄ£¬µ«Ã»ÈÏÖ¤¹ıµÄ£¬·µ»Ø TLS_AUTHENTICATION_FAILED
+                               ·ñÔò£¬·µ»Ø TLS_AUTHENTICATION_DEFERRED £¨ÈÏÖ¤ÍÆ³Ù£©
+                               '''
+                            int tls_auth_state = tls_authentication_status(multi, TLS_MULTI_AUTH_STATUS_INTERVAL);
+                            '''¼ì²ésession->key[KS_LAME_DUCK]£¬
+                               Èç¹ûÆästate >= S_INITIAL£¬
+                                   Èç¹ûÆämust_dieÊ±¼ä³¬¹ıµ±Ç°Ê±¼ä£¬·µ»ØÕæ
+                                   ·ñÔò£¬·µ»Ø¼Ù£¬wakeup¸üĞÂÎª¡®µ½ÆÚÊ±¼ä-µ±Ç°Ê±¼ä¡¯
+                               ·ñÔò£¬·µ»Ø¼Ù'''
+                            if (lame_duck_must_die(&multi->session[TM_LAME_DUCK], wakeup))
+                                ...
+                            '''Èç¹û TM_UNTRUSTED µÄsessionµÄKS_PRIMARY keyµÄ×´Ì¬Îª>= S_GOT_KEY/S_SENT_KEY µÄ,
+                               ½«Ö®×ªÎª active µÄsession'''
+                            if (DECRYPT_KEY_ENABLED(multi, &multi->session[TM_UNTRUSTED].key[KS_PRIMARY]))
+                                move_session(multi, TM_ACTIVE, TM_UNTRUSTED, true);
+                            ...
+                        if(ret == TLSMP_ACTIVE)
+                            interval_action(&c->c2.tmp_int);
+                                c->c2.tmp_int->last_action = now
+                        '''Èç¹ûtls_multi_process·µ»ØÁË´íÎó£¬Ôò´¥·¢´íÎóÊÂ¼ş'''
+                        else if(ret == TLSMP_KILL)
+                            register_signal(c, SIGTERM, "auth-control-exit");
+                        c->c2.tmp_int->future_trigger = now + wakeup
+                    '''¸ù¾İc->c2.tmp_intµÄ³ÉÔ±Öµ£¬µÃµ½½ÏÔçµÄwakeupÊ±¼ä£º
+                       min(last_test_true+refresh-now, wakeup)
+                       min(future_trigger,wakeup)'''
+                    interval_schedule_wakeup(&c->c2.tmp_int, &wakeup);
+                        min(c->c2.tmp_int
+                    if (wakeup) //Õæ
+                        c->c2.timeval.tv_sec = min(wakeup,c->c2.timeval.tv_sec)
+            +check_tls_errors(c);
+            '''Èç¹ûtlsÓĞ´íÎó²úÉú£¬Ôòº¯ÊıÍË³ö'''
+            if (c->sig->signal_received) return
+            '''Èç¹û¿ØÖÆÍ¨µÀÉÏÓĞÊÕµ½¿ØÖÆĞÅÏ¢ÁË£¬Ôò´¦ÀíËü
+               tls_test_payload_len»áÔÚmulti->session[TM_ACTIVE].key[KS_PRIMARY].state >= S_ACTIVE(6) Ê±
+               ·µ»Ø ks->plaintext_read_buf£¨¶Áµ½µÄÎÄ±¾ÄÚÈİ£© µÄ³¤¶È£¬ ·ñÔò£¬·µ»Ø0
+               '''
+            +if (tls_test_payload_len(c->c2.tls_multi) > 0)
+                +check_incoming_control_channel(c);
+            '''¼ì²éÊÇ·ñÓ¦¸Ã·¢ËÍoccĞÅÏ¢
+               Èç¹û c->c2.occ_op >= 0 ÇÒµ±Ç° c->c2.to_link ÉÏÃ»ÓĞÊı¾İÒª·¢ËÍ
+               '''
+            +check_send_occ_msg(c);
+                if (c->c2.occ_op >= 0)  #µ±Ç°Îª-1£¬ºóÃæ¿ÉÄÜ»áĞŞ¸Ä¸ÃÖµ
+                    Èç¹û c->c2.to_link µÄ³¤¶ÈÎª0 
+                        check_send_occ_msg_dowork(c);
+                    else
+                        c->c2.timeval = 0
+        +uint flags = IOW_READ_TUN (1<<2) | 
+                     IOW_READ_LINK (1<<3) |
+                     IOW_SHAPER  (1<<4) |
+                     IOW_CHECK_RESIDUAL (1<<5) |
+                     IOW_FRAG  (1<<6) |
+                     IOW_WAIT_SIGNAL  (1<<9)
+        if (c->c2.to_link.len>0)  flags |= IOW_TO_LINK  (1<<1) ;
+        '''´Ó c->c2.link_socket(»òc->c1.tuntap£¬²»Âú×ã)ÉÏ¶Á£¬²¢µÈ´ı¼à²â¶ÁĞ´ÊÂ¼ş'''
+        +io_wait(c, flags);
+            +io_wait_dowork(c, flags);
+                static int socket_shift = 0;   #depends on SOCKET_READ and SOCKET_WRITE 
+                static int tun_shift = 2;      #depends on TUN_READ and TUN_WRITE 
+                static int err_shift = 4;      #depends on ES_ERROR 
+                uint socket = 0
+                uint tuntap = 0
+                struct event_set_return esr[4];
+                +event_reset(c->c2.event_set);
+                '''°Ñwin32_signal.in¼ÇÂ¼µ½c->c2.event_setÖĞ£º
+                   °Ñc->c2.event_setÇ¿×ªÎª we_set ½á¹¹£¬È»ºóÉèÖÃÆä³ÉÔ±Öµ£º
+                   HANDLE* events[n_events] = win32_signal.in.read
+                   event_set_return* esr[n_events].rwflags = EVENT_READ 
+                   event_set_return* esr[n_events].arg = &err_shift
+                   n_events++
+                   '''
+                +Èç¹ûflags°üº¬ IOW_WAIT_SIGNAL  #IOWÊÇ io wait µÄÒâË¼
+                    '''°Ñwin32_signal.in¼ÇÂ¼µ½c->c2.event_setÖĞ£¬
+                       err_shift±íÃ÷Èç¹ûÔÚwin32_signal.inÉÏÊÕµ½ĞÅºÅ£¬
+                       ½«ÉèÖÃ c->c2.event_set_status Îª ES_ERROR
+                       '''
+                    +wait_signal(c->c2.event_set, arg=(void *)&err_shift);  &<wait_signal>
+                        +if(HANDLE_DEFINED(win32_signal.in.read))  #win32_signalÔÚ¿Í»§¶ËÓÃÓÚ»ñÈ¡¿ØÖÆÌ¨¼üÅÌÊäÈë
+                            event_ctl(c->c2.event_set,&win32_signal.in,EVENT_READ,arg) #win32_signal.inÊÇ @rw_handle ½á¹¹
+                            ->we_ctl(es,event,rwflags,arg)  &<we_ctl> &<event_ctl>
+                                we_append_event(es, event, rwflags, arg)
+                                    if (rwflags & EVENT_WRITE)
+                                        if(es->n_events < es->capacity)
+                                            we_set_event(wes, wes->n_events, event, EVENT_WRITE, arg);
+                                                (we_set*)es->events[i] = event->read;
+                                                wes->esr[i].rwflags = rwflags;
+                                                wes->esr[i].arg = arg;
+                                    if (rwflags & EVENT_READ)
+                                        if(es->n_events < es->capacity)
+                                            we_set_event(wes, wes->n_events, event, EVENT_READ, arg);
+                                                (we_set*)es->events[i] = event->read;
+                                                wes->esr[i].rwflags = rwflags;
+                                                wes->esr[i].arg = arg;
+                                Èç¹ûÉÏ¾äÊ§°Ü£¬»á²úÉú D_EVENT_ERRORS ÊÂ¼ş
+                '''Èç¹ûÓĞ´«³öÊı¾İµÈ´ı·¢ËÍ£¬ÉèÖÃ¾Ö²¿±äÁ¿socketµÄÖµ'''
+                if (flags & IOW_TO_LINK)   #Âú×ã
+                    socket |= EVENT_WRITE;
+                '''Èç¹û²»Âú×ã£¨°üº¬ IOW_FRAG ÇÒ c->c2.fragment ²»Îª¿Õ£©'''
+                else if (!((flags & IOW_FRAG) && TO_LINK_FRAG(c)))   #ÉÏ¾äÂú×ã£¬Ôò¸Ã¾ä²»ÅĞ¶Ï     
+                    if (flags & IOW_READ_TUN)  #Âú×ã
+                        tuntap |= EVENT_READ;
+                if (flags & IOW_TO_TUN)   #²»Âú×ã
+                    tuntap |= EVENT_WRITE;
+                else if (flags & IOW_READ_LINK)  #Âú×ã
+                    socket |= EVENT_READ;
+                if (flags & IOW_MBUF)    #²»Âú×ã
+                    socket |= EVENT_WRITE;
+                if (flags & IOW_READ_TUN_FORCE)  #²»Âú×ã
+                    tuntap |= EVENT_READ;
+                if (tuntap_is_wintun(c->c1.tuntap))  #²»Âú×ã
+                    ¡£¡£¡£
+                '''´Óc->c2.link_socketÉÏ²âÊÔ¶Á£¬Êı¾İ´æÔÚ c->c2.link_socket.reads.buf ÖĞ£¬
+                   ¸ù¾İ¶ÁÈ¡½á¹û£¬ÉèÖÃ c->c2.link_socket.reads µÄ³ÉÔ±Öµ£º
+                       overlapped.hEvent¡¢status¡¢overlapped.hEvent
+                   Èç¹û²»ÊÇ persistent==rwflags£¬Ôò°Ñ c2.link_socket->rw_handle ¼Çµ½ c2.event_set ÖĞ
+                   '''
+                +socket_set(s=c->c2.link_socket, es=c->c2.event_set, rwflags=socket, 
+                           arg=(void *)&socket_shift, uint*persistent=NULL);
+                    +if( rwflags & EVENT_READ)
+                        +socket_recv_queue(sock=s, 0);
+                            if (sock->reads.io_state == IOSTATE_INITIAL)  #sock->readsÊÇoverlapped_io½á¹¹
+                                µ÷ÓÃWSARecvFrom£¬´Ósocket¶Á£¬½á¹û´æ¸ø sock->reads.buf
+                                Èç¹ûÄÜÁ¢¼´¶Áµ½ÄÚÈİ
+                                    sock->reads.io_state = IOSTATE_IMMEDIATE_RETURN;
+                                    SetEvent(sock->reads.overlapped.hEvent)
+                                    sock->reads.status = 0
+                                ·ñÔò£¬
+                                    Èç¹û·µ»ØÖµÎª£ºWSA_IO_PENDING  #ËµÃ÷ÓĞÊı¾İµÈ´ı¶Á
+                                        sock->reads.io_state = IOSTATE_QUEUED;
+                                        sock->reads.status = WSA_IO_PENDING;
+                                    ·ñÔò  #Ã»ÓĞÊı¾İµÈ´ı¶Á
+                                        sock->reads.io_state = IOSTATE_IMMEDIATE_RETURN;
+                                        sock->reads.status = WSAGetLastError();
+                            return sock->reads.io_state
+                    if (!persistent || *persistent != rwflags) 
+                        '''°Ñc->c2.event_setÇ¿×ªÎª we_set ½á¹¹£¬È»ºóÉèÖÃÆä³ÉÔ±Öµ£º
+                           HANDLE* events[n_events] = s->rw_handle->write
+                           event_set_return* esr[n_events].rwflags = EVENT_WRITE 
+                           event_set_return* esr[n_events].arg = &socket_shift
+                           n_events++
+                           HANDLE* events[n_events] = s->rw_handle->read
+                           event_set_return* esr[n_events].rwflags = EVENT_READ 
+                           event_set_return* esr[n_events].arg = &socket_shift
+                           n_events++
+                           '''
+                        event_ctl(es, s->rw_handle, rwflags, arg);
+                            we_ctl(struct event_set *es, event_t event, unsigned int rwflags, void *arg)
+                                @we_ctl
+                    s->rwflags_debug = rwflags;
+                    return rwflags;
+                +tun_set(c->c1.tuntap, c->c2.event_set, tuntap, (void *)&tun_shift, NULL);
+                    if (tuntap_defined(tt))  #²»Âú×ã
+                '''Èç¹ûÃ»·¢Éú´íÎó£¬¾ÍµÈ´ıÊÂ¼ş¼¯c->c2.event_set£¬²¢½«µÈ´ı½á¹ûÉèÖÃ¸øc->c2.event_set_status'''
+                +if (!c->sig->signal_received)  #Èç¹ûc->sig->signal_receivedÓĞĞÅºÅ£¬Í¨³£ÊÇ³ö´íĞÅºÅ
+                    '''µÈ´ı (we_set*)multi.top.c2.event_set)->events
+                       Èç¹ûÄ³¸ö event ±»´¥·¢ÁË£¬Ôò½«Ö®¼ÇÂ¼µ½outÖĞ
+                       ·µ»Ø´¥·¢µÄÊÂ¼ş¸öÊı
+                       Èç¹û status > 0  , ÉèÖÃ multi.top.c2.event_set_status µÄÏàÓ¦Î»
+                       Èç¹û status = 0 , ÉèÖÃ multi.top.c2.event_set_status = ES_TIMEOUT
+                       '''
+                    +status = event_wait(c->c2.event_set, &c->c2.timeval, esr, SIZE(esr));
+                    =we_wait(struct event_set *es, const struct timeval *tv, struct event_set_return *out, int outlen)
+                        dword status = WSAWaitForMultipleEvents((we_set*)es->n_events,(we_set*)es->events,FALSE,0,FALSE)
+                        Èç¹ûstatus>=WSA_WAIT_EVENT_0
+                            µ÷ÓÃ WaitForSingleObject((we_set*)es->events[i])£¬¼ì²éÄÇ¸öÊÂ¼ş´¥·¢ÁË
+                                ½«Ö®¼ÇÂ¼µ½out²ÎÊıÖĞ
+                            ·µ»Ø´¥·¢µÄÊÂ¼ş¸öÊı
+                        Èç¹ûÃ»ÓĞÊÂ¼ş´¥·¢
+                            Èç¹û²ÎÊıtv£¨120£©>0
+                                µÈ´ı£¬Ö±µ½ÓĞÊÂ¼ş´¥·¢»ò³¬Ê±
+                            Èç¹ûÓĞÊÂ¼ş´¥·¢ÁË
+                                ½«Ö®¼ÇÂ¼µ½outÖĞ£¬·µ»Ø1
+                            Èç¹û³¬Ê±ÁË
+                                ·µ»Ø0
+                            ÆäËüÇé¿ö
+                                ·µ»Ø -1
+                    '''¸ù¾İÊÂ¼şµÈ´ı½á¹ûesr£¬ÉèÖÃc->c2.event_set_status'''
+                    if(status > 0) #status=3£¬status>0 ±íÃ÷ÓĞÊÂ¼şµÈµ½ÁË
+                        c->c2.event_set_status = 0;
+                        for (i = 0; i < status; ++i)
+                            event_set_return *e = &esr[i]
+                            c->c2.event_set_status |= ( e->rwflags&3 << e->arg )
+                            ²Î£ºfile://openvpnµÄcontext½á¹¹.c+@io_wait¿ÉÄÜ·µ»ØµÄÊÂ¼şÖµ
+                    else if (status == 0)
+                        c->c2.event_set_status = ES_TIMEOUT;
+                '''Èç¹ûÕâ¸öÌõ¼şÂú×ã£¬ËµÃ÷ÔÚ c->sig ÉÏÊÕµ½ĞÅºÅÁË£¬ÕâÒ»°ã±íÃ÷³ö´íÁË'''
+                if (c->c2.event_set_status & ES_ERROR)
+                    get_signal(&c->sig->signal_received);
+                        *sig = win32_signal_get(&win32_signal);
+                            ÏÈ¼ì²éÈç¹û siginfo_static ÉÏÊÕµ½ĞÅºÅÁË£¬ Ôò·µ»Ø siginfo_static µÄ´íÎóÂë
+                            ·ñÔò¼ì²é²ÎÊı win32_signal ÉÏµÄĞÅºÅÖµ£¨Í¨³£±íÃ÷ÓĞ¼üÅÌÊÂ¼şÁË£©
+        '''¼ì²éc->sig'''
+        P2P_CHECK_SIG();
+            if(c->sig->signal_received)
+                '''Èç¹ûc->sig->signal_receivedÊÕµ½µÄĞÅºÅÎªSIGUSR1£¬¿É½«Ö®Ó³ÉäÎªc->options.remap_sigusr1'''
+                remap_signal(c);
+                    if (c->sig->signal_received == SIGUSR1 && c->options.remap_sigusr1)
+                        c->sig->signal_received = c->options.remap_sigusr1;
+                '''´¦ÀíSIGUSR1»òSIGHUPĞÅºÅ:
+                   Èç¹ûÉÏĞĞÌõ¼şÂú×ã£¬ÇÒ¶¨ÒåÁË c->c2.explicit_exit_notification_interval£¨event_timeout½á¹¹£©
+                       Èç¹û c->sig->source == SIG_SOURCE_HARD ÎªÕæ£¬Çå¿Õc->sig£¬·µ»ØÕæ£¬
+                       ·ñÔòÉèÖÃc->sigÎªSIGTERM£¬·µ»Ø¼Ù
+                   ·ñÔò·µ»Ø¼Ù
+                   '''
+                int brk = process_signal(c);
+                    if( c->sig->signal_received==SIGUSR1»òSIGHUP ÇÒ 
+                        c->c2.explicit_exit_notification_interval->definedÎªÕæ )
+                        if( c->sig->source == SIG_SOURCE_HARD )
+                            signal_reset(si=c->sig);
+                                si->signal_received = 0;
+                                si->signal_text = NULL;
+                                si->source = SIG_SOURCE_SOFT;
+                            return true
+                        else
+                            register_signal(c, SIGTERM, "exit-with-notification");
+                                c->sig->signal_received = SIGTERM;
+                                c->sig->signal_text = "exit-with-notification";
+                            return false
+                    return false
+                perf_pop();
+                if(brk)
+                    break;
+                else
+                    continue;
+        +process_io(c)
+            uint status = c->c2.event_set_status;
+            '''Á¬½Ó¹ÜÀíÆ÷ÉÏÊÕµ½ĞÅºÅ'''
+            +if (status & (MANAGEMENT_READ|MANAGEMENT_WRITE))
+                ¡£¡£¡£
+            '''ÏÈ¿´socketÉÏÊÇ·ñÊÕµ½¿ÉĞ´ĞÅºÅ'''
+            +if (status & SOCKET_WRITE)
+                '''½«c->c2.to_linkÉÏµÄÊı¾İ·¢ËÍµÄÄ¿µÄµØÖ·'''
+                +process_outgoing_link(c);
+                    +Èç¹ûc->c2.to_linkÉÏÓĞÊı¾İÒªĞ´
+                        +È·±£c->c2.to_link_addr£¨Ô¶¶ËµØÖ·£©ÓĞĞ§
+                        '''Èç¹ûÊ¹ÓÃÁËÁ÷Á¿Ğ£Õı£¬ÈÃshaperÖªµÀÎÒÃÇĞ´ÁË¶àÉÙ×Ö½Ú'''
+                        if (c->options.shaper) #²»Âú×ã
+                            ¡£¡£¡£
+                        '''ÖØÖÃpingµÄ¼ÆÊ±Ê±¼ä'''
+                        if (c->options.ping_send_timeout)
+                            event_timeout_reset(&c->c2.ping_send_interval);
+                        +'''ÉèÖÃsocketµÄTOS(·şÎñÀàĞÍ)'''
+                        link_socket_set_tos(ls=c->c2.link_socket);
+                            if (ls && ls->ptos_defined) #ptos_definedÎª¼Ù
+                                setsockopt(ls->sd, IPPROTO_IP, IP_TOS, ls->ptos, sizeof(ls->ptos));
+                        +'¸ú×Ù(´òÓ¡»ò¼ÇÂ¼ÈÕÖ¾»ò²»Ö´ĞĞ)·¢ËÍµÄ°ü
+                        int size_delta=0
+                        socks_preprocess_outgoing_link(c, &to_addr, &size_delta);  #ÄÚ²¿Ã»ÓĞÖ´ĞĞ
+                            if (c->c2.link_socket->socks_proxy)  #²»Âú×ã
+                                if(c->c2.link_socket->info.proto == PROTO_UDP)  #Âú×ã
+                                    ¡£¡£¡£
+                        '''½«c->c2.to_linkÉÏµÄÊı¾İ·¢ËÍµÄÄ¿µÄµØÖ·'''
+                        +size = link_socket_write(c->c2.link_socket,&c->c2.to_link,c->c2.to_link_addr);
+                            if (proto_is_udp(sock->info.proto))  #Âú×ã
+                                return link_socket_write_udp(sock=c->c2.link_socket, buf=c->c2.to_link, to=c->c2.to_link_addr);
+                                    '''Èç¹ûÖØµş¶Ë¿ÚµÄ×´Ì¬ÎªÅÅ¶Ó»òÁ¢¼´·µ»Ø£¨²»ÊÇIOSTATE_INITIAL£©£¬¼ì²éÖØµş¶Ë¿Ú·¢ËÍ½á¹û£¬Èç¹û³ö´í£¬Ôò±¨´í'''
+                                    Èç¹û sock->writes->iostate Îª IOSTATE_QUEUED(1) »ò IOSTATE_IMMEDIATE_RETURN(2)  #Îª0£¬²»Âú×ã
+                                        '''¿´ÖØµş¶Ë¿Ú´¦ÀíÍêÁËÃ»ÓĞ£¬³É¹¦´¦ÀíÍê£¬·µ»ØÊÕ·¢µÄÊı¾İ³¤¶È£¬»¹ÔÚÊÕ·¢»òÕß³ö´í£¬¶¼·µ»Ø-1
+                                           Èç¹ûbuf²ÎÊı²»Îª¿Õ£¬»¹»áÔÚ³É¹¦´¦ÀíÍê³ÉµÄÇé¿öÏÂ£¬°ÑÖØµş¶Ë¿ÚÉÏµÄÊı¾İ´æ¸øbuf£¨ÊÊÓÃÓÚ¶Á£©
+                                           ÁíÍâ£¬ÊÕ·¢Íê³É£¨²»¹ÜÊÇ³É¹¦»¹ÊÇÊ§°Ü£©ÁË£¬»¹»á°ÑÖØµş¶Ë¿ÚµÄÊÂ¼ş»Ö¸´ÎªÎ´´¥·¢×´Ì¬
+                                           Èç¹ûµÚÈı¸ö²ÎÊıfrom²»Îª¿Õ£¬Ôò»¹»á°ÑÖØµş¶Ë¿ÚÉÏ¼ÇÂ¼µÄipµØÖ·´æ¸øfrom²ÎÊı
+                                           ¾ßÌå£º
+                                               ´«ÈëµÄ²ÎÊıio£¬ÎªÖØµş¶Ë¿Ú£¬
+                                               Èç¹û¸ÃÖØµş¶Ë¿ÚµÄ×´Ì¬Îª IOSTATE_INITIAL£¬ËµÃ÷¸ÃÖØµş¶Ë¿ÚÃ»ÓĞ¼à¿ØsocketÉÏÊı¾İµÄÊÕ·¢
+                                                   Í¨³£ÕâÖÖÇé¿ö²»Ó¦¸Ã³öÏÖ£¬ÒòÎªÎÒÃÇÖªµÀÇ°ÃæÎÒÃÇÊÇÓÃÖØµş¶Ë¿Ú¼àÊÓÁËsocketµÄ£¬
+                                                   ÄÇ³öÏÖÕâÖÖÇé¿ö£¬»³ÒÉÊÇ²»ÊÇ²ÎÊı´íÁË£¬²»¹ÜÎªÊ²Ã´»á³öÏÖÕâÖÖÇé¿ö£¬ÎÒÃÇÖ»ÊÇ°Ñ·µ»ØÖµÉèÎª-1
+                                               Èç¹û¸ÃÖØµş¶Ë¿ÚµÄ×´Ì¬Îª IOSTATE_IMMEDIATE_RETURN£¬ËµÃ÷¸ÃÖØµş¶Ë¿ÚÒÑ¾­Íê³ÉÊÕ·¢ÁË£¨µ«²»´ú±íÃ»³ö´í£©
+                                                   ÉèÖÃÖØµş¶Ë¿ÚµÄ×´Ì¬Îª IOSTATE_INITIAL£¬Í¬Ê±Ïû³ıÖØµş¶Ë¿ÚµÄÊÂ¼ş´¥·¢×´Ì¬
+                                                   Èç¹ûÊÇÒòÎª³ö´í¶ø·µ»Ø£¬ÔòÉèÖÃ·µ»ØÖµÎª-1
+                                                   Èç¹ûÊÇ³É¹¦·µ»ØµÄ£¬ÉèÖÃ·µ»ØÖµÎª¶Áµ½µÄ×Ö½ÚÊı£¬Èô²ÎÊıbuf²»Îª¿Õ£¬Ôò°ÑÖØµş¶Ë¿ÚÖĞ¼ÇÂ¼µÄÊı¾İ´æ¸øbuf
+                                               Èç¹û¸ÃÖØµş¶Ë¿ÚµÄ×´Ì¬Îª IOSTATE_QUEUED£¬ËµÃ÷¸ÃÖØµş¶Ë¿Ú»¹Ã»Íê³ÉÊÕ·¢£¬»¹ÔÚ½øĞĞÖĞ
+                                                   ´ËÊ±£¬ÔÙ¼ì²é¸ÃÖØµş¶Ë¿Ú£¬¿´ÆäÍê³ÉÊÕ·¢ÁËÃ»ÓĞ
+                                                       Èç¹ûÍê³ÉÁË£¨Ò²¿ÉÄÜÊÇ³ö´íÁË£©£¬ÉèÖÃÖØµş¶Ë¿ÚµÄ×´Ì¬Îª IOSTATE_INITIAL£¬Í¬Ê±Ïû³ıÖØµş¶Ë¿ÚµÄÊÂ¼ş´¥·¢×´Ì¬
+                                                           Èç¹û³É¹¦£¬ÉèÖÃ·µ»ØÖµÎª¶Áµ½µÄ×Ö½ÚÊı£¬Èô²ÎÊıbuf²»Îª¿Õ£¬Ôò°ÑÖØµş¶Ë¿ÚÖĞ¼ÇÂ¼µÄÊı¾İ´æ¸øbuf
+                                                           Èç¹ûÊ§°ÜÁË£¬ÔòÉèÖÃ·µ»ØÖµÎª-1
+                                                       Èç¹ûÃ»Íê³É£¬ÔòÊ²Ã´Ò²²»×ö£¨·µ»ØÖµÄ¬ÈÏÎª-1£©
+                                           '''
+                                        socket_finalize(s=sock->sd, io=&sock->writes, buf=NULL, from=NULL);  &<socket_finalize>
+                                            '''ÉÏ´ÎµÄ·¢ËÍ½á¹ûÎªIOSTATE_QUEUED£¨ÅÅ¶ÓµÄ£©'''
+                                            if £¨sock->writes->iostate == IOSTATE_QUEUED£©
+                                                BOOL status = WSAGetOverlappedResult(s=sock->sd, io=sock->writes->overlapped, ...)
+                                                if (status) #³É¹¦±íÊ¾ÖØµş¶Ë¿Ú²Ù×÷ÒÑ¾­³É¹¦Íê³É£¬Ê§°Ü±íÃ»ÓĞÍê³É»ò³ö´íÁË
+                                                    if(buf) *buf = io->buf;
+                                                    io->iostate = IOSTATE_INITIAL;
+                                                    ResetEvent(io->overlapped.hEvent)
+                                                else
+                                                    if (WSAGetLastError() != WSA_IO_INCOMPLETE)  #²»ÊÇÖØµş¶Ë¿Ú»¹Ã»Íê³ÉµÄÇé¿ö£¬¼´³ö´íÁË
+                                                        io->iostate = IOSTATE_INITIAL;
+                                                        ResetEvent(io->overlapped.hEvent)
+                                                        msg(D_WIN32_IO | M_ERRNO, "WIN32 I/O: Socket Completion error");
+                                            '''ÉÏ´ÎµÄ·¢ËÍ½á¹ûÎªIOSTATE_IMMEDIATE_RETURN£¨Á¢¼´³É¹¦·µ»ØÁË£©'''
+                                            if £¨sock->writes->iostate == IOSTATE_IMMEDIATE_RETURN
+                                                io->iostate = IOSTATE_INITIAL;
+                                                ResetEvent(io->overlapped.hEvent)
+                                                '''ÉÏ´Î·¢ËÍ½á¹û²»Îª0'''
+                                                if (io->status)
+                                                    msg(D_WIN32_IO | M_ERRNO, "WIN32 I/O: Socket Completion non-queued error");
+                                                else  #ÉÏ´Î·¢ËÍ½á¹ûÎª³É¹¦
+                                                    ret = io->size;
+                                            if (from) #²»Âú×ã
+                                                ¡£¡£¡£
+                                    '''½«c->c2.to_linkµÄÄÚÈİ·¢ËÍµ½Ä¿µÄµØÖ·£¬ÉèÖÃsock->writes.overlapped.hEvent'''
+                                    socket_send_queue(sock=c->c2.link_socket, buf=c->c2.to_link, to=c->c2.to_link_addr);
+                                        if (sock->writes.iostate == IOSTATE_INITIAL)  #Âú×ã
+                                            #sock->writes.buf ÔÚ @socket_frame_init º¯ÊıÖĞÍê³ÉµÄ³õÊ¼ÉèÖÃ,buf_init.offset=548, buf_init.len=1640
+                                            sock->writes.buf = sock->writes.buf_init;
+                                            sock->writes.buf.len = 0;
+                                            '''½«²ÎÊıbufµÄÄÚÈİ£¬·Åµ½sock->writes.bufÉÏ'''
+                                            buf_copy(&sock->writes.buf, buf)  #Õâ¾äÖ´ĞĞÍêºó£¬buf_init.offset=548, buf_init.len=14
+                                            '''½«sock->writes.bufÉÏµÄÓĞĞ§Êı¾İ´æ¸øwsabuf'''
+                                            WSABUF wsabuf[1];
+                                            wsabuf[0].buf = BPTR(&sock->writes.buf);
+                                            wsabuf[0].len = BLEN(&sock->writes.buf);
+                                            '''½«wsabufÉÏµÄÊı¾İ·¢ËÍ³öÈ¥£¬Èç¹ûÁ¢¼´·¢ËÍ³É¹¦ÁË£¬·µ»Ø0£¬·ñÔò·µ»ØÆäËûÖµ'''
+                                            status = sock->writes.status = WSASendTo(...)
+                                            if (0==status)  #Âú×ã
+                                                sock->writes.iostate = IOSTATE_IMMEDIATE_RETURN;
+                                            else
+                                                if( WSA_IO_PENDING == WSAGetLastError()) #ÖØµş¶Ë¿Ú³É¹¦³õÊ¼»¯ÁË£¬ÉÔºó½«Ö¸Ê¾Íê³É
+                                                    sock->writes.iostate = IOSTATE_QUEUED;
+                                                else  #ËµÃ÷·¢ËÍ´íÎó
+                                                    ASSERT(SetEvent(sock->writes.overlapped.hEvent));
+                                                    sock->writes.iostate = IOSTATE_IMMEDIATE_RETURN;
+                                        return sock->writes.iostate;
+                                    return ·¢ËÍµÄÊı¾İ³¤¶È£¬»òĞ¡ÓÚ0µÄÖµ£¬±íÊ¾´íÎó
+                            else if (proto_is_tcp(sock->info.proto))
+                                return link_socket_write_tcp(sock, buf, to);
+                        link_socket_write_post_size_adjust(&size, size_delta, &c->c2.to_link);  #ÄÚ²¿Ã»ÓĞÖ´ĞĞ
+                            if(size_delta>0) #²»Âú×ã
+                                if(size>0)
+                                    size -= size_delta
+                                    buf_advance(buf, size_delta)
+                                    *size = 0
+                        if (size > 0)  #±íÃ÷·¢ËÍ³É¹¦£¬sizeÊÇ·¢ËÍµÄ×Ö½ÚÊı
+                            '''ÀÛ¼ÆÒÑ·¢ËÍ×Ö½ÚÊı'''
+                            c->c2.link_write_bytes += size;
+                            link_write_bytes_global += size
+                            if (management)  #²»Âú×ã
+                                ...
+                            '''Êµ¼Ê·¢ËÍµÄÊı¾İ³¤¶È£¬ÓëÏë·¢ËÍµÄÊı¾İ³¤¶È²»Ò»ÖÂ£¬±¨´í'''
+                            if (size != BLEN(&c->c2.to_link))
+                                msg(D_LINK_ERRORS, ...)
+                        if (c->c2.buf.len > 0) #0£¬²»Âú×ã
+                            ¡£¡£¡£
+                        if(size < 0)  #²»Âú×ã
+                            ¡£¡£¡£
+                    buf_reset(&c->c2.to_link);
+            '''ÔÙ¿´tuntapÉÏÊÇ·ñÊÕµ½¿ÉĞ´ĞÅºÅ'''
+            +else if (status & TUN_WRITE)
+                ¡£¡£¡£
+            '''ÔÙ¿´socketÉÏÊÇ·ñÊÕµ½¿É¶ÁĞÅºÅ'''
+            +else if (status & SOCKET_READ)
+                '''³¢ÊÔ°ÑÖØµş¶Ë¿ÚÉÏµÄÊı¾İ´æ¸øc->c2.buffers->read_link_buf£¬²¢ÈÃc->c2.bufÖ¸Ïò¸Ãbuffer'''
+                +read_incoming_link(c);
+                    c->c2.buf = c->c2.buffers->read_link_buf;   #c2.buffers×¨ÃÅÓÃÓÚ°ü´¦ÀíµÄBuffers
+                    buf_init(&c->c2.buf,FRAME_HEADROOM_ADJ(..))
+                    status = link_socket_read(c->c2.link_socket, &c->c2.buf, &c->c2.from);
+                        if (proto_is_udp(sock->info.proto))
+                            int res = link_socket_read_udp_win32(sock, buf, from);
+                                return socket_finalize(sock->sd, &sock->reads, buf, from);
+                                    @socket_finalize
+                        else if (proto_is_tcp(sock->info.proto))
+                            ...
+                    '''Õâ¾äÖ»ÊÇÓÃÀ´ÏÔÊ¾´íÎóĞÅÏ¢µÄ'''
+                    check_status(status, "read", c->c2.link_socket, NULL); &<check_status>
+                    '''Õâ¾äÖ»ÊÇÔÚÊ¹ÓÃsocket´úÀíµÄÇé¿öÏÂ²Å¹¤×÷'''
+                    socks_postprocess_incoming_link(c);
+                +if ( ! c->sig->signal_received ) #Èç¹ûÃ»ÓĞ³ö´í
+                    +process_incoming_link(c);
+                        link_socket_info *lsi = c->c2.link_socket_info;
+                        +process_incoming_link_part1(c, lsi, false);
+                            @process_incoming_link_part1
+                        +process_incoming_link_part2(c, lsi, orig_buf);
+                            @process_incoming_link_part2
+            '''×îºó¿´tuntapÉÏÊÇ·ñÊÕµ½¿É¶ÁĞÅºÅ'''
+            +else if (status & TUN_READ)
+                ¡£¡£¡£
+        '''¼ì²éc->sig'''
+        P2P_CHECK_SIG();         
+'''¸Ãº¯ÊıÊÇÖ÷ÊÂ¼şÑ­»·ÖĞ£¬´¦ÀíTLSÊÂÏîµÄÖ÷Òªº¯Êı£¬
+   µ±¸Ãº¯Êı·µ»Ø non-error£¬Ëü½«ÉèÖÃwakeup²ÎÊıÎªÏ£ÍûÏÂ´Î±»µ÷ÓÃµÄÊ±¼ä
+   Èç¹ûÎÒÃÇ°ÑÒ»¸ö°ü´æ¸øÁË to_link ²ÎÊı£¬½«·µ»Ø³É¹¦
+   to_link ÊÇÎÒÃÇÏ£Íû·¢¸ø¶Ô¶ËµÄ°üÊı¾İ
+   '''
+&<tls_process>            
++bool tls_process(  #¿ÉĞÅ²ã£¨reliable£©Êı¾İ´¦Àí
+                 struct tls_multi *multi,                        = c->c2.tls_multi,
+                 struct tls_session *session,                    = multi->session[]
+                 struct buffer *to_link,                         = c->c2.to_link,
+                 struct link_socket_actual **to_link_addr,       = tla,
+                 struct link_socket_info *to_link_socket_info,   = c->c2.link_socket->info
+                 interval_t *wakeup)                             = = &(interval_t wakeup=7Ìì)
+    struct key_state *ks = &session->key[KS_PRIMARY];      /* primary key */
+    struct key_state *ks_lame = &session->key[KS_LAME_DUCK]; /* retiring key */
+    bool active = false;
+    bool state_change = true;
+    '¼ì²éÊÇ·ñÎÒÃÇÓ¦¸Ã´¥·¢Ò»¸öÈíÖØÆô --  ÒòÎªĞèÒª¸ü»»ĞÂÃÜÔ¿
+    '''ÖØĞÂĞ­ÉÌÖ÷ÃÜÔ¿µÄ¼¸Ãëºó£¬¹Ø±Õ lame duck key transition_window
+       lame_duck_must_die º¯ÊıÄÚ£¬»á¼ì²é session->key[KS_LAME_DUCK]->must_die ÊÇ·ñµ½Ê±
+       '''
+    +if (lame_duck_must_die(session, wakeup))
+        key_state_free(ks_lame, true);
+        msg("TLS: tls_process: killed expiring key");
+    +while(state_change)
+        update_time();
+        state_change = false;
+        if (ks->state == S_INITIAL)
+            '''send_reliable ÊÇ¸ö reliable ½á¹¹£¬ÀïÃæ×î¶à¿É´æ·ÅRELIABLE_CAPACITY=8¸ö reliable_entry ½á¹¹£¬
+               Êµ¼ÊÖ»ÓÃÁË4¸ö£¬Ã¿¸öreliable_entry¿É¼ÇÂ¼Ò»¸öÊı¾İ°ü£¨°üÀ¨ÓĞĞ§±ê¼Ç¡¢°üid¡¢°üÊı¾İ¡¢²Ù×÷Âë¡¢Ê±¼äµÈ£©
+               Ò»¸ö reliable ½á¹¹£¨¿ÉĞÅ²ãµÄÊı¾İ½á¹¹£©Ôò´ú±íÁËvpnµÄÒ»¸ö·½ÏòÉÏµÄ¿ØÖÆÍ¨µÀ
+               reliable ÖĞÓĞ¸ö hold ±ê¼Ç£¬ ÓÃÒÔ¿ØÖÆÔÚ reliable_schedule_now µ÷ÓÃÇ°£¬²»»á·¢ËÍ
+               reliable_get_buf_output_sequenced ÔòÊÇ¶¨Î»µ½°üid×îĞ¡µÄ reliable_entry ³ÉÔ±£¬
+               ²¢·µ»ØÆäbuf£¨reliable_entryÖĞ¼ÇÂ¼°üÊı¾İµÄbuffer½á¹¹£©
+               ·µ»ØÇ°£¬»áÉèÖÃ buf µÄ len=0 ºÍ offset=ks->send_reliable->offset=44
+               '''
+            +struct buffer *buf = reliable_get_buf_output_sequenced(ks->send_reliable)
+            +if(buf)
+                ks->must_negotiate = now + session->opt->handshake_window=60s;
+                ks->auth_deferred_expire = now + auth_deferred_expire_window(session->opt)=60s;
+                '''ÕÒµ½Óë´«ÈëµÄbuf²ÎÊı¶ÔÓ¦µÄÄÇ¸ö reliable_entry£¬ÉèÖÃÆäÄÚÈİ£º
+                   ÉèÖÃÆäÓĞĞ§±ê¼ÇÎªÕæ£¬ÉèÖÃÆä²Ù×÷ÂëÎª7£¨P_CONTROL_HARD_RESET_CLIENT_V2£©
+                   ÉèÖÃÆä°üid£¨0£©£¬ÉèÖÃÆäÆ«ÒÆÎª 44-4=40£¬ÉèÖÃÆäbufÄÚÈİ´æÈë°üid'''
+                +reliable_mark_active_outgoing(ks->send_reliable, buf, ks->initial_opcode);
+                ks->state = S_PRE_START;
+                state_change = true;
+        '''Èç¹û ks->state »¹Ã» S_ACTIVE£¬Ôò¼ì²éµ±Ç°Ê±¼ä£¬ÊÇ·ñµ½´ï ks->must_negotiate µÄÊ±¼äÁË£¬ÊÇ£¬ÔòËµÃ÷Ğ­ÉÌ³¬Ê±ÁË'''
+        +if (now >= ks->must_negotiate && ks->state < S_ACTIVE) goto error
+        '''FULL_SYNCÊÇ¸öºêº¯Êı£¬¼ì²éÊÇ·ñ ks->send_reliable ºÍ ks->rec_ack ¶¼Îª¿Õ,
+           Ò»°ãÔÚ·¢ËÍÍêºó£¬ÊÕµ½·şÎñ¶Ë»Ø¸´Ö®Ç°£¬»áÂú×ã¸ÃÌõ¼ş'''
+        +if (ks->state == S_PRE_START && FULL_SYNC)    
+            ks->state = S_START;
+            state_change = true;
+            if (session->opt->crl_file && 
+                session->opt->ssl_flags ²»°üº¬ SSLF_CRL_VERIFY_DIR)
+                ¡£¡£¡£
+            '''ĞÂµÄÁ¬½Ó£¬Çå³ı¾ÉµÄX509»·¾³±äÁ¿'''
+            tls_x509_clear_env(session->opt->es);
+        '''Èç¹ûÒÑ¾­·¢ËÍÁËkey£¨·şÎñ¶Ë£©»ò»ñµÃÁËkey£¨¿Í»§¶Ë£©'''
+        +if (ks->state == S_GOT_KEY && is_client || ks->state == S_SENT_KEY && is_server)
+            ...
+        '''to_link=c->c2.to_link£¬reliable_can_send»á¼ì²ésend_reliableÖĞµÄ±£³Ö±ê¼ÇÊÇ·ñÎª¼Ù£¬ÇÒÆäÖĞÓĞÃ»ÓĞÓĞĞ§µÄ°ü
+           µ±ÔÚreliableÖĞ×¼±¸ºÃÁËÒª·¢°ü£¬µ«»¹Ã»½«Ö®×ªÂë´æ´¢µ½c->c2.to_linkÇ°£¬¸ÃÌõ¼şÍ¨³£ÊÇÂú×ãµÄ
+           '''
+        +if (!to_link->len && reliable_can_send(ks->send_reliable))
+            int opcode;
+            '''ÕÒµ½°üid×îĞ¡µÄÄÇ¸öreliable_entry,¼ÇÎªbest£¬ÉèÖÃ best->next_try = now+best->timeout(2)
+               best->timeout *= 2; ²ÎÊı opcode = best->opcode; ·µ»Ø best->buf'''
+            +buf = reliable_send(ks->send_reliable, &opcode);
+            +buffer b = *buf  # b Óë buf ¹²Ïí uint8_t *data£¬ÆäËüÖµÔò¸÷×ÔÓµÓĞ
+            '''°Ñ ks->rec_ack µÄĞÅÏ¢prependµ½ b ÖĞ£¬²¢¸ù¾İĞèÒª´¦ÀíbÖĞµÄÊı¾İÄÚÈİ£¬ÒÔÖ§³ÖÈÏÖ¤»ò¼ÓÃÜ£º
+               °Ñ ks->rec_ack µÄĞÅÏ¢prependµ½ b ÖĞ
+               Èç¹ûsession->tls_wrap.modeÎª'ÈÏÖ¤'»ò'ÎŞ'±ê¼Ç
+                   °Ñsession->session_id£¨8×Ö½Ú£© prependµ½bÖĞ
+                   °ÑovpnÍ·prependµ½bÖĞ
+               Èç¹ûsession->tls_wrap.modeÎª'ÈÏÖ¤'±ê¼Ç
+                   ¡£¡£¡£¡£
+               Èç¹ûsession->tls_wrap.modeÎª'¼ÓÃÜ'±ê¼Ç
+                   ¡£¡£¡£¡£
+               '''
+            &<write_control_auth>
+            +write_control_auth(session,ks,buf=b,to_link_addr, opcode, max_ack=CONTROL_SEND_ACK_MAX=4, prepend_ack=true) 
+                '''°Ñ ack=ks->rec_ack µÄĞÅÏ¢´æÈëµ½ b ÖĞ£º
+                   ½« ack->len µÄÖµ=0£¨1×Ö½Ú£©Ğ´Èëµ½ b ÖĞ£¨Í·²å·¨£©
+                   Èç¹û ack->len > 0£¬
+                       Ôò»¹°Ñ ack->packet_id[]¡¢ ks->session_id_remote¡¢ÒÀ´ÎĞ´Èëµ½bÖĞ
+                       »¹»áĞŞ¸Ä ack->packet_id[] µÄÖµ
+                   '''
+                reliable_ack_write(ks->rec_ack, buf, &ks->session_id_remote, max_ack, prepend_ack)
+                '''°Ñsession->session_id(Ëæ»úÖµ)prependµ½bÖĞ£¬°ÑovpnÍ·£¨ks->key_id | opcode£©prependµ½bÖĞ'''
+                if (session->tls_wrap.mode == TLS_WRAP_AUTH »ò TLS_WRAP_NONE)
+                    session_id_write_prepend(&session->session_id, buf)
+                if (session->tls_wrap.mode == TLS_WRAP_AUTH)
+                    ¡£¡£¡£
+                else if (session->tls_wrap.mode == TLS_WRAP_CRYPT)
+                    ¡£¡£¡£
+                *to_link_addr = ks->remote_addr
+            '''°Ñb½»¸øudp²ã'''
+            +*to_link = b;  
+            active = true;
+            state_change = true;
+            +break;
+        '''´Ó½ÓÊÕĞÅÈÎ²ãÖĞ»ñÈ¡ÓĞĞ§µÄ°ü£¬·µ»ØÆä°üÊı¾İÖ¸Õë
+           ÔÚ¿Í»§¶ËÊÕµ½·şÎñ¶ËµÄµÚÒ»¸öÁ¬½ÓÏìÓ¦°üÊ±£¬»áÖ´ĞĞÕâÀï
+           '''
+        buf = reliable_get_buf_sequenced(ks->rec_reliable);
+        if(buf)
+            int status = 1
+            if (buf->len)
+                '''°ÑÊı¾İĞ´¸ø ks->ks_ssl->ct_in (ssl)'''
+                status = key_state_write_ciphertext(&ks->ks_ssl, buf);
+                    ret=bio_write(ks_ssl->ct_in, BPTR(buf), BLEN(buf), "tls_write_ciphertext");
+                    'Èç¹û³É¹¦£¬³É¹¦Ê±Çå¿Õbuf
+                    return ret
+            if(status == 1)
+                '''½«¸Ãbuf¶ÔÓ¦µÄrec_reliableÖĞµÄ°üÉèÖÃÎª·Ç»î¶¯µÄ£¬
+                   Í¬Ê± rec_reliable ÖĞµÄ packet_id ÖµÔö1
+                   '''
+                reliable_mark_deleted(ks->rec_reliable, buf, true);
+                state_change = true;
+        '''ÈÃbufÖ¸ÏòÎÄ±¾»º´æÇø(³¢ÊÔ´ÓsslÉÏ¶ÁÈ¡Êı¾İ£©'''
+        buf = &ks->plaintext_read_buf;
+        if (!buf->len)  #Èç¹ûÎÄ¼ş»º´æÇøÎª¿Õ£¬·ûºÏ
+            buf_init(buf, 0)
+            int status = key_state_read_plaintext(&ks->ks_ssl, buf, TLS_CHANNEL_BUF_SIZE);
+                '''´Óks_ssl->ssl_bioÉÏ¶ÁÈ¡Êı¾İ'''
+                return bio_read(ks_ssl->ssl_bio, buf, maxlen, "tls_read_plaintext");
+                    int ret = 0;
+                    if (buf->len > 0)
+                        int len = buf_forward_capacity(buf);  #buf´Ó buf->offset+buf->len ¿ªÊ¼Ö®ºóµÄÈİÁ¿
+                        i = BIO_read(bio, BPTR(buf), len);
+                        if(i < 0)  #¶ÁÈ¡Ê§°Ü
+                            if (BIO_should_retry(bio)) #ÏÂ´ÎÔÙÊÔ£¿
+                                (0)
+                            else
+                                crypto_msg(D_TLS_ERRORS, "TLS_ERROR: BIO read %s error", desc);
+                                ret = -1;
+                        else if(i == 0)  #ÎŞÊı¾İ¿É¶Á
+                            buf->len = 0;
+                        else  #¶Áµ½Êı¾İÁË
+                            buf->len = i;
+                            ret = 1;
+                    return ret
+            if(status == 1) #¶Áµ½Êı¾İÁË
+                state_change = true;
+                *wakeup = 0;
+        '''ÈÃbufÖ¸ÏòÎÄ±¾Ğ´»º³åÇø£¬ÎªÁË·¢ËÍKey'''
+        buf = &ks->plaintext_write_buf;
+        if (!buf->len && ( (ks->state == S_START && !session->opt->server)
+                           || (ks->state == S_GOT_KEY && session->opt->server) ) )
+            '''½«keyÊı¾İ¡¢¶Ô¶ËĞÅÏ¢£¬ÓÃ»§ÃûÃÜÂë£¬OCCµÈ£¬Ğ´µ½tsl¿ØÖÆÍ¨µÀÖĞ£¨´¿ÎÄ±¾£©'''
+            bool b = key_method_2_write(buf, multi, session)
+                'bufÖĞĞ´Ò»¸ö uint32 µÄ 0
+                'bufÖĞĞ´ uint8 µÄ KEY_METHOD_2(2)
+                '''bufÖĞĞ´ÈëÃÜÔ¿²ÄÁÏ£¨Ò»¸öËæ»úÊı£©'''
+                key_source2_randomize_write(k2=ks->key_src, buf, session->opt->server)
+                    key_source *k = &k2->client / &k2->server;
+                    clear(*k)
+                    if (!server)
+                        '''outÖĞ²úÉúËæ»úÊı£¬²¢Ğ´Èëµ½bufÖĞ'''
+                        random_bytes_to_buf(buf, out=k->pre_master, sizeof k->pre_master)
+                    random_bytes_to_buf(buf, k->random1, sizeof k->random1)
+                    random_bytes_to_buf(buf, k->random2, sizeof k->random2)
+                '''session->opt->local_options = 
+                       V4,dev-type tun,link-mtu 1553,tun-mtu 1500,proto UDPv4,
+                       cipher BF-CBC,auth SM3,keysize 128,key-method 2,tls-client
+                   '''
+                write_string(buf, session->opt->local_options, TLS_OPTIONS_LEN)
+                if (auth_user_pass_enabled || #auth_user_pass_enabledÎªÈ«¾Ö±äÁ¿£¬¸ù¾İÅäÖÃ£¬ÎªÕæ
+                    (auth_token.token_defined && auth_token.defined))
+                    user_pass *up = &auth_user_pass;
+                    '''maxlen<0Ê±£¬±í²»ÏŞ³¤¶È'''
+                    write_string(buf, str = up->username, maxlen=-1)
+                        len = strlen(str) + 1
+                        buf_write_u16(buf, len)
+                        buf_write(buf, str, len)
+                    write_string(buf, up->password, maxlen=-1)
+                    if (!session->opt->pull)  #¿Í»§¶ËÊ±£¬pullÖµÎªÕæ
+                        purge_user_pass(&auth_user_pass, false);
+                else
+                    write_empty_string(buf) #±íÊ¾Ã»ÓĞÓÃ»§Ãû
+                    write_empty_string(buf) #±íÊ¾Ã»ÓĞÃÜÂë
+                push_peer_info(buf, session)
+                    if (session->opt->push_peer_info_detail > 0) #Âú×ã
+                        "IV_VER=PACKAGE_VERSION\n" => buf
+                        "IV_PLAT=win\n" => buf
+                        "IV_PROTO=IV_PROTO_DATA_V2 | IV_PROTO_REQUEST_PUSH\n" => buf
+                        "IV_CIPHERS=$(session->opt->config_ncp_ciphers)\n" => buf
+                        if (!(opt->flags & COMP_F_ADVERTISE_STUBS_ONLY))
+                            "IV_LZ4=1\n" => buf
+                            "IV_LZ4v2=1\n" => buf
+                            "IV_LZO=1\n" => buf
+                            "IV_COMP_STUB=1\n" => buf
+                            "IV_COMP_STUBv2=1\n" => buf
+                            "IV_TCPNL=1\n" => buf
+                        ... => buf
+                    else
+                        write_empty_string(buf)   #no peer info 
+                '''Èç¹ûÎÒÃÇÊÇTLS server£¬Ôò²úÉútunnel keys £º
+                   Èç¹ûÎÒÃÇÊÇÒ»¸öÔÊĞíNCPµÄp2mp·şÎñÆ÷£¬
+                   µÚÒ»¸öÃÜÔ¿µÄÉú³É»á±»ÍÆ³Ùµ½Á¬½Ó½Å±¾Íê³ÉºÍNCPÑ¡Ïî¿ÉÒÔ±»´¦ÀíÖ®ºó¡£
+                   ÒòÎªÕâ×ÜÊÇ·¢ÉúÔÚÁ¬½Ó½Å±¾Ñ¡Ïî¿ÉÓÃÖ®ºó£¬
+                   CAS_SUCCEEDED×´Ì¬ÓëNCPÑ¡Ïî±»´¦ÀíÏàÍ¬£¬ÎÒÃÇÃ»ÓĞ¶îÍâµÄNCPÍê³É×´Ì¬¡£
+                   '''
+                if (session->opt->server && 
+                    (session->opt->mode != MODE_SERVER || 
+                     multi->multi_state == CAS_SUCCEEDED) )
+                    if (ks->authenticated > KS_AUTH_FALSE)
+                        tls_session_generate_data_channel_keys(session)
+            state_change = true;
+            ks->state = S_SENT_KEY;
+        '''ÈÃbufÖØĞÂÖ¸ÏòÎÄ±¾»º´æÇø(ÎªÁË¶ÁÈ¡Key£©'''
+        buf = &ks->plaintext_read_buf;
+        if (buf->len && ( (ks->state == S_SENT_KEY && !session->opt->server)
+                          || (ks->state == S_START && session->opt->server) ) )
+            ¡£¡£¡£
+        '''ÈÃbufÖØĞÂÖ¸ÏòÎÄ±¾Ğ´»º³åÇø£¬ÎªÁË½«ÒªÊä³öµÄÎÄ±¾Ğ´µ½tlsÉÏ'''
+        buf = &ks->plaintext_write_buf;
+        if (buf->len)
+            '''¿Í»§¶ËµÄµÚÒ»¸öClient Hello°ü£¬¾ÍÊÇ´ÓÕâÀï²úÉúµÄ'''
+            key_state_write_plaintext(&ks->ks_ssl, buf);
+        '''½«ÒªÊä³öµÄÊı¾İ·Åµ½¿ÉĞÅ²ãÉÏ'''
+        if (ks->state >= S_START)
+            //ÔÚsend_reliableÖĞÑ°ÕÒÒ»¸ö¿ÕÏĞµÄreliable_entry£¬È¡³öÆäbuf
+            buf = reliable_get_buf_output_sequenced(ks->send_reliable);
+                int status = key_state_read_ciphertext(&ks->ks_ssl, buf, PAYLOAD_SIZE_DYNAMIC(&multi->opt.frame));
+                    '''ks_ssl->ct_out Îª key_state_ssl ½á¹¹£¬³ÉÔ±ÖµÓĞ£º
+                       SSL *ssl;     /* SSL object -- new obj created for each new key */
+                       BIO *ssl_bio; /* read/write plaintext from here */
+                       BIO *ct_in;   /* write ciphertext to here */
+                       BIO *ct_out;  /* read ciphertext from here */
+                       Ö®Ç°µÄ´úÂëÓĞÓĞ¹ı¶ÔÕâĞ©³ÉÔ±±äÁ¿µÄ³õÊ¼»¯ÉèÖÃ
+                       ÕâÀïÊÇ´Ótls²ã¶ÁÈ¡¼ÓÃÜµÄÊı¾İ£¨¶Áµ½µÄÎªtls½âÃÜºóµÄ£©
+                       '''
+                    return bio_read(ks_ssl->ct_out, buf, maxlen, "tls_read_ciphertext");
+                if (status == 1)  #´Óssl²ã¶Áµ½Êı¾İÁË
+                    '''´Ósend_reliable->array[]ÖĞÕÒµ½Óëbuf¶ÔÓ¦µÄÄÇ¸ö reliable_entry£¬¼ÇÎª e
+                       e->packet_id = rel->packet_id++;
+                       buf_write_prepend(buf, e->packet_id)
+                       e->active = true;
+                       e->opcode = P_CONTROL_V1;
+                       e->next_try = 0;
+                       e->timeout = rel->initial_timeout;
+                       '''
+                    reliable_mark_active_outgoing(ks->send_reliable, buf, opcode=P_CONTROL_V1)
+                        ´Ó 
+                    state_change = true;
+        +¡£¡£¡£
+    '''Èç¹ûto_linkÖĞÃ»ÓĞÒª·¢ËÍµÄÊı¾İ£¬ÇÒ ks->rec_ack ²»Îª¿Õ£¨ÊÕµ½ÁËÏìÓ¦°ü£©'''
+    +if (!to_link->len && !reliable_ack_empty(ks->rec_ack))
+        buffer buf = ks->ack_write_buf;
+        buf_init(&buf£¬...)
+        '''²úÉú»ØÓ¦°ü
+           ×¢£º¿Í»§¶Ë·¢ËÍÁË P_ACK_V1 °üºó£¨Ğ¯´øÃÜÔ¿²ÄÁÏ£©£¬·şÎñ¶Ë¾Í»á·¢ËÍ ssl ²ãµÄ Client Hello
+           È»ºó¿Í»§¶Ë»ØÓ¦ Server Hello£¬´Ó¶øÏà»¥Ö®¼ä½¨Á¢ÆğsslÁ¬½Ó
+           '''
+        write_control_auth(session, ks, &buf, to_link_addr, opcode=P_ACK_V1,
+                           max_ack=RELIABLE_ACK_SIZE, prepend_ack=false);
+            @write_control_auth
+        *to_link = buf;
+        active = true;
+    '''¼ÆËãµÃµ½wakeupÊ±¼ä'''
+    +if (ks->state >= S_INITIAL)
+        '''ks->send_reliableÖĞÕÒµ½×îÔçµÄ´òËã·¢ËÍµÄreliable_entry£¬½«ÆäÊ±¼ä´æ¸øwakeup'''
+        compute_earliest_wakeup(wakeup,reliable_send_timeout(ks->send_reliable))
+        '''Èç¹ûwakeupµÄÖµ´óÓÚks->must_negotiateµÄÊ±¼ä£¬ÔòÉèÎªks->must_negotiateÖ¸¶¨µÄÊ±¼ä'''
+        compute_earliest_wakeup(wakeup, ks->must_negotiate - now);
+        '''Èç¹ûÒÑ¾­½¨Á¢ÆğÁ¬½Ó£¬wakeupÓëÖØĞÂĞ­ÉÌÊ±¼ä£¨renegotiate_seconds£©×ö¶Ô±È£¬wakeup=ÆäÖĞ½ÏÔçÕß'''
+        if (ks->established && session->opt->renegotiate_seconds)
+            ¡£¡£¡£
+        Èç¹û wakeup µÄÖµ <=0 £¬wakeup = 1£¬ active = true;
+    +return active;
+    error:  return false;
++&<ovpn¿ØÖÆĞ­Òé²Ù×÷Âë>
+    #packet opcode (high 5 bits) and key-id (low 3 bits) are combined in one byte 
+    ££define P_KEY_ID_MASK                  0x07
+    ££define P_OPCODE_SHIFT                 3
+    #packet opcodes -- the V1 is intended to allow protocol changes in the future 
+    ££define P_CONTROL_HARD_RESET_CLIENT_V1 1     /* initial key from client, forget previous state */
+    ££define P_CONTROL_HARD_RESET_SERVER_V1 2     /* initial key from server, forget previous state */
+    ££define P_CONTROL_SOFT_RESET_V1        3     /* new key, graceful transition from old to new key */
+    ££define P_CONTROL_V1                   4     /* control channel packet (usually TLS ciphertext) */
+    ££define P_ACK_V1                       5     /* acknowledgement for packets received */
+    ££define P_DATA_V1                      6     /* data channel packet */
+    ££define P_DATA_V2                      9     /* data channel packet with peer-id */
+    #indicates key_method >= 2 
+    ££define P_CONTROL_HARD_RESET_CLIENT_V2 7     /* initial key from client, forget previous state */
+    ££define P_CONTROL_HARD_RESET_SERVER_V2 8     /* initial key from server, forget previous state */
+    #indicates key_method >= 2 and client-specific tls-crypt key
+    ££define P_CONTROL_HARD_RESET_CLIENT_V3 10    /* initial key from client, forget previous state */
+    #define the range of legal opcodes, Since no longer support key-method 1, consider the v1 op codes invalid 
+    ££define P_FIRST_OPCODE                 3
+    ££define P_LAST_OPCODE                  10
+
+            
 ===========================================================================================================     
                 
-²¿·ÖÊı¾İ½á¹¹
++²¿·ÖÊı¾İ½á¹¹
     multi_instance *mi->context.c2.es
     multi_instance *mi->context.c2.tls_multi.es
     session->opt->es
     tls_multi *multi->opt.es        
     
-    #&<multi_context>
+    +&<multi_context>
     #´æ´¢openvpnµÄ·şÎñ×´Ì¬µÄ½á¹¹£¬Ö»ÔÚ·şÎñ¶ËÊ¹ÓÃ£¬´æ´¢ËùÓĞvpnËíµÀºÍ½ø³Ì¼¶µÄ×´Ì¬
     struct multi_context multi
     /{
@@ -1521,7 +2733,7 @@ process_coarse_timers(struct context *c)
         ¡£¡£¡£
     /}
     
-    #&<multi_instance>
+    +&<multi_instance>
     #·şÎñÆ÷Ä£Ê½ÏÂ£¬ÓÃÓÚ´æ´¢Ò»¸övpnËíµÀµÄ×´Ì¬µÄ½á¹¹
     struct multi_instance
     /{
@@ -1533,7 +2745,7 @@ process_coarse_timers(struct context *c)
         ¡£¡£¡£
     /}
     
-    #&<context>
+    +&<context>
     #¸Ã½á¹¹´ú±íÁËÒ»¸övpnËíµÀ£¬ÓÃÓÚ´æ´¢Ò»¸öËíµÀµÄ×´Ì¬ĞÅÏ¢
     #µ«Ò²°üº¬Ò»Ğ©½ø³Ì¼¶±ğµÄÊı¾İ£¬ÏñÈçÅäÖÃÑ¡Ïî
     struct context
@@ -1557,7 +2769,7 @@ process_coarse_timers(struct context *c)
         ¡£¡£¡£
     /}
     
-    #&<context_1>
+    +&<context_1>
     #¸Ã½á¹¹°üº¬µÄ×´Ì¬²»ÊÜSIGUSR1ÖØÆôĞÅºÅµÄÓ°Ïì£¬µ«»áÒòSIGHUPÖØÆôĞÅºÅ¶øÖØÖÃ
     struct context_1
     /{
@@ -1583,7 +2795,7 @@ process_coarse_timers(struct context *c)
         const char *authname;
     /}
     
-    #&<context_2>
+    +&<context_2>
     #´æ´¢ÁËÒòSIGHUP»òSIGUSR1ĞÅºÅµ¼ÖÂµÄ¡°ÖØÆô¡±ÒÔÀ´µÄ×´Ì¬ĞÅÏ¢
     struct context_2
     /{
@@ -1615,8 +2827,8 @@ process_coarse_timers(struct context *c)
         bool es_owned;
         ¡£¡£¡£
     /}
-    
-    #&<tls_multi>
+        
+    +&<tls_multi>
     #ÆôÓÃ TLS µÄÇé¿öÏÂÔËĞĞµÄ»î¶¯ VPN ËíµÀÓĞÒ»¸ötls_multi¶ÔÏó£¬
     #ÆäÖĞ´æ´¢ËùÓĞ¿ØÖÆÍ¨µÀºÍÊı¾İÍ¨µÀ°²È«²ÎÊı×´Ì¬¡£
     #´Ë½á¹¹¿ÉÒÔ°üº¬¶à¸ö£¨¿ÉÄÜÍ¬Ê±´¦ÓÚ»î¶¯×´Ì¬£©tls_context¶ÔÏó£¬
@@ -1646,7 +2858,7 @@ process_coarse_timers(struct context *c)
         ¡£¡£¡£
     /}
     
-    #&<key_state>
+    +&<key_state>
     #´æ´¢Á¿¿ØÖÆÍ¨µÀµÄtls×´Ì¬ºÍÊı¾İÍ¨µÀµÄÃÜÂë×´Ì¬£¬
     #»¹°üº¬ÁË¡°¿ÉĞÅ²ã½á¹¹¡±--ÓÃÓÚ¿ØÖÆÍ¨µÀµÄÏûÏ¢[´«Êä]
     struct key_state
@@ -1678,27 +2890,92 @@ process_coarse_timers(struct context *c)
         ¡£¡£¡£
     /}
     
-    #&<tls_session>
+    +&<tls_session>
     #´æ´¢Ò»¸ö»á»°µÄ°²È«²ÎÊıĞÅÏ¢£¨»á»°ÊôÓÚËíµÀ£©
     #¸Ã½á¹¹¶ÔÓ¦Ò»¸övpnµÄ¶Ëµ½¶ËµÄ¿ØÖÆÍ¨µÀsession
     struct tls_session
     /{
         struct tls_options *opt;  #³£Á¿Ñ¡ÏîºÍÅäÖÃĞÅÏ¢
-        struct session_id session_id;
+        struct session_id session_id;  #Ëæ»úÊı
+        ''' during hard reset used to control burst retransmit '''
+        bool burst;
+        ''' authenticate control packets '''
+        struct tls_wrap_ctx tls_wrap;
+        int initial_opcode;         ''' our initial P_ opcode '''
+        ''' The current active key id, used to keep track of renegotiations.
+            key_id increments with each soft reset to KEY_ID_MASK then recycles back
+            to 1.  This way you know that if key_id is 0, it is the first key.
+        '''
         int key_id; #ÓÃÒÔ¸ú×Ùrenegotiations
-        ¡£¡£¡£
+        int limit_next;             ''' used for traffic shaping on the control channel '''
+        int verify_maxlevel;
+        char *common_name;
+        struct cert_hash_set *cert_hash_set;
+        uint32_t common_name_hashval;
+        bool verified;              ''' true if peer certificate was verified against CA '''
+        ''' not-yet-authenticated incoming client '''
+        struct link_socket_actual untrusted_addr;
+        struct key_state key[KS_SIZE];    //@key_state  @:key_state
     /}
     
+    '''¼ÇÂ¼ÃÜÔ¿²ßÂÔ½á¹ûĞÅÏ¢
+       ¸Ã½á¹¹³ÉÔ±µÄ³õÊ¼»¯£¬Ö÷ÒªÔÚdo_init_crypto_tls::do_init_crypto_tls_c1ÖĞÍê³É
+       '''
+    +&<key_schedule>
+    {
+        '''¼ÇÂ¼ÎÒÃÇÓÃÊ²Ã´cipher£¨ÌØÖ¸¶Ô³Æ¼ÓÃÜËã·¨£©¡¢HMACËã·¨¡¢ÃÜÔ¿´óĞ¡'''
+        struct key_type key_type;  #Õâ¸öÊÇ¶Ô³Æ¼ÓÃÜÓÃµÄÊı¾İ½á¹¹
+        '''Ô¤¹²ÏíµÄ¾²Ì¬ÃÜÔ¿£¬´ÓÎÄ¼şÖĞ¶ÁÈ¡'''
+        struct key_ctx_bi static_key;
+        '''È«¾ÖÓÃµÄ SSL context'''
+        struct tls_root_ctx ssl_ctx;
+        '''ÏÂÃæÕâĞ©ÓÃÓÚ¶Ô TLS ¿ØÖÆÍ¨µÀÊı¾İµÄ°ü×°£¨¿ÉÑ¡£©£¬
+           ¶ÔÓ¦--tls-auth/--tls-crypt
+           ÓëÖ®¹ØÁªµÄÊı¾İ½á¹¹ÊÇ :
+           tls_options.tls_wrap
+           tls_auth_standalone.tls_wrap (·şÎñ¶Ë£©
+           tls_multi.opt.tls_wrap
+           ×¢£º
+               key_typeÖĞ°üº¬cipher_kt_t¡¢md_kt_tµÈ³ÉÔ±½á¹¹
+               ¶økey_ctxÖĞ°üº¬cipher_ctx_t¡¢hmac_ctx_tµÈ³ÉÔ±½á¹¹
+               ËûÃÇµÄ¹ØÏµÊÇ£¬cipher_ctx_tÖĞ³ıÁË°üº¬cipher_kt_t£¬
+               »¹°üº¬¼ÓÃÜÓÃµÄÆäËüÏà¹Ø²ÎÊı£¬ÄÜÕæÕıÍê³ÉÊı¾İµÄ¼ÓÃÜ
+           '''
+        struct key_type tls_auth_key_type;  #Õâ¸öÊÇÊ¹ÓÃÈÏÖ¤²ãÊ±£¬ÓÃµ½µÄÊı¾İ½á¹¹
+        struct key_ctx_bi tls_wrap_key;   #Õâ¸öÊÇÊ¹ÓÃÈÏÖ¤²ãÊ±£¬ÓÃµ½µÄÊı¾İ½á¹¹
+        struct key_ctx tls_crypt_v2_server_key;
+        struct buffer tls_crypt_v2_wkc;            ''' Wrapped client key'''
+        struct key_ctx auth_token_key;
+    };
     
-    &<½á¹¹±äÁ¿Ê¹ÓÃÇé¿ö×·×Ù>
-    mainÖĞµÄ context c; 
+    '''ÓÃÓÚ¼ÇÂ¼¼üÅÌÊÂ¼şµÄ½á¹¹'''
+    +&<win32_signal>
+    {
+        #define WSO_MODE_UNDEF   0
+        #define WSO_MODE_SERVICE 1
+        #define WSO_MODE_CONSOLE 2
+        int mode;
+        struct rw_handle in;
+        DWORD console_mode_save;
+        bool console_mode_save_defined;
+    };
+    
+    +&<rw_handle>
+    {
+        HANDLE read;
+        HANDLE write;
+    };
+    
+    
++&<½á¹¹±äÁ¿Ê¹ÓÃÇé¿ö×·×Ù>
+    +mainÖĞµÄ context c; 
         ¸ºÔğÅäÖÃÏî
         ¸ºÔğ²å¼ş
         ¸ºÔğÈÕÖ¾
         ¸ºÔğ¹ÜÀí×ÓÏµÍ³
         ¸ºÔğ»·¾³±äÁ¿
     
-    tunnel_server_udp_single_threadedÖĞµÄ context c £¨Ö¸ÏòmainÖĞµÄ context c£©
+    +tunnel_server_udp_single_threadedÖĞµÄ context c £¨Ö¸ÏòmainÖĞµÄ context c£©
         ¸ºÔğcontext_2
             ÈÃcontext_2µÄes¼Ì³ĞmainÖĞcontextµÄ»·¾³±äÁ¿
             ¸ºÔğcontext_2µÄlink_socket
@@ -1706,7 +2983,7 @@ process_coarse_timers(struct context *c)
         ¸ºÔğcontext_1
         ¸ºÔğÅäÖÃÏî
     
-    tunnel_server_udp_single_threadedÖĞµÄ multi_context multi;
+    +tunnel_server_udp_single_threadedÖĞµÄ multi_context multi;
         ¸ù¾İcontext top£¬³õÊ¼»¯multi
         ¼Ì³Ğcontext top£¬²¢¶ÔÆäÖĞÒ»Ğ©Öµ½øĞĞĞŞ¸Ä
             mode¸ÄÎªCM_TOP_CLONE£¨·ÀÖ¹close_instance¹Ø±Õ¸¸ÀàµÄ×ÊÔ´¾ä±ú£©
@@ -1718,7 +2995,7 @@ process_coarse_timers(struct context *c)
             ...
         
         
-tunnel_serverµÄÄÚÑ­»·  #&<tunnel_serverµÄÄÚÑ­»·>
++tunnel_serverµÄÄÚÑ­»·  #&<tunnel_serverµÄÄÚÑ­»·>
     tunnel_server_udp_single_threaded(context *top)
         multi_context multi;
         '³õÊ¼»¯¶¥²ãcontextµÄc2'
@@ -1884,7 +3161,7 @@ tunnel_serverµÄÄÚÑ­»·  #&<tunnel_serverµÄÄÚÑ­»·>
                     ´¦Àí TUN_WRITE ÊÂ¼ş
                     '''
                     
-tuntapºÍlink·Ö±ğÊÇÈçºÎ³õÊ¼»¯µÄ                    
++tuntapºÍlink·Ö±ğÊÇÈçºÎ³õÊ¼»¯µÄ                    
     c.c2.link_socketµÄ³õÊ¼»¯
         openvpn_main
             tunnet_server
@@ -1976,3 +3253,698 @@ tuntapºÍlink·Ö±ğÊÇÈçºÎ³õÊ¼»¯µÄ
                                                                         ai_family,
                                                                         "TCP/UDP", 
                                                                         sock->info.bind_ipv6_only);
+
++&<³£ÓÃºê¶¨Òå>
+    +Tunnel types
+        ££define DEV_TYPE_UNDEF 0
+        ££define DEV_TYPE_NULL  1
+        ££define DEV_TYPE_TUN   2    /* point-to-point IP tunnel */
+        ££define DEV_TYPE_TAP   3    /* ethernet (802.3) tunnel */
+    +TUNµÄ×éÍø·½Ê½
+        ££define TOP_UNDEF   0
+        ££define TOP_NET30   1
+        ££define TOP_P2P     2
+        ££define TOP_SUBNET  3
+    +enum proto_num 
+        PROTO_NONE,     /* catch for uninitialized */
+        PROTO_UDP,
+        PROTO_TCP,
+        PROTO_TCP_SERVER,
+        PROTO_TCP_CLIENT,
+        PROTO_N
+    +context modes
+        ££define CM_P2P            0  /* standalone point-to-point session or client */
+        ££define CM_TOP            1  /* top level of a multi-client or point-to-multipoint server */
+        ££define CM_TOP_CLONE      2  /* clone of a CM_TOP context for one thread */
+        ££define CM_CHILD_UDP      3  /* child context of a CM_TOP or CM_THREAD */
+        ££define CM_CHILD_TCP      4  /* child context of a CM_TOP or CM_THREAD */
+
++&<:tls_multi>
+'''¹²1¸ötls_multiÏÂÃæÓĞTM_SIZE=3¸ötls_session£¬Ã¿¸ötls_sessionÏÂÃæÓÖÓĞKS_SIZE=2¸ökey_state'''
+/struct tls_multi
+        struct tls_options opt;  &<:tls_options>
+            ''' our master TLS context from which all SSL objects derived '''
+            struct tls_root_ctx ssl_ctx;
+            ''' data channel cipher, hmac, and key lengths '''
+            struct key_type key_type;
+            ''' true if we are a TLS server, client otherwise '''
+            bool server;
+            ''' if true, don't xmit until first packet from peer is received '''
+            bool xmit_hold;
+            ''' local and remote options strings
+                that must match between client and server '''
+            const char *local_options;
+            const char *remote_options;
+            ''' from command line '''
+            bool replay;
+            bool single_session;
+            bool disable_occ;
+            int mode;
+            bool pull;
+            int push_peer_info_detail;
+            int transition_window;
+            int handshake_window;
+            interval_t packet_timeout;
+            int renegotiate_bytes;
+            int renegotiate_packets;
+            interval_t renegotiate_seconds;
+            ''' cert verification parms '''
+            const char *verify_command;
+            const char *verify_export_cert;
+            int verify_x509_type;
+            const char *verify_x509_name;
+            const char *crl_file;
+            bool crl_file_inline;
+            int ns_cert_type;
+            unsigned remote_cert_ku[MAX_PARMS];
+            const char *remote_cert_eku;
+            uint8_t *verify_hash;
+            hash_algo_type verify_hash_algo;
+            char *x509_username_field;
+            ''' allow openvpn config info to be
+                passed over control channel '''
+            bool pass_config_info;
+            ''' struct crypto_option flags '''
+            unsigned int crypto_flags;
+            int replay_window;                 ''' --replay-window parm '''
+            int replay_time;                   ''' --replay-window parm '''
+            bool tcp_mode;
+            const char *config_ciphername;
+            const char *config_ncp_ciphers;
+            bool ncp_enabled;
+            bool tls_crypt_v2;
+            const char *tls_crypt_v2_verify_script;
+            '''   TLS handshake wrapping state '''
+            struct tls_wrap_ctx tls_wrap;
+            struct frame frame;
+            ''' used for username/password authentication '''
+            const char *auth_user_pass_verify_script;
+            bool auth_user_pass_verify_script_via_file;
+            const char *tmp_dir;
+            const char *auth_user_pass_file;
+            bool auth_token_generate;   '''<Generate auth-tokens on successful
+                                            user/pass auth,seet via
+                                            options->auth_token_generate. '''
+            bool auth_token_call_auth; '''< always call normal authentication '''
+            unsigned int auth_token_lifetime;
+            struct key_ctx auth_token_key;
+            ''' use the client-config-dir as a positive authenticator '''
+            const char *client_config_dir_exclusive;
+            ''' instance-wide environment variable set '''
+            struct env_set *es;
+            openvpn_net_ctx_t *net_ctx;
+            const struct plugin_list *plugins;
+            ''' compression parms '''
+            ££ifdef USE_COMP
+            struct compress_options comp_options;
+            ££endif
+            ''' configuration file SSL-related boolean and low-permutation options '''
+            ££define SSLF_CLIENT_CERT_NOT_REQUIRED (1<<0)
+            ££define SSLF_CLIENT_CERT_OPTIONAL     (1<<1)
+            ££define SSLF_USERNAME_AS_COMMON_NAME  (1<<2)
+            ££define SSLF_AUTH_USER_PASS_OPTIONAL  (1<<3)
+            ££define SSLF_OPT_VERIFY               (1<<4)
+            ££define SSLF_CRL_VERIFY_DIR           (1<<5)
+            ££define SSLF_TLS_VERSION_MIN_SHIFT    6
+            ££define SSLF_TLS_VERSION_MIN_MASK     0xF  ''' (uses bit positions 6 to 9) '''
+            ££define SSLF_TLS_VERSION_MAX_SHIFT    10
+            ££define SSLF_TLS_VERSION_MAX_MASK     0xF  ''' (uses bit positions 10 to 13) '''
+            ££define SSLF_TLS_DEBUG_ENABLED        (1<<14)
+            unsigned int ssl_flags;
+            ££ifdef MANAGEMENT_DEF_AUTH
+            struct man_def_auth_context *mda_context;
+            ££endif
+            const struct x509_track *x509_track;
+            ££ifdef ENABLE_MANAGEMENT
+            const struct static_challenge_info *sci;
+            ££endif
+            ''' --gremlin bits '''
+            int gremlin;
+            ''' Keying Material Exporter [RFC 5705] parameters '''
+            const char *ekm_label;
+            size_t ekm_label_size;
+            size_t ekm_size;        
+        struct key_state *key_scan[KEY_SCAN_SIZE];  &<:key_state>
+            int state;
+            '''The state of the auth-token sent from the client '''
+            int auth_token_state_flags;
+            ''' Key id for this key_state,  inherited from struct tls_session.
+                @see tls_session::key_id.'''
+            int key_id;
+            struct key_state_ssl ks_ssl; '''contains SSL object and BIOs for the control channel '''
+                SSL *ssl;                   ''' SSL object -- new obj created for each new key '''
+                BIO *ssl_bio;                       ''' read/write plaintext from here '''
+                BIO *ct_in;                 ''' write ciphertext to here '''
+                BIO *ct_out;                        ''' read ciphertext from here '''
+            time_t established;         '''when our state went S_ACTIVE '''
+            time_t must_negotiate;      '''key negotiation times out if not finished before this time '''
+            time_t must_die;            '''this object is destroyed at this time '''
+            int initial_opcode;         '''our initial P_ opcode '''
+            struct session_id session_id_remote; '''peer's random session ID '''
+                uint8_t id[8];
+            struct link_socket_actual remote_addr; &<:link_socket_actual> '''peer's IP addr '''
+                struct openvpn_sockaddr dest;
+                    union {
+                        struct sockaddr sa;
+                        struct sockaddr_in in4;
+                        struct sockaddr_in6 in6;
+                    } addr;
+            struct crypto_options crypto_options;'''data channel crypto options '''
+                struct key_ctx_bi key_ctx_bi;
+                '''< OpenSSL cipher and HMAC contexts for
+                     both sending and receiving
+                     directions. '''
+                struct packet_id packet_id; '''< Current packet ID state for both
+                                                 sending and receiving directions. '''
+                struct packet_id_persist *pid_persist;
+                '''< Persistent packet ID state for
+                     keeping state between successive
+                     OpenVPN process startups. '''
+                ££define CO_PACKET_ID_LONG_FORM  (1<<0)
+                '''< Bit-flag indicating whether to use
+                    OpenVPN's long packet ID format. '''
+                ££define CO_IGNORE_PACKET_ID     (1<<1)
+                '''< Bit-flag indicating whether to ignore
+                     the packet ID of a received packet.
+                     This flag is used during processing
+                     of the first packet received from a
+                     client. '''
+                ££define CO_MUTE_REPLAY_WARNINGS (1<<2)
+                '''< Bit-flag indicating not to display
+                     replay warnings. '''
+                unsigned int flags;         '''< Bit-flags determining behavior of
+                                                 security operation functions. '''
+            struct key_source2 *key_src;       '''source entropy for key expansion '''
+                struct key_source client;   '''< Random provided by client. '''
+                    uint8_t pre_master[48];     '''< Random used for master secret
+                                                     generation, provided only by client
+                                                     OpenVPN peer. '''
+                    uint8_t random1[32];        '''< Seed used for master secret
+                                                     generation, provided by both client
+                                                     and server. '''
+                    uint8_t random2[32];        '''< Seed used for key expansion, provided
+                                                     by both client and server. '''
+                struct key_source server;   '''< Random provided by server. '''
+            struct buffer plaintext_read_buf;
+            struct buffer plaintext_write_buf;
+            struct buffer ack_write_buf;
+            struct reliable *send_reliable; '''holds a copy of outgoing packets until ACK received '''
+            struct reliable *rec_reliable; '''order incoming ciphertext packets before we pass to TLS '''
+            struct reliable_ack *rec_ack; '''buffers all packet IDs we want to ACK back to sender '''
+            struct buffer_list *paybuf;
+            counter_type n_bytes;                '''how many bytes sent/recvd since last key exchange '''
+            counter_type n_packets;              '''how many packets sent/recvd since last key exchange '''
+            ''' If bad username/password, TLS connection will come up but 'authenticated' will be false.'''
+            enum ks_auth_state authenticated;
+            time_t auth_deferred_expire;
+            ££ifdef MANAGEMENT_DEF_AUTH
+            unsigned int mda_key_id;
+            unsigned int mda_status;
+            ££endif
+            ££ifdef PLUGIN_DEF_AUTH
+            unsigned int auth_control_status;
+            time_t acf_last_mod;
+            char *auth_control_file;
+            ££endif
+        '''<List of key_state objects in the
+              order they should be scanned by data
+              channel modules. '''
+        ''' used by tls_pre_encrypt to communicate the encrypt key
+            to tls_post_encrypt()'''
+        struct key_state *save_ks;  ''' temporary pointer used between pre/post routines '''
+        ''' Used to return outgoing address from tls_multi_process.'''
+        struct link_socket_actual to_link_addr;
+            struct openvpn_sockaddr dest;
+                union {
+                    struct sockaddr sa;
+                    struct sockaddr_in in4;
+                    struct sockaddr_in6 in6;
+                } addr;
+        int n_sessions;             '''< Number of sessions negotiated thus far. '''
+        enum client_connect_status multi_state;
+            enum client_connect_status {
+                CAS_SUCCEEDED=0,
+                CAS_PENDING,
+                CAS_PENDING_DEFERRED,
+                CAS_PENDING_DEFERRED_PARTIAL,   /**< at least handler succeeded, no result yet*/
+                CAS_FAILED,
+            };
+        ''' Number of errors.'''
+        int n_hard_errors; ''' errors due to TLS negotiation failure '''
+        int n_soft_errors; ''' errors due to unrecognized or failed-to-authenticate incoming packets '''
+        ''' Our locked common name, username, and cert hashes (cannot change during the life of this tls_multi object)'''
+        char *locked_cn;
+        char *locked_username;
+        struct cert_hash_set *locked_cert_hash_set;
+        ''' Time of last call to tls_authentication_status '''
+        time_t tas_last;
+        ''' An error message to send to client on AUTH_FAILED'''
+        char *client_reason;
+        ''' A multi-line string of general-purpose info received from peer
+            over control channel.'''
+        char *peer_info;
+        char *auth_token;    '''<  If server sends a generated auth-token,
+                                   this is the token to use for future
+                                   user/pass authentications in this session.
+                              '''
+        char *auth_token_initial;
+        '''< The first auth-token we sent to a client, for clients that do
+            not update their auth-token (older OpenVPN3 core versions)'''
+        ££define  AUTH_TOKEN_HMAC_OK              (1<<0)
+        '''< Auth-token sent from client has valid hmac '''
+        ££define  AUTH_TOKEN_EXPIRED              (1<<1)
+        '''< Auth-token sent from client has expired '''
+        ££define  AUTH_TOKEN_VALID_EMPTYUSER      (1<<2)
+        ''' Auth-token is only valid for an empty username
+            and not the username actually supplied from the client
+            OpenVPN 3 clients sometimes wipes or replaces the username with a
+            username hint from their config.'''
+        ''' For P_DATA_V2 '''
+        uint32_t peer_id;
+        bool use_peer_id;
+        char *remote_ciphername;    '''< cipher specified in peer's config file '''
+        ''' Our session objects.'''
+        struct tls_session session[TM_SIZE];
+            ''' const options and config info '''
+            struct tls_options *opt; @:tls_options
+            ''' during hard reset used to control burst retransmit '''
+            bool burst;
+            ''' authenticate control packets '''
+            struct tls_wrap_ctx tls_wrap;
+                enum {
+                    TLS_WRAP_NONE = 0, '''< No control channel wrapping '''
+                    TLS_WRAP_AUTH,  '''< Control channel authentication '''
+                    TLS_WRAP_CRYPT, '''< Control channel encryption and authentication '''
+                } mode;                     '''< Control channel wrapping mode '''
+                struct crypto_options opt;  '''< Crypto state '''  @:crypto_options
+                struct buffer work;         '''< Work buffer (only for --tls-crypt) '''
+                struct key_ctx tls_crypt_v2_server_key;  '''< Decrypts client keys ''' &<:key_ctx>
+                    cipher_ctx_t *cipher;       '''< Generic cipher %context. '''
+                        typedef EVP_CIPHER_CTX cipher_ctx_t;
+                    hmac_ctx_t *hmac;           '''< Generic HMAC %context. '''
+                        typedef HMAC_CTX hmac_ctx_t;
+                    uint8_t implicit_iv[OPENVPN_MAX_IV_LENGTH];
+                    '''< The implicit part of the IV '''
+                    size_t implicit_iv_len;     '''< The length of implicit_iv '''
+                const struct buffer *tls_crypt_v2_wkc;   '''< Wrapped client key, sent to server '''
+                struct buffer tls_crypt_v2_metadata;     '''< Received from client '''
+                bool cleanup_key_ctx;                    '''< opt.key_ctx_bi is owned by
+                                                              this context '''
+            int initial_opcode;         ''' our initial P_ opcode '''
+            struct session_id session_id; ''' our random session ID '''
+                uint8_t id[8];
+            ''' The current active key id, used to keep track of renegotiations.
+                key_id increments with each soft reset to KEY_ID_MASK then recycles back
+                to 1.  This way you know that if key_id is 0, it is the first key.
+             '''
+            int key_id;
+            int limit_next;             ''' used for traffic shaping on the control channel '''
+            int verify_maxlevel;
+            char *common_name;
+            struct cert_hash_set *cert_hash_set;
+            ££ifdef ENABLE_PF
+            uint32_t common_name_hashval;
+            ££endif
+            bool verified;              ''' true if peer certificate was verified against CA '''
+            ''' not-yet-authenticated incoming client '''
+            struct link_socket_actual untrusted_addr;  @:link_socket_actual
+            struct key_state key[KS_SIZE];  @:key_state
+        '''<  Array of tls_session objects
+              representing control channel
+              sessions with the remote peer. '''        
+================================================================================================================================== 
+
+&<process_incoming_link_part1>
++process_incoming_link_part1(c, lsi, false);
+    struct crypto_options *opt = NULL;   &<opt²ÎÊı¶¨ÒåÎ»ÖÃ>
+    +if (c->c2.buf.len > 0)  #Èç¹û¶Áµ½ÁËÊı¾İ
+        '''¼ÇÂ¼¶Áµ½µÄÊı¾İ³¤¶È'''
+        c->c2.original_recv_size = c->c2.buf.len;
+        c->c2.link_read_bytes += c->c2.buf.len;
+        link_read_bytes_global += c->c2.buf.len;
+        'È·±£ÊÕµ½µÄ°üµÄµØÖ·£¬Óëc->c2.link_socket_infoÊÇÒ»ÖÂµÄ
+        +if (c->c2.tls_multi)
+            '''Èç¹ûtls_pre_decrypt·µ»Øtrue£¬ÒâÎ¶×ÅÊÕµ½µÄ°üÊÇÁ¼ºÃµÄtls¿ØÖÆÍ¨µÀµÄ°ü
+               Èç¹ûÊÇÕâÑù£¬ÔòTLS´úÂë½«´¦Àí¸Ã°ü£¬²¢ÉèÖÃbuf.lenÎª0£¬´Ó¶øºóÃæµÄ²½Öè²»»áÔÙ´¦ÀíËüÁË
+               Èç¹û¸Ã°üÊÇ¸öÊı¾İÍ¨µÀµÄ°ü£¬Ôòtls_pre_decrypt»á¼ÓÔØÕıÈ·µÄ¼ÓÃÜÃÜÔ¿£¬²¢·µ»Ø¼Ù;
+               µ±ÔÚTLSÄ£Ê½Ê±£¬ÕâÊÇµÚÒ»¸ö¿´µ½£¨´¦Àí£©ÊÕµ½µÄ°üµÄº¯Êı
+               Èç¹ûÊÇÊı¾İ°ü£¬ÎÒÃÇÉèÖÃÑ¡Ïîe£¬´Ó¶øÊ¹µÃÎÒÃÇµÄµ÷ÓÃÕß¿ÉÒÔ½âÃÜËü
+               ÎÒÃÇÒ²°Ñ¶ÔÓ¦µÄ½âÃÜkey¸øµ½ÎÒÃÇµÄµ÷ÓÃÕß
+               Èç¹ûÊÇ¸ö¿ØÖÆ°ü£¬ÎÒÃÇÈÏÖ¤Ëü²¢´¦ÀíËü
+               ¿ÉÄÜ»á´´½¨Ò»¸öĞÂµÄtls»á»°£¨Èç¹ûËû±íÊ¾µÄÊÇÒ»¸öĞÂ»á»°µÄµÚÒ»¸ö°ü£©
+               ¶ÔÓ¦¿ØÖÆ°ü£¬ÎÒÃÇ»á°ÑËüµÄbufÇåÁã£¬´Ó¶øÊ¹ÎÒÃÇµÄµ÷ÓÃÕßÔÚÎÒÃÇ·µ»ØºóºöÂÔ¸Ã°ü
+               ×¢Òâ£¬ovpnÖ»ÔÊĞíÍ¬Ê±ÓĞÒ»¸ö»î¶¯µÄ»á»°£¬ËùÒÔÒ»¸öĞÂµÄ»á»°£¨Ò»µ©ÈÏÖ¤¹ı£©½«×ÜÊÇ´Û¶áÒ»¸ö¾ÉµÄ»á»°
+               Èç¹ûÊÇ¸öÈÏÖ¤Í¨¹ıµÄ¿ØÖÆÍ¨µÀµÄ°ü£¬·µ»ØÕæ£¬·ñÔò·µ»Ø¼Ù
+               '''
+            '''Ö÷ÒªÍê³ÉµÄ¹¤×÷£¨ÏÂÃæÖ»ÁĞ³öÁË¶Ô¿ØÖÆ°üµÄ´¦ÀíÇé¿ö£©£º
+               ÕÒµ½¶ÔÓ¦µÄsession£¬ÉèÖÃ session->untrusted_addr = Ô¶¶ËµØÖ·
+               ks = session->key[KS_PRIMARY]
+               ks->session_id_remote = sid£¨´«À´µÄ°üµÄ»á»°id£©; 
+               ks->remote_addr = Ô¶¶ËµØÖ·
+               ks->send_reliableÖĞÏàÓ¦µÄ°üÉèÖÃÎª·Ç»î¶¯µÄ
+               ks->rec_reliableÖĞÕÒµ½Ò»¸ö¿ÉÓÃµÄµÄ reliable_entry
+                   e = rel->array[]
+                   e->active = true;  
+                   e->packed_id = pid;  
+                   e->opcode= opcode;
+                   e->next_try = e->timeout = 0
+               Èç¹ûÊ¹ÓÃÁË -tls-auth »ò --tls-crypt ÅäÖÃÏîÊ±£¬
+               »¹»áÍê³É°üµÄÑéÖ¤/½âÃÜ´¦Àí
+               '''
+            +bool b = tls_pre_decrypt(...)   &<tls_pre_decrypt>  file://ovpnÔ´Âë·ÖÎö-·şÎñ¶Ë.py@tls_pre_decrypt
+                uint8_t pkt_firstbyte = *BPTR(buf);
+                int op = pkt_firstbyte >> P_OPCODE_SHIFT;  #ovpn°üÍ·µÄ¸ß5Î»ÊÇ²Ù×÷Âë
+                +'''ÊÇÊı¾İ°ü'''
+                if ((op == P_DATA_V1) || (op == P_DATA_V2))
+                    handle_data_channel_packet(multi, from, buf, opt, floated, ad_start);  @opt²ÎÊı¶¨ÒåÎ»ÖÃ
+                        for (int i = 0; i < KEY_SCAN_SIZE; ++i)
+                            '''×¢Òâ£¬key_scan£¨key_state*½á¹¹£©ÊÇÖ¸Ïò²»Í¬sessionµÄkey×Ó³ÉÔ±µÄ'''
+                            struct key_state *ks = multi->key_scan[i];
+                            '''¸ÃifÌõ¼şÊÇ±¾µØvpnÊµÀıºÍÆäÔ¶¶Ë£¬Á½ÕßÖ®¼äTSL×´Ì¬µÄ»ù±¾²âÊÔ
+                               Èç¹û²âÊÔÊ§°Ü£¬Ëü¸æËßÎÒÃÇ£¬ÎÒÃÇ´ÓÒ»¸öÀ´Ô´»ñµÃÁËÒ»¸öÊı¾İ°ü£¬
+                               ¸ÃÊı¾İ°üÉù³Æ²Î¿¼ÁËÏÈÇ°Ğ­ÉÌµÄTLS»á»°£¬µ«±¾µØOpenVPNÊµÀıÃ»ÓĞ¹ØÓÚÕâÖÖĞ­ÉÌµÄ¼ÇÒä¡£
+                               Õâ¼¸ºõ×ÜÊÇ·¢ÉúÔÚUDP»á»°ÖĞ£¬µ±Á¬½ÓµÄ±»¶¯¶Ë±»ÖØÆô¶øÖ÷¶¯¶ËÃ»ÓĞÖØÆôÊ±
+                               £¨±»¶¯¶ËÊÇ·şÎñÆ÷£¬Ö»¼àÌıÁ¬½Ó£¬Ö÷¶¯¶ËÊÇ¿Í»§¶Ë£¬·¢ÆğÁ¬½Ó£©
+                               '''
+                            if ( ks->state>=S_GOT_KEY/S_SEND_KEY     && 
+                                 key_id == ks->key_id                && 
+                                 ks->authenticated == KS_AUTH_TRUE   && 
+                                 (floated || link_socket_actual_match(from, &ks->remote_addr) ) ) 
+                                '''ÓëÔ¶¶ËÖ®¼äµÄkey»¹Ã»³õÊ¼»¯£¬¶ªÆú¸Ã°ü'''
+                                if (!ks->crypto_options.key_ctx_bi.initialized)
+                                    goto done
+                                *opt = &ks->crypto_options;   #optÊÇº¯Êı´«À´µÄ²ÎÊı£¬crypto_options **ÀàĞÍ  @opt²ÎÊı¶¨ÒåÎ»ÖÃ
+                                ++ks->n_packets;
+                                ks->n_bytes += buf->len;
+                                return
+                    return false;
+                +'''ÊÇ¿ØÖÆ°ü'''
+                int key_id = pkt_firstbyte & P_KEY_ID_MASK;  #ovpn°üÍ·µÄµÍ3Î»ÊÇkeyid
+                +'''ÑéÖ¤°üµÄ²Ù×÷ÂëÊÇ·ñÔÚÓĞĞ§·¶Î§'''
+                if (op < P_FIRST_OPCODE || op > P_LAST_OPCODE)
+                    goto error;  #²»ÔÚÓĞĞ§·¶Î§£¨²»ÄÜÊ¶±ğµÄ°ü²Ù×÷Âë£©
+                +'''Èç¹û·¢À´µÄÊÇÍ¨ÖªÖØÖÃµÄ°ü£¬ÔòºËÊµÆäÊÇ·ñÀ´×ÔÕıÈ·µÄ¶Ô¶Ë
+                   ¼ì²é°üµÄ¿ØÖÆÂë£¬Èç¹ûÊÇÒªÇóÖØĞÂ³õÊ¼»¯key£¨ÒªÇóÍü¼ÇÖ®Ç°µÄ×´Ì¬£©£¬ÔòÖØÖÃc->c2.frame'''
+                if (op == P_CONTROL_HARD_RESET_CLIENT_V2 ||    &<is_hard_reset_method2>
+                    op == P_CONTROL_HARD_RESET_SERVER_V2 || 
+                    op == P_CONTROL_HARD_RESET_CLIENT_V3)   
+                    '''È·±£ÊÇ¶ÔÓ¦µÄ·şÎñ¶Ë»ò¿Í»§¶Ë·¢ÆğµÄÖØÖÃ'''
+                    if (((op == P_CONTROL_HARD_RESET_CLIENT_V2  ||
+                          op == P_CONTROL_HARD_RESET_CLIENT_V3) && !multi->opt.server) ||
+                          ((op == P_CONTROL_HARD_RESET_SERVER_V2) && multi->opt.server))
+                        '''ËµÃ÷¸ÃÍ¨ÖªÖØÖÃµÄ°üÊÇÀ´×Ô¿Í»§¶ËµÄ£¬µ«×Ô¼º²ÅÊÇ¿Í»§¶Ë
+                           »ò¸ÃÍ¨ÖªÖØÖÃµÄ°üÊÇÀ´×Ô·şÎñ¶ËµÄ£¬µ«×Ô¼º²ÅÊÇ·şÎñ¶Ë
+                           ÕâÏÔÈ»ÊÇ²»Õı³£µÄ°ü'''
+                        goto error 
+                '''¿ªÊ¼°üµÄÈÏÖ¤'''
+                +'´Ó°üÖĞ»ñÈ¡µ½»á»°id£¨sid£¬Ëæ»úÖµ£©
+                +'''´Ómulti->session[]ÖĞÕÒµ½ÓësidÒ»ÖÂµÄÄÇ¸ösession'''
+                for (i = 0; i < TM_SIZE; ++i)  #TM_SIZE: tls_multi£¨ÏÂsession£©µÄ¸öÊı£¨3¸ö£©
+                    tls_session *session = &multi->session[i];
+                    key_state *ks = &session->key[KS_PRIMARY];
+                    if (session_id_equal(&ks->session_id_remote, &sid))  #»ñÈ¡µ½µÄ»á»°id£¬Óë¼ÇÂ¼µÄÔ¶¶Ë»á»°id±È½Ï
+                        if (i == TM_LAME_DUCK)  #Æ¥ÅäÁË£¬µ«Õâ¸öÊÇÓëTM_LAME_DUCKµÄÄÇ¸ösessionÆ¥ÅäµÄ 
+                            goto error
+                        break
+                '''i == TM_SIZE Í¨³£±íÃ÷ÉÏÒ»²½Ã»ÓĞÕÒµ½Óë°üÖĞ¼ÇÂ¼µÄ»á»°idÆ¥ÅäµÄÄÇ¸ösession
+                   Èç¹ûÊÇÕâÑùµÄÇé¿ö£¬ÇÒ°üµÄ²Ù×÷ÂëÊÇÒªÇóÖØÖÃµÄÇé¿ö
+                   ´ËÊ±ÈÏÎªÕâÊÇ£¨ĞÂ£©»á»°µÄµÚÒ»¸ö°ü
+                   ×¢£º¿Í»§¶Ë¿ªÊ¼½¨Á¢Á¬½ÓµÄÊ±ºò£¬·şÎñ¶Ë»Ø¸´µÄµÚÒ»¸ö°ü¾ÍÊÇ P_CONTROL_HARD_RESET_SERVER_V2 µÄ
+                   '''
+                +'''¼ì²âÊÇ²»ÊÇÊ¹ÓÃTM_ACTIVE½¨Á¢Ò»¸öĞÂµÄ»á»°'''
+                if (i == TM_SIZE && is_hard_reset_method2(op))     @is_hard_reset_method2
+                    tls_session *session = &multi->session[TM_ACTIVE];
+                    key_state *ks = &session->key[KS_PRIMARY];
+                    '''Èç¹û»¹Ã»ÉèÖÃ¼ÇÂ¼Ô¶¶ËµÄ»á»°id£¨»¹Ã»½¨Á¢¹ıÈÎºÎÁ¬½Ó£©'''
+                    if (!session_id_defined(&ks->session_id_remote))
+                        do_burst = true;
+                        new_link = true;  #ÕâÊÇ¸ö²¼¶ûÖµ£¬±êÊ¶ÊÇĞÂÁ¬½Ó
+                        i = TM_ACTIVE;  #Ö±½ÓÊ¹ÓÃ TM_ACTIVE µÄsession
+                        session->untrusted_addr = *from;  #TM_ACTIVEµÄsessionÖĞ¼ÇÂ¼Ô¶¶ËµØÖ·
+                '''ÕâÀïi == TM_SIZE£¬ËµÃ÷Ö®Ç°ÒÑ¾­½¨Á¢¹ıÁ¬½Ó£¬
+                   µ«ÄÇ¸öÁ¬½Ó¶ÔÓ¦µÄsessionÖĞ¼ÇÂ¼µÄsidÓëÊÕµ½µÄ°üµÄsid²»Ò»ÖÂ£¨sidÊÇ¸öËæ»úÊı£©
+                   is_hard_reset_method2ÑéÖ¤ÊÇ·ñÊÇÒªÇóÖØÖÃµÄ°ü
+                   '''
+                +'''¼ì²âÊÇ²»ÊÇÊ¹ÓÃTM_UNTRUSTED½¨Á¢Ò»¸öĞÂµÄ»á»°'''
+                +if (i == TM_SIZE && is_hard_reset_method2(op))  
+                    +'''Ñ¡ÔñÔÚTM_UNTRUSTEDµÄsessionÉÏ½¨Á¢Á¬½Ó'''
+                    tls_session *session = &multi->session[TM_UNTRUSTED];
+                    +'''¶ÁÈ¡¿ØÖÆÍ¨µÀµÄÈÏÖ¤¼ÇÂ¼ &<read_control_auth>'''
+                    bool b = read_control_auth(buf, ctx=&session->tls_wrap, from,opt=session->opt)
+                        uint8_t opcode = *(BPTR(buf)) >> P_OPCODE_SHIFT;
+                        if (opcode == P_CONTROL_HARD_RESET_CLIENT_V3)  #ÊÇ¿Í»§¶Ë·¢ÆğµÄÖØÖÃ°ü
+                            bool b = tls_crypt_v2_extract_client_key(buf, ctx, opt)
+                            '''ÎŞ·¨´Ó¶Ô¶ËÌáÈ¡³ötls-crypt-v2µÄ¿Í»§¶ËÃÜÔ¿'''
+                            if(!b) goto cleanup
+                            ¡£¡£¡£
+                        '''&<¿ØÖÆ²ã°²È«>£º
+                           Ê¹ÓÃ--tls-auth fileÑ¡Ïî£¬¿ÉÒÔ¸ø¿ØÖÆ²ã¼ÓÒ»²ãHMAC£¬
+                           ¶ÔÓÚÑéÖ¤HAMCÊ§°ÜµÄ°ü£¬Ö±½Ó¶ªÆú£¬´Ó¶øÊ¹ovpnÃâÓÚDDOS¹¥»÷
+                           ¸ÃÑ¡ÏîÈç¹ûÒªÓÃ£¬Ó¦¸Ã·ÅÔÚ·şÎñ¶ËµÄÅäÖÃÎÄ¼şÖĞ
+                           ÀàËÆµÄ£¬--tls-crypt key¿ÉÒÔ¸øtls¿ØÖÆÍ¨µÀÌí¼Ó¶îÍâµÄÒ»²ã¼ÓÃÜ
+                           Õâ¿ÉÒÔÆğµ½Òş²ØtlsÖ¤ÊéµÄ×÷ÓÃ£¬Ò²¿ÉÒÔ·ÅÖÃDOS¹¥»÷
+                           ÕâÀïµÄÕâ¸öctx±äÁ¿£¬ÊÇtls_wrap_ctxÀàĞÍµÄ£¬
+                           ¶øÕâ¸ö½á¹¹£¬¾ÍÊÇÓÃÓÚ¸øtls¿ØÖÆ²ãHMAC»ò¼ÓÃÜÓÃµÄ£¬
+                           µ±È»£¬Èç¹ûÃ»ÓĞÊ¹ÓÃ -tls-auth »ò --tls-crypt Ê±£¨µ±Ç°ÅäÖÃ¾ÍÊÇÕâÑù£©£¬
+                           Õâ¸ö±äÁ¿¾ÍÃ»É¶ÓÃÁË£¬´ËÊ± ctx->mode Îª TLS_WRAP_NONE
+                           '''
+                        if (ctx->mode == TLS_WRAP_AUTH)
+                            ¡£¡£¡£
+                        else if (ctx->mode == TLS_WRAP_CRYPT)
+                            ¡£¡£¡£
+                        else if (ctx->tls_crypt_v2_server_key.cipher)
+                            ¡£¡£¡£
+                        +if (ctx->mode == TLS_WRAP_NONE || ctx->mode == TLS_WRAP_AUTH) 
+                            +'''½«bufferµÄÖ¸ÕëÌø¹ıovpnÍ·£¨1×Ö½Ú£©ºÍ»á»°id£¨8×Ö½Ú£©'''
+                            buf_advance(buf, SID_SIZE(8) + 1);
+                        return true
+                    if (!b) goto error
+                    new_link = true;
+                    i = TM_UNTRUSTED;
+                    session->untrusted_addr = *from;
+                +else
+                    struct tls_session *session = &multi->session[i];
+                    struct key_state *ks = &session->key[KS_PRIMARY];
+                    if (i != TM_ACTIVE && i != TM_UNTRUSTED) goto error
+                    +'''²»ÊÇĞÂÁ¬½Ó£¬µ«µ±Ç°Ô¶¶ËµÄµØÖ·Óëks£¨³É¹¦½¨Á¢Á¬½Ó£©ÖĞ¼ÇÂ¼µÄÔ¶¶ËµØÖ·²»Ò»ÖÂ
+                       ¹¥»÷µÄ°ü£¿
+                       '''
+                    if (!new_link && !link_socket_actual_match(&ks->remote_addr, from))  goto error
+                    +'''P_CONTROL_SOFT_RESET_V1 µÃÌåµÄÒªÇóÖØĞÂ¸ü»»ĞÂµÄkeyµÄ¿ØÖÆ°ü(Ô¶¶ËÒªÇóÖØĞÂĞ­ÉÌÃÜÔ¿)
+                       DECRYPT_KEY_ENABLED Õ¹¿ªÎª£ºks->state >= S_GOT_KEY/S_SEND_KEY
+                       Âú×ã¸ÃifÌõ¼ş£¬ËµÃ÷Ö®Ç°ÒÑ¾­Ğ­ÉÌºÃkeyÁË£¬ÏÖÔÚ·şÎñ¶ËÒªÇóÖØĞÂ¸ü»»key
+                       '''
+                    if (op == P_CONTROL_SOFT_RESET_V1 && DECRYPT_KEY_ENABLED(multi, ks))
+                        ¡£¡£¡£
+                    else
+                        if (op == P_CONTROL_SOFT_RESET_V1) do_burst = true;
+                        +'''½«bufµÄÖ¸ÕëÌø¹ıovpnÍ·£¨1×Ö½Ú£©ºÍ»á»°id£¨8×Ö½Ú£©'''
+                        bool b = read_control_auth(buf, &session->tls_wrap, from, session->opt) @read_control_auth
+                        if(!b) goto error
+                tls_session *session = &multi->session[i];
+                key_state *ks = &session->key[KS_PRIMARY];
+                'È·±£session->session_id²»Îª¿Õ
+                +'''Èç¹ûÊÇĞÂÁ¬½Ó£¬key_state¼ÇÂ¼ÏÂÔ¶¶ËµÄ»á»°idºÍµØÖ·'''
+                if (new_link)
+                    ks->session_id_remote = sid;   
+                    ks->remote_addr = *from;
+                    ++multi->n_sessions;
+                +else 
+                    +'''key_stateÖĞ¼ÇÂ¼µÄÔ¶¶ËµØÖ·£¬Óë·¢À´°üµÄÔ¶¶ËµØÖ·²»Ò»ÖÂ£¬´íÎó'''
+                    if (!link_socket_actual_match(&ks->remote_addr, from))  goto error;
+                +'''ÊÇ·ñÓ¦¸Ã¶Ô·¢ËÍ»º³åÇøÖĞËùÓĞÎ´È·ÈÏµÄÊı¾İ°ü½øĞĞÖØ´«?
+                   Õâ»áÌá¸ßÁËµÚ2¸ö¶Ô¶ËÉÏÏßºó£¬³õÊ¼ÃÜÔ¿Ğ­ÉÌµÄÆô¶¯Ğ§ÂÊ¡£'''
+                if (do_burst && !session->burst)
+                    '''±éÀú¿ÉĞÅ²ãµÄÃ¿¸öreliable_entry£¨°ü£©
+                       Èç¹û¸Ã°üÊÇ active µÄ£¬Ôò½«Æä next_try ÉèÖÃÎª now£¬
+                       ½«Æä³¬Ê±Ê±¼äÉèÖÃÎª¿ÉĞÅ²ãµÄ initial_timeout£¨³õÊ¼³¬Ê±Ê±¼ä£©
+                       '''
+                    reliable_schedule_now(ks->send_reliable);
+                    session->burst = true;
+                '''key_idÊÇ°üÍ·µÄµÚ3Î»¼ÇÂ¼µÄ'''
+                if (ks->key_id != key_id)  goto error  
+                struct reliable_ack send_ack;
+                +'''´Ó»Ø¸´µÄ°üÖĞ¶Ápackid²¿·Ö£¨Î»ÓÚovpnÍ·ºÍsidÖ®ºó£¬×î¶àÖ§³Ö8¸öpackid£©
+                   ºÍ½ô¸úÆäºóµÄRemoteSessionID²¿·Ö
+                   '''
+                bool b = reliable_ack_read(ack=&send_ack, buf, sid=&session->session_id)
+                    uint8_t count;
+                    buf_read(buf, &count, sizeof(count)
+                if(!b)  goto error
+                +'''±éÀúsend_reliable£¬Èç¹ûÄÄ¸ö°üµÄidÓësend_ackÖĞ¼ÇÂ¼µÄÄ³¸ö°üidÒ»ÖÂÁË
+                   ËµÃ÷¸Ã°üÓĞ»ØÓ¦ÁË£¬Ôò½«¸Ã°üµÄ active ÉèÖÃÎª false
+                   ¾ßÌå£º
+                   ±éÀúsend_ackÖĞ¼ÇÂ¼µÄpacked_id[]
+                   ÄÚ²¿ÔÙ±éÀú reliable ¿ÉĞÅ²ãµÄ array[] (·¢ËÍ¿ÉĞÅ²ã×î¶àÖ§³Ö4¸ö°ü£©
+                   Èç¹û¿ÉĞÅ²ãÈ¡µ½µÄarray£¨°ü£©ÊÇactiveµÄ£¬ÇÒÆä°üid Óë packed_id[i] Ò»ÖÂ£¬
+                   Ëµ×Å·¢ËÍµÄÕâ¸ö°ü£¬ÓĞÏàÓ¦µÄ»Ø¸´ÁË£¬Ôò½«Ö® active ÉèÖÃÎª¼Ù
+                   '''
+                reliable_send_purge(ks->send_reliable, &send_ack);
+                +'''reliable_can_get¼ì²érec_reliableÖĞÓĞÃ»ÓĞ¿ÕÏĞµÄ£¬¿ÉÓÃÓÚ½ÓÊÕÊı¾İµÄbuffer'''
+                if (op != P_ACK_V1 && reliable_can_get(ks->rec_reliable))   
+                    '''´ÓbufÖĞ¶Á£¨°üÄ©Î²--³õ´ÎÁ¬½ÓµÄµÚÒ»¸ö»Ø¸´°ü£©Message Package-ID'''
+                    bool b=reliable_ack_read_packet_id(buf, &id)
+                    if(b)
+                        '''È·±£½ÓÊÕµÄ°üµÄid£¬²»»áËÀËø½ÓÊÕbuffer
+                           ÒòÎª°üµÄidÊÇuint32±íÊ¾µÄ£¬ËüÓĞ¸ö×î´ó±íÊ¾·¶Î§
+                           ÕâÀïµÄÅĞ¶Ï¾ÍÊÇÓ¦¶Ô°üµÄidÂíÉÏ¾ÍÒªµ½Æä×î´ó±íÊ¾·¶Î§µÄÇé¿ö
+                           '''
+                        b = reliable_wont_break_sequentiality(ks->rec_reliable, id)
+                            return reliable_pid_in_range2(test=id, base=rel->packet_id, extent=rel->size)
+                                   #×¢£ºparam1, param2 ¶¼ÊÇ uint32 ÀàĞÍ
+                                   if ( UINT32_MAX_VAL - base > extend )    #µ±baseµÄÖµ»¹Ã»½Ó½üÆä±íÊ¾ÉÏÏŞÊ±
+                                        if (test < base + extent)
+                                            return true;
+                                   else                                     #µ±baseµÄÖµ½Ó½üÆä±íÊ¾ÉÏÏŞÊ±
+                                        if ((test+0x80000000u) < (base+0x80000000u) + extent)
+                                            return true;
+                                   return false;
+                        if(b)
+                            '''È·¶¨½ÓÊÕµÄ°ü²»ÊÇÒ»¸ö(ÒÑ½ÓÊÕ¹ıµÄ)ÀúÊ·µÄÖØ·Å°ü'''
+                            b = reliable_not_replay(rel=ks->rec_reliable, id)
+                                '''Èç¹û id < rel->packet_id'''
+                                b=reliable_pid_min(id, rel->packet_id)
+                                if(b)  return false
+                                ±éÀú rel->array[]
+                                    Èç¹û´æÔÚÄ³¸ö reliable_entry ÊÇ active µÄ£¬
+                                    ÇÒÆä packet_id == id;  
+                                    return false
+                                return true    
+                            if(b)
+                                '''ÔÚ½ÓÊÕĞÅÈÎ²ãÖĞ×¥È¡Ò»¸ö¿ÉÓÃµÄ reliable_entry'''
+                                struct buffer *in = reliable_get_buf(ks->rec_reliable);
+                                    ±éÀú rel->array[]£¬ Èç¹ûÄ³¸ö reliable_entry µÄ active Îª¼Ù£¬
+                                    ½«¸Ã reliable_entry ³õÊ¼»¯(buf_init)£¬²¢·µ»ØÆä buf
+                                '''½«buf£¨ÊÕµ½µÄ°ü£©¿½±´¸ø½ÓÊÕĞÅÈÎ²ãµÄÄÇ¸ö reliable_entry'''
+                                buf_copy(in, buf)
+                                '''½«²Ù×÷ÀàĞÍ op ¡¢°üid£¨Á½¸ö¶¼ÊÇ´ÓbufÖĞ·ÖÎö³öÀ´µÄ£©µÈ´æ¸ø½ÓÊÕĞÅÈÎ²ãµÄÄÇ¸ö reliable_entry'''
+                                reliable_mark_active_incoming(ret=ks->rec_reliable, buf=in, pid=id, op)
+                                    ±éÀú rel->array[] ,ÕÒµ½Óë²ÎÊı buf Æ¥ÅäµÄÄÇ¸ö reliable_entry, ¼ÇÎª e
+                                    e->active = true;  e->packed_id = pid;  e->opcode= opcode;
+                                    e->next_try = e->timeout = 0
+                            reliable_ack_acknowledge_packet_id(ack=ks->rec_ack, pid=id);
+                                '''¼ì²é pid ÊÇ·ñÒÑ¾­¼ÇÂ¼ÔÚ ack ÖĞÁË
+                                   ack ÊÇ key_state ÖĞµÄ reliable_ack ½á¹¹£¬ÓÃÒÔ¼ÇÂ¼packedid£¬×î¶àÖ§³Ö¼Ç8¸ö
+                                   '''
+                                bool b = reliable_ack_packet_id_present(ack, pid)
+                                if(!b)   #Ã»¼ÇÂ¼
+                                    if(ack->len < RELIABLE_ACK_SIZE(8) )  #»¹Ã»Âú
+                                        ack->packet_id[ack->len++] = pid;
+                                        return true
+                                    return false                  
+            if(b)
+                '''¼ì²é°üµÄ¿ØÖÆÂë£¬Èç¹ûÊÇÒªÇóÖØĞÂ³õÊ¼»¯key£¨ÒªÇóÍü¼ÇÖ®Ç°µÄ×´Ì¬£©£¬ÔòÖØÖÃc->c2.frame'''
+                uint8_t op = *BPTR(&c->c2.buf) >> P_OPCODE_SHIFT;
+                if (op == P_CONTROL_HARD_RESET_CLIENT_V2 || 
+                    op == P_CONTROL_HARD_RESET_SERVER_V2 || 
+                    op == P_CONTROL_HARD_RESET_CLIENT_V3)
+                    c->c2.frame = c->c2.frame_initial;
+                c->c2.tmp_int->last_action = now;
+                '''ÖØÖÃping¼ÆÊ±'''
+                if (c->options.ping_rec_timeout)
+                    event_timeout_reset(&c->c2.ping_rec_interval);
+        else
+            opt = &c->c2.crypto_options;
+        '''ÑéÖ¤ºÍ½âÃÜ´«ÈëµÄÊı¾İ°ü'''
+        bool decrypt_status = openvpn_decrypt(buf=&c->c2.buf, work=c->c2.buffers->decrypt_buf,
+                                              opt=crypto_options, frame=&c->c2.frame, ad_start);
+            if(buf->len>0 && crypto_options!=NULL)  #¿ØÖÆ°üÊ±£¬crypto_optionsÎªNULL
+                key_ctx *ctx = &opt->key_ctx_bi.decrypt;
+                cipher_kt_t * tmp = cipher_ctx_get_cipher_kt(ctx->cipher)
+                '''Èç¹û EVP_CIPHER_nid(cipher) Îª
+                   NID_aes_128_gcm »ò 
+                   NID_aes_192_gcm »ò 
+                   ID_aes_256_gcm »ò 
+                   NID_chacha20_poly1305
+                   ·µ»ØÕæ£¬·ñÔò·µ»Ø¼Ù
+                   '''
+                bool b= cipher_kt_mode_aead(tmp)
+                if(b)
+                    '''aead¼ÓÃÜ£º &<aead¼ÓÃÜ>
+                       Authenticated Encryption with Associated Data (AEAD) 
+                       ÊÇÒ»ÖÖÍ¬Ê±¾ß±¸±£ÃÜĞÔ£¬ÍêÕûĞÔºÍ¿ÉÈÏÖ¤ĞÔµÄ¼ÓÃÜĞÎÊ½¡£
+                       µ¥´¿µÄ¶Ô³Æ¼ÓÃÜËã·¨£¬Æä½âÃÜ²½ÖèÊÇÎŞ·¨È·ÈÏÃÜÔ¿ÊÇ·ñÕıÈ·µÄ¡£
+                       Ò²¾ÍÊÇËµ£¬¼ÓÃÜºóµÄÊı¾İ¿ÉÒÔÓÃÈÎºÎÃÜÔ¿Ö´ĞĞ½âÃÜÔËËã£¬
+                       µÃµ½Ò»×éÒÉËÆÔ­Ê¼Êı¾İ£¬¶ø²»ÖªµÀÃÜÔ¿ÊÇ·ñÊÇÕıÈ·µÄ£¬
+                       Ò²²»ÖªµÀ½âÃÜ³öÀ´µÄÔ­Ê¼Êı¾İÊÇ·ñÕıÈ·¡£
+                       Òò´Ë£¬ĞèÒªÔÚµ¥´¿µÄ¼ÓÃÜËã·¨Ö®ÉÏ£¬
+                       ¼ÓÉÏÒ»²ãÑéÖ¤ÊÖ¶Î£¬À´È·ÈÏ½âÃÜ²½ÖèÊÇ·ñÕıÈ·¡£
+                       AEADÔòÊÇÔÚÒ»¸öËã·¨ÔÚÄÚ²¿Í¬Ê±ÊµÏÖ¼ÓÃÜºÍÈÏÖ¤
+                       '''
+                    return openvpn_decrypt_aead(buf, work, opt, frame, ad_start);
+                else
+                    '''½â¿ª£¨ÑéÖ¤¡¢½âÃÜºÍ¼ì²éÖØ·Å±£»¤£©CBC¡¢OFB»òCFBÄ£Ê½µÄÊı¾İÍ¨µÀ°ü¡£
+                       ½«buf->lenÉèÖÃÎª0£¬½âÃÜ´íÎóÊ±·µ»Øfalse¡£
+                       ³É¹¦Ê±£¬buf±»ÉèÖÃÎªÖ¸ÏòÃ÷ÎÄ£¬·µ»Øtrue¡£
+                       '''
+                    return openvpn_decrypt_v1(buf, work, opt, frame);
+            else
+                return true
+        '''½âÃÜ´íÎóÔÚ TCP Ä£Ê½ÏÂÊÇÖÂÃüµÄ£¬×¢²á SIGUSR1 ĞÅºÅ'''
+        if (false==decrypt_status && link_socket_connection_oriented(c->c2.link_socket))
+            register_signal(c, SIGUSR1, "decryption-error"); 
+
+&<process_incoming_link_part2>
++process_incoming_link_part2(c, lsi, orig_buf);   
+    lsi = c->c2.link_socket_info
+    orig_buf = c->c2.buf.data
+    '''Âú×ãÌõ¼şÊ±£¬Èç¹ûÓĞ±ØÒª£¬»á½âÑ¹¸Ã°ü
+       Èç¹ûÊÇping°ü»òocc°ü£¬»á×öÒ»¶¨µÄ´¦Àí£¬
+       °Ñ buf µÄÊı¾İ´æ¸ø c->c2.to_tun ºÍ
+       c->c2.buffers->read_link_buf->data
+       '''
+    if (c->c2.buf.len > 0)  
+        '''½âÑ¹´«ÈëµÄÊı¾İ°ü'''
+        if (c->c2.comp_context)
+            (*c->c2.comp_context->alg.decompress)(&c->c2.buf, c->c2.buffers->decompress_buf, ...);
+        '''¸ù¾İÅäÖÃ£¬²»Âú×ã'''
+        if (c->c2.tls_multi == NULL && c->c2.buf.len > 0) 
+            link_socket_set_outgoing_addr(lsi, &c->c2.from, NULL, c->c2.es);
+        'ÖØÖÃÊı¾İ°ü½ÓÊÕ¶¨Ê±Æ÷
+        '''Èç¹ûÊÇping°ü£¬ÔòÉèÖÃbuf.len=0£¬ºóÃæ²»ÔÙ´¦Àí¸Ã°ü'''
+        if (is_ping_msg(&c->c2.buf))
+            c->c2.buf.len = 0; #ºóÃæ²»ÔÙ´¦Àí¸Ã°ü
+        '''Èç¹ûÊÕµ½µÄÊÇ¸öocc°ü'''
+        if (is_occ_msg(&c->c2.buf))
+            process_received_occ_msg(c);
+                case OCC_REQUEST:
+                    c->c2.occ_op = OCC_REPLY;
+                case OCC_MTU_REQUEST:
+                    c->c2.occ_op = OCC_MTU_REPLY;
+                case OCC_MTU_LOAD_REQUEST:
+                    c->c2.occ_mtu_load_size = buf_read_u16(&c->c2.buf);
+                    if (c->c2.occ_mtu_load_size >= 0)
+                        c->c2.occ_op = OCC_MTU_LOAD;
+                case OCC_REPLY:
+                    if (c->options.occ && c->c2.tls_multi != NULL #¸ù¾İÅäÖÃ£¬²»Âú×ã
+                        && c->c2.options_string_remote)
+                        ¡£¡£¡£
+                    event_timeout_clear(&c->c2.occ_interval);
+                case OCC_MTU_REPLY:
+                    c->c2.max_recv_size_remote = buf_read_u16(&c->c2.buf);
+                    c->c2.max_send_size_remote = buf_read_u16(&c->c2.buf);
+                    if (c->options.mtu_test  #¸ù¾İÅäÖÃ£¬²»Âú×ã
+                        && c->c2.max_recv_size_remote > 0
+                        && c->c2.max_send_size_remote > 0)
+                        ¡£¡£¡£
+                    event_timeout_clear(&c->c2.occ_mtu_load_test_interval);
+                case OCC_EXIT:
+                    c->sig->signal_received = SIGTERM;
+                    c->sig->signal_text = "remote-exit";
+        '''Èç¹û orig_buf ÊÇÖ¸Ïò c->c2.buf->data ÇÒÇø±ğÓÚ c->c2.buffers->read_link_buf->data
+           Ôò½« c->c2.buf ´æ¸ø c->c2.buffers->read_link_buf£¬²¢ÈÃ c->c2.to_tun Ö¸Ïò read_link_buf
+           ·ñÔò£¬ÈÃ c->c2.to_tun Ö¸Ïò c->c2.buf
+           '''
+        buffer_turnover(uint8* orig_buf, buffer* dest_stub=&c->c2.to_tun, buffer* src_stub=&c->c2.buf, 
+                        buffer* storage=&c->c2.buffers->read_link_buf);
+            if (orig_buf == src_stub->data && src_stub->data != storage->data)
+                '''src_stub ´æ¸ø src_stub'''
+                buf_assign(storage, src_stub);
+                *dest_stub = *storage;
+            else
+                *dest_stub = *src_stub;
+        '''Èç¹ûtuntap»¹Ã»¶¨Òå£¬ÉèÖÃ c->c2.to_tun.len = 0£¬·ñÔò»áµ¼ÖÂËÀËø'''
+        if (!tuntap_defined(c->c1.tuntap))
+            c->c2.to_tun.len = 0;
+    else
+        buf_reset(&c->c2.to_tun);

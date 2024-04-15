@@ -1,3 +1,6 @@
+相关参考：
+    file://思科路由器操作.py
+
 用户模式下：
 enable 				从用户模式进入特权模式（查看初始化的信息）
 
@@ -6,6 +9,102 @@ configure terminal 		进入配置模式（查看所有信息、调试、保存配置信息）
 
 配置模式下：
 interface+接口类型+接口号	进入接口配置模式
+    注： 以太网口可简写为 e，快速以太网口可简写为 f，千兆以太网口可简写为 g，
+         如，要从 config 模式进入 以太网口 0 的配置模式，可输入命令： 
+         interface e0/0
+         
 line+接口类型+接口号 		进入线控模式（对路由器进行控制的接口配置）
 hostname			修改设备登录名称
 enable password			启用密码并修改设备登录密码
+
+解决因输入了错误命令，而导致路由器卡死的问题：
+    如： Translating "intt"...domain server (255.255.255.255)
+    默认情况下，当在路由器中输入处于用户或启用模式的命令并且无法识别此命令时，
+    路由器会认为这是用户尝试使用 telnet 访问的设备的主机名。
+    因此，路由器尝试使用 IP 域查找将无法识别的命令解析为 IP 地址。
+    如果路由器上未配置特定的域服务器，路由器将发出广播，以便将命令转换为 IP 地址。当
+    路由器等待对其域名系统 （DNS） 广播的响应时，路由器提示可能需要几秒钟才能返回。
+    要禁用尝试将无效命令解析为 IP 地址的路由器的默认行为，
+    请在全局配置模式下输入命令： no ip domain-lookup 
+
+配置单臂路由
+    定义：
+        单臂路由是为实现VLAN间通信的三层网络设备路由器，
+        它只需要一个以太网，通过创建子接口可以承担所有VLAN的网关，
+        而在不同的VLAN间转发数据。
+        单臂路由（router-on-a-sTIck）是指
+        在路由器的一个接口上通过配置子接口
+        （或“逻辑接口”，并不存在真正物理接口）的方式，
+        实现原来相互隔离的不同VLAN（虚拟局域网）之间的互联互通。
+    使用场景：
+        单臂路由用于在没有三层交换机的情况下，实现不同vlan之间的通信
+        例如：公司部门与部门之间可能因为地域或者办公环境等限制，
+        为了网络安全和便于管理划分了不同的 vlan，
+        有时候因为工作原因需要对其他部门的电脑进行访问获取相应的资源，
+        两个部门的交换机通过一台路由器进行了连接。
+        相关参考：《三层交换机.txt》《思科三层交换机配置.txt》
+    相关概念 
+        sub口 ： 
+            一个物理端口可以划分为最多4096个子端口
+            每个子端口可以分别设置 ip
+            物理口与交换机的 trunk 口相连
+            交换机内部划分了多个 vlan
+            每个 vlan 的网关 ip，实为该路由器端口的 sub 口的 ip
+            更多资料参：《子接口 sub口.txt》
+    单臂路由的原理
+        路由器的端口可以接收带 tag 的包，并解析转换其中的 vid
+        相关知识参：《vlan介绍.txt》
+    单臂路由的网络拓扑：
+        物理口 ethernet0/0 与交换机的 trunk 口相连
+        交换机内部划分了多个 vlan，其中包括 vlan2:2 和 vlan3:3
+        （注： vlan2:2 前面的这个vlan2，是该vlan的名字，后面的这个2，是该vlan的编号）
+        其中 1-5 口是 vlan2， 6-10 口是 vlan3， 11 口是 trunk 口
+        PC2_1(192.168.2.1)，PC2_2(192.168.2.2) 在 vlan2 内， 
+        PC3_1(192.168.3.1)，PC3_2(192.168.3.2) 在 vlan3 内
+        注意： 
+            除非给 trunk 口设置了别的 pvid，
+            否则 trunk 口会给默认的 vlan 为 default:1 的包去掉 tag
+            而单臂路由的原理就是处理交换机包中的 tag
+            所以默认情况下，不能实现从 default:1 到 vlan2 的跨 vlan 通信
+            相关知识参：《vlan介绍.txt》
+    配置命令
+        Router> en
+        Router# conf t
+        Router(config)#int g0/0         进入路由器的 g0/0 端口
+        Router(config-if)#no sh         开启端口 
+        Router(config-if)#end
+        Router#conf t
+        Router(config)#int g0/0.1       进入路由器第 0 端口号的 0.1 子（逻辑）端口
+        Router(config-subif)#encapsulation dot1Q 2     封装协议设置为 dot1Q（中继封装）允许通过的 vlan 是 vlan2
+        Router(config-subif)#ip add 192.168.1.1 255.255.255.0  该子接口配置的IP地址
+        Router(config-subif)#end
+        Router#conf t
+        Router(config)#int g0/0.2       进入路由器第 0 端口号的 0.2 子（逻辑）端口
+        Router(config-subif)#encapsulation dot1Q 3     封装协议设置为 dot1Q（中继封装）允许通过的 vlan 是 vlan3
+        Router(config-subif)#ip add 192.168.2.1 255.255.255.0    该子接口配置的IP地址
+        Router(config-subif)#end
+        Router#show ip route            查看路由表
+    问题与分析
+        按上面的配置后，不能实现跨 vlan 互 ping
+        包跟踪；
+            2.1 ping 3.1 时，先发 arp 包，查网关 2.254 的 mac
+            结果这个包到了路由器的 3.254 sub口上，然后发现不是本网段的，就丢弃了
+            3.1 ping 2.1 时，也是先发 arp 包，查网关 3.254 的 mac
+            结果这个包到了路由器的 2.254 sub口上，然后发现不是本网段的，就丢弃了
+        根据赵玉鹏的经验，华为路由器需要配置开启 arp 广播
+            arp广播，就是A段计算机访问该路由器连接的B网段的计算机时，
+            A端的计算机会发出arp广播包，到达路由器后，路由器把自己的mac地址发给A段计算机
+            参：file://网络协议/arp与rarp.py:ARP响应
+        关于 arp 广播
+            未开启arp bro时，路由器仍然可以对其发出该 arp 广播报文的 pc 进行回应
+            回应的src  mac为子接口的mac地址【所有子接口共享一个mac】
+            只是此时的路由器子接口没有能力将 pc 所发出的 ping 报文的 pvid 转换为对应
+            【或者说目的ip地址pc的端子接口的pvid】用于 ping 对应 pc
+            并且路由器也没有能力主动的发送广播来获取目的ip主机的mac；
+            所以路由器在回应原ping主机的arp 广播报文后就将其抛弃；
+            网上查到华为路由器开启 arp 广播的方法是，
+            在子接口配置模式中，使用命令 arp broadcast enable
+            但数科模式器不支持此命令
+            
+
+        

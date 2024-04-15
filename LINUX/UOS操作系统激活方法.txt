@@ -1,3 +1,8 @@
+提供信息：
+uname -a
+cat /etc/os-version
+uos-activator-cmd -v
+
 第一步： 改激活地址
     方式一. 打开授权客户端点击右上角【设置】，选择自定义【https】，输入telicense.chinauos.com 点击【确定】
     方式二. 命令行输入：uos-activator-cmd -s --https telicense.chinauos.com

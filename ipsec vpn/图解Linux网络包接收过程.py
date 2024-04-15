@@ -1,7 +1,8 @@
-https://mp.weixin.qq.com/s?__biz=MjM5Njg5NDgwNA==&mid=2247484058&idx=1&sn=a2621bc27c74b313528eefbc81ee8c0f
+<catalog s0/s4 text_line_prefix=: super_text_line_prefix=.>
+:https://mp.weixin.qq.com/s?__biz=MjM5Njg5NDgwNA==&mid=2247484058&idx=1&sn=a2621bc27c74b313528eefbc81ee8c0f
 图解Linux网络包接收过程 （微信公众号：开发内功修炼/内功修炼/网络篇/1）
 
-一 Linux网络收包总览
+.一 Linux网络收包总览
     在TCP/IP网络分层模型里，整个协议栈被分成了物理层、链路层、网络层，传输层和应用层。
     物理层对应的是网卡和网线，应用层对应的是我们常见的Nginx，FTP等等各种应用。
     Linux实现的是链路层、网络层和传输层这三层
@@ -181,7 +182,7 @@ https://mp.weixin.qq.com/s?__biz=MjM5Njg5NDgwNA==&mid=2247484058&idx=1&sn=a2621b
         file://imgs/网络协议栈处理.png
     3.4 IP协议层处理        
     3.5 UDP协议层处理
-五 总结    
+.五 总结    
     首先在开始收包之前，Linux要做许多的准备工作：
     1. 创建ksoftirqd线程，为它设置好它自己的线程函数，后面指望着它来处理软中断呢
     2. 协议栈注册，linux要实现许多协议，比如arp，icmp，ip，udp，tcp，

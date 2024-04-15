@@ -1,4 +1,5 @@
 #define LOG(fmt,...) writelog(fmt,__VA_ARGS__); 
+//注：在 Qt 中，需使用 ##__VA_ARGS__
 
 int writelog(const char *format,...)
 {
@@ -13,4 +14,62 @@ int writelog(const char *format,...)
 	va_end(arg_ptr);		// 要写的内容已经存在了pmsg中
     ......
 	return 0;
+}
+
+int write_log(const char *format,...)
+{
+        char pmsg[2048]={0};
+        va_list arg_ptr;
+        FILE* pf = NULL;
+        if(format==NULL)
+           return 0;
+    
+        static bool write_log_flag = true;
+        static bool write_log_checked = false;   //控制只检查一次
+        if(write_log_checked == false)
+        {
+            write_log_checked = true;
+            pf = fopen("/tmp/oeslog.log","r");
+            if(pf == NULL)
+            {
+                fclose(pf);
+                write_log_flag = false;     //日志文件不存在，不允许写日志
+                return 0;
+            }
+            fclose(pf);     //日志文件存在，可以写日志
+        }
+        if(!write_log_flag)
+            return 0;
+
+        //a+会创建文件，不能起到当日志文件不存在时，不写日志的作用
+        pf = fopen("/tmp/oeslog.log","a+");
+        if(pf == NULL)
+            return 0;
+
+#ifdef _WIN32
+        SYSTEMTIME sys;
+    	GetLocalTime(&sys);
+	    sprintf_s(pmsg, 15, "[%02d:%02d:%02d.%03d] ", sys.wHour, sys.wMinute, sys.wSecond, sys.wMilliseconds);
+#else
+        struct timeval tv;
+        gettimeofday(&tv,NULL);
+
+        int h,m,s,us;
+        printf("total s = %ld\n",tv.tv_sec);
+        h = tv.tv_sec / 3600 % 24 + 8;
+        m = tv.tv_sec / 60 % 60;
+        s = tv.tv_sec % 60;
+        us = tv.tv_usec/1000;
+        sprintf(pmsg,"[%02d:%02d:%02d.%03d] ",h,m,s,us);
+#endif
+
+        va_start(arg_ptr,format);       
+        vsnprintf(pmsg+15,2030,format,arg_ptr);
+        va_end(arg_ptr);        
+        strcat(pmsg,"\n");
+
+        fwrite(pmsg,strlen(pmsg),1,pf);
+        fclose(pf);
+
+        return 0;
 }

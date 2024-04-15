@@ -1,0 +1,174 @@
+在思科模拟器中设置交换机的时候，在config选项卡中可以发现，
+每个端口都是可以选择 trunk 模式，或者 access 模式的
+默认是 access 模式，这时，其后的 vlan 列表只能选择一个
+如果改为 trunk 模式，则其后的 vlan 列表可以选择多个
+另外在 config 选项卡的 vlan database 标签下，
+我们可以管理 vlan 数据库，增删 vlan。
+
+那这个 access 与 trunk 到底是什么呢？
+
+交换机VLAN 模式trunk和access 区别
+    https://blog.csdn.net/qwe502763576/article/details/122424064
+    
+    普通交换机的二层端口有三种常见的端口类型：access、trunk、hybird
+    access端口一般用作PC或服务器主机接入，通过该端口的数据包都是不带VLAN tag的；
+    trunk端口可以允许多个VLAN的数据包通过，一般连接其他交换机（vlan可以跨交换机）；
+    * hybird端口比较灵活，可以根据用户需求，对通过该端口的数据包进行VLAN tag打标和去标动作，可以连主机也可以连其他交换机；
+    
+    在开始讲解之前，请记住交换机内部的所有数据报文是有VLAN tag的
+    
+    从 trunk 上走的数据包也是带 vlan tag 的，如果遇到没有 vlan tag 的包，会丢弃？ 有则按照 vlan tag 进行转发
+    
+    access收到的帧正常是不带 tag 的，收到无tag的帧会打上vlanTag
+    trunk收到的帧，正常是带 tag 的，收到无tag的帧跟access一样处理，会打上vlanTag
+    
+    数据包要从 access 口上发出去前，该端口会检查包的 pvid 是否与本端口一致，
+    不是的不会发出去，符合的，移除 vlan tag 后发出去
+    trunk 转发，则是看该包的 vlan id 是否在该口的转发的允许列表中，在就转发，不在就不转发
+    
+    file://imgs/交换机不同口的转发规则图.png
+
+以太网端口有三种链路类型：Access、Hybrid和Trunk。
+    Access类型的端口只能属于1个VLAN，一般用于连接计算机的端口：
+    Trunk类型的端口可以允许多个VLAN通过，可以接收和发送多个VLAN的报文，一般用手于交换机之间连接的端口：
+    Hybrid类型的端口可以允许多个VLAN通过，可以接收和发送多个VLAN的报文，
+    可以用于交换机之间连接，也可以用手连接用户的计算机。
+    Hybrid端口和Trunk端口在接收数据时，处理方法是一样的，唯一不同之处在于
+    发送数据时：Hybrid端口可以允许多个VLAN的报文发送时不打标签，
+    而Trunk端口只充许缺省VLAN的报文发送时不打标签。
+
+端口的缺省VLAN这个概念
+    Access端口只属于1个VLAN，所以它的缺省VLAN就是它所在的VLAN，不用设置
+    Hybrid端口和Trunk端口属于多个VLAN，所以需要设置缺省VLAN ID。
+    缺省情况下，Hybrid端口和Trunk端口的缺省VLAN为VLAN1。
+    如果设置了端口的缺省 VLAN ID，当端口接收到不带VLANTag的报文后，
+    则将报文转发到属于缺省VLAN 的端口
+    当端口发送带有VLAN Tag的报文时，如果该报文的VLANID与端口缺省的VLANID相同，
+    则系统将去掉报文的VLANTag，然后再发送该报文。
+    注：对于华为交换机缺省VLAN被称为"Pvid Vlan"，
+    对于思科交换机缺省VLAN 被称为"Native Vlan"
+
+交换机接口出入数据处理过程如下：
+    file://imgs/交换机接口出入数据处理过程.png
+    Acess端口收报文：
+        收到一个报文,判断是否有VLAN信息：
+        如果没有则打上端口的PVid并进行转发,如果有则直接丢弃（缺省）
+    Acess端口发报文：
+        将报文的VLAN信息剥离，直接发送出去
+    trunk端口收报文：
+        收到一个报文，判断是否有VLAN信息：
+        如果没有，则打上端口的PVID，并进行交换转发，
+        如果有，判断该trunk端口是否允许该VLAN的数据进入：
+        如果可以则转发，否则丢弃
+    trunk端口发报文：
+        比较端口的PVID和将要发送报文的VLAN信息，
+        如果两者相等则剥离VLAN信息再发送，如果不相等则直接发送
+    hybrid端口收报文：
+        收到一个报文，判断是否有VLAN信息：如果没有则打上端口的PVID，并进行交换转发，
+        如果有则判断该hybrid端口是否允许该VLAN的数据进入：如果可以则转发，
+        否则天弃（此时端口上的untag配置是不用考虑的，untag配置只对发送报文时起作用）
+    hybrid端口发报文：
+        于trunk端口的区别是，Hybrid端口可以允许多个VLAN的报文发送时不打标签
+        而Trunk端口只充许缺省VLAN的报文发送时不打标签。
+
+交换机中的vlan
+    交换机初始会有个默认的 vlan，名为default，编号为1
+    默认所有的口，都在该vlan下，且所有的口的模式默认为access，
+    即使是交换机与交换机相连的口
+    
+不确定点
+    对没有 vlan tag 的包， trunk 口和 access 口都是怎么处理的，网上有多种说法
+    access 口收到没有有 tag 的包，有的说做丢弃处理，有的说会将包中的 pvid 替换为自己端口的 pvid
+    
+
+交换机不启用 vlan 时，所有的口对数据包都不做包装处理
+    
+pvid 和 vid
+    VID（VLAN ID）是 VLAN 的标识
+    PVID 英文解释为 Port-base VLAN ID，是基于端口的 VLAN ID （ 端口号 + vlan号）
+    一个端口可以属于多个 vlan，但是只能有一个 PVID，
+    收到一个不带 tag 头的数据包时，会打上 PVID 所表示的 vlan 号，视同该 vlan 的数据包处理。
+    
+    一个物理端口只能拥有一个 PVID，当一个物理端口拥有了一个 PVID 的时候，
+    必定会拥有和 PVID 相等的 VID，而且在这个 VID 上，这个物理端口必定是 Untagged Port。
+    
+    PVID 的作用只是在交换机从外部接受到可以接受 Untagged 数据帧的时候给数据帧添加 TAG 标记用的，
+    在交换机内部转发数据的时候 PVID 不起任何作用。
+
+    普通的 access 口， 其 pvid 和 vid 是一致的， 或者说，其 vid 就是其 pvid
+    对于 hybrid 和 trunk 端口，因为这样的端口能识别多个 vlan，
+
+关于 pvid
+    vlan中的pvid其实就是处理标签的一种方式
+    在端口为access模式的时候，pvid=access端口本身的vlan，也无法单独配置
+    在端口为trunk的时候pvid是可以根据需求配置的，默认的pvid=vlan1，
+    在trunk端口模式中，pvid影响的是trunk端口双向的数据帧
+    在接收方向上trunk端口是对于没有标签的数据帧打上配置的pvid号（vlan号），
+    至于有vlan标签的数据帧不归pvid管，归port trunk-allow vlan x管。
+    在发送方向上trunk端口是对于vlan号和配置的pvid号相同的数据帧进行untag去掉vlan标签的操作
+    （将之变为vlan1的数据帧，也就是没有vlan标签的普通的以太网数据帧）。
+
+注：pvid 是华为的叫法，思科称之为 native vlan（本征vlan）
+
+理解 pvid
+    pvid 就是 "能设置 vid 的端口" 的 vid， 而 access 口不能设置 vid ，所以 access 口没有 pvid ，
+    但实际上，通常认为 access 口也有 pvid，且等于该端口的 vid， 该端口的 vid 即其 vlan 的 id
+    trunk 是可以设置 vid 的，例如可以设置其 vid = id（vlan1）， 或其 vid = id（vlan2）， ...
+    为了表明该端口可以设置 vid 的特性，才引入了 pvid 的概念
+    trunk 是转发类型的口（access是访问类型的口），它主要负责对包进行转发，
+    它在转发时有个特性：
+        如果出去包的 vid 等于当前 trunk 口的 pvid，它会将该包的 vid 去掉，
+        于是变成普通的以太网数据包， 如果不等于当前 trunk 口的 pvid，则不会处理
+        于是出去的包是带有 tag 的，包装了的以太网数据包（vlan报文）
+        当前，这是有个前提的，就是发出去的包在该端口的允许列表中，
+        如果不在，则不会在该 trunk 口上发出去，于是这样的包，只在交换机的本 vlan 内流动
+        它收包时，看收到的包是否带有 tag（是否是 vlan 报文）
+        如果是，且收到的包的 vid 在其允许范围内时，则不做处理，如果不在其范围内，则 ？
+        如果收到的包不带 tag，则该 trunk 会为其加上 tag （交换机内部的包一定是带 tag 的）
+        所加的 tag 的 vid，即该端口设置的 pvid
+    结合上面的说明，考虑这样一种情形；
+        SW1 上有两个 vlan ： V1(vid=1)， V2(vid=2)
+        SW2 上有两个 vlan ： V1(vid=1)， V2(vid=2)
+        假设这两个交换机的 trunk 都是允许 vlan1 和 vlan2  的
+        PC1_1 -> SW1:V1 ;  PC1_2 -> SW1:V2;  PC2_1 -> SW2:V1;  PC2_2 -> SW2_V2;
+        正常 trunk 口的 pvid 默认是 vlan1 的 vid，
+        可以推论出：
+            PC1_1 发出的包，经 trunk 口出去时，因为该包的 vid = 1， 而 trunk 的 pvid = 1
+            所以该包出去时，会被去掉 tag 部分，到达 SW2 时，因为其不带 tag，所以会被 SW2 的trunk
+            加上该 trunk 口的 pvid=1， 所以此时该包会被 SW2 判定为 vlan1 中的包，所以可以发到 PC2_1
+            另一方面，从 PC1_2 发出的包，与 trunk 的 pvid=1 不一致，所以不会被 trunk 去 tag，
+            而到达 SW2 时，因为带 tag，所以也不会被 SW2 的 trunk 再添加或修改 tag，
+            所以到达 SW2 里面时，会被判定为 vlan2 的包，所以可以发给 PC2_2
+        如果手动设置 SW1 的 trunk 口的 pvid = 2, 同时仍保留 SW2 的 trunk 的 pvid = 1
+        （下面的过程可参看图：file://imgs/交换机vlan包流动图）
+        此时，从 PC1_1 发出的包，不会被 trunk 去 tag，到达 SW2 后，会被判定为 vlan1 的包，
+        可以到达同是 vlan1 的 PC2_1；另一方面，从 PC1_2 发出的包，vid=2，与 trunk 的 pvid 一致，
+        所以会去 tag，到达 SW2 后，会加上 SW2 的 trunk 的 pvid=1 ，所以也会被认定为 vlan1 的包，
+        所以该包是可以到达 SW2 上 vlan1 内的 PC2_1 上的，
+        从 PC2_1 上回复的包，从 SW2 出去的时候，是不带 tag 的，到达 SW1 后，因为 SW1 的 trunk 的 pvid=2
+        所以会加上 vid=2 的 tag，也就是说，从 PC2_1 上的包，在 SW1 内，会被判定为 vlan2 内的包，
+        所以可以达到 SW1 的 vlan2 内的 PC1_2，所以 PC1_2 可以跟 PC2_1 通信
+        于是，原来默认情况下， SW1:vlan1 <=> SW2:vlan1;   SW1:vlan2 <=> SW2:vlan2，
+        结果这样改后， SW1:vlan2 <=> SW2:vlan1 了，
+        那 SW1:vlan1 和 SW2:vlan2 呢？
+        先看 SW1:vlan1:PC1_1，因为其包的 vid=1，与 SW1 的 trunk 的 pvid 不同，所以不会去 tag，
+        到达 SW2 时，因为带 tag，不会被 trunk 处理，所以在 SW2 内，仍是 vid=1, 可以达到同一 vlan 的 PC2_1，
+        但从 PC2_1 回去的包，经上面的分析，到达 SW1 内时，会被判定为 vlan2 的包，所以不会回复给 PC1_1；
+        所以： SW1:PC1_1 --> SW2:PC2_1 -/-> SW1:PC1_1
+        再看 SW2:vlan2 内的 PC2_2，也有类似的情况，从 SW2 出去的包，会带 tag，到达 SW1 内时，
+        会判定为 vlan2 内的包，会发给 PC1_2，但从 PC1_2 回复的包，根据上面的分析， 会被 SW2 判定为 vlan1 内的包
+        所以不会成功回复给 SW2:vlan2:PC2_2,  所以 ： SW2:PC2_2 --> SW1:PC1_2 -/-> SW2:PC2_2
+        
+    这个例子一定程度上反映了 trunk 口设置 pvid 的一个功用：
+    它可以将 SW1 某个 vlan_m 内的机器，与 SW2 的 vlan_n 内的机器通信，
+    但同时， SW1 的 vlan1 内的机器，却不能再与 SW2 的 vlan1 内的机器通信了， 
+    SW1 的 vlan2 内的机器，也不能再与 SW2 的 vlan2 内的机器通信了， 
+        
+        
+vlan 报文格式
+    DstMac（6B）  SrcMac（6B） "Tag（4B）" Length/Type（2B）  Data（42-1500B）  CRC（4B）
+    Tag ： Type（2B）  PRI（3b）  CFI（1b）  VID（12b）
+    因为 VID  占 12 bit，所以表示范围 0~4095， 其中 0 和 4095 是保留的
+    其实，vlan报文，就是传统的以太网帧中间加入了 4B 的 Tag
+    传统以太网帧的格式：
+    DstMac（6B）  SrcMac（6B） Length/Type（2B）  Data（42-1500B）  CRC（4B）

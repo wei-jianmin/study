@@ -23,7 +23,7 @@ ipsec使用 AH 和 ESP 对报文进行封装
     esp头是这样的：file://imgs/esp头.png
     可见esp头是不带端口号的，
     传输模式下，esp头后面跟的是tcp头（隧道模式下是ip-tcp头）
-    理论上可以替换该tcp头的端口号，可以该tcp头是加密的，
+    理论上可以替换该tcp头的端口号，可是该tcp头是加密的，
     所以网关无法替换该tcp头中的端口号
     
 nat穿越的解决办法（nat-t）    
@@ -38,7 +38,7 @@ nat穿越的解决办法（nat-t）
     这种技术称作 NAT-T 技术，图：file://imgs/esp nat穿越.png
     
 关键NAT-T的3个问题：
-    IPSEC网关如何知道自己是否支持NAT-T？
+    IPSEC网关如何知道自己是否需要支持NAT-T？
         决定双方是否支持NAT-T（和下一条的判断peers之间是否有NAT存在）
         的任务是在IKEv1的第一阶段完成，
         NAT-T能力探测使用IKEv1第一阶段1-2个包交换来实现，

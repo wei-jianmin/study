@@ -1,3 +1,4 @@
+<catalog s0>
 QApplicationµÄ¹¦ÄÜ
     QApplication app(argc,argv);
     ...

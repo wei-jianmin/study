@@ -1,42 +1,36 @@
--rpath
-    设置依赖库查找路径
-    -Wl,-rpath='$ORIGIN'
--fPIC
-    生成位置无关代码，如将跳转生成相对，而非绝对的地址
-    这意味着库文件应该总是带有该选项的，但链接生成可执行程序时，则可以不带该选项
-    readelf --relocs foo.o | egrep '(GOT|PLT|JU?MP_SLOT)'
-    上句大多数时候(和平台有关)可以正确判断是否是以fPIC选项编译的，
-    如果输出为空，基本可以表明不是以fPIC选项编译的，
-    若有输出，基本上表明是以fPIC选项编译的。
-    注意：fPIC是编译选项也是链接选项，如果编译的时候加了fPIC，链接的时候也必须加上。
--shared
-    生成动态库，如果不带，则是生成可执行文件
-    如果是生成动态库，则不进行链接操作
-    不链接就意味着如果库中有未解决的符号，也不影响动态库的生成
-    但这一有个例外：
-    如果未定义的符号（如函数），带有 __attribute__((visibility("hidden")))
-    则这样的符号必须有相应的实现，否则会报错：
-    对‘myfunc()’未定义的引用
-    hidden symbol `_Z6myfuncv' isn't defined
-    报错原因是试图使用的这个符号指明是不导出的，
-    则如果这个符号是在其它动态库中调用的，则这种符号因为是强制不导出的，所以这种用法肯定是错的，
-    但同时这个符号又没在本库中定义，所以就报错了。
--fpermissive
-    该选项会将不一致代码的诊断从错误降级为警告
-    该选项最好不要使用，因为会降低对于代码检查的严格性
+-rpath 设置依赖库查找路径 -Wl,-rpath='$ORIGIN' 
+-fPIC 生成位置无关代码，如将跳转生成相对，而非绝对的地址 
+	这意味着库文件应该总是带有该选项的，但链接生成可执行程序时，则可以不带该选项 
+	readelf --relocs foo.o | egrep '(GOT|PLT|JU?MP_SLOT)' 
+	上句大多数时候(和平台有关)可以正确判断是否是以fPIC选项编译的， 
+	如果输出为空，基本可以表明不是以fPIC选项编译的， 若有输出，基本上表明是以fPIC选项编译的。 
+	注意：fPIC是编译选项也是链接选项，如果编译的时候加了fPIC，链接的时候也必须加上。 
+-shared 生成动态库，如果不带，则是生成可执行文件 如果是生成动态库，则不进行链接操作 
+	不链接就意味着如果库中有未解决的符号，也不影响动态库的生成 
+	但这一有个例外： 如果未定义的符号（如函数），带有 __attribute__((visibility("hidden"))) 
+	则这样的符号必须有相应的实现，否则会报错： 对‘myfunc()’未定义的引用 hidden symbol `_Z6myfuncv' isn't defined 
+	报错原因是试图使用的这个符号指明是不导出的， 
+	则如果这个符号是在其它动态库中调用的，则这种符号因为是强制不导出的，所以这种用法肯定是错的， 
+	但同时这个符号又没在本库中定义，所以就报错了。 
+-fpermissive 该选项会将不一致代码的诊断从错误降级为警告 该选项最好不要使用，因为会降低对于代码检查的严格性
     该标志使编译器将某些实际上是错误(但某些编译器允许)的东西报告为警告，以允许代码进行编译，即使它不符合语言规则。
 -fvisibility
     -fvisibility=hidden|default
     gcc 在链接时设置 -fvisibility=hidden，则不加 visibility声明的都默认为hidden; 
     gcc 默认设置 -fvisibility=default，即全部可见；
+    注意：隐藏不导出的符号，用 nm 也是会列出来的，不过这样的符号的标记是小写的 t
+         而导出的符号，用 nm 命令查看时，其标记是大写的 T
+         非导出的符号，用 nm -D 是看不到的
 --retain-symbols-file
-    控制静态符号表, 此时，除了指定导出的符号外，其它全部为仅内部可见
+    控制静态符号表(.symtab), 此时，除了指定导出的符号外，其它全部为仅内部可见
+    (注：静态链接，即链接静态库时，会用到该表，该表保存了所有关于该目标文件的符号的定义和引用)
     –retain-symbols-file=xxx.sym
     .sym文件的格式为直接按行列出要导出的符号，如：
     func_1
     func_3
 --version-script
-    –version-script=xxx.map 控制动态符号表
+    –version-script=xxx.map 控制动态符号表(.dynsym)
+    (注：动态符号表保存了与动态链接相关的符号，像如模块私有变量，是不会不存在该表中的)
     此时，除了指定导出的符号外，其它全部为仅内部可见
     .map文件的写法有点类似结构体的写法，如：
     {
@@ -44,9 +38,14 @@
       func_1;
       func_2;
     local: *;
-    };  
+    };
 -std=c++11
     支持C++11特性，意味着自动链接c++11相关的库
+    有的g++版本默认使用c++98/03，还有的默认使用c++14，
+    如果a程序依赖动态库b，而a和b使用不同版本c++标准进行编译，则可能出问题
+    相如 tzreader 阅读器，调用oes时，在oes调用的框架方法中，有个地方崩溃，
+    崩溃原因是判断一个std::string是否为空时，提示内存访问错误，
+    目前猜测可能就是这方面原因导致的（2023年9月19日）
 _GLIBCXX_USE_CXX11_ABI
     参：https://blog.csdn.net/dreamvyps/article/details/89179248
     新旧版本的ABI，可以在GCC5.1之后版本编绎的时候，如果使用C++11标准，
@@ -55,7 +54,7 @@ _GLIBCXX_USE_CXX11_ABI
     如果GCC版本在5.1以上，使用c++11标准编绎的时候，默认使用了新版本的ABI。
     例如旧版ABI的函数函数签名：Get(std::basic_string<char, std::char_traits, std::allocator >)
     对应新版ABI的函数签名为：Get(std::__cxx11::basic_string<char, std::char_traits, std::allocator >)
--Bsymbolic
+-Bsymbolic 
     正常情况下，在 linux 平台上 (不使用 - Bsymbolic)，加载的目标文件中第一次出现的符号将在程序中一直被使用，
     不论是定义在静态可执行部分，还是在动态目标文件中。
     这是通过符号抢占 (symbol preemption) 来实现的。动态加载器构建符号表，所有的动态符号根据该符号表被决议。
@@ -71,14 +70,152 @@ _GLIBCXX_USE_CXX11_ABI
     经测试，动态库加了该选项，则优先使用动态库自身的符号，否则优先使用之前存在的符号
     在windows下，动态库只支持使用自身符号，而不支持使用之前存在的符号这种链接方式，
     如果一个动态库中使用了未定义的符号，则在vs中是编译不过去的，但gcc可以编译成功。
+    注： 在 ubuntu 中测试，写法类似 https://blog.csdn.net/qq_29426201/article/details/113092051
+    使用 dlopen 的方式，则动态库始终调用自己的函数（输出 conflict），而与加载标志（RTLD_NOW、RTLD_LAZY、RTLD_DEEPBIND）无关
+    使用静态链接 .so 库时，才会有上面所述的情况（动态库默认会调用到宿主的同名方法），
+    而如果编译 .so 库时，加了 -Wl,-Bsymbolic ，so 就会调用到自己的（与宿主同名的）方法了
 -static
     阻止链接动态库（意味着强制链接静态库）
     如 gcc main.c -static -o test -lpthread  ，链接的pthread库是静态库，而不是动态库
 -static-libgcc
     只强制链接静态c++标准库（默认-shared-libgcc），该选项只适用于g++，不适用于gcc
     区别于-static的地方是，-static会强制链接所有静态库，包括c++标准库
+-Wl,--whole-archive
+	从静态库生成动态库时，如： gcc -shared -PIC -lssl -o libssl.so，
+	或写为 gcc -shared -PIC libssl.a -o libssl.so，
+	因为 libssl.a 就是一堆 .o 文件的集合，所以就等同于将一些 .o 文件编译(链接)成 so 动态库
+	但这样生成的动态库，所有的在 .o 文件中导出的符号，在 .so 文件中不会被引入
+	表现为用 nm 命令，直接看不到任何在 .o 文件中导出的符号，这是因为，
+	默认情况下，对于未使用到的符号（函数是一种符号），链接器不会将它们链接进共享库和可执行程序。
+	这个时候，可以启用链接参数“--whole-archive”来告诉链接器，将后面库中所有符号都链接进来
+	也就是说，--whole-archive 可以把在其后面出现的静态库包含的函数和变量输出到动态库
+	gcc -Wall -g -O0 -pthread -static-libgcc -Wa,--noexecstack -fPIC 
+	-Wl,-znodelete -shared -Wl,-Bsymbolic -Wl,-soname=libcrypto.so.1.1 
+	-o ./libcrypto.so.1.1 -Wl,--whole-archive,--version-script=crypto.map 
+	./libcrypto.a -Wl,--no-whole-archive -ldl
+	注1：-Wl，表明后面的选项，是传给 ld 的，要查看 --whole-archive 的帮助，
+	    不应使用 man gcc，而应使用 man ld
+	注2：-Wl,--no-whole-archive -ldl，是为了在连接 dl 动态库前，关闭 whole-archive
+	注3：-Wa,--noexecstack，这个也是传给 ld 的选项，execstack 表明该对象需要运行stack，
+		noexecstack 表明该对象不需要运行栈（executable stack）
+	注4：--version-script=crypto.map，这个是为了控制从静态库引入到动态库中的那些符号，
+		哪些符号是导出的（符号标识为大写字母），哪些符号是局部的(符号标识为小写字母）
+		crypto.map 文件的格式为：
+		动态库 {
+			global:
+				导出符号1；
+				导出符号2；
+				。。。
+			local:*;
+		}
+		举例：
+		OPENSSL_1_1_0d {
+			global:
+				ASN1_BIT_STRING_check;
+				ASN1_BIT_STRING_free;
+				。。。
+				local:*;
+		}
+LIBRARY_PATH vs. LD_RUN_PATH vs. LD_LIBRARY_PATH 
+	链接器在处理动态库时，会将链接时路径（Link-time path）和运行时路径(Run-time path) 分开
+	用户可以通过-L指定连接时库的路径，通过-R（或-rpath）指定程序运行时库的路径
+	
+	经测试， LD_LIBRARY_PATH 在加载动态库时管用，在编译链接时不管用
+	LIBRARY_PATH 在编译链接时管用，在加载动态库时不管用
+	LD_RUN_PATH 既不是用于指示链接时查找路径，也不是用于指示运行时查找路径
+	它的效果跟 -rpath 是一样的，在编译时，如果没有 -rpath，但设置了 LD_RUN_PATH='$ORIGIN'
+	则编译出的动态库，跟使用了 -Wl,-rpath='$ORIGIN' 效果是一样的
+-Wl,-rpath：
+	根据 man ld 中的说明，在 elf 文件中没有设置 rpath 时，会查找 LD_RUN_PATH
+	-rpath 也可以用在 SunOS 上（SunOS主要是基于BSD Unix版本，后来改名叫 Solaris）
+	在 SunOS 上，链接器默认会基于 -L 选项，形成一个运行时搜索路径，而如果指定了 -rpath，
+	就使用 -rpath 设置的运行时搜索路径，忽略基于 -L 形成的运行时搜索路径
+	为了兼容其它 ELF 链接器，如果 -R 后面跟了个文件名名，而不是文件名，它将被视同 -rpath
+	执行程序时，动态库的查找顺序：
+	1. LD_PRELOAD 环境变量指定的库文件
+	2. 通过 -rpath 指定的目录
+	3. 在 sunOS 上，如果没使用 -rpath，就会搜索通过 -L 选项设置的目录
+	4. 对于本地链接器，查找 LD_LIBRARY_PATH 
+	5. EFL 系统上的本地链接器，如果 /etc/ld.so.conf 存在，将按这个查找
+	   使用ldconfig命令，进行将 /etc/ld.so.conf 加载到 ld.so.cache 之中（需要root权限）；
+	6. 对于本地 ELF 链接器，查找 DT_RUNPATH 或 DT_RPATH，前者会覆盖后者
+	7. 找默认目录 /lib 和 /usr/lib
+	8. 按以上顺序还没找到，报错  
+-Wl,-rpath-link ： 
+	在使用 ELF 或 SunOS 时，某个通过 -l 链接进来的动态库，可能依赖另一个动态库，
+	如果链接器在进行"非共享、非重定向的链接时"，亦即生成可执行文件时，遇到这种情况，
+	而这个所依赖的"另一个动态库"有没有明显的 -l 进来，则链接器将自动去查找这些依赖的库，并链接进来
+	在这种情况下， -rpath-link 选项将告诉链接器，去哪些目录下查找，
+	多个查找路径可以通过冒号分隔开，或多次使用 -rpath-link 指定
+	$ORIGIN 和 $LIB 可以出现在搜索路径中，
+	该选项应该小心使用，因为它会覆盖应编码到共享库中的路径，
+	也就是说，在编译链接时，如果有 -la ，但 a 又依赖 b，同时没有指定 -lb，
+	但 a 中有个 rpath 指示了所依赖的 b 的位置，那么测试，链接器会参照这个 rpath 找到 b，
+	并把 b 链接进来，但如果指定了 -rpath-link，那链接器就不再参考 rpath 了，
+	而是参考 -rpath-link ,决定去哪里找 b，
+	由此也可以得出， rpath 不但是运行时路径，在链接时，也起作用
+	至于这个 -rpath-link 的效果测试，我们可以这样进行：
+	.
+	├── a.cpp  : 调用 func_b()
+	├── a.out
+	├── b.cpp  : 定义 func_b() , 调用 func_c()
+	├── build.sh
+	├── dir
+	│   ├── c.cpp  : 定义 func_c()
+	│   └── libc.so
+	├── dir2
+	│   ├── c.cpp  : 定义 func_c2()
+	│   └── libc.so
+	└── libb.so
+	gcc -shared -fPIC ./dir/c.cpp -o ./dir/libc.so    #1
+	gcc -shared -fPIC ./dir2/c.cpp -o ./dir2/libc.so	#2
+	gcc -shared -fPIC -Wl,-rpath='$ORIGIN/dir' b.cpp -o libb.so -Ldir -lc  #3
+	#gcc -Wl,-rpath='$ORIGIN' a.cpp -L. -lb		#4
+	#gcc -Wl,-rpath='$ORIGIN' -Wl,-rpath-link='./dir' a.cpp -L. -lb		#5
+	gcc -Wl,-rpath='$ORIGIN' -Wl,-rpath-link='./dir2' a.cpp -L. -lb		#6
+	如果放开 #4, 注掉 #6，此时是能编译成功的，因为这时会参照 b 动态库的 rpath ，去 dir 目录下连接 c
+	如果放开 #5, 注掉 #6，也是能编译成功的，因为这时强制去 dir2 目录下链接 c，
+	但如果像上面这样，使用 #6，就会编译报错 ： undefined reference to `func_c()'
+	这是因为，-Wl,-rpath-link='./dir2'，忽略 rpath，强制去 dir2 目录下连接 c，
+	而 dir2 目录下的 c 动态库，是没有 func_c 这个符号的（只有 func_c2），
+	其实，还有一种情形，就是如果 -Wl,-rpath-link='./dir2'，强制去 dir2 目录下找 c，
+	但结果在 dir2 目录下找不到 c 这个动态库（注掉 #2 这句即可达到次效果），
+	这时，就会再去 rpath 指示的目录下去找，这时，就能编译成功了
+	但是要注意，-Wl,-rpath-link='./dir2' 这句，只是在链接时才有意义，
+	也就是说，如果 dir2 目录下的 libc.so 增加了 func_c 这个函数的定义，
+	此时虽然使用 #6 这句能编译成功了，但实际运行时，
+	还是只会参考 libb.so 中的 rpath ，去调用 dir 下的 libc.so 中的 func_c
+	注： bash 中单引号和双引号的区别：
+		单引号是全引用，被单引号括起的内容不管是常量还是变量都不会发生替换
+		echo '$PWD'   #输出内容为 $PWD
+		双引号引用的内容中，如果有命令、变量等，
+		会先把变量、命令解析出结果，然后在输出最终内容：
+		echo '$PWD'   #输出内容为当前路径
+		无引号时，相当于双引号，但如果要输出的内容中含有空格，则应该带上双引号
+			
+		
+	
+	LIBRARY_PATH is used by gcc before compilation to search directories 
+	containing static and shared libraries that need to be linked to your program.
+	LD_LIBRARY_PATH is used by your program 
+	to search directories containing shared libraries 
+	after it has been successfully compiled and linked.
+	LD_RUN_PATH is used for the link time resolution of libraries whilst 
+	LD_LIBRARY_PATH is used for run time resolution of libraries. 
+	LD_RUN_PATH Specifies the directories that are to be searched for libraries 
+	at both link and run time.
+	LD_LIBRARY_PATH indicates to the dynamic loader to search 
+	the colon delimited paths for libraries required to execute the binary.  
+	LD_RUN_PATH is used by the linker to specify where to look for libraries only at run time.  
+	This differs ever so slightly from LD_LIBRARY_PATH in that this set of paths are not searched during link time.
+	1. 可以使用上面 LD_LIBRARY_PATH 等环境变量进行配置；
+	2. 可以使用 /etc/ld.so.conf 全局配置文件，配置动态链接库运行时的搜索路径； 
+	
+	
+	
+	ld默认搜索/lib和/usr/lib这两个目录
 –Wl,-soname,libname.so.x
-    编译时指定要生成的动态库的soname    
+    编译时指定要生成的动态库的soname      
 预处理选项
     -D宏
     -D宏=值
@@ -92,7 +229,99 @@ _GLIBCXX_USE_CXX11_ABI
     -w : 进制所有警告信息（不建议）
     -Wall ： 开启大部分警告信息（建议）
     -Werror ： 视警告为错误
-
+ _GLIBCXX_USE_CXX11_ABI
+	即使是C++自己调动自己也可能出现ABI不兼容，
+	一个明显的改变是C++11前后一些关键类的名字在ABI层面生了改变
+	（比如std::string和std::list）
+	导致C++11之前和之后编译出来的目标文件不兼容！
+	换句话说如果某个库的提供方使用的是C++11之前的ABI编译的，
+	那么依赖这个库的项目必须也用旧的ABI编译。
+	可通过_GLIBCXX_USE_CXX11_ABI来控制是否使用C++11的ABI，形如：
+	gcc -D_GLIBCXX_USE_CXX11_ABI=1 main.cpp
+Dual ABI（双ABI）
+	https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_dual_abi.html
+	In the GCC 5.1 release，libstdc++ introduced a new library ABI
+	that includes new implementations of std::string and std::list.
+	These changes were necessary to conform to the 2011 C++ standard，
+	which forbids（禁止） Copy-On-Write strings ，
+	and requires lists to keep track of their size.
+	the new version of std::list<int> 
+	is actually defined as std::__cxx11::list<int> （内联命名空间）
+	The _GLIBCXX_USE_CXX11_ABI macro controls 
+	whether the declarations（in the library headers）use the old or new ABI.
+	尽管这些更改是为了符合c++ 11，但选择使用的ABI与编译代码时使用的-std选项无关，
+	也就是说，对于给定的gcc版本，_GLIBCXX_USE_CXX11_ABI 的默认值总是一致的，
+	不收 -std 选项的影响，因此将C++03和C++11代码链接在一起是很简单的。
+	理解：从 gcc 5.1 版本开始，增加了 string 和 list 的新实现，
+	当然，旧的实现仍然存在，它们有不同的 abi，根据 _GLIBCXX_USE_CXX11_ABI 值的不同，
+	可以控制在头文件中会引用不同的（新的/旧的）string 和 list 
+	附注：因为 string 被广泛的引用，所以库中很多其它（基于string）的类型，
+	也被定义了两次，像如 stringstream 等
+-std=
+	决定使用哪种语言，编译器可接受几种基本标准，像如 c90 或 c++98 ，
+	以及这些标准的 gnu 版本，如 gnu90 、gnu++98
+	当指定了一种标准后，编译器就会接受所有遵循该标准的程序，
+	以及使用与该标准不相抵触的 GNU 扩展名的程序。 
+	例如，-std=c90 会关闭 GCC 中与 ISO C90 不兼容的某些功能，
+	如 "asm "和 "typeof "关键字，但不会关闭在 ISO C90 中没有意义的其他 GNU 扩展，如省略"?: "表达式的中间项。
+	另一方面，当指定一个标准的 GNU 版本时，编译器支持的所有功能都会启用，即使这些功能改变了基本标准的含义。 
+	因此，一些严格遵守标准的程序可能会被拒绝。 
+	特定标准由 -Wpedantic 使用，以确定在该标准版本下哪些特性属于 GNU 扩展。
+	例如，-std=gnu90 -Wpedantic 会对 C++ 风格 // 注释提出警告，而 -std=gnu99 -Wpedantic 则不会。
+	理解： 像如编译时，遇到 const char* 类型的变量，
+	必须为 -std= 选项设置一个值，可选值如下：
+	c90 、 c89 、 iso9899:1990
+		支持所有 ISO C90 程序（禁用某些与 ISO C90 冲突的 GNU 扩展）。 与 C 代码的 -ansi 选项相同
+	iso9899:199409
+		ISO C90 修订版 1。
+	c99 、 c9x 、 iso9899:1999 、 iso9899:199x
+		ISO C99。 除错误和浮点问题（主要但不完全与附件 F 和 G 中的可选 C99 功能有关）外，该标准基本上完全支持。 
+		更多信息请参见 <http://gcc.gnu.org/c99status.html>。 c9x 和 iso9899:199x 已被弃用。
+	c11 、 c1x 、 iso9899:2011
+		ISO C11 是 ISO C 标准的 2011 年修订版。 
+		除错误、浮点问题（主要但不完全涉及附件 F 和 G 中的可选 C11 功能）
+		以及可选附件 K（边界校验接口）和 L（可分析性）外，该标准基本完全支持。 c1x 名称已被弃用。
+	c17 、 c18 、 iso9899:2017 、 iso9899:2018
+		ISO C17 是 ISO C 标准的 2017 年修订版（2018 年发布）。 该标准与 C11 相同，
+		只是修正了一些缺陷（所有这些缺陷也适用于 -std=c11），并新增了"__STDC_VERSION__"值，因此支持程度与 C11 相同。
+	gnu90 、 gnu89
+		ISO C90 的 GNU 方言（包括一些 C99 功能）。
+	gnu99 、 gnu9x
+		ISO C99 的 GNU 方言。 gnu9x 名称已被弃用
+	gnu11 、 gnu1x
+		ISO C11 的 GNU 方言。 gnu1x 已被弃用。
+	gnu17 、 gnu18
+		ISO C17 的 GNU 方言。 这是 C 代码的默认设置。
+	gnu2x
+		ISO C 标准的下一个版本，仍在开发中，加上了 GNU 扩展。 对该版本的支持是试验性的，并不完整。 
+	c++98 、 c++03
+		1998 年 ISO C++ 标准加上 2003 年技术更正和一些附加缺陷报告。与 C++ 代码的 -ansi 相同。
+	gnu++98 、 gnu++03
+		-std=c++98 的 GNU 方言。
+	c++11 、 c++0x
+		2011 年 ISO C++ 标准及修正案。 c++0x 已被弃用。
+	gnu++11 、 gnu++0x
+		-std=c++11 的 GNU 方言，gnu++0x 已被弃用。
+	c++14 、 c++1y
+		2014 年 ISO C++ 标准及修正案。 c++1y 已被弃用。
+	gnu++14 、 gnu++1y
+		-std=c++14 的 GNU 方言。 gnu++1y 已被弃用。
+	c++17 、 c++1z
+		2017 年 ISO C++ 标准及修正案。 c++1z 已被弃用。
+	gnu++17 、 gnu++1z
+		-std=c++17 的 GNU 方言。 这是 C++ 代码的默认设置。 gnu++1z 已被弃用。
+	c++20 、 c++2a
+		2020 年 ISO C++ 标准及修正案。 支持是试验性的，
+		在未来版本中可能会有不兼容的变化。 c++2a 已被弃用。
+	gnu++20 、 gnu++2a
+		-std=c++20 的 GNU 方言。 支持是试验性的，
+		在未来的版本中可能会有不兼容的变化。 gnu++2a 已被弃用。
+	c++2b 、 c++23
+		ISO C++ 标准的下一个修订版，计划于 2023 年发布。 
+		支持是高度试验性的，几乎肯定会在未来版本中以不兼容的方式发生变化
+	gnu++2b 、 gnu++23
+		-std=c++2b 的 GNU 方言。 该支持是高度试验性的，
+		在未来的版本中几乎肯定会出现不兼容的变化。
     
 总结：    
 https://www.cnblogs.com/CocoML/p/14643389.html    

@@ -94,7 +94,7 @@ public:
 	{
 		return _err_stack._values[_err_stack._index] == v;
 	}
-	//使得当前类可以与无符号整数进行比较
+	//使得当前类(的最后一个错误码)可以与无符号整数进行比较
 	bool operator != (value_type v)
 	{
 		return _err_stack._values[_err_stack._index] != v;

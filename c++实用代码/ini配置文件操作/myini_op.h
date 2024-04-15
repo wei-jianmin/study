@@ -1,3 +1,4 @@
+//仅适用于 MFC
 #pragma once
 #include <string>
 using std::string;

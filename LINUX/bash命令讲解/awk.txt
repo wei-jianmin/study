@@ -31,7 +31,8 @@ awk 使用数据字段变量
     $0 代表整个文本行；是存放该行各个数据段的数组的引用；
     $1 代表文本行中的第 1 个数据字段；
     $2 代表文本行中的第 2 个数据字段；
-    $n 代表文本行中的第 n 个数据字段。
+    $n 代表文本行中的第 n 个数据字段;
+    $NF 代表文本行中的最后一个数据字段;
     这些变量（也包括-v var定义的变量）不但可以用在动作语句中，也可用在条件语句中
     
 命令的执行过程是这样的：
@@ -88,3 +89,109 @@ awk的输出函数
     printf函数的详细用法，参：https://www.jianshu.com/p/2cedb8b0caba
     
 在awk中，可以用system调用shell命令。如：awk '{cmd="echo "$0;system(cmd)}'
+
+普通变量：awk -v age=123 'BEGIN{print age}'
+使用shell变量赋值：awk -v age=$age 'BEGIN{print age}'
+
+awk 的内置函数（具体参看 man awk）
+    运算符
+        (...)       Grouping
+        $           Field reference.
+        ++ --       Increment and decrement, both prefix and postfix.
+        ^           Exponentiation (** may also be used, and **= for the assignment operator).
+        + - !       Unary plus, unary minus, and logical negation.
+        * / %       Multiplication, division, and modulus.
+        + -         Addition and subtraction.
+        space       String concatenation.
+        |   |&      Piped I/O for getline, print, and printf.
+        ~ !~        Regular  expression  match,  negated  match. 
+        in          Array membership.
+        &&          Logical AND.
+        ||          Logical OR.
+        ?:          The C conditional expression.  
+        < > <= >= == !=       The regular relational operators.
+        = += -= *= /= %= ^=   Assignment.  
+    流程控制
+        if (condition) statement [ else statement ]
+        while (condition) statement
+        do statement while (condition)
+        for (expr1; expr2; expr3) statement
+        for (var in array) statement
+        break
+        continue
+        delete array[index]
+        delete array
+        exit [ expression ]
+        { statements }
+        switch (expression) {
+          case value|regex : statement
+          ...
+          [ default: statement ]
+        }
+    输入输出
+        close(file [, how])  
+        getline               
+        getline <file         
+        getline var           
+        getline var <file     
+        command | getline [var]
+        command |& getline [var]
+        next                  
+        nextfile              
+        print                 
+        print expr-list       
+        print expr-list >file 
+        printf fmt, expr-list 
+        printf fmt, expr-list >file
+        system(cmd-line)      
+        fflush([file])        
+        print ... >> file
+        print ... | command
+        print ... |& command
+    数学函数
+        atan2(y, x)   Return the arctangent of y/x in radians.
+        cos(expr)     Return the cosine of expr, which is in radians.
+        exp(expr)     The exponential function.
+        int(expr)     Truncate to integer.
+        log(expr)     The natural logarithm function.
+        rand()        Return a random number N, between zero and one, such that 0 ≤ N < 1.
+        sin(expr)     Return the sine of expr, which is in radians.
+        sqrt(expr)    Return the square root of expr.
+        srand([expr]) Use expr as the new seed for the random number generator. 
+    字符串处理（gawk）
+        asort(s [, d [, how] ]) 
+        asorti(s [, d [, how] ])
+        gensub(r, s, h [, t])
+        gsub(r, s [, t])
+        index(s, t) 
+        length([s])   
+        match(s, r [, a])
+        patsplit(s, a [, r [, seps] ])
+        split(s, a [, r [, seps] ])
+        sprintf(fmt, expr-list)
+        strtonum(str)
+        sub(r, s [, t])
+        substr(s, i [, n])
+        tolower(str)
+        toupper(str)
+    时间
+        mktime(datespec [, utc-flag])
+        strftime([format [, timestamp[, utc-flag]]])
+        systime()
+    位操作
+        and(v1, v2 [, ...]) Return the bitwise AND of the values provided in the argument list.  There must be at least two.
+        compl(val)          Return the bitwise complement of val.
+        lshift(val, count)  Return the value of val, shifted left by count bits.
+        or(v1, v2 [, ...])  Return the bitwise OR of the values provided in the argument list.  There must be at least two.
+        rshift(val, count)  Return the value of val, shifted right by count bits.
+        xor(v1, v2 [, ...]) Return the bitwise XOR of the values provided in the argument list.  There must be at least two.
+    类型检查
+        isarray(x)          Return true if x is an array, false otherwise.
+        typeof(x)           Return a string indicating the type of x.  
+                            The string will be one of "array", "number", "regexp", "string", "strnum", or "undefined".
+    其它
+        bindtextdomain(directory [, domain])
+        dcgettext(string [, domain [, category]])
+        dcngettext(string1, string2, number [, domain [, category]])
+        
+    

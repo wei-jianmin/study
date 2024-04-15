@@ -806,7 +806,7 @@
             this 与 super
                 关键字 this 有两个用途：一是引用隐式参数，二是调用该类其他的构造器 ， 
                 同样，super 关键字也有两个用途：一是调用基类的方法，二是调用基类的构造器。
-            多态
+            多态 &<多态>
                 一个对象变量（例如， 变量 e ) 可以指示多种实际类型的现象被称为多态
                 在运行时能够自动地选择调用哪个方法的现象称为动态绑定
                 在 Java 程序设计语言中， 对象变量是多态的，一个变量可以引用该类，及其任意子类的对象
@@ -1980,6 +1980,139 @@
                 那么它最终都会继承 RootLogger 的配置。
         调试技巧
     第8章 泛型程序设计
+        .构造函数省略泛型类型
+            从 Java SE7 开始，构造函数可以省略泛型类型，
+            如：ArrayList<String> files = new ArrayList<>()
+            省略的类型可以从变量的类型推断得出
+        .定义简单泛型类
+            举例：
+                public class Pair<S,T>
+                {
+                    private S first;
+                    private T second;
+                    public Pair(S first, T second)
+                    {
+                        this.first = first;
+                        this.second = second;
+                    }
+                    ...
+        .泛型方法
+            除了定义泛型类，还可定义泛型方法
+            例：
+                class ArrayAlg
+                {
+                    //获取数组的中间元素
+                    public static <T> T getMiddle(T... a)
+                    {
+                        return a[a.length / 2];
+                    }
+                }
+            当调用一个泛型方法时，在方法名前的尖括号中放入具体的类型：
+            String mid = ArrayAlg.<String>getMiddle("a","b","c");
+            在这种情况（实际也是大多数情况）下，方法调用中可以省略 <String> 类型参数。
+            编译器有足够的信息能够推断出所调用的方法。
+            String middle = ArrayAlg.getHiddle("a","b","c");
+            与 C++ 写法格式的比较
+                在 C++ 中将类型参数放在方法名后面， 有可能会导致语法分析的歧义。
+                例如，g(f<a,b>(c)) 
+                可以理解将'用 f<a, b>(c) 的结果'作为参数传给 g 函数，
+                或者理解为将 f<a 和 b>(c) 两个语句的结果（逗号语句）作为参数传给 g 函数
+        .类型变量的限定
+            有时，类或方法需要对类型变量加以约束
+            如：public static <T extends Comparable> T a) . . .
+            这样，就限制了 T 必须要实现 Comparable 接口才行
+            T 也可以有多个限定， 如 <T extends Comparable & Cloneable> T a) . . .
+            为什么使用关键字 extends 而不是 implements
+                读者或许会感到奇怪？ 在此为什么使用关键字 extends 而不是 implements ? 
+                毕竟，Comparable 是一个接口。
+                这是因为，上面泛型中的 T ，表示要适配的类型，应该是 Comparable 的子类型 （subtype)
+                选择关键字 extends 的原因是更接近子类的概念
+            与 c++ 比较
+                在 C++ 中不能对模板参数的类型加以限制
+        泛型代码与虚拟机
+            - 虚拟机没有泛型类型对象 ——— 所有对象都属于普通类
+            类型擦除
+                无论何时定义一个泛型类型， 都自动提供了一个相应的原始类型
+                （泛型类型只有编译器能看到，编译处理后，仍存在的是原始类型）
+                原始类型的名字就是删去类型参数后的泛型类型名（擦除类型变量, 并替换为限定类型）
+                例，Pair<T> 的原始类型如下所示 ：
+                    public class Pair
+                    {
+                        private Object first;
+                        private Object second;
+                        // 当 T 没有进行限定时，就用 Object 代替 T
+                        public Pair(Object first, Object second)
+                        {
+                            this.first = first;
+                            this.second = second;
+                        }
+                        。。。
+                    }
+                    当 T 有限定时， 如 <T extends Comparable & Serializable>，
+                    此时， T 会被替换为后面的第一个限定类型，在这里 T 被替换为 Comparable
+                结果是一个普通的类， 就好像泛型引入 Java 语言之前已经实现的那样。
+                当实例化一个泛型类型时，其本质是创建了该泛型类型的原始类型
+                泛型类型只是方便编译期代码检查，编译后，看不到泛型类型，而是转化成了其原始类型
+                从这一点来看，就不会存在 c++ 中的 "模板代码膨胀" (每个模板的实例化会产生不同的类型)
+                的问题，这是与 c++ 泛型的实现原理的本质区别
+            翻译泛型表达式
+                如：
+                    Pair<Person> couple = ...;
+                    Persion p = couple.getFirst();
+                    编译器会在编译时，自动插入 Persion 的强制转换类型，
+                    也就是说，编译器把这个方法调用翻译为两条虚拟机指令：
+                    ● 对原始方法 Pair.getFirst 的调用
+                    ● 将返回的 Object 类型强制转换为 Persion 类型
+                    当存取一个泛型域时，也要插人强制类型转换。
+                    假设 Pair 类的 first 域和 second 域都是公有的
+                    则表达式：Persion p = couple.first;
+                    也会在结果字节码中插人强制类型转换。
+            翻译泛型方法
+                类型擦除也会出现在泛型方法中。
+                如 public static <T extends Comparable〉T min(T[] a)
+                擦除类型后，变为： public static Comparable min(Comparable[] a)
+                方法的擦除带来了两个复杂问题。看一看下面这个示例：
+                class Datelnterval extends Pair<LocalDate>
+                {
+                    public void setSecond(Localdate second)
+                    {
+                        //确保第二个时间要大于第一个时间
+                        if (second.compareTo(getFirst()) >= 0)
+                        {
+                            super.setSecond(second);
+                        }
+                        ...
+                    }
+                }   
+                一个日期区间是一对 LocalDate 对象，
+                并且需要覆盖这个方法来确保第二个值永远不小于第一个值
+                Pair类擦除类型后，变为：
+                class Datelnterval extends Pair //擦除后
+                {
+                    public void setSecond(LocalDate second) { . . . }
+                    ...
+                }
+                所以， Pair 中的 void setSecond(Object second) 方法也会被 Datelnterval 继承
+                于是，就引入了多态（多态也是在运行期处理的）
+                考虑下面的语句序列：
+                Datelnterval interval = new Datelnterval(. . .);
+                Pair<Loca1Date> pair = interval; //用基类指向派生类
+                pair.setSecond(aDate);
+                用于 pair 引用的是 Datelnterval 的对象， 
+                所以我们期望的是调用 Datelnterval 的 setSecond 方法
+                而不是 Pair 自身的 setSecond 方法
+                为此，编译器的解决办法是，在 Datelnterval 类中会生成一个"桥方法" :
+                public void setSecond(Object second) { setSecond((Date) second); }
+                此时，相当于在 Datelnterval 中覆盖了 Pair 的 setSecond 方法（函数签名一致）
+                于是，在执行上面的 pair.setSecond(aDate) 语句时
+                变量 pair 已经声明为类型 Pair<LocalDate>，
+                所以调用的是 Pair 的 setSecond 方法
+                ？？？  &<未完待续>
+            调用遗留代码
+                设计 Java 泛型类型时， 主要目标是允许泛型代码和遗留代码之间能够互操作。
+        .与 C++ 泛型类的区别
+            表面上的区别是 java 不需要使用专门的 template 关键字
+            但两者有本质的区别
     第9章 集合
         集合框架
         具体的集合

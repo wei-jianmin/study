@@ -1,3 +1,4 @@
+<catalog s0>
 参：https://info.support.huawei.com/info-finder/encyclopedia/zh/IPsec.html
 什么是IPSec
     IPsec（Internet Protocol Security）是为IP网络提供安全性的协议和服务的集合
@@ -124,6 +125,8 @@ IPsec使用的端口
     而AH和ESP属于网络层协议，不涉及端口。
     为了使IPsec隧道能正常建立，通常还要在网关设备上配置安全策略放开AH（IP协议号是51）
     和ESP（IP协议号是50）服务。
+ipsec的nat穿越思考
+    file://gre协议.txt@gre 的内网穿透
 IPsec VPN和SSL VPN对比
     IPsec和SSL是部署VPN时最常用的两种技术，它们都有加密和验证机制保证用户远程接入的安全性。
     从以下几个方面对IPsec VPN和SSL VPN进行对比：

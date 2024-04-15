@@ -1,3 +1,4 @@
+<catalog s0/s4/s8>
 参：https://zhuanlan.zhihu.com/p/270872278
     常见的hash算法分类 
         MD5

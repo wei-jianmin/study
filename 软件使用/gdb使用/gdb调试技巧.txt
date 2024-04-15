@@ -1,2 +1,20 @@
-在 ~/.gdbinit中写 source gdb_print_helper.txt
-即可实现 标准库：std::string、std::list、std::map等对象值的打印，也支持打印QString
+打印 stl 对象内容
+    在 ~/.gdbinit中写 source gdb_print_helper.txt
+    即可实现 标准库：std::string、std::list、std::map等对象值的打印，也支持打印QString
+
+调试子进程 
+    gdb 中执行 set  follo-fork-mode child
+    follow-fork-mode	detach-on-fork	说明
+    parent	            on	            只调试主进程( GDB 默认)
+    child	            on	            只调试子进程
+    parent	            off	            同时调试两个进程, gdb 跟主进程, 子进程 block 在 fork 位置
+    child	            off	            同时调试两个进程, gdb 跟子进程, 主进程 block 在 fork 位置
+
+为调试的程序设置启动参数
+    为程序传递参数   ： set args 参数列表
+        每次执行 set args 参数列表， 会覆盖之前设置的参数列表
+    显示参数 ： show args
+
+设置源码目录
+    dir  要添加的源码目录
+    每次执行，会在上次的基础上添加，而不是覆盖
